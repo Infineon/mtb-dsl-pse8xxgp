@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<PersonalityTemplate id='protection_sau' name='SAU' version='1.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v14'>
+  <Constants>
+    <Const id='REGION_COUNT' value='8' />
+    <Const id='MAX_MEM_REGIONS' value='64' />
+  </Constants>
+
+  <FittingRules>
+    <MappingRules>
+      <IpBlock name='m33syscpuss' />
+      <Resource name='(m33syscpuss|m55appcpuss)\.(cm33|cm55)\.sau' />
+      <OperatingMode value='MCU' />
+    </MappingRules>
+  </FittingRules>
+
+  <BehaviorImplementation>
+    <Implements type='sau_v1'>
+      <ExposedMember key='starts_list' paramId='tcl_starts'/>
+      <ExposedMember key='ends_list' paramId='tcl_ends'/>
+      <ExposedMember key='sau_core_idx' paramId='sau_core_idx'/>
+      <ExposedMember key='sau_core_type' paramId='sau_core_type'/>
+      <ExposedMember key='enable$idx' paramId='enable$idx' repeatCount='$REGION_COUNT'/>
+      <ExposedMember key='base_addr$idx' paramId='base_addr$idx' repeatCount='$REGION_COUNT'/>
+      <ExposedMember key='end_addr$idx' paramId='end_addr$idx' repeatCount='$REGION_COUNT'/>
+      <ExposedMember key='size$idx' paramId='size$idx' repeatCount='$REGION_COUNT'/>
+      <ExposedMember key='attribute$idx' paramId='attribute$idx' repeatCount='$REGION_COUNT'/>
+      <ExposedMember key='security$idx' paramId='security$idx' repeatCount='$REGION_COUNT'/>
+    </Implements>
+  </BehaviorImplementation>
+
+  <Parameters>
+    <ParamDoc id='doc' name='CMSIS Help' group='Overview' default='https://arm-software.github.io/CMSIS_5/5.8.0/Core/html/group__sau__trustzone__functions.html' linkText='Open CMSIS IDAU/SAU Documentation' visible='true' desc='Open CMSIS IDAU/SAU Documentation' />
+    <ParamDoc id='doc_api' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/page_prot_person.html#SAU_personality' linkText='Open Personality Documentation' visible='true' desc='Open Personality Documentation' />
+
+    <ParamString id='memreg_count' name='memreg_count' default='`${memoryRegionCount()}`' />
+
+    <!-- Find the Core associated with SAU -->
+    <ParamString id='core_resource' default='`${getBlockType(1)}`' />
+    <ParamString id='sau_core_idx' default='`${getInstNumber(getBlockType(1))}`' />
+    <ParamString id='sau_core_type' default='`${(core_resource eq "cm33") ? "CortexM33" : ((core_resource eq "cm55") ? "CortexM55" : "Unknown")}`' />
+
+    <ParamString id='idauCnt' default='`${getOrDefault(getCustomDataCount("/Core[@key=\"CM33\"]/AddressRange"), 0)}`'/>
+    <Repeat count='$MAX_MEM_REGIONS'>
+      <ParamBool id='memreg$idx' default='`${$idx &lt; memreg_count}`' />
+
+      <!-- Collect IDAU regions -->
+      <ParamString id='IDAUstart$idx' default='`${getOrDefault(getCustomData("/Core[@key=\"CM33\"]/AddressRange[@key=\"" . $idx . "\"]/@start"), "")}`' />
+      <ParamString id='IDAUsize$idx' default='`${getOrDefault(getCustomData("/Core[@key=\"CM33\"]/AddressRange[@key=\"" . $idx . "\"]/@size"), "")}`' />
+      <ParamString id='IDAUattribute$idx' default='`${getOrDefault(getCustomData("/Core[@key=\"CM33\"]/AddressRange[@key=\"" . $idx . "\"]/@attribute"), "")}`' />
+
+      <!-- Attribute Sorting List -->
+      <ParamString id='mem_reg_attr$idx' default='`${memreg$idx ? getExposedMember(getBlockFromInstance(getExposedMember(memoryRegionLocation($idx), "domain")), "cmseAttribute") : ""}`' />
+
+      <!-- Physical Memory List -->
+      <ParamString id='mem_reg_phys$idx' default='`${memreg$idx ? getOrDefault(findMemoryViewMapAddress(getExposedMember(memoryRegionLocation($idx), "memoryId"), "CORE_NAME_CM33_0", true, true),"-1") : ""}`' />
+      <ParamString id='mem_reg_phys_offset$idx' default='`${memreg$idx ? getOrDefault(getExposedMember(memoryRegionLocation($idx), "offset"), "0") : ""}`' />
+      <ParamString id='mem_reg_phys_size$idx' default='`${memreg$idx ? getOrDefault(getExposedMember(memoryRegionLocation($idx), "size"), "0") : ""}`' />
+    </Repeat>
+
+    <ParamString id='tcl_rslt' default='`${runTcl("protection_sau-1.0.tcl", createTclArgData())}`' />
+    <ParamString id='tcl_starts' default='`${getTclVar("sau_starts", tcl_rslt)}`' />
+    <ParamString id='tcl_ends' default='`${getTclVar("sau_ends", tcl_rslt)}`' />
+    <ParamString id='idau_removed_tcl_attrs' default='`${getTclVar("attrs", tcl_rslt)}`' />
+    <ParamString id='idau_removed_tcl_starts' default='`${getTclVar("starts", tcl_rslt)}`' />
+    <ParamString id='idau_removed_tcl_ends' default='`${getTclVar("ends", tcl_rslt)}`' />
+    <ParamString id='region_count' default='`${splitCount(idau_removed_tcl_starts, ",")}`' />
+
+    <Repeat count='$REGION_COUNT'>
+      <ParamBool id='enable$idx' name='SAU region $idx' group='' default='`${$idx &lt; region_count}`' visible='`${$idx &lt; region_count}`' editable='false' desc='Should the SAU region be enabled?' />
+
+      <ParamString id='base_addr$idx' name='Start Address' group='SAU region $idx' default='`${($idx &lt; region_count) ? splitAt(idau_removed_tcl_starts, $idx, ",") : ""}`' visible='`${enable$idx}`' editable='false' desc='' />
+      <ParamString id='size$idx' name='Size (bytes)' group='SAU region $idx' default='`${($idx &lt; region_count) ? toLower(toHex((splitAt(idau_removed_tcl_ends, $idx, ",") - splitAt(idau_removed_tcl_starts, $idx, ",") + 1), 8)) : ""}`' visible='`${enable$idx}`' editable='false' desc='' />
+      <ParamString id='end_addr$idx' name='End Address' group='SAU region $idx' default='`${($idx &lt; region_count) ? splitAt(idau_removed_tcl_ends, $idx, ",") : ""}`' visible='`${enable$idx}`' editable='false' desc='' />
+      <ParamString id='attribute$idx' name='Attribute' group='SAU region $idx' default='`${($idx &lt; region_count) ? splitAt(idau_removed_tcl_attrs, $idx, ",") : ""}`' visible='false' editable='false' desc='' />
+      <ParamString id='security$idx' name='Protection Type' group='SAU region $idx' default='`${(attribute$idx eq "NON_SECURE_CALLABLE") ? "Non-Secure Callable" : "Non-Secure"}`' visible='`${enable$idx}`' editable='false' desc='' />
+
+    </Repeat>
+  </Parameters>
+
+  <DRCs>
+    <DRC type='ERROR' text='The memory region configuration requires more SAU regions than are available. Please reconfigure your memory to use less than $REGION_COUNT SAU regions.' condition='`${(region_count &gt; $REGION_COUNT)}`' paramId='region_count' location='vres[0].memory[0]' />
+  </DRCs>
+
+  <ConfigFirmware>
+    <ConfigFile repeatCount='1' name='cycfg_sau.h'>
+      <Line value='/* This file is automatically generated. */'/>
+      <Line value='#if !defined(CY_CYCFG_SAU_H)'/>
+      <Line value='#define CY_CYCFG_SAU_H'/>
+      <Line value='#include "cmsis_compiler.h"'/>
+      <Line value='#include "cy_device.h"'/>
+      <Line value=''/>
+      <Line value='#ifdef CY_PDL_TZ_ENABLED'/>
+      <Line value=''/>
+      <Line value='#define CY_SAU_REGION_CNT          (`${region_count}`U)'/>
+      <Line value='#define CY_SAU_MAX_REGION_CNT      ($REGION_COUNTU)'/>
+      <Line value=''/>
+      <Line value='typedef struct {'/>
+      <Line value='    uint8_t     reg_num;   /* Region number. */'/>
+      <Line value='    uint32_t    base_addr; /* Base address of SAU region. */'/>
+      <Line value='    uint32_t    size;      /* Size of SAU region. */'/>
+      <Line value='    uint32_t    end_addr;  /* End address of SAU region. */'/>
+      <Line value='    bool        nsc;       /* Is this region Non-Secure Callable? */'/>
+      <Line value='} cy_sau_config_t; '/>
+      <Line value=''/>
+      <Line value=''/>
+      <Line value='void Cy_SauInit(void);'/>
+      <Line value='extern const cy_sau_config_t SAU_config[CY_SAU_REGION_CNT];'/>
+      <Line value=''/>
+      <Line value='#endif /* #ifdef CY_PDL_TZ_ENABLED */'/>
+      <Line value='#endif /* #if !defined(CY_CYCFG_SAU_H) */'/>
+      <Line value=''/>
+    </ConfigFile>
+
+    <ConfigFile repeatCount='1' name='cycfg_sau.c'>
+      <Line value='/* This file is automatically generated. */'/>
+      <Line value=''/>
+      <Line value='#include "cycfg_sau.h"'/>
+      <Line value=''/>
+      <Line value='#ifdef CY_PDL_TZ_ENABLED'/>
+      <Line value=''/>
+      <Line value='#ifdef __ICCARM__'/>
+      <Line value=''/>
+      <Line value='#pragma section = "NSC" '/>
+      <Line value='#ifndef NSC_START_ADDRESS'/>
+      <Line value='#define NSC_START_ADDRESS  (uint32_t) (__section_begin("NSC"))'/>
+      <Line value='#endif /* NSC_START_ADDRESS */'/>
+      <Line value='#ifndef NSC_END_ADDRESS'/>
+      <Line value='#define NSC_END_ADDRESS  (uint32_t) (__section_end("NSC"))'/>
+      <Line value='#endif /* NSC_END_ADDRESS */'/>
+      <Line value=''/>
+      <Line value='#elif defined(__ARMCC_VERSION)'/>
+      <Line value=''/>
+      <Line value='extern uint32_t Image$$app_codeNsc$$Base;'/>
+      <Line value='extern uint32_t Image$$app_codeNsc$$Limit;'/>
+      <Line value='#ifndef NSC_START_ADDRESS'/>
+      <Line value='#define NSC_START_ADDRESS  (uint32_t)&amp;Image$$app_codeNsc$$Base '/>
+      <Line value='#endif /* NSC_START_ADDRESS */'/>
+      <Line value='#ifndef NSC_END_ADDRESS'/>
+      <Line value='#define NSC_END_ADDRESS  (uint32_t)&amp;Image$$app_codeNsc$$Limit'/>
+      <Line value='#endif /* NSC_END_ADDRESS */'/>
+      <Line value=''/>
+      <Line value='#elif defined(__llvm__) || defined (__GNUC__) '/>
+      <Line value=''/>
+      <Line value='extern uint32_t __nsc_region_start;'/>
+      <Line value='extern uint32_t __nsc_region_end;'/>
+      <Line value='#ifndef NSC_START_ADDRESS'/>
+      <Line value='#define NSC_START_ADDRESS  (uint32_t)&amp;__nsc_region_start '/>
+      <Line value='#endif /* NSC_START_ADDRESS */'/>
+      <Line value='#ifndef NSC_END_ADDRESS'/>
+      <Line value='#define NSC_END_ADDRESS  (uint32_t)&amp;__nsc_region_end'/>
+      <Line value='#endif /* NSC_END_ADDRESS */'/>
+      <Line value=''/>
+      <Line value='#else'/>
+      <Line value='#error "Unsupported toolchain" '/>
+      <Line value='#endif'/>
+
+
+      <Line value=''/>
+      <Line value='const cy_sau_config_t SAU_config[CY_SAU_REGION_CNT];' include='`${!(region_count &gt; 0)}`'/>
+      <Line value='const cy_sau_config_t SAU_config[CY_SAU_REGION_CNT] = ' include='`${(region_count &gt; 0)}`'/>
+      <Line value='{' include='`${(region_count &gt; 0)}`'/>
+      <Repeat count='$REGION_COUNT'>
+        <Line value='    {' include='`${$idx &lt; region_count}`'/>
+        <Line value='        .reg_num = $idxU,' include='`${$idx &lt; region_count}`'/>
+        <Line value='        .base_addr = `${base_addr$idx}`U,' include='`${$idx &lt; region_count}`'/>
+        <Line value='        .size = `${size$idx}`U,' include='`${$idx &lt; region_count}`'/>
+        <Line value='        .end_addr = `${end_addr$idx}`U,' include='`${$idx &lt; region_count}`'/>
+        <Line value='        .nsc = false,' include='`${($idx &lt; region_count) &amp;&amp; (attribute$idx ne "NON_SECURE_CALLABLE")}`'/>
+        <Line value='        .nsc = true,' include='`${($idx &lt; region_count) &amp;&amp; (attribute$idx eq "NON_SECURE_CALLABLE")}`'/>
+        <Line value='    },' include='`${((region_count &gt; 0) &amp;&amp; $idx &lt; region_count)}`'/>
+      </Repeat>
+      <Line value='};' include='`${(region_count &gt; 0)}`'/>
+      <Line value=''/>
+      <Line value='void Cy_SauInit(void)'/>
+      <Line value='{'/>
+      <Line value='    SAU-&gt;CTRL |= SAU_CTRL_ENABLE_Msk;' include='`${(region_count &gt; 0)}`'/>
+      <Line value='    for (uint8_t i = 0U ; i &lt; CY_SAU_REGION_CNT ; i++)' include='`${(region_count &gt; 0)}`'/>
+      <Line value='    {' include='`${(region_count &gt; 0)}`'/>
+      <Line value='        SAU-&gt;RNR = SAU_config[i].reg_num;' include='`${$idx &lt; region_count}`'/>
+      <Line value='        SAU-&gt;RBAR = (SAU_config[i].base_addr &amp; SAU_RBAR_BADDR_Msk);' include='`${(region_count &gt; 0)}`'/>
+      <Line value='        SAU-&gt;RLAR = ((SAU_config[i].end_addr &amp; SAU_RLAR_LADDR_Msk) | \' include='`${(region_count &gt; 0)}`'/>
+      <Line value='            (SAU_config[i].nsc ? SAU_RLAR_NSC_Msk : 0U) | SAU_RLAR_ENABLE_Msk);' include='`${(region_count &gt; 0)}`'/>
+      <Line value='    }' include='`${(region_count &gt; 0)}`'/>
+      <Line value=''/>
+      <Line value='    if((NSC_END_ADDRESS - NSC_START_ADDRESS &gt; 0)) '/>
+      <Line value='    {'/>
+      <Line value='        if(CY_SAU_REGION_CNT &lt; CY_SAU_MAX_REGION_CNT)'/>
+      <Line value='        {'/>
+      <Line value='            /* Extra handling for NSC region if not empty */'/>
+      <Line value='            SAU-&gt;RNR = CY_SAU_REGION_CNT; '/>
+      <Line value='            SAU-&gt;RBAR = (NSC_START_ADDRESS &amp; SAU_RBAR_BADDR_Msk); '/>
+      <Line value='            SAU-&gt;RLAR = ((NSC_END_ADDRESS &amp; SAU_RLAR_LADDR_Msk) | \'/>
+      <Line value='                SAU_RLAR_NSC_Msk | SAU_RLAR_ENABLE_Msk ); '/>
+      <Line value='         }'/>
+      <Line value='        else'/>
+      <Line value='        {'/>
+      <Line value='            /* We cannot add the setting because we have used all SAU regions */'/>
+      <Line value='            CY_ASSERT(0);'/>
+      <Line value='        }'/>
+      <Line value='     }'/>
+      <Line value='}'/>
+      <Line value=''/>
+      <Line value='#endif /* #ifdef CY_PDL_TZ_ENABLED */'/>
+      <Line value=''/>
+    </ConfigFile>
+  </ConfigFirmware>
+</PersonalityTemplate>

@@ -1,0 +1,28 @@
+var group__group__autanalog__fifo__macros =
+[
+    [ "CY_AUTANALOG_FIFO_BUFS_NUM", "group__group__autanalog__fifo__macros.html#gad024a68bc6d2ed1544d063109df5a784", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW0", "group__group__autanalog__fifo__macros.html#ga7329a3b2646637f0e3a85e3e417f664d", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW1", "group__group__autanalog__fifo__macros.html#ga334b14e86aa3ec6251400dd92534ccc1", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW2", "group__group__autanalog__fifo__macros.html#ga035d91b91d8cb713998d0c169b2975f2", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW3", "group__group__autanalog__fifo__macros.html#ga2e4fc063b29b7ff383890ce946d9921a", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW4", "group__group__autanalog__fifo__macros.html#ga00c770b3a2115c527d1d8ead40513c9f", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW5", "group__group__autanalog__fifo__macros.html#ga6169f687d20c0e5eb8e9811fdd8882ec", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW6", "group__group__autanalog__fifo__macros.html#gaeb4810ca2a7629fddb57703fea9ccee0", null ],
+    [ "CY_AUTANALOG_INT_FIFO_OVERFLOW7", "group__group__autanalog__fifo__macros.html#ga8a2e53748eb4b04fe4ac069329d98e49", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL0", "group__group__autanalog__fifo__macros.html#ga1d5179ebffcaaad020c58a9467c07e92", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL1", "group__group__autanalog__fifo__macros.html#gaa321a0ee46dec35f1ef23d98c892849f", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL2", "group__group__autanalog__fifo__macros.html#ga8fff7a9e687a877b7eb9c7f7a6daf8ea", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL3", "group__group__autanalog__fifo__macros.html#gae61d4a93132fbd226f61ea67cf9f6b26", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL4", "group__group__autanalog__fifo__macros.html#gae0ccd02f3413054e5903f5562d0ee6be", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL5", "group__group__autanalog__fifo__macros.html#ga8fcedcb75770aded915ff9b124d68e2f", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL6", "group__group__autanalog__fifo__macros.html#gadeed67e5cf27209a83c3482c7cc49dd5", null ],
+    [ "CY_AUTANALOG_INT_FIFO_LEVEL7", "group__group__autanalog__fifo__macros.html#gafad1d01ffc6c6c0fc4737525f6dcf657", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW0", "group__group__autanalog__fifo__macros.html#gaf4e3e498d65fdbb806792d37355d59b6", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW1", "group__group__autanalog__fifo__macros.html#gad91bc4a861441f58bf662acbe7c17694", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW2", "group__group__autanalog__fifo__macros.html#ga4c2aa6c53ae5603d905e57052d35c65b", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW3", "group__group__autanalog__fifo__macros.html#ga7e270edd0b4798325b5f9df714f1dc21", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW4", "group__group__autanalog__fifo__macros.html#ga65fdc27063606db2fa87588a679151f2", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW5", "group__group__autanalog__fifo__macros.html#ga04757936c5436e0f19c7cb440925e9b0", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW6", "group__group__autanalog__fifo__macros.html#ga1b23e5d2d2ea299108933cfe7b766f83", null ],
+    [ "CY_AUTANALOG_INT_FIFO_UNDERFLOW7", "group__group__autanalog__fifo__macros.html#ga9f75fd6789a21241492d72c85abc0b13", null ]
+];

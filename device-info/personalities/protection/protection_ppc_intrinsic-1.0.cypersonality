@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<PersonalityTemplate id='protection_ppc_intrinsic' name='PPC_intrinsic' intrinsic='true' version='1.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v14'>
+  <Constants>
+    <Const id='MAX_PERI_INSTANCES' value='4' />
+    <Const id="PPC_REGIONS" value='500'/>
+    <Const id="PPC_LOCATIONS" value='170'/>
+    <Const id='PCC_MACRO_PREFIX' value='CYCFG_PPC_SECURED_' />
+  </Constants>
+
+  <FittingRules>
+    <MappingRules>
+      <!-- Use a virtual resource to ensure there is only one instance of this -->
+      <IpBlock name='VirtualResource' />
+      <Resource name='vres\.protection\.ppc' />
+      <!--
+      <IpBlock name="mxsperi" />
+      <Resource name="peri" />
+      -->
+      <OperatingMode value="MCU" />
+    </MappingRules>
+  </FittingRules>
+
+  <Variables>
+    <Variable id='protection_mode' value='`${getOrDefault(getExposedMember("vres[0].protection[0]", "protectionLevel"), "")}`' />
+    <Variable id='is_pp_enabled' value='`${protection_mode eq "SECURE_PERIPHERALS" || protection_mode eq "SECURE_CUSTOM"}`' />
+    <Variable id='is_ppc_disabled$idx' value='`${hasBlock("peri[$idx]") &amp;&amp; !isBlockUsed("peri[$idx]")}`' repeatCount='$MAX_PERI_INSTANCES' />
+    <Variable id='need_default' value='`${!is_pp_enabled || is_ppc_disabled0 || is_ppc_disabled1 || is_ppc_disabled2 || is_ppc_disabled3}`' />
+    <Variable id='is_ppc_enabled' value='`${isBlockUsed("peri[0]") || isBlockUsed("peri[1]") || isBlockUsed("peri[2]") || isBlockUsed("peri[3]")}`' />
+
+    <!-- Create data for default region structs -->
+    <Variable id='regCnt' value='`${getOrDefault(getCustomDataCount("/PPC_REGISTER"), 0)}`'/>
+    <Variable id='ppc_reg$idx' value='`${getOrDefault(getCustomDataKeys("/PPC_REGISTER", $idx), "")}`' repeatCount='$PPC_REGIONS'/>
+    <Variable id='ppc_reg$idx_enum_name' value='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . ppc_reg$idx . "\"]/@enum_name"), "PROT_" . ppc_reg$idx)}`' repeatCount='$PPC_REGIONS'/>
+    <Variable id='ppc_reg$idx_locationKey' value='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . ppc_reg$idx . "\"]/@locationKey"), "")}`' repeatCount='$PPC_REGIONS'/>
+    <Variable id='ppc_reg$idx_peri' value='`${getOrDefault(getCustomData("/PPC_LOCATION[@key=\"" . ppc_reg$idx_locationKey . "\"]/@peri"), "")}`' repeatCount='$PPC_REGIONS'/>
+
+    <!-- Workaround to filter out unwanted PPC regions. Used to compare later in code-gen -->
+     <Variable id='ppc_filter' value='PROT_PERI1_PPC1_PPC_PPC_SECURE;PROT_PERI1_PPC1_PPC_PPC_NONSECURE;PROT_PERI0_GR0_GROUP;PROT_PERI0_GR0_BOOT;PROT_PERI0_GR1_BOOT;PROT_PERI0_GR2_BOOT;PROT_PERI0_GR3_BOOT;PROT_PERI0_GR4_BOOT;PROT_PERI0_GR5_BOOT;PROT_PERI0_RRAMC0_RRAM_EXTRA_AREA_RRAMC_PROTECTED;PROT_PERI0_RRAMC0_RRAM_EXTRA_AREA_RRAMC_REPAIR;PROT_PERI0_RRAMC0_RRAM_EXTRA_AREA_RRAMC_EXTRA;PROT_PERI0_RRAMC0_RRAMC0_RRAMC_M0SEC;PROT_PERI0_RRAMC0_MPC0_PPC_MPC_MAIN;PROT_PERI0_RRAMC0_MPC1_PPC_MPC_MAIN;PROT_PERI0_RRAMC0_MPC0_PPC_MPC_PC;PROT_PERI0_RRAMC0_MPC1_PPC_MPC_PC;PROT_PERI0_RRAMC0_MPC0_PPC_MPC_ROT;PROT_PERI0_RRAMC0_MPC1_PPC_MPC_ROT;PROT_PERI0_RRAMC0_RRAM_SFR_RRAMC_SFR_FPGA;PROT_PERI0_RRAMC0_RRAM_SFR_RRAMC_SFR_NONUSER;PROT_PERI0_RAMC0_BOOT;PROT_PERI0_RAMC1_BOOT;PROT_PERI0_MXCM33_BOOT_PC0;PROT_PERI0_MXCM33_BOOT_PC1;PROT_PERI0_MXCM33_BOOT_PC3;PROT_PERI0_MXCM33_BOOT;PROT_PERI0_CPUSS_AP;PROT_PERI0_MS0_MAIN;PROT_PERI0_MS4_MAIN;PROT_PERI0_MS5_MAIN;PROT_PERI0_MS6_MAIN;PROT_PERI0_MS7_MAIN;PROT_PERI0_MS8_MAIN;PROT_PERI0_MS9_MAIN;PROT_PERI0_MS10_MAIN;PROT_PERI0_MS11_MAIN;PROT_PERI0_MS29_MAIN;PROT_PERI0_MS31_MAIN;PROT_PERI0_MS_PC31_PRIV;PROT_PERI0_CPUSS_SL_CTL_GROUP;PROT_PERI0_SRSS_SECURE2;PROT_PERI0_M0SECCPUSS_STATUS_MAIN;PROT_PERI0_M0SECCPUSS_STATUS_PC1;PROT_PERI0_PPC0_PPC_PPC_SECURE;PROT_PERI0_PPC0_PPC_PPC_NONSECURE;PROT_PERI0_SRSS_SECURE'/>
+  </Variables>
+
+
+  <DRCs>
+  </DRCs>
+
+  <ConfigFirmware>
+    <ConfigInclude value='cy_ppc.h' />
+
+    <ConfigDefine name='PPC_PC_MASK_ALL_ACCESS' value='0xFFU' public='true' include='`${need_default}`' />
+
+    <ConfigStruct name='cycfg_unused_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default}`'>
+      <Member name='pcMask' value='0xFF' />
+      <Member name='secAttribute' value='CY_PPC_NON_SECURE' />
+      <Member name='privAttribute' value='CY_PPC_NONPRIV' />
+    </ConfigStruct>
+
+    <ConfigArray name='cycfg_unused_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
+      <ArrayElement value='`${ppc_reg$idx_enum_name}`' include='`${($idx &lt; regCnt) &amp;&amp; ($idx{periInst} == ppc_reg$idx_peri) &amp;&amp; (splitFind(ppc_filter, ppc_reg$idx_enum_name) == -1)}`' repeatCount='$PPC_REGIONS'/>
+    </ConfigArray>
+
+    <ConfigVariable name='cycfg_unused_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_unused_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' repeatCount='$MAX_PERI_INSTANCES' />
+
+    <!-- Function if PPC configuration is not enabled -->
+    <ConfigFunction signature='cy_rslt_t Cy_PPC_UnsecureInit(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default}`' replicateForAliases='false'>
+      <Line value='cy_rslt_t ret = Cy_Ppc_InitPpc(base, CY_PPC_BUS_ERR);'/>
+      <Line value=''/>
+      <Line value='for (size_t index = 0; ret == CY_PPC_SUCCESS &amp;&amp; index &lt; count; index++)'/>
+      <Line value='{'/>
+      <Line value='    ret = Cy_Ppc_ConfigAttrib(base, regions[index], &amp;cycfg_unused_ppc_cfg);'/>
+      <Line value='    if (ret == CY_RSLT_SUCCESS)'/>
+      <Line value='        ret = Cy_Ppc_SetPcMask(base, regions[index], PPC_PC_MASK_ALL_ACCESS);'/>
+      <Line value='}'/>
+      <Line value='return ret;'/>
+    </ConfigFunction>
+
+    <ConfigFunction signature='cy_rslt_t Cy_PPC$idx_Init(void)' public='true' repeatCount='$MAX_PERI_INSTANCES' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' replicateForAliases='false'>
+      <Line value='return Cy_PPC_UnsecureInit(PPC$idx, cycfg_unused_ppc_$idx_regions, cycfg_unused_ppc_$idx_regions_count);'/>
+    </ConfigFunction>
+
+    <!-- Function if PPC configuration is enabled -->
+    <ConfigFunction signature='cy_rslt_t Cy_PPC_Init(PPC_Type* base, const cy_stc_ppc_cfg_t cfg[], uint32_t count, cy_en_ppc_resp_cfg_t response)' public='true' include='`${is_ppc_enabled}`' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' >
+      <Line value='cy_rslt_t ret = Cy_Ppc_InitPpc(base, response);'/>
+      <Line value=''/>
+      <Line value='for (size_t domain_idx = 0; ret == CY_PPC_SUCCESS &amp;&amp; domain_idx &lt; count; domain_idx++)'/>
+      <Line value='{'/>
+      <Line value='    const cy_stc_ppc_cfg_t* ppc_config = &amp;cfg[domain_idx];'/>
+      <Line value='    const cy_en_prot_region_t* regions = ppc_config->regions;'/>
+      <Line value='    const cy_stc_ppc_attribute_t* attributes = ppc_config->cfg;'/>
+      <Line value='    for (size_t region_idx = 0; region_idx &lt; ppc_config->region_count; region_idx++)'/>
+      <Line value='    {'/>
+      <Line value='        ret = Cy_Ppc_ConfigAttrib(base, regions[region_idx], attributes);'/>
+      <Line value='        if (ret == CY_RSLT_SUCCESS)'/>
+      <Line value='            ret = Cy_Ppc_SetPcMask(base, regions[region_idx], attributes->pcMask);'/>
+      <Line value='    }'/>
+      <Line value='}'/>
+      <Line value='return ret;'/>
+    </ConfigFunction>
+
+    <ConfigFile name='cycfg_ppc.h' include='true' >
+      <Line value='/* This file is automatically generated. */'/>
+      <Line value='#ifndef CYCFG_PPC_H'/>
+      <Line value='#define CYCFG_PPC_H'/>
+      <Line value=''/>
+      <Line value='#define $PCC_MACRO_PREFIX`${ppc_reg$idx}` `${getOrDefault((getExposedMember(getBlockFromInstance(getExposedMember("peri[" . getCustomData("/PPC_LOCATION[@key=\"" . getCustomData("/PPC_REGISTER[@key=\"" . ppc_reg$idx . "\"]/@locationKey") . "\"]/@peri") . "]", "reg$idx")), "cmseAttribute") eq "SECURE" ? "1U" : "0U"), "0U")}`' include='`${$idx &lt; getCustomDataCount("/PPC_REGISTER")}`' repeatCount='$PPC_REGIONS' />
+      <Line value=''/>
+      <Line value='#endif /* #ifndef CYCFG_PPC_H */' />
+    </ConfigFile>
+  </ConfigFirmware>
+
+</PersonalityTemplate>

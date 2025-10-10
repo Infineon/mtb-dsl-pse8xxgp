@@ -35,7 +35,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__lpcomp.html' linkText='Open LPComp Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__lpcomp.html' linkText='Open LPComp Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamBool id='debug' name='debug' group='Internal' default='false' visible='false' editable='false' desc='' />
     <ParamString id='IpBlockName' name='IpBlockName' group='Internal' default='`${getIpBlockName()}`' visible='`${debug}`' editable='false' desc='' />

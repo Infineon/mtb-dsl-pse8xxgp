@@ -35,7 +35,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__rtc.html' linkText='Open RTC Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__rtc.html' linkText='Open RTC Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!--General-->
     <ParamChoice id='format' name='Date Format' group='General' default='0' visible='true' editable='true' desc='Stores the Date Format to use for display. Can choose from the following values: MM/DD/YYYY, DD/MM/YYYY, YYYY/MM/DD.' >

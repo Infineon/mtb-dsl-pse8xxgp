@@ -10,9 +10,7 @@ var searchData=
   ['rtc_20_28real_20time_20clock_29_7',['RTC (Real Time Clock)',['../group__group__hal__impl__rtc.html',1,'']]],
   ['rtc_20_28real_2dtime_20clock_29_8',['RTC (Real-Time Clock)',['../group__group__hal__rtc.html',1,'']]],
   ['rtc_20hal_20results_9',['RTC HAL Results',['../group__group__hal__results__rtc.html',1,'']]],
-  ['rtc_20interrupt_20sources_10',['RTC Interrupt sources',['../group__group__rtc__macros__interrupts.html',1,'']]],
-  ['rtc_20srf_20_20_20_20_20_20_28rtc_20secure_20request_20framework_29_11',['RTC SRF      (RTC Secure Request Framework)',['../group__group__rtc__srf.html',1,'']]],
-  ['rtc_20status_20definitions_12',['RTC Status definitions',['../group__group__rtc__busy__status.html',1,'']]],
-  ['rx_20interrupt_20masks_13',['RX Interrupt masks',['../group__group__canfd__rx__interrupt__masks.html',1,'']]],
-  ['rx_20interrupt_20statuses_14',['RX Interrupt Statuses',['../group__group__scb__common__macros__rx__intr.html',1,'']]]
+  ['rtc_20srf_20_20_20_20_20_20_28rtc_20secure_20request_20framework_29_10',['RTC SRF      (RTC Secure Request Framework)',['../group__group__rtc__srf.html',1,'']]],
+  ['rx_20interrupt_20masks_11',['RX Interrupt masks',['../group__group__canfd__rx__interrupt__masks.html',1,'']]],
+  ['rx_20interrupt_20statuses_12',['RX Interrupt Statuses',['../group__group__scb__common__macros__rx__intr.html',1,'']]]
 ];

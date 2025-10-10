@@ -40,7 +40,7 @@
   </ExposedMembers>
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__smif.html' linkText='Open SMIF Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__smif.html' linkText='Open SMIF Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- Differentiation variable for SMIFv4 and SMIFv5 values -->
     <ParamBool id='isSmifV4' name='isSmifV4' group='' default='`${("4" eq getVersion())}`' visible='false' editable='false' desc='True if the IP version is SMIFv4.' />

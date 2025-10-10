@@ -35,8 +35,8 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id="mac_api_doc" name="MAC API Help" group="Documentation" default="file:///`${cy_libs_path()}`/docs/pdl_api_reference_manual/html/group__group__ethif.html" linkText="Open ETH_MAC Driver Documentation" visible="true" desc="Opens the Peripheral Library Documentation." />
-    <ParamDoc id="phy_api_doc" name="PHY API Help" group="Documentation" default="file:///`${cy_libs_path()}`/docs/pdl_api_reference_manual/html/group__group__ephy.html" linkText="Open ETH_PHY Driver Documentation" visible="true" desc="Opens the Peripheral Library Documentation." />
+    <ParamDoc id="mac_api_doc" name="MAC API Help" group="Documentation" default="file:///`${cy_libs_path()}`/docs/html/group__group__ethif.html" linkText="Open ETH_MAC Driver Documentation" visible="true" desc="Opens the Peripheral Library Documentation." />
+    <ParamDoc id="phy_api_doc" name="PHY API Help" group="Documentation" default="file:///`${cy_libs_path()}`/docs/html/group__group__ephy.html" linkText="Open ETH_PHY Driver Documentation" visible="true" desc="Opens the Peripheral Library Documentation." />
 
     <!-- eth instance name -->
     <ParamString id="Instancename" name="selected Instance name" group="Test" default="`${INST_NAME}`" visible="false" editable="false" desc="" />

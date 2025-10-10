@@ -284,7 +284,7 @@ Snippet 3: DMA transfers with D-cache</h2>
 </li>
 </ul>
 <p >The following snippet initializes a DMA channel and uses it to transfer a single block from one cacheable memory to another cacheable memory. Cleaning D-cache of DMA descriptor is done by calling <a class="el" href="group__group__hal__dma.html#ga4d1c0aca2d52aac18118746d0aeb4302">mtb_hal_dma_set_src_addr</a>, <a class="el" href="group__group__hal__dma.html#ga99b72de5b32c77a95180b20285ee6d2c">mtb_hal_dma_set_dst_addr</a>, <a class="el" href="group__group__hal__dma.html#ga5de1d8ee122ed59ce7d8d67a43f8f703">mtb_hal_dma_set_length</a> and <a class="el" href="group__group__hal__dma.html#gaf0c27a248f3d97a8bf7f2f56a486dbe7">mtb_hal_dma_setup</a>. Cleaning D-cache of source's buffer and Invalidating D-cahe of destination's buffer should be done explicitly.</p>
-<p >Refer to <a class="el" href="md_deploy_doxygen_hal_input_dcache.html#DCACHE_Management">DCACHE_Management</a> for more information.</p>
+<p >Refer to <a class="el" href="dcacheManagement.html#DCACHE_Management">DCACHE_Management</a> for more information.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define BUF_SIZE (32) </span><span class="comment">/* multiple of cache line size */</span><span class="preprocessor"></span></div>
 <div class="line">CY_ALIGN(__SCB_DCACHE_LINE_SIZE) uint8_t tx_buffer[BUF_SIZE];</div>
 <div class="line">CY_ALIGN(__SCB_DCACHE_LINE_SIZE) uint8_t rx_buffer[BUF_SIZE]; <span class="comment">/* Memory address should be</span></div>

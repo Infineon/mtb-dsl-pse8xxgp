@@ -2231,6 +2231,12 @@ cy_en_smif_status_t Cy_SMIF_MemEraseChip(SMIF_Type *base, cy_stc_smif_mem_config
 * Cy_SMIF_TransmitCommand() API works in a blocking mode. In the dual quad mode
 * this API should be called for each memory.
 *
+* \note While there is no standardized opcode to power down,
+* many devices use 0xB9 (CY_SMIF_POWER_DOWN_CMD) and this function
+* uses that command internally. If a memory device uses a different opcode
+* for power-down mode, this function cannot support that device
+* and users must implement a custom solution using \ref Cy_SMIF_TransmitCommand
+*
 * \param base
 * Holds the base address of the SMIF block registers.
 *
@@ -2278,6 +2284,12 @@ cy_en_smif_status_t Cy_SMIF_MemCmdPowerDown(SMIF_Type *base,
 * \note This function uses the low-level Cy_SMIF_TransmitCommand() API.
 * Cy_SMIF_TransmitCommand() API works in a blocking mode. In the dual quad mode
 * this API should be called for each memory.
+*
+* \note While there is no standardized opcode to release power down,
+* many devices use 0xAB (CY_SMIF_RELEASE_POWER_DOWN_CMD) and this function
+* uses that command internally. If a memory device uses a different opcode
+* for releasing from power-down mode, this function cannot support that device
+* and users must implement a custom solution using \ref Cy_SMIF_TransmitCommand
 *
 * \param base
 * Holds the base address of the SMIF block registers.

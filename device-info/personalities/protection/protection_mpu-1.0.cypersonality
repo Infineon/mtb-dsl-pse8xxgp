@@ -10,7 +10,7 @@
   </FittingRules>
 
   <Parameters>
-    <ParamDoc id='doc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/lpa_api_reference_manual/html/index.html#MPU_personality' linkText='Open MPU Documentation' visible='true' desc='Open MPU Documentation' />
+    <ParamDoc id='doc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/page_prot_person.html#MPU_personality' linkText='Open MPU Documentation' visible='true' desc='Open MPU Documentation' />
 
     <ParamRange id='base_addr' name='Start Address' group='' default='0x00000000' min='0' max='4294967264' resolution='32' visible='true' desc='Start address of MPU region region .' />
     <ParamRange id='size' name='Size (bytes)' group='' default='`${toHex(1048576, 8)}`' min='31' max='4294967294' resolution='32' visible='true' desc='Size of MPU region region .' />

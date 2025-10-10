@@ -171,7 +171,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This API expects the trims to be calculated outside this API scope, so refer and use the ECO calculators excel sheet for the platform to obtain the trims.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This API expects the trims to be calculated outside this API scope, so refer and use the ECO calculators excel sheet for the platform to obtain the trims.</dd>
+<dd>
+This API is not Secure Aware. It uses the PPC regions SRSS_SECURE and SRSS_MAIN. The SRSS_SECURE region is always secured. Thus, this API is only safe to call if SRSS_MAIN is also configured as secure.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>Error / status code: <br  />
 CY_SYSCLK_SUCCESS - ECO configuration completed successfully <br  />
 CY_SYSCLK_BAD_PARAM - One or more invalid parameters <br  />
@@ -231,8 +233,8 @@ Take into account the possible platform specific clkHf (and further clocking cha
 <div class="line">    <span class="comment">/* Set the path muxes and configure the downstream clocks. For example,</span></div>
 <div class="line"><span class="comment">       the ECO can source the FLL through path 0 clock or it can source the PLL</span></div>
 <div class="line"><span class="comment">       through path 1 clock. */</span></div>
-<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_ga392db1f8d8504409017a3fedb95b8ee2"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#ga392db1f8d8504409017a3fedb95b8ee2">Cy_SysClk_EcoGetFrequency</a></div><div class="ttdeci">uint32_t Cy_SysClk_EcoGetFrequency(void)</div><div class="ttdoc">Returns the frequency of the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4138</div></div>
-<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_gaadd2986e0b77ab0a714e4127ef1693f6"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#gaadd2986e0b77ab0a714e4127ef1693f6">Cy_SysClk_EcoEnable</a></div><div class="ttdeci">cy_en_sysclk_status_t Cy_SysClk_EcoEnable(uint32_t timeoutus)</div><div class="ttdoc">Enables the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4100</div></div>
+<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_ga392db1f8d8504409017a3fedb95b8ee2"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#ga392db1f8d8504409017a3fedb95b8ee2">Cy_SysClk_EcoGetFrequency</a></div><div class="ttdeci">uint32_t Cy_SysClk_EcoGetFrequency(void)</div><div class="ttdoc">Returns the frequency of the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4264</div></div>
+<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_gaadd2986e0b77ab0a714e4127ef1693f6"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#gaadd2986e0b77ab0a714e4127ef1693f6">Cy_SysClk_EcoEnable</a></div><div class="ttdeci">cy_en_sysclk_status_t Cy_SysClk_EcoEnable(uint32_t timeoutus)</div><div class="ttdoc">Enables the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4226</div></div>
 <div class="ttc" id="agroup__group__sysclk__returns_html_ggad6699a184e2e3c01433251b0981558f3a1563f761f963757b339ff05eb5a690ec"><div class="ttname"><a href="group__group__sysclk__returns.html#ggad6699a184e2e3c01433251b0981558f3a1563f761f963757b339ff05eb5a690ec">CY_SYSCLK_SUCCESS</a></div><div class="ttdeci">@ CY_SYSCLK_SUCCESS</div><div class="ttdoc">Command completed with no errors.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:497</div></div>
 </div><!-- fragment --> </dd></dl>
 
@@ -307,9 +309,9 @@ Take into account the possible platform specific clkHf (and further clocking cha
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Disable the ECO */</span></div>
 <div class="line">    <a class="code hl_function" href="group__group__sysclk__eco__funcs.html#gab97a44bef89cdc85e5bcdc80098c1cef">Cy_SysClk_EcoDisable</a>();</div>
-<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_gab97a44bef89cdc85e5bcdc80098c1cef"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#gab97a44bef89cdc85e5bcdc80098c1cef">Cy_SysClk_EcoDisable</a></div><div class="ttdeci">void Cy_SysClk_EcoDisable(void)</div><div class="ttdoc">Disables the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4077</div></div>
-<div class="ttc" id="agroup__group__sysclk__path__src__enums_html_gga8ddaf9023a02dee0d1f9a5629d6ccfe6a01c7cbab413a99daa41d2fb7a0340955"><div class="ttname"><a href="group__group__sysclk__path__src__enums.html#gga8ddaf9023a02dee0d1f9a5629d6ccfe6a01c7cbab413a99daa41d2fb7a0340955">CY_SYSCLK_CLKPATH_IN_IMO</a></div><div class="ttdeci">@ CY_SYSCLK_CLKPATH_IN_IMO</div><div class="ttdoc">Select the IMO as the output of the path mux.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:814</div></div>
-<div class="ttc" id="agroup__group__sysclk__path__src__funcs_html_ga517f603266062d0013947ea950ed5b60"><div class="ttname"><a href="group__group__sysclk__path__src__funcs.html#ga517f603266062d0013947ea950ed5b60">Cy_SysClk_ClkPathSetSource</a></div><div class="ttdeci">cy_en_sysclk_status_t Cy_SysClk_ClkPathSetSource(uint32_t clkPath, cy_en_clkpath_in_sources_t source)</div><div class="ttdoc">Configures the source for the specified clock path.</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4567</div></div>
+<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_gab97a44bef89cdc85e5bcdc80098c1cef"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#gab97a44bef89cdc85e5bcdc80098c1cef">Cy_SysClk_EcoDisable</a></div><div class="ttdeci">void Cy_SysClk_EcoDisable(void)</div><div class="ttdoc">Disables the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4208</div></div>
+<div class="ttc" id="agroup__group__sysclk__path__src__enums_html_gga8ddaf9023a02dee0d1f9a5629d6ccfe6a01c7cbab413a99daa41d2fb7a0340955"><div class="ttname"><a href="group__group__sysclk__path__src__enums.html#gga8ddaf9023a02dee0d1f9a5629d6ccfe6a01c7cbab413a99daa41d2fb7a0340955">CY_SYSCLK_CLKPATH_IN_IMO</a></div><div class="ttdeci">@ CY_SYSCLK_CLKPATH_IN_IMO</div><div class="ttdoc">Select the IMO as the output of the path mux.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:828</div></div>
+<div class="ttc" id="agroup__group__sysclk__path__src__funcs_html_ga517f603266062d0013947ea950ed5b60"><div class="ttname"><a href="group__group__sysclk__path__src__funcs.html#ga517f603266062d0013947ea950ed5b60">Cy_SysClk_ClkPathSetSource</a></div><div class="ttdeci">cy_en_sysclk_status_t Cy_SysClk_ClkPathSetSource(uint32_t clkPath, cy_en_clkpath_in_sources_t source)</div><div class="ttdoc">Configures the source for the specified clock path.</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4693</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -331,9 +333,10 @@ Take into account the possible platform specific clkHf (and further clocking cha
 </div><div class="memdoc">
 
 <p>Reports the current status of the external crystal oscillator (ECO). </p>
-<dl class="section return"><dt>Returns</dt><dd>CY_SYSCLK_ECOSTAT_AMPLITUDE = ECO does not have sufficient amplitude <br  />
-CY_SYSCLK_ECOSTAT_INACCURATE = ECO has sufficient amplitude but may not be meeting accuracy and duty cycle specifications <br  />
-CY_SYSCLK_ECOSTAT_STABLE = ECO has fully stabilized</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>CY_SYSCLK_ECOSTAT_UNUSABLE = ECO does not have sufficient amplitude <br  />
+CY_SYSCLK_ECOSTAT_OK = ECO has sufficient amplitude but may not be meeting accuracy and duty cycle specifications <br  />
+CY_SYSCLK_ECOSTAT_READY = ECO has sufficient time to stabilize it's power <br  />
+CY_SYSCLK_ECOSTAT_OK_AND_READY = ECO has fully stabilized</dd></dl>
 <dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line">    <span class="comment">/* Scenario: Query the status of the ECO */</span></div>
 <div class="line"> </div>
 <div class="line">    uint32_t ecoStatus = <a class="code hl_function" href="group__group__sysclk__eco__funcs.html#ga55bbf5f409d57259aff005b29be026e0">Cy_SysClk_EcoGetStatus</a>();</div>
@@ -341,25 +344,29 @@ CY_SYSCLK_ECOSTAT_STABLE = ECO has fully stabilized</dd></dl>
 <div class="line">    <span class="comment">/* Perform action based on the ECO status */</span></div>
 <div class="line">    <span class="keywordflow">switch</span>(ecoStatus)</div>
 <div class="line">    {</div>
-<div class="line">        <span class="keywordflow">case</span> <a class="code hl_define" href="group__group__sysclk__ecostatus.html#ga1eb088e2bce67f0b1c8e8956d12ee6d9">CY_SYSCLK_ECOSTAT_AMPLITUDE</a>:</div>
+<div class="line">        <span class="keywordflow">case</span> <a class="code hl_define" href="group__group__sysclk__ecostatus.html#ga21cf6465aa61cd6f94e75dd38cd7b088">CY_SYSCLK_ECOSTAT_UNUSABLE</a>:</div>
 <div class="line">            <span class="comment">/* Amplitude is not sufficient. Try waiting longer before</span></div>
 <div class="line"><span class="comment">               attempting to reconfigure the ECO */</span></div>
 <div class="line">        <span class="keywordflow">break</span>;</div>
-<div class="line">        <span class="keywordflow">case</span> <a class="code hl_define" href="group__group__sysclk__ecostatus.html#ga9890a5835f8dea7ae3596ea242911ae1">CY_SYSCLK_ECOSTAT_INACCURATE</a>:</div>
+<div class="line">        <span class="keywordflow">case</span> <a class="code hl_define" href="group__group__sysclk__ecostatus.html#ga9b82dee248343020f09615c8c54b9d42">CY_SYSCLK_ECOSTAT_OK</a>:</div>
 <div class="line">            <span class="comment">/* Amplitude is correct but the ECO is not yet stable. Try</span></div>
 <div class="line"><span class="comment">               waiting longer before attempting to reconfigure the ECO */</span></div>
 <div class="line">        <span class="keywordflow">break</span>;</div>
-<div class="line">        <span class="keywordflow">case</span> <a class="code hl_define" href="group__group__sysclk__ecostatus.html#ga1fbb771899bde3d2a8914bdfab9d47a0">CY_SYSCLK_ECOSTAT_STABLE</a>:</div>
+<div class="line">        <span class="keywordflow">case</span> <a class="code hl_define" href="group__group__sysclk__ecostatus.html#gaba7165c1e910456c84318a3cb8bf226b">CY_SYSCLK_ECOSTAT_READY</a>:</div>
+<div class="line">            <span class="comment">/* Power is correct and stable */</span></div>
+<div class="line">        <span class="keywordflow">break</span>;</div>
+<div class="line">        <span class="keywordflow">case</span> <a class="code hl_define" href="group__group__sysclk__ecostatus.html#gaf579a1842eaf186b3c3b8650df733867">CY_SYSCLK_ECOSTAT_OK_AND_READY</a>:</div>
 <div class="line">            <span class="comment">/* ECO is stable and ready for use */</span></div>
 <div class="line">        <span class="keywordflow">break</span>;</div>
 <div class="line">        <span class="keywordflow">default</span>:</div>
 <div class="line">            <span class="comment">/* Invalid state. Perform error handling. */</span></div>
 <div class="line">        <span class="keywordflow">break</span>;</div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_ga55bbf5f409d57259aff005b29be026e0"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#ga55bbf5f409d57259aff005b29be026e0">Cy_SysClk_EcoGetStatus</a></div><div class="ttdeci">uint32_t Cy_SysClk_EcoGetStatus(void)</div><div class="ttdoc">Reports the current status of the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4085</div></div>
-<div class="ttc" id="agroup__group__sysclk__ecostatus_html_ga1eb088e2bce67f0b1c8e8956d12ee6d9"><div class="ttname"><a href="group__group__sysclk__ecostatus.html#ga1eb088e2bce67f0b1c8e8956d12ee6d9">CY_SYSCLK_ECOSTAT_AMPLITUDE</a></div><div class="ttdeci">#define CY_SYSCLK_ECOSTAT_AMPLITUDE</div><div class="ttdoc">ECO does not have sufficient amplitude.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:561</div></div>
-<div class="ttc" id="agroup__group__sysclk__ecostatus_html_ga1fbb771899bde3d2a8914bdfab9d47a0"><div class="ttname"><a href="group__group__sysclk__ecostatus.html#ga1fbb771899bde3d2a8914bdfab9d47a0">CY_SYSCLK_ECOSTAT_STABLE</a></div><div class="ttdeci">#define CY_SYSCLK_ECOSTAT_STABLE</div><div class="ttdoc">ECO has fully stabilized.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:563</div></div>
-<div class="ttc" id="agroup__group__sysclk__ecostatus_html_ga9890a5835f8dea7ae3596ea242911ae1"><div class="ttname"><a href="group__group__sysclk__ecostatus.html#ga9890a5835f8dea7ae3596ea242911ae1">CY_SYSCLK_ECOSTAT_INACCURATE</a></div><div class="ttdeci">#define CY_SYSCLK_ECOSTAT_INACCURATE</div><div class="ttdoc">ECO may not be meeting accuracy and duty cycle specs.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:562</div></div>
+<div class="ttc" id="agroup__group__sysclk__eco__funcs_html_ga55bbf5f409d57259aff005b29be026e0"><div class="ttname"><a href="group__group__sysclk__eco__funcs.html#ga55bbf5f409d57259aff005b29be026e0">Cy_SysClk_EcoGetStatus</a></div><div class="ttdeci">uint32_t Cy_SysClk_EcoGetStatus(void)</div><div class="ttdoc">Reports the current status of the external crystal oscillator (ECO).</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4216</div></div>
+<div class="ttc" id="agroup__group__sysclk__ecostatus_html_ga21cf6465aa61cd6f94e75dd38cd7b088"><div class="ttname"><a href="group__group__sysclk__ecostatus.html#ga21cf6465aa61cd6f94e75dd38cd7b088">CY_SYSCLK_ECOSTAT_UNUSABLE</a></div><div class="ttdeci">#define CY_SYSCLK_ECOSTAT_UNUSABLE</div><div class="ttdoc">ECO does not have sufficient amplitude and not stable power.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:561</div></div>
+<div class="ttc" id="agroup__group__sysclk__ecostatus_html_ga9b82dee248343020f09615c8c54b9d42"><div class="ttname"><a href="group__group__sysclk__ecostatus.html#ga9b82dee248343020f09615c8c54b9d42">CY_SYSCLK_ECOSTAT_OK</a></div><div class="ttdeci">#define CY_SYSCLK_ECOSTAT_OK</div><div class="ttdoc">ECO has sufficient amplitude but may not be meeting accuracy and duty cycle specifications.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:562</div></div>
+<div class="ttc" id="agroup__group__sysclk__ecostatus_html_gaba7165c1e910456c84318a3cb8bf226b"><div class="ttname"><a href="group__group__sysclk__ecostatus.html#gaba7165c1e910456c84318a3cb8bf226b">CY_SYSCLK_ECOSTAT_READY</a></div><div class="ttdeci">#define CY_SYSCLK_ECOSTAT_READY</div><div class="ttdoc">ECO has sufficient time to stabilize it's power.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:563</div></div>
+<div class="ttc" id="agroup__group__sysclk__ecostatus_html_gaf579a1842eaf186b3c3b8650df733867"><div class="ttname"><a href="group__group__sysclk__ecostatus.html#gaf579a1842eaf186b3c3b8650df733867">CY_SYSCLK_ECOSTAT_OK_AND_READY</a></div><div class="ttdeci">#define CY_SYSCLK_ECOSTAT_OK_AND_READY</div><div class="ttdoc">ECO has fully stabilized.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:564</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>

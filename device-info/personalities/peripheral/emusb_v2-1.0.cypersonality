@@ -42,6 +42,10 @@
     <!-- Debug mode selection -->
     <ParamBool id="debug" name="debug" group="Internal" default="false" visible="false" editable="false" desc="Enable/Disable debug mode" />
 
+    <!-- Documentation -->
+    <ParamDoc id='emUsbDocHost' name='Configuration Help' group='Overview' default='`${"https://infineon.github.io/emusb-host/html/index.html"}`' linkText='Open emUSB-Host Documentation' visible='true' desc='Open the USB Documentation' />
+    <ParamDoc id='emUsbDocDevice' name='Configuration Help' group='Overview' default='`${"https://infineon.github.io/emusb-device/html/index.html"}`' linkText='Open emUSB-Device Documentation' visible='true' desc='Open the USB Documentation' />
+
     <!-- Mode selection -->
     <ParamChoice id="mode" name="USB mode" group="General" default="Host" visible="true" editable="true" desc="Select USB Mode">
       <Entry name="Host" value="Host" visible="true" />
@@ -49,9 +53,6 @@
     </ParamChoice>
     <ParamBool id="modeIsDevice" name="modeIsDevice" group="Internal" default="`${mode eq Device}`" visible="false" editable="false" desc="USB mode is Device" />
     <ParamBool id="modeIsHost" name="modeIsHost" group="Internal" default="`${mode eq Host}`" visible="false" editable="false" desc="USB Mode is Host" />
-
-    <!-- Documentation -->
-    <ParamDoc id="emUsbDoc" name="Configuration Help" group="Overview" default="`${modeIsHost ? &quot;https://infineon.github.io/emusb-host/html/index.html&quot; : &quot;https://infineon.github.io/emusb-device/html/index.html&quot;}`" linkText="`${modeIsHost ? &quot;Open emUSB-Host Documentation&quot; : &quot;Open emUSB-Device Documentation&quot;}`" visible="true" desc="Open the USB Documentation" />
 
     <!-- Main Clock selection -->
     <ParamSignal port="mmio_clk_hf[0]" name="Main Clock" group="Connections" visible="true" desc="The clock to operate this block" canBeEmpty="true" />
@@ -91,7 +92,11 @@
     <ParamString id="phyPllFreq" name="Clock real frequency" group="Connections" default="`${phyPllHz . &quot;Hz +/-&quot; . phyPllRealAccuracy * 100 . &quot;%&quot;}`" visible="`${debug}`" editable="false" desc="Real frequency of the connected clock" />
 
     <ParamBool      id="timerEnable"        name="Enable 1ms Timer" group="Timer" desc="Set timer enabled or disabled"    default="false" visible="`${modeIsDevice}`" editable="true"  />
-    <ParamPlacement templateId="usbCounter" name="Timer Counter"    group="Timer" desc="Reserving TCPVM resource if 1ms Timer is enabled" visible="`${timerEnable}`" />
+
+    <ParamBool      templateId="usbCounter" id="timerEnable" default="`${getParamValue(&quot;mxs22emusb&quot;, &quot;timerEnable&quot;) &amp;&amp; getParamValue(&quot;mxs22emusb&quot;, &quot;modeIsDevice&quot;)}`" name="" group="" visible="false" editable="false" desc=""/>
+    <ParamPlacement templateId="usbCounter" name="Timer Counter" group="Timer" desc="Reserving TCPVM resource if 1ms Timer is enabled" visible="`${timerEnable}`" />
+    <ParamSignal    templateId="usbCounter" port="clock_counter_en[0]" name="Clock Signal" group="Timer/Timer Counter/Inputs" visible="`${timerEnable}`" desc="The clock input defines the operating frequency." canBeEmpty="`${!timerEnable}`" />
+    <ParamBool      templateId="usbCounter" id="inFlash" name="Store Config in Flash" group="Timer/Timer Counter/Advanced" default="false" visible="`${timerEnable}`" editable="`${timerEnable}`" desc="Controls whether the configuration structure is stored in flash (const, true) or SRAM (not const, false)." />
   </Parameters>
 
   <DRCs>
@@ -147,12 +152,8 @@
       <ParamString id="InterruptSource" name="InterruptSource" desc="InterruptSource" group="Interrupt Source" default="(CY_TCPWM_INT_ON_TC &amp; 0U) | (CY_TCPWM_INT_ON_CC0) | (CY_TCPWM_INT_ON_CC1 &amp; 0U)" visible="`${debug}`" editable="false" />
 
       <!-- Clock Frequency -->
-      <ParamSignal port="clock_counter_en[0]" name="Clock Signal" group="Inputs" visible="true" desc="The clock input defines the operating frequency." canBeEmpty="false" />
       <ParamString id="sourceClock" name="sourceClock" group="General" default="`${getBlockFromSignal(&quot;clock_counter_en[0]&quot;)}`" visible="`${debug}`" editable="false" desc="Source Clock Resource" />
       <ParamRange  id="tcpwmClkHz" name="tcpwmClkHz" group="General" default="`${getExposedMember(sourceClock, &quot;frequency&quot;)}`" min="0" max="400000000" resolution="1" visible="`${debug}`" editable="false" desc="TCPWM clock frequency in Hz" />
-
-      <!-- Advanced -->
-      <ParamBool id="inFlash" name="Store Config in Flash" group="Advanced" default="false" visible="true" editable="true" desc="Controls whether the configuration structure is stored in flash (const, true) or SRAM (not const, false)." />
 
       <!-- Internal -->
       <ParamString id="pclk" name="PCLK" group="Internal" default="`${getBlockFromSignal(&quot;clock_counter_en[0]&quot;)}`" visible="`${debug}`" editable="false" desc="Connected peripheral clock divider (PCLK)" />

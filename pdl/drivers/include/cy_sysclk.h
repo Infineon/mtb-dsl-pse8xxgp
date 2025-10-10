@@ -38,7 +38,7 @@
 * The clock system includes a variety of resources that can vary per device, including:
 * - Internal clock sources such as internal oscillators
 * - External clock sources such as crystal oscillators or a signal on an I/O pin
-* - Generated clocks such as an FLL, a PLL, and peripheral clocks
+* - Generated clocks such as a PLL, and peripheral clocks
 *
 * Consult the Technical Reference Manual for your device for details of the
 * clock system.
@@ -558,12 +558,20 @@ uint32_t Cy_SysClk_ExtClkGetFrequency(void);
 * \{
 * Constants used for expressing ECO status.
 */
-#define CY_SYSCLK_ECOSTAT_AMPLITUDE  0UL /**< \brief ECO does not have sufficient amplitude */
-#define CY_SYSCLK_ECOSTAT_INACCURATE 1UL /**< \brief ECO may not be meeting accuracy and duty cycle specs */
-#define CY_SYSCLK_ECOSTAT_STABLE     2UL /**< \brief ECO has fully stabilized */
+#define CY_SYSCLK_ECOSTAT_UNUSABLE       0UL /**< \brief ECO does not have sufficient amplitude and not stable power */
+#define CY_SYSCLK_ECOSTAT_OK             1UL /**< \brief ECO has sufficient amplitude but may not be meeting accuracy and duty cycle specifications */
+#define CY_SYSCLK_ECOSTAT_READY          2UL /**< \brief ECO has sufficient time to stabilize it's power */
+#define CY_SYSCLK_ECOSTAT_OK_AND_READY   3UL /**< \brief ECO has fully stabilized */
 
 
 /** \} group_sysclk_ecostatus */
+
+/** \cond internal */
+/* Kept it for Backward compatibility */
+#define CY_SYSCLK_ECOSTAT_AMPLITUDE      CY_SYSCLK_ECOSTAT_UNUSABLE
+#define CY_SYSCLK_ECOSTAT_INACCURATE     CY_SYSCLK_ECOSTAT_OK
+#define CY_SYSCLK_ECOSTAT_STABLE         CY_SYSCLK_ECOSTAT_OK_AND_READY
+/** \endcond */
 
 #if defined (CY_IP_MXS22SRSS)
 
@@ -646,6 +654,11 @@ void Cy_SysClk_EcoSetFrequency(uint32_t freq);
 * and use the ECO calculators excel sheet for the platform to obtain the
 * trims.
 *
+* \note
+* This API is not Secure Aware.  It uses the PPC regions SRSS_SECURE and
+* SRSS_MAIN. The SRSS_SECURE region is always secured.  Thus, this API is only
+* safe to call if SRSS_MAIN is also configured as secure.
+*
 * \return Error / status code: \n
 * CY_SYSCLK_SUCCESS - ECO configuration completed successfully \n
 * CY_SYSCLK_BAD_PARAM - One or more invalid parameters \n
@@ -724,9 +737,10 @@ void Cy_SysClk_EcoDisable(void);
 * Reports the current status of the external crystal oscillator (ECO).
 *
 * \return
-* CY_SYSCLK_ECOSTAT_AMPLITUDE = ECO does not have sufficient amplitude \n
-* CY_SYSCLK_ECOSTAT_INACCURATE = ECO has sufficient amplitude but may not be meeting accuracy and duty cycle specifications \n
-* CY_SYSCLK_ECOSTAT_STABLE = ECO has fully stabilized
+* CY_SYSCLK_ECOSTAT_UNUSABLE = ECO does not have sufficient amplitude \n
+* CY_SYSCLK_ECOSTAT_OK = ECO has sufficient amplitude but may not be meeting accuracy and duty cycle specifications \n
+* CY_SYSCLK_ECOSTAT_READY = ECO has sufficient time to stabilize it's power \n
+* CY_SYSCLK_ECOSTAT_OK_AND_READY = ECO has fully stabilized
 *
 * \funcusage
 * \snippet sysclk/snippet/main.c snippet_Cy_SysClk_EcoGetStatus
@@ -3092,7 +3106,6 @@ bool Cy_SysClk_IsClkHfCsvEnabled(uint32_t clkHf);
 */
 /**
 * Slave control Register Numbers
-* Used with functions \ref Cy_SysClk_ClkHfSetDivider and \ref Cy_SysClk_ClkHfGetDivider.
 */
 typedef enum
 {
@@ -3480,7 +3493,9 @@ cy_en_sysclk_status_t
 *
 * \param ipBlock specifies ip block to connect the clock divider to.
 *
-* \return The divider type and number
+* \return The divider type and number.  These are returned in one value, which can
+* be split using the CY_PERI_CLOCK_CTL_DIV_SEL_Msk and CY_PERI_CLOCK_CTL_TYPE_SEL_Msk
+* bitmasks.
 *
 *******************************************************************************/
 uint32_t Cy_SysClk_PeriPclkGetAssignedDivider(en_clk_dst_t ipBlock);

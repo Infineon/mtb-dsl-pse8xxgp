@@ -35,7 +35,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__mcwdt.html' linkText='Open MCWDT Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__mcwdt.html' linkText='Open MCWDT Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!--Clock source-->
     <ParamString id='sourceLfClk' name='Low Frequency Clock' group='Internal' default='srss[0].clock[0].lfclk[0]' visible='false' editable='false' desc='' />

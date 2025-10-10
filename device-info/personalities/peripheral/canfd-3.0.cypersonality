@@ -33,7 +33,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__canfd.html' linkText='Open CAN FD Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__canfd.html' linkText='Open CAN FD Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- Callback Functions -->
     <ParamRange id='InstCount' name='Instance Number' group='General' default='`${CAN_NR}`' min='0' max='2' resolution='1' visible='false' editable='false' desc='This parameter specifies count of total instances.' />

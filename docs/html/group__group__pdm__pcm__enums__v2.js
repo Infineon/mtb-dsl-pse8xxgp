@@ -88,5 +88,6 @@ var group__group__pdm__pcm__enums__v2 =
     [ "cy_en_pdm_pcm_status_t", "group__group__pdm__pcm__enums__v2.html#ga8ef640550e81684b9c1b7a8af1cfd355", [
       [ "CY_PDM_PCM_SUCCESS", "group__group__pdm__pcm__enums__v2.html#gga8ef640550e81684b9c1b7a8af1cfd355aa19a67e822e56e6646241c57396f86a4", null ],
       [ "CY_PDM_PCM_BAD_PARAM", "group__group__pdm__pcm__enums__v2.html#gga8ef640550e81684b9c1b7a8af1cfd355a02fbb89909bedaaeccbcec18fdf56f6c", null ]
-    ] ]
+    ] ],
+    [ "cy_en_pdm_pcm_format_t", "group__group__pdm__pcm__enums__v2.html#ga89dc0acbed8f400fcd8ff3aef7817736", null ]
 ];

@@ -12,8 +12,12 @@ The package includes:
 DeepSleep
 * make - provides build recipe make files and scripts for building and programming device applications
 
+See the [Release Notes](./RELEASE.md) for release-specific information.
+
 ## More information
 Use the following links for more information, as needed:
+* [PSOC™ Edge Overview](https://www.infineon.com/products/microcontroller/32-bit-psoc-arm-cortex/32-bit-psoc-edge-arm)
+* [Device Support Library API Reference Manual](https://infineon.github.io/mtb-dsl-pse8xxgp/html/index.html)
 * [Infineon GitHub](https://github.com/infineon)
 * [ModusToolbox™](https://www.infineon.com/design-resources/development-tools/sdk/modustoolbox-software)
 

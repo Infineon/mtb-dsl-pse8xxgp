@@ -34,7 +34,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__tcpwm__pwm.html' linkText='Open PWM (TCPWM) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__tcpwm__pwm.html' linkText='Open PWM (TCPWM) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!--General-->
     <ParamRange id='pCntWidthMax' name='pCntWidthMax' desc='pCntWidthMax' group='Internal'  default='`${pow(2, CNT.CNT_WIDTH)-1}`' min='0' max='4294967296' resolution='1' visible='false' editable='false' />

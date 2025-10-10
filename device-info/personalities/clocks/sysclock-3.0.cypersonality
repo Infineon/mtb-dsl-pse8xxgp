@@ -48,8 +48,10 @@
     <DRC type='ERROR' text='The IMO must be enabled for chip operation.' condition='`${hasBlock("srss[0].clock[0].imo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].imo[0]")}`' >
       <FixIt action='ENABLE_BLOCK' target='srss[0].clock[0].imo[0]' valid='true' />
     </DRC>
-    <DRC type='WARNING' text='Clock initialization depends on the power configuration. Enable the power personality to ensure correct initialization.' condition='`${!isBlockUsed("srss[0].power[0]")}`' location='srss[0].power[0]' />
-    <DRC type='INFO' text='The DPLL_LP might be used as a source clock for QSPI. In case when the CM33 Secure application executed from external flash the user should not reconfigure a clock tree related to the appropriate QSPI interface.' condition='`${isMXS22 &amp;&amp; (isBlockUsed("srss[0].clock[0].pll250m[0]") || isBlockUsed("srss[0].clock[0].pll250m[1]"))}`' />
+    <DRC type='WARNING' text='Clock initialization depends on the power configuration. Enable the power personality to ensure correct initialization.' condition='`${!isBlockUsed("srss[0].power[0]")}`' location='srss[0].power[0]' >
+      <FixIt action='ENABLE_BLOCK' target='srss[0].power[0]' valid='true' />
+    </DRC>
+    <DRC type='INFO' text='The DPLL_LP might be used as a source clock for QSPI. In case when the CM33 Secure application executed from external flash the user should not reconfigure a clock tree related to the appropriate QSPI interface.' condition='`${isMXS22 &amp;&amp; (isBlockUsed("srss[0].clock[0].pll250m[0]") || isBlockUsed("srss[0].clock[0].pll250m[1]"))}`' location='`${isBlockUsed("srss[0].clock[0].pll250m[0]") ? "srss[0].clock[0].pll250m[0]" : isBlockUsed("srss[0].clock[0].pll250m[1]") ? "srss[0].clock[0].pll250m[1]" : "srss[0].clock[0].pll250m[0]"}`' />
   </DRCs>
 
   <ConfigFirmware>
@@ -225,7 +227,7 @@
     </ConfigFunction>
 
     <!-- Configure Non-Secure options -->
-    <ConfigFunction signature='void init_cycfg_ns_clocks(void)' public='true' include='`${isMXS22}`'>
+    <ConfigFunction name='init_cycfg_ns_clocks' signature='void %1(void)' public='true' include='`${isMXS22}`'>
       <Line value='#if (!defined(COMPONENT_SECURE_DEVICE))' />
       <Line value='/* Update global variables used in sysclock driver */' />
       <Line value='#ifdef CY_CFG_SYSCLK_ECO_ENABLED' />
@@ -361,14 +363,14 @@
 
     <ConfigInstruction value='Cy_SysClk_Dpll_Hp$idx_Init();' purpose='INITIALIZE' repeatCount='2' include='`${isBlockUsed("srss[0].clock[0].pll500m[$idx]")}`' />
     <!-- TODO: Is this workaround still needed? -->
-    <ConfigInstruction value='#ifdef WA__DRIVERS_21925' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[0]")}`' />
+    <ConfigInstruction value='#ifdef UPDATE_DPLL_LP_TRIM_VALUES' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[0]")}`' />
     <ConfigInstruction value='    /* Workaround: update DPLL_LP trim values */' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[0]")}`' />
     <ConfigInstruction value='    CY_SET_REG32(0x52403218,0x921F190A); /* DPLL_LP0_TEST3 */' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[0]")}`' />
     <ConfigInstruction value='    CY_SET_REG32(0x5240321C,0x08100000); /* DPLL_LP0_TEST4 */' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[0]")}`' />
     <ConfigInstruction value='#endif' include='`${isBlockUsed("srss[0].clock[0].pll250m[0]")}`' purpose='INITIALIZE' />
     <ConfigInstruction value='Cy_SysClk_Dpll_Lp0_Init();' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].dpll250[0]") || isBlockUsed("srss[0].clock[0].pll250m[0]")}`' />
 
-    <ConfigInstruction value='#ifdef WA__DRIVERS_21925' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[1]")}`' />
+    <ConfigInstruction value='#ifdef UPDATE_DPLL_LP_TRIM_VALUES' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[1]")}`' />
     <ConfigInstruction value='    /* Workaround: update DPLL_LP trim values */' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[1]")}`' />
     <ConfigInstruction value='    CY_SET_REG32(0x52403238,0x921F190A); /* DPLL_LP1_TEST3 */' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[1]")}`' />
     <ConfigInstruction value='    CY_SET_REG32(0x5240323C,0x08100000); /* DPLL_LP1_TEST4 */' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].pll250m[1]")}`' />

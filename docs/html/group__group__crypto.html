@@ -92,13 +92,8 @@ $(document).ready(function(){initNavTree('group__group__crypto.html',''); initRe
 <dl class="section note"><dt>Note</dt><dd>IP Supported: CRYPTO</dd></dl>
 <p>The Crypto driver provides a public API to perform cryptographic and hash operations, as well as generate both true and pseudo random numbers.</p>
 <p >It uses a hardware IP block to accelerate operations.</p>
-<p >The functions and other declarations used in this driver are in cy_crypto.h, cy_crypto_core.h, and cy_crypto_server.h. You can also include cy_pdl.h to get access to all functions and declarations in the PDL.</p>
-<p >The driver implements two usage models:</p><ul>
-<li><a class="el" href="group__group__crypto__cli__srv.html">Client-Server Model</a></li>
-<li><a class="el" href="group__group__crypto__lld__api.html">Direct Crypto Core Access</a></li>
-</ul>
-<p >Mixing these usage models will result in undefined behaviour.</p>
-<p >The Crypto driver supports these standards: DES, TDES, AES (128, 192, 256 bits), CMAC-AES, SHA, HMAC, PRNG, TRNG, CRC, RSA, ECP, and ECDSA. </p><dl class="section note"><dt>Note</dt><dd>ECP and ECDSA are only implemented for the <a class="el" href="group__group__crypto__lld__api.html">Direct Crypto Core Access</a> model.</dd></dl>
+<p >The functions and other declarations used in this driver are in cy_crypto.h, cy_crypto_core.h. You can also include cy_pdl.h to get access to all functions and declarations in the PDL.</p>
+<p >The Crypto driver supports these standards: DES, TDES, AES (128, 192, 256 bits), CMAC-AES, SHA, HMAC, PRNG, TRNG, CRC, RSA, ECP, and ECDSA.</p>
 <h1><a class="anchor" id="group_crypto_configuration_considerations"></a>
 Configuration Considerations</h1>
 <p >User can enable/disable cryptographic functionality based on the project requirements. To do so, create a configuration header file to configure cryptographic functionalities and define a macro CY_CRYPTO_USER_CONFIG_FILE with configuration header file name and add to project environment. If CY_CRYPTO_USER_CONFIG_FILE macro is not defined in project environment, firmware will enable all available cryptographic functionalities.</p>
@@ -106,7 +101,7 @@ Configuration Considerations</h1>
 <p >All Crypto functions require a context. A context is a data structure that the driver uses for its operations. Firmware declares a context (allocates memory) but does not write or read the values in that context. In effect, the context is a scratch pad you provide to the driver. The driver uses the context to store and manipulate data during cryptographic operations.</p>
 <p >Several methods require an additional context unique to the particular cryptographic technique. The Crypto driver header files declare all the required structures for both configuration and context.</p>
 <p >Some encryption techniques require additional initialization specific to the technique. If there is an Init function, you must call it before using any other function for that technique, and re-initialize after you use a different encryption technique.</p>
-<p >For example, use <a class="el" href="group__group__crypto__cli__functions.html#gae157d02a1be9a43e944337dd816eb618">Cy_Crypto_Aes_Init</a> to configure an AES encryption operation with the encryption key, and key length. Provide pointers to two context structures. You can then call the AES Run functions. If you use DES after that, you must re-initialize the AES encryption before using it again.</p>
+<p >For example, use <a class="el" href="group__group__crypto__lld__symmetric__functions.html#gaea56d7bae9d75b93886094f248e26006">Cy_Crypto_Core_Aes_Init</a> to configure an AES encryption operation with the encryption key, and key length. Provide pointers to two context structures. You can then call the AES Run functions. If you use DES after that, you must re-initialize the AES encryption before using it again.</p>
 <h1><a class="anchor" id="group_crypto_definitions"></a>
 Definitions</h1>
 <table class="doxtable">
@@ -180,15 +175,14 @@ More Information</h1>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>
-<tr class="memitem:group__group__crypto__cli__srv"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__cli__srv.html">Client-Server Model</a></td></tr>
-<tr class="memdesc:group__group__crypto__cli__srv"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use the client-server API to isolate the Crypto hardware from non-secure application access. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__crypto__lld__api"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__lld__api.html">Direct Crypto Core Access</a></td></tr>
 <tr class="memdesc:group__group__crypto__lld__api"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use the low-level API for direct access to the Crypto hardware. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__crypto__data__structures"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__data__structures.html">Common Data Structures</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__crypto__enums"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__enums.html">Common Enumerated Types</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__crypto__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__macros.html">Common macro defines</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

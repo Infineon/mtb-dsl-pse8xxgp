@@ -42,7 +42,8 @@
 #endif /* CY_SYS_DEFAULT_VECTOR_ADDRESS */
 
 #if (defined(CY_IP_MXS22SRSS_VERSION) && (CY_IP_MXS22SRSS_VERSION == 1))
-#define WA__DRIVERS_21925
+/* This forces the DPLL LP trim values to be updated in the personality */
+#define UPDATE_DPLL_LP_TRIM_VALUES
 #endif /* (defined(CY_IP_MXS22SRSS_VERSION) && (CY_IP_MXS22SRSS_VERSION == 1)) */
 
 /* DIE_ID and REV_ID registers located in the NS_SFLASH sub-region
@@ -2675,7 +2676,12 @@ extern const uint32_t IPC_BASE_PTR[CY_IPC_INSTANCES];
 
 #define CY_IPC_PIPE_IS_CHANNEL_INTR_COMBINATION_VALID(ipcChannel, ipcIntrIndex)  ((((ipcChannel) < CY_IPC_CHANNELS_PER_INSTANCE) && ((ipcIntrIndex) < CY_IPC_INTERRUPTS_PER_INSTANCE)) || \
                                                                                   (((ipcChannel) >= CY_IPC_CHANNELS_PER_INSTANCE) && ((ipcIntrIndex) >= CY_IPC_INTERRUPTS_PER_INSTANCE)))
-#define CY_IPC_STRUCT_PTR(ipcIndex)                                              CY_IPC_STRUCT_PTR_FOR_IP(((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE), IPC_BASE_PTR[((ipcIndex)-((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE))/CY_IPC_CHANNELS_PER_INSTANCE])
+#define CY_IPC_STRUCT_PTR(ipcIndex)                                              (((ipcIndex < (CY_IPC_CHANNELS_PER_INSTANCE * CY_IPC_INSTANCES)) && (ipcIndex > 0 )) ? \
+                                                                                    CY_IPC_STRUCT_PTR_FOR_IP(((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE), \
+                                                                                    IPC_BASE_PTR[((ipcIndex)-((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE))/CY_IPC_CHANNELS_PER_INSTANCE]) : \
+                                                                                    ( (ipcIndex == 0) ? (CY_IPC_STRUCT_PTR_FOR_IP(0,IPC_BASE_PTR[0])) : \
+                                                                                    ((ipcIndex == (CY_IPC_CHANNELS_PER_INSTANCE * CY_IPC_INSTANCES)) ? \
+                                                                                    (CY_IPC_STRUCT_PTR_FOR_IP(((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE),IPC_BASE_PTR[CY_IPC_INSTANCES -1])) : NULL   ) ))
 #define CY_IPC_INTR_STRUCT_PTR(ipcIntrIndex)                                     CY_IPC_INTR_STRUCT_PTR_FOR_IP(((ipcIntrIndex)%CY_IPC_INTERRUPTS_PER_INSTANCE), IPC_BASE_PTR[((ipcIntrIndex)-((ipcIntrIndex)%CY_IPC_INTERRUPTS_PER_INSTANCE))/CY_IPC_INTERRUPTS_PER_INSTANCE])
 /* ipcChannel comprises of total number of channels present in all IPC IP instances */
 #define CY_IPC_PIPE_COMPUTE_INTR_MASK(ipcChannel, ipcIntrmask)                   (((ipcChannel)<CY_IPC_CHANNELS_PER_INSTANCE)?(ipcIntrmask):((((ipcIntrmask)&0xFFFF0000U) != 0x0U)?((ipcIntrmask)>>CY_IPC_CHANNELS_PER_INSTANCE):(ipcIntrmask)))

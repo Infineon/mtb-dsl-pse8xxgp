@@ -83,79 +83,9 @@ $(document).ready(function(){initNavTree('group__group__syspm__functions__ldo.ht
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">LDO<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a> &raquo; <a class="el" href="group__group__syspm.html">SysPm        (System Power Management)</a> &raquo; <a class="el" href="group__group__syspm__functions.html">Functions</a> &raquo; <a class="el" href="group__group__syspm__functions__core__regulators.html">Core Voltage Regulation</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ga3134f6b474d6bba15825971923349372"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__ldo.html#ga3134f6b474d6bba15825971923349372">Cy_SysPm_LdoSetMode</a> (<a class="el" href="group__group__syspm__data__enumerates.html#gab23a08d99fea934c12e01f877c26dd80">cy_en_syspm_ldo_mode_t</a> mode)</td></tr>
-<tr class="memdesc:ga3134f6b474d6bba15825971923349372"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the core LDO regulator operating mode to one of three modes.  <a href="group__group__syspm__functions__ldo.html#ga3134f6b474d6bba15825971923349372">More...</a><br /></td></tr>
-<tr class="separator:ga3134f6b474d6bba15825971923349372"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab53ba203b3fdeae14421e25d7b8461ac"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__syspm__data__enumerates.html#gab23a08d99fea934c12e01f877c26dd80">cy_en_syspm_ldo_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__ldo.html#gab53ba203b3fdeae14421e25d7b8461ac">Cy_SysPm_LdoGetMode</a> (void)</td></tr>
-<tr class="memdesc:gab53ba203b3fdeae14421e25d7b8461ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current core LDO regulator operating mode.  <a href="group__group__syspm__functions__ldo.html#gab53ba203b3fdeae14421e25d7b8461ac">More...</a><br /></td></tr>
-<tr class="separator:gab53ba203b3fdeae14421e25d7b8461ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ga3134f6b474d6bba15825971923349372" name="ga3134f6b474d6bba15825971923349372"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3134f6b474d6bba15825971923349372">&#9670;&nbsp;</a></span>Cy_SysPm_LdoSetMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> Cy_SysPm_LdoSetMode </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__syspm__data__enumerates.html#gab23a08d99fea934c12e01f877c26dd80">cy_en_syspm_ldo_mode_t</a>&#160;</td>
-          <td class="paramname"><em>mode</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Configures the core LDO regulator operating mode to one of three modes. </p>
-<p >Disabled - turns off the LDO regulator and should be selected only after the Buck regulator is operating. Normal mode configures the LDO for operation at the maximum output current limit. Minimal current mode optimizes the LDO at a reduced output current limit. Specific device current limits can be found in the device datasheet.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">mode</td><td>The desired LDO regulator operating mode. See <a class="el" href="group__group__syspm__data__enumerates.html#gab23a08d99fea934c12e01f877c26dd80">cy_en_syspm_ldo_mode_t</a> mode</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><ul>
-<li>CY_SYSPM_SUCCESS - Requested regulator current mode was set</li>
-<li>CY_SYSPM_CANCELED - The power circuits were not ready to enter into minimum current mode. You should try to call the function again</li>
-<li>CY_SYSPM_TIMEOUT - Timeout occurred because of active reference was not ready to enter into the normal regulator current mode</li>
-<li>CY_SYSPM_FAIL - incorrect mode value was passed For the PSoC 64 devices there are possible situations when function returns the PRA error status code. This is because for PSoC 64 devices the function uses the PRA driver to change the protected registers. Refer to cy_en_pra_status_t for more details.</li>
-</ul>
-</dd></dl>
-<dl class="section user"><dt>Side Effects</dt><dd>For PSoC 64 series devices CY_SYSPM_LDO_MODE_DISABLED mode is not supported. Use Cy_SysPm_BuckEnable() instead. </dd></dl>
-
-</div>
-</div>
-<a id="gab53ba203b3fdeae14421e25d7b8461ac" name="gab53ba203b3fdeae14421e25d7b8461ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab53ba203b3fdeae14421e25d7b8461ac">&#9670;&nbsp;</a></span>Cy_SysPm_LdoGetMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">__STATIC_INLINE <a class="el" href="group__group__syspm__data__enumerates.html#gab23a08d99fea934c12e01f877c26dd80">cy_en_syspm_ldo_mode_t</a> Cy_SysPm_LdoGetMode </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns the current core LDO regulator operating mode. </p>
-<dl class="section return"><dt>Returns</dt><dd>The LDO regulator operating mode. See <a class="el" href="group__group__syspm__data__enumerates.html#gab23a08d99fea934c12e01f877c26dd80">cy_en_syspm_ldo_mode_t</a> mode </dd></dl>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part

@@ -46,7 +46,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__clk__lf.html' linkText='Open Low-Frequency Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__lf.html' linkText='Open Low-Frequency Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${hasBlock("srss[0].clock[0].pilo[0]") ? pilo : hasBlock("srss[0].clock[0].ilo[1]") ? ilo0 : ilo}`' visible='true' desc='The clock source for CLK_LF'>
       <Entry name='ALTLF' value='altlf' visible='`${hasBlock("srss[0].clock[0].altlf[0]")}`'/>

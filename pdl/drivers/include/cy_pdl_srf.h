@@ -105,7 +105,7 @@ extern mtb_srf_pool_t cy_pdl_srf_default_pool;
 * \addtogroup group_pdl_srf_macros
 * \{
 */
-#if !defined(CY_PDL_ENABLE_SECURE_AWARE)
+#if !defined(CY_PDL_ENABLE_SECURE_AWARE) && !defined(CY_SRF_DISABLE)
 /** PDL-wide Secure Aware Driver enablement.  Set to 0 to disable all Secure Aware Drivers */
 #define CY_PDL_ENABLE_SECURE_AWARE (1)
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE) */

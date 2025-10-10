@@ -418,6 +418,10 @@ extern "C" {
                                              (CY_SMIF_SEL_SPHB_RWDS_CLK == (cy_en_smif_clk_select_t)(clkSel)))
 
 #define CY_SMIF_DESELECT_DELAY_VALID(delay) ((delay) <= CY_SMIF_MAX_DESELECT_DELAY)
+/** Maximum number of devices that can be connected to a SMIF instance */
+#define CY_SMIF_MAX_MEMNUM                  (4U)
+/** Macro to check that a memory number is valid */
+#define CY_SMIF_MEM_NUM_VALID(memNum)       (memNum < CY_SMIF_MAX_MEMNUM)
 #define CY_SMIF_SLAVE_SEL_VALID(ss)         ((CY_SMIF_SLAVE_SELECT_0 == (ss)) || \
                                              (CY_SMIF_SLAVE_SELECT_1 == (ss)) || \
                                              (CY_SMIF_SLAVE_SELECT_2 == (ss)) || \
@@ -713,6 +717,7 @@ typedef enum
     /** SMIF is currently busy and cannot accept the request */
     CY_SMIF_BUSY            = CY_SMIF_ID |CY_PDL_STATUS_ERROR | 0x83U,
     CY_SMIF_GENERAL_ERROR   = CY_SMIF_ID |CY_PDL_STATUS_ERROR | 0x84U,  /**< Some general error */
+    CY_SMIF_SECURITY_POLICY_VIOLATION = CY_SMIF_ID |CY_PDL_STATUS_ERROR | 0x90U,
 } cy_en_smif_status_t;
 
 /** The SMIF slave select definitions for the driver API. Each slave select is
@@ -1701,8 +1706,9 @@ __STATIC_INLINE void Cy_SMIF_PushTxFifo(SMIF_Type *baseaddr, cy_stc_smif_context
         buff = &buff[writeBytes];
         buffCounter -= writeBytes;
 
-        /* Check if we already got new data in TX_FIFO */
-        freeFifoBytes = CY_SMIF_TX_DATA_FIFO_STATUS_RANGE - Cy_SMIF_GetTxFifoStatus(baseaddr);
+        while (Cy_SMIF_GetTxFifoStatus(baseaddr) != 0);
+        /* Send remaining data */
+        freeFifoBytes = CY_SMIF_TX_DATA_FIFO_STATUS_RANGE;
         writeBytes = (freeFifoBytes > buffCounter)? buffCounter: freeFifoBytes;
     }
 

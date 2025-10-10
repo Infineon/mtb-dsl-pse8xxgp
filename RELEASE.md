@@ -1,15 +1,18 @@
-# ModusToolbox™ PSE8xxGP Device Support Library 1.0.0
+# ModusToolbox™ PSE8xxGP Device Support Library 1.1.0
 ## What's Included?
 
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
 ## Defect Fixes
-
+### v1.1.0
+* Documentation updates
+* Personality updates
+### v1.0.0
 * Initial release
 
 ## Supported Software and Tools
 
-This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.0.0 was validated for the compatibility with the following Software and Tools:
+This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.1.0 was validated for the compatibility with the following Software and Tools:
 
 | Software and Tools                                      | Version |
 | [Infineon Core Library](https://github.com/Infineon/core-lib)                 | 1.5.0        |

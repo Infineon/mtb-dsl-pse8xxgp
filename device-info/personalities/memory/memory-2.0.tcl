@@ -120,10 +120,11 @@ proc process_memory_data {} {
 #   set coreShortName [dict get $::param_dict $key_coreShortName]
 # }
 
+  set usedPysMemIds [dict create]
   set numRegionsDefined [dict get $::param_dict "numRegionsDefined"]
   for {set regIdx 0} {$regIdx < $numRegionsDefined} {incr regIdx} {
-#   set key_regionPhysMemId "regionPhysMemId_$regIdx"
-#   set regionPhysMemId [dict get $::param_dict $key_regionPhysMemId]
+    set key_regionPhysMemId "regionPhysMemId_$regIdx"
+    set regionPhysMemId [dict get $::param_dict $key_regionPhysMemId]
 #   set key_regionOffset "regionOffset_$regIdx"
 #   set regionOffset [dict get $::param_dict $key_regionOffset]
 #   set key_regionSize "regionSize_$regIdx"
@@ -134,6 +135,9 @@ proc process_memory_data {} {
 #   set regionDomain [dict get $::param_dict $key_regionDomain]
 #   set key_regionEndOffset "regionEndOffset_$regIdx"
 #   set regionEndOffset [dict get $::param_dict $key_regionEndOffset]
+
+    # The value doesn't matter here (so 1 is used). Just need the keys.
+    dict set usedPysMemIds $regionPhysMemId 1
 
     for {set coreIdx 0} {$coreIdx < $numCores} {incr coreIdx} {
       set key_regionCoreIsAccessible [format "regionCoreIsAccessible%d_%d" $coreIdx $regIdx]
@@ -224,12 +228,16 @@ proc process_memory_data {} {
   set memNonSecureOutputs {}
   set memSecureOutputs {}
 
+  set validMemoryIds [dict create]
   set numMemories [dict get $::param_dict "numMemories"]
   for {set memIdx 0} {$memIdx < $numMemories} {incr memIdx} {
-#   set key_memoryId "memoryId$memIdx"
-#   set memoryId [dict get $::param_dict $key_memoryId]
+    set key_memoryId "memoryId$memIdx"
+    set memoryId [dict get $::param_dict $key_memoryId]
     set key_memorySize "memorySize$memIdx"
     set memorySize [dict get $::param_dict $key_memorySize]
+
+    # The value doesn't matter here (so 1 is used). Just need the keys.
+    dict set validMemoryIds $memoryId 1
 
     for {set coreIdx 0} {$coreIdx < $numCores} {incr coreIdx} {
 #     set key_memoryViewMaps [format "memoryViewMaps%d_%d" $memIdx $coreIdx]
@@ -280,6 +288,17 @@ proc process_memory_data {} {
     }
 
   }
+
+  set usedMemories [dict keys $usedPysMemIds]
+  set invalidMemories {}
+  foreach key $usedMemories {
+      if {![dict exists $validMemoryIds $key]} {
+          lappend invalidMemories $key
+      }
+  }
+
+  puts $::channelName [format "param:invalidUsedMemoryIdsCnt=%d" [llength $invalidMemories]]
+  puts $::channelName [format "param:invalidUsedMemoryIds=%s" [join $invalidMemories ";"]]
 
   set accumulatedMemNonSecureOutputs [join $memNonSecureOutputs ";"]
   set accumulatedMemSecureOutputs [join $memSecureOutputs ";"]

@@ -16,8 +16,12 @@ This release of the PSOC™ Edge GNU make build recipe includes complete support
     * LLVM Embedded Toolchain for Arm
 
 ### What Changed?
+#### v2.3.1
+* Improved missing toolchains handling.
+* Improved FreeRTOS component flag handling for IAR toolchain.
+
 #### v2.3.0
-* Initial release
+* Initial release.
 
 ### Product/Asset Specific Instructions
 Builds require that the ModusToolbox™ tools be installed on your machine. This comes with the ModusToolbox™ install. On Windows machines, it is recommended that CLI builds be executed using the Cygwin.bat located in ModusToolBox/tools\_x.y/modus-shell install directory. This guarantees a consistent shell environment for your builds.

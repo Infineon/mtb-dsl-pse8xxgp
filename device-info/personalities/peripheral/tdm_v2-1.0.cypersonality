@@ -40,7 +40,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id="pdlDoc" name="Configuration Help" group="Overview" default="file:///`${cy_libs_path()}`/docs/pdl_api_reference_manual/html/group__group__tdm.html" linkText="Open TDM Documentation" visible="true" desc="Opens the Peripheral Driver Library Documentation" />
+    <ParamDoc id="pdlDoc" name="Configuration Help" group="Overview" default="file:///`${cy_libs_path()}`/docs/html/group__group__tdm.html" linkText="Open TDM Documentation" visible="true" desc="Opens the Peripheral Driver Library Documentation" />
 
     <!-- TX -->
     <ParamBool id="txEnabled" name="Enable" group="TX" default="true" visible="true" editable="true" desc="Enables the transmitter" />

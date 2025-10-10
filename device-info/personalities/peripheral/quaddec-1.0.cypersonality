@@ -34,7 +34,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__tcpwm__quaddec.html' linkText='Open Quadrature Decoder (TCPWM) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__tcpwm__quaddec.html' linkText='Open Quadrature Decoder (TCPWM) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!--General-->
     <ParamChoice id='CounterSize' name='Quadrature Decoder Resolution' group='General' default='`${(CNT.CNT_WIDTH eq 16) ? "16" : "32"}`' visible='true' editable='false' desc='Sets the resolution of the counter'>

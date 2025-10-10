@@ -36,7 +36,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__smartio.html' linkText='Open SmartIO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__smartio.html' linkText='Open SmartIO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- External tools -->
     <ParamCustom id='SmartIOConfigurator' name='Smart I/O Configurator' group='External Tools' path='`${cy_tools_path("smartio-configurator") . "/smartio-configurator"}`' visible='true' editable='true' desc='Launch Smart I/O Configurator'>

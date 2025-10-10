@@ -28,12 +28,13 @@ var searchData=
   ['wr_5fdummy_5fctl_25',['WR_DUMMY_CTL',['../structSMIF__CORE__DEVICE__Type.html#a203e0f674d3150f202e807ad71eb8a03',1,'SMIF_CORE_DEVICE_Type']]],
   ['wr_5fmode_5fctl_26',['WR_MODE_CTL',['../structSMIF__CORE__DEVICE__Type.html#a23bf108a41a80c2db0c96a3ec4cb6b73',1,'SMIF_CORE_DEVICE_Type']]],
   ['wrap_27',['WRAP',['../structSDHC__Type.html#a32cc03f971480329ad1ac6453aebb3d8',1,'SDHC_Type']]],
-  ['write_5ffill_28',['write_fill',['../structmtb__hal__spi__t.html#abcf4008cff81d0a7ebb67d2e3443e464',1,'mtb_hal_spi_t']]],
-  ['writediscmd_29',['writeDisCmd',['../group__group__smif__data__structures__memslot.html#a4e784af10fe9c014e4303990a5fa8171',1,'cy_stc_smif_mem_device_cfg_t']]],
-  ['writeencmd_30',['writeEnCmd',['../group__group__smif__data__structures__memslot.html#a456a87e11eb3e32c7211b547d49fb747',1,'cy_stc_smif_mem_device_cfg_t']]],
-  ['writelatencycmd_31',['writeLatencyCmd',['../group__group__smif__data__structures__memslot.html#aeaa8b36aacfa7b39dcfbbbe042c832a8',1,'cy_stc_smif_mem_device_cfg_t']]],
-  ['writestsregoecmd_32',['writeStsRegOeCmd',['../group__group__smif__data__structures__memslot.html#aa6997fc2194c795c9e16d94c4cd777dd',1,'cy_stc_smif_mem_device_cfg_t']]],
-  ['writestsregqecmd_33',['writeStsRegQeCmd',['../group__group__smif__data__structures__memslot.html#ad4c73ef9b9a7932c2832347c4c268ffa',1,'cy_stc_smif_mem_device_cfg_t']]],
-  ['wtaddr_34',['wtAddr',['../group__group__nnlite__data__structures.html#a0091d837b191ee72354c117d9897d723',1,'cy_nnlite_sparsity_cfg_t']]],
-  ['wup_5fctrl_5fr_35',['WUP_CTRL_R',['../structSDHC__CORE__Type.html#a8cd846735d2e585e602f4bae89a8600f',1,'SDHC_CORE_Type']]]
+  ['writable_28',['writable',['../group__group__cmsis__data__structures.html#ad3f7c39f153a8d2764ee42f2266877cb',1,'cy_stc_mpu_config_t']]],
+  ['write_5ffill_29',['write_fill',['../structmtb__hal__spi__t.html#abcf4008cff81d0a7ebb67d2e3443e464',1,'mtb_hal_spi_t']]],
+  ['writediscmd_30',['writeDisCmd',['../group__group__smif__data__structures__memslot.html#a4e784af10fe9c014e4303990a5fa8171',1,'cy_stc_smif_mem_device_cfg_t']]],
+  ['writeencmd_31',['writeEnCmd',['../group__group__smif__data__structures__memslot.html#a456a87e11eb3e32c7211b547d49fb747',1,'cy_stc_smif_mem_device_cfg_t']]],
+  ['writelatencycmd_32',['writeLatencyCmd',['../group__group__smif__data__structures__memslot.html#aeaa8b36aacfa7b39dcfbbbe042c832a8',1,'cy_stc_smif_mem_device_cfg_t']]],
+  ['writestsregoecmd_33',['writeStsRegOeCmd',['../group__group__smif__data__structures__memslot.html#aa6997fc2194c795c9e16d94c4cd777dd',1,'cy_stc_smif_mem_device_cfg_t']]],
+  ['writestsregqecmd_34',['writeStsRegQeCmd',['../group__group__smif__data__structures__memslot.html#ad4c73ef9b9a7932c2832347c4c268ffa',1,'cy_stc_smif_mem_device_cfg_t']]],
+  ['wtaddr_35',['wtAddr',['../group__group__nnlite__data__structures.html#a0091d837b191ee72354c117d9897d723',1,'cy_nnlite_sparsity_cfg_t']]],
+  ['wup_5fctrl_5fr_36',['WUP_CTRL_R',['../structSDHC__CORE__Type.html#a8cd846735d2e585e602f4bae89a8600f',1,'SDHC_CORE_Type']]]
 ];

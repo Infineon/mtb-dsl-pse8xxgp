@@ -45,7 +45,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__clk__pump.html' linkText='Open Pump Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__pump.html' linkText='Open Pump Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='sourceClockNumber' name='Source Clock' group='General' default='0' visible='true' desc='The clock source selection'>
       <Entry name='CLK_PATH$idx'  value='$idx'  visible='`${NUM_CLKPATH &gt; $idx}`' repeatCount='16' />

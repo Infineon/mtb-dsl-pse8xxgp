@@ -50,7 +50,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__eco.html' linkText='Open ECO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__eco.html' linkText='Open ECO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamBool id='is40srss_ver2or3Available' default='`${(("mxs40srss_ver2" eq getIpBlockName()) || ("mxs40srss_ver3" eq getIpBlockName()))}`' />
 

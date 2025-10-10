@@ -45,7 +45,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__arm__system__timer.html' linkText='Open SysTick Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__arm__system__timer.html' linkText='Open SysTick Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${"m0seccpuss" eq getIpBlockName() ? "lfclk" :
                                                                                   "m33syscpuss" eq getIpBlockName() ? "lfclk" :

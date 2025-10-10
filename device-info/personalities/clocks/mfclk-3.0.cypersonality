@@ -45,7 +45,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk.html' linkText='Open SysClk Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk.html' linkText='Open SysClk Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${"mxs22srss" eq getIpBlockName() ? "wco" : "mfo"}`' visible='`${"mxs40srss" eq getIpBlockName()}`' desc='Source clock path'>
       <Entry name='MFO'    value='mfo'    visible='`${hasBlock("srss[0].clock[0].mfo[0]")}`'/>

@@ -104,6 +104,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gadbdb5f2f1f637f16483d119beb7df424"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__lld__mem__functions.html#gadbdb5f2f1f637f16483d119beb7df424">Cy_Crypto_Core_MemXor</a> (<a class="el" href="structCRYPTO__V2__Type.html">CRYPTO_Type</a> *base, void *dst, void const *src0, void const *src1, uint16_t size)</td></tr>
 <tr class="memdesc:gadbdb5f2f1f637f16483d119beb7df424"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function MemXor uses Crypto HW.  <a href="group__group__crypto__lld__mem__functions.html#gadbdb5f2f1f637f16483d119beb7df424">More...</a><br /></td></tr>
 <tr class="separator:gadbdb5f2f1f637f16483d119beb7df424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabd4ba58c8fef2e5dc952995774cfb760"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__lld__mem__functions.html#gabd4ba58c8fef2e5dc952995774cfb760">Cy_Crypto_InvertEndianness</a> (void *inArrPtr, uint32_t byteSize)</td></tr>
+<tr class="memdesc:gabd4ba58c8fef2e5dc952995774cfb760"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function inverts endianness of the byte-array.  <a href="group__group__crypto__lld__mem__functions.html#gabd4ba58c8fef2e5dc952995774cfb760">More...</a><br /></td></tr>
+<tr class="separator:gabd4ba58c8fef2e5dc952995774cfb760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga2a34cb65f8bc94c4c68b3c4bd384e375" name="ga2a34cb65f8bc94c4c68b3c4bd384e375"></a>
@@ -316,6 +319,44 @@ Functions</h2></td></tr>
     <tr><td class="paramname">src0</td><td>The pointer to the first source of MemXor.</td></tr>
     <tr><td class="paramname">src1</td><td>The pointer to the second source of MemXor.</td></tr>
     <tr><td class="paramname">size</td><td>The size in bytes of the compare operation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gabd4ba58c8fef2e5dc952995774cfb760" name="gabd4ba58c8fef2e5dc952995774cfb760"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabd4ba58c8fef2e5dc952995774cfb760">&#9670;&nbsp;</a></span>Cy_Crypto_InvertEndianness()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cy_Crypto_InvertEndianness </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>inArrPtr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>byteSize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function inverts endianness of the byte-array. </p>
+<p >Odd or even byteSize are acceptable.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inArrPtr</td><td>The pointer to the memory whose endianness is to be inverted.</td></tr>
+    <tr><td class="paramname">byteSize</td><td>The length of the memory array whose endianness is to be inverted (in bytes) </td></tr>
   </table>
   </dd>
 </dl>

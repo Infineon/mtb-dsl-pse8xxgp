@@ -122,7 +122,7 @@
                  editable='false'
                  default='`${"pass[" . inst_pass . "].sar[" . 0 . "]"}`'/>
 
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__autanalog.html' linkText='Open Autonomous Analog Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__autanalog.html' linkText='Open Autonomous Analog Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamString id='INST_NAME_lppass' name='INST_NAME_lppass' group='Internal' default='`${INST_NAME}`' visible='`${debug}`' editable='false' desc='' />
 

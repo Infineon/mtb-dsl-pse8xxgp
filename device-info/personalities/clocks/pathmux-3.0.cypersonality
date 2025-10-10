@@ -44,7 +44,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__path__src.html' linkText='Open Clock Path Source Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__path__src.html' linkText='Open Clock Path Source Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamString id='clockInst' default='`${getInstNumber("pathmux")}`' />
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${("mxs22srss" eq getIpBlockName()) ? iho : imo}`' visible='true' desc='The clock source for Clock Path `${clockInst}`'>

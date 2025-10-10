@@ -35,7 +35,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__tcpwm__shiftreg.html' linkText='Open Shift Register (TCPWM) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__tcpwm__shiftreg.html' linkText='Open Shift Register (TCPWM) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!--General-->
     <ParamRange id='pCntGroup' name='pCntGroup' desc='pCntGroup' group='Internal'  default='`${getInstNumber("group")}`' min='0' max='3' resolution='1' visible='false' editable='false' />

@@ -54,7 +54,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__clk__hf.html' linkText='Open High-Frequency Clocks Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__hf.html' linkText='Open High-Frequency Clocks Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamBool id='is22srssAvailable' default='`${("mxs22srss" eq getIpBlockName())}`' />
 

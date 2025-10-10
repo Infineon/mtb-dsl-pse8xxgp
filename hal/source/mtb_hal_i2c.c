@@ -176,7 +176,7 @@ static cy_en_scb_i2c_command_t _mtb_hal_i2c_cb_addr_wrapper(uint32_t event)
 }
 
 
-#if ((CY_SCB_DRV_VERSION_MAJOR >= 3) && (CY_SCB_DRV_VERSION_MINOR >= 40))
+#if ((CY_IP_MXSCB_VERSION >= 4) && (CY_IP_MXSCB_VERSION_MINOR >= 4))
 //--------------------------------------------------------------------------------------------------
 // _mtb_hal_i2c_cb_byte_wrapper
 //--------------------------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ static cy_en_scb_i2c_command_t _mtb_hal_i2c_cb_byte_wrapper(uint8_t byte_receive
 }
 
 
-#endif /* ((CY_SCB_DRV_VERSION_MAJOR >= 3) && (CY_SCB_DRV_VERSION_MINOR >= 40)) */
+#endif /* ((CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) */
 
 //--------------------------------------------------------------------------------------------------
 // _mtb_hal_i2c_target_status
@@ -650,9 +650,9 @@ void mtb_hal_i2c_register_byte_received_callback(mtb_hal_i2c_t* obj,
     obj->byte_callback_data.callback = (cy_israddress)callback;
     obj->byte_callback_data.callback_arg = callback_arg;
     mtb_hal_system_critical_section_exit(savedIntrStatus);
-    #if ((CY_SCB_DRV_VERSION_MAJOR >= 3) && (CY_SCB_DRV_VERSION_MINOR >= 40))
+    #if ((CY_IP_MXSCB_VERSION >= 4) && (CY_IP_MXSCB_VERSION_MINOR >= 4))
     Cy_SCB_I2C_RegisterByteReceivedCallback(obj->base, _mtb_hal_i2c_cb_byte_wrapper, obj->context);
-    #endif /* ((CY_SCB_DRV_VERSION_MAJOR >= 3) && (CY_SCB_DRV_VERSION_MINOR >= 40)) */
+    #endif /* ((CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) */
 }
 
 

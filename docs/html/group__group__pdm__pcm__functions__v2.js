@@ -26,5 +26,9 @@ var group__group__pdm__pcm__functions__v2 =
     [ "Cy_PDM_PCM_Channel_FreezeFifo", "group__group__pdm__pcm__functions__v2.html#gabb59f7b95337165c47c09903f9d725c5", null ],
     [ "Cy_PDM_PCM_Channel_UnfreezeFifo", "group__group__pdm__pcm__functions__v2.html#ga5021b0ed0ea27ad4f4244d6998990fb2", null ],
     [ "Cy_PDM_PCM_Channel_ReadFifoSilent", "group__group__pdm__pcm__functions__v2.html#ga55c2c7d2ea9d771760276a683fba7c7a", null ],
+    [ "Cy_PDM_PCM_DCBlock_Enable", "group__group__pdm__pcm__functions__v2.html#gac3fc396ba805a4ca2a50e047dbce9ded", null ],
+    [ "Cy_PDM_PCM_DCBlock_Disable", "group__group__pdm__pcm__functions__v2.html#gabcad7ee2693e0d2a68a1557c92a34375", null ],
+    [ "Cy_PDM_PCM_SetFIR0_Scale", "group__group__pdm__pcm__functions__v2.html#ga4627e12d5018a38ceebf80d5b8879296", null ],
+    [ "Cy_PDM_PCM_ApplyPCM_Gain", "group__group__pdm__pcm__functions__v2.html#gade6edcc3e4d69f2611249be95de91330", null ],
     [ "Cy_PDM_PCM_Channel_GetCurrentState", "group__group__pdm__pcm__functions__v2.html#ga9dfa44a1d588f0d78efb99e0fcd2002f", null ]
 ];

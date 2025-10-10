@@ -280,6 +280,21 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SMIF_IsBridgeOn</b
 <tr class="memitem:ga6633fdcf48299706b9c87369d1adf26f"><td class="memItemLeft" align="right" valign="top"><a id="ga6633fdcf48299706b9c87369d1adf26f" name="ga6633fdcf48299706b9c87369d1adf26f"></a>
 <a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SMIF_Bridge_Enable</b> (SMIF_Base_Type *base, bool enable)</td></tr>
 <tr class="separator:ga6633fdcf48299706b9c87369d1adf26f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ecd1075db9d75ae45f4eb437dbfed8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">Cy_SMIF_SetMasterDLP</a> (SMIF_Type *base, uint16 dlp, uint8_t size)</td></tr>
+<tr class="memdesc:ga6ecd1075db9d75ae45f4eb437dbfed8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function sets the data learning pattern.  <a href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">More...</a><br /></td></tr>
+<tr class="separator:ga6ecd1075db9d75ae45f4eb437dbfed8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga338f6c1d218cd2093c48254995f6f06b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b">Cy_SMIF_GetMasterDLP</a> (SMIF_Type *base)</td></tr>
+<tr class="memdesc:ga338f6c1d218cd2093c48254995f6f06b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function gets the data learning pattern configured.  <a href="group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b">More...</a><br /></td></tr>
+<tr class="separator:ga338f6c1d218cd2093c48254995f6f06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga220136f6a2fe90ea720c3e1577f96421"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421">Cy_SMIF_GetMasterDLPSize</a> (SMIF_Type *base)</td></tr>
+<tr class="memdesc:ga220136f6a2fe90ea720c3e1577f96421"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function gets the data learning pattern size configured.  <a href="group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421">More...</a><br /></td></tr>
+<tr class="separator:ga220136f6a2fe90ea720c3e1577f96421"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7f56e6919c991ce5b1e0947c0994644"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#gae7f56e6919c991ce5b1e0947c0994644">Cy_SMIF_GetTapNumCapturedCorrectDLP</a> (SMIF_Type *base, uint8_t bit)</td></tr>
+<tr class="memdesc:gae7f56e6919c991ce5b1e0947c0994644"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function gets number of delay taps used for specified data line.  <a href="group__group__smif__low__level__functions.html#gae7f56e6919c991ce5b1e0947c0994644">More...</a><br /></td></tr>
+<tr class="separator:gae7f56e6919c991ce5b1e0947c0994644"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae88b33af21e1dd8fc761317b4f81b4f4"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#gae88b33af21e1dd8fc761317b4f81b4f4">CY_SMIF_GetDelayTapsNumber</a> (volatile void *base)</td></tr>
+<tr class="memdesc:gae88b33af21e1dd8fc761317b4f81b4f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns tap number which the SMIF IP has.  <a href="group__group__smif__low__level__functions.html#gae88b33af21e1dd8fc761317b4f81b4f4">More...</a><br /></td></tr>
+<tr class="separator:gae88b33af21e1dd8fc761317b4f81b4f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab67d2aecdf1783c11ea54acb78ea2034"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#gab67d2aecdf1783c11ea54acb78ea2034">Cy_SMIF_InitCache</a> (<a class="el" href="structSMIF__CACHE__BLOCK__Type.html">SMIF_CACHE_BLOCK_Type</a> *base, const <a class="el" href="group__group__smif__data__structures.html#structcy__stc__smif__cache__config__t">cy_stc_smif_cache_config_t</a> *cache_config)</td></tr>
 <tr class="memdesc:gab67d2aecdf1783c11ea54acb78ea2034"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function initializes SMIF internal CACHE with user provided configuration <a class="el" href="group__group__smif__data__structures.html#structcy__stc__smif__cache__config__t">cy_stc_smif_cache_config_t</a>.  <a href="group__group__smif__low__level__functions.html#gab67d2aecdf1783c11ea54acb78ea2034">More...</a><br /></td></tr>
 <tr class="separator:gab67d2aecdf1783c11ea54acb78ea2034"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1697,17 +1712,17 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SMIF_IsBridgeOn</b
 <div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga72240c0ce8307c50b65c4fca45c9cd30">Cy_SMIF_CacheInvalidate</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggaf7e001d5a1821a56324e8898913b21efa629d9c56adb3c14ac83a486fe57afa84">CY_SMIF_CACHE_BOTH</a>);</div>
 <div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#gacb0c1e80c19ef607a1efc70df6818ccb">Cy_SMIF_CacheDisable</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggaf7e001d5a1821a56324e8898913b21efa629d9c56adb3c14ac83a486fe57afa84">CY_SMIF_CACHE_BOTH</a>);</div>
 <div class="line">    (void)pHyperFlashBaseAddr;</div>
-<div class="ttc" id="agroup__group__smif__enums_html_gad776a0db9224477ab865254a32d9e312"><div class="ttname"><a href="group__group__smif__enums.html#gad776a0db9224477ab865254a32d9e312">cy_en_smif_slave_select_t</a></div><div class="ttdeci">cy_en_smif_slave_select_t</div><div class="ttdoc">The SMIF slave select definitions for the driver API.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:722</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga2baa7c37d2cedf2e2c837facc753ab5da562131834e2b77b141db45354e8584ec"><div class="ttname"><a href="group__group__smif__enums.html#gga2baa7c37d2cedf2e2c837facc753ab5da562131834e2b77b141db45354e8584ec">CY_SMIF_MEMORY</a></div><div class="ttdeci">@ CY_SMIF_MEMORY</div><div class="ttdoc">XIP (eXecute In Place) mode.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:567</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d"><div class="ttname"><a href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a></div><div class="ttdeci">@ CY_SMIF_SLAVE_SELECT_0</div><div class="ttdoc">The SMIF slave select 0</div><div class="ttdef"><b>Definition:</b> cy_smif.h:723</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_ggaf7e001d5a1821a56324e8898913b21efa629d9c56adb3c14ac83a486fe57afa84"><div class="ttname"><a href="group__group__smif__enums.html#ggaf7e001d5a1821a56324e8898913b21efa629d9c56adb3c14ac83a486fe57afa84">CY_SMIF_CACHE_BOTH</a></div><div class="ttdeci">@ CY_SMIF_CACHE_BOTH</div><div class="ttdoc">The SMIF both caches.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:756</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga0ff445110c019e30b942fb87878b32c7"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga0ff445110c019e30b942fb87878b32c7">Cy_SMIF_CachePrefetchingEnable</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CachePrefetchingEnable(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to enable pre-fetching for the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2243</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga194756a68fde927d8b6bbc5255177414"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga194756a68fde927d8b6bbc5255177414">Cy_SMIF_DeviceTransfer_SetMergeTimeout</a></div><div class="ttdeci">void Cy_SMIF_DeviceTransfer_SetMergeTimeout(SMIF_Type *base, cy_en_smif_slave_select_t slave, cy_en_smif_merge_timeout_t timeout)</div><div class="ttdoc">This function enables merging continuous transfers over XIP so that the overhead of transferring comm...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2628</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga28f06f761c260849fa8e37d7a3f858dc"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga28f06f761c260849fa8e37d7a3f858dc">Cy_SMIF_CacheEnable</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CacheEnable(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to enable the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2158</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga6d2d7ef86eccf2e7a3a2f760208bea0b"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga6d2d7ef86eccf2e7a3a2f760208bea0b">Cy_SMIF_DeviceTransfer_ClearMergeTimeout</a></div><div class="ttdeci">void Cy_SMIF_DeviceTransfer_ClearMergeTimeout(SMIF_Type *base, cy_en_smif_slave_select_t slave)</div><div class="ttdoc">This function disables continuous transfer merging.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2654</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga72240c0ce8307c50b65c4fca45c9cd30"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga72240c0ce8307c50b65c4fca45c9cd30">Cy_SMIF_CacheInvalidate</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CacheInvalidate(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to invalidate/clear the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2329</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gad776a0db9224477ab865254a32d9e312"><div class="ttname"><a href="group__group__smif__enums.html#gad776a0db9224477ab865254a32d9e312">cy_en_smif_slave_select_t</a></div><div class="ttdeci">cy_en_smif_slave_select_t</div><div class="ttdoc">The SMIF slave select definitions for the driver API.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:727</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga2baa7c37d2cedf2e2c837facc753ab5da562131834e2b77b141db45354e8584ec"><div class="ttname"><a href="group__group__smif__enums.html#gga2baa7c37d2cedf2e2c837facc753ab5da562131834e2b77b141db45354e8584ec">CY_SMIF_MEMORY</a></div><div class="ttdeci">@ CY_SMIF_MEMORY</div><div class="ttdoc">XIP (eXecute In Place) mode.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:571</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d"><div class="ttname"><a href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a></div><div class="ttdeci">@ CY_SMIF_SLAVE_SELECT_0</div><div class="ttdoc">The SMIF slave select 0</div><div class="ttdef"><b>Definition:</b> cy_smif.h:728</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_ggaf7e001d5a1821a56324e8898913b21efa629d9c56adb3c14ac83a486fe57afa84"><div class="ttname"><a href="group__group__smif__enums.html#ggaf7e001d5a1821a56324e8898913b21efa629d9c56adb3c14ac83a486fe57afa84">CY_SMIF_CACHE_BOTH</a></div><div class="ttdeci">@ CY_SMIF_CACHE_BOTH</div><div class="ttdoc">The SMIF both caches.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:761</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga0ff445110c019e30b942fb87878b32c7"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga0ff445110c019e30b942fb87878b32c7">Cy_SMIF_CachePrefetchingEnable</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CachePrefetchingEnable(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to enable pre-fetching for the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2246</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga194756a68fde927d8b6bbc5255177414"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga194756a68fde927d8b6bbc5255177414">Cy_SMIF_DeviceTransfer_SetMergeTimeout</a></div><div class="ttdeci">void Cy_SMIF_DeviceTransfer_SetMergeTimeout(SMIF_Type *base, cy_en_smif_slave_select_t slave, cy_en_smif_merge_timeout_t timeout)</div><div class="ttdoc">This function enables merging continuous transfers over XIP so that the overhead of transferring comm...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2631</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga28f06f761c260849fa8e37d7a3f858dc"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga28f06f761c260849fa8e37d7a3f858dc">Cy_SMIF_CacheEnable</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CacheEnable(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to enable the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2161</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga6d2d7ef86eccf2e7a3a2f760208bea0b"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga6d2d7ef86eccf2e7a3a2f760208bea0b">Cy_SMIF_DeviceTransfer_ClearMergeTimeout</a></div><div class="ttdeci">void Cy_SMIF_DeviceTransfer_ClearMergeTimeout(SMIF_Type *base, cy_en_smif_slave_select_t slave)</div><div class="ttdoc">This function disables continuous transfer merging.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2657</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga72240c0ce8307c50b65c4fca45c9cd30"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga72240c0ce8307c50b65c4fca45c9cd30">Cy_SMIF_CacheInvalidate</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CacheInvalidate(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to invalidate/clear the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2332</div></div>
 <div class="ttc" id="agroup__group__smif__low__level__functions_html_ga957f49ed7cf091e9b9d736ee589f2583"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga957f49ed7cf091e9b9d736ee589f2583">Cy_SMIF_SetMode</a></div><div class="ttdeci">void Cy_SMIF_SetMode(SMIF_Type *base, cy_en_smif_mode_t mode)</div><div class="ttdoc">Sets the mode of operation for the SMIF.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:354</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_gacb0c1e80c19ef607a1efc70df6818ccb"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gacb0c1e80c19ef607a1efc70df6818ccb">Cy_SMIF_CacheDisable</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CacheDisable(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to disable the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2200</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_gacb0c1e80c19ef607a1efc70df6818ccb"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gacb0c1e80c19ef607a1efc70df6818ccb">Cy_SMIF_CacheDisable</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_CacheDisable(SMIF_Type *base, cy_en_smif_cache_t cacheType)</div><div class="ttdoc">This function is used to disable the fast cache, the slow cache or both.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2203</div></div>
 <div class="ttc" id="agroup__group__smif__macros__sfdp_html_ga993e6f1e15ec86683e6685dc222c8f32"><div class="ttname"><a href="group__group__smif__macros__sfdp.html#ga993e6f1e15ec86683e6685dc222c8f32">CY_SMIF_FLASHDATA</a></div><div class="ttdeci">uint32_t CY_SMIF_FLASHDATA</div><div class="ttdoc">HyperBus Flash Data Type.</div><div class="ttdef"><b>Definition:</b> cy_smif_memslot.h:448</div></div>
 </div><!-- fragment -->
 </div>
@@ -1813,9 +1828,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SMIF_IsBridgeOn</b
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc"><div class="ttname"><a href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a></div><div class="ttdeci">@ CY_SMIF_SUCCESS</div><div class="ttdoc">Successful SMIF operation.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:680</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga7a547a8e9db987215d7be94e25688ca1"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga7a547a8e9db987215d7be94e25688ca1">Cy_SMIF_Set_DelayTapSel</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_Set_DelayTapSel(SMIF_Type *base, uint8_t tapSel)</div><div class="ttdoc">This function sets delay tap number for the SMIF master clock which is common for all memory devices ...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2908</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga810c01bc60e2eafeb53a7c9cfa0b7115"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga810c01bc60e2eafeb53a7c9cfa0b7115">Cy_SMIF_Get_DelayTapSel</a></div><div class="ttdeci">uint8_t Cy_SMIF_Get_DelayTapSel(SMIF_Type *base)</div><div class="ttdoc">This function returns delay tap number which has been set for the SMIF.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2934</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc"><div class="ttname"><a href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a></div><div class="ttdeci">@ CY_SMIF_SUCCESS</div><div class="ttdoc">Successful SMIF operation.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:684</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga7a547a8e9db987215d7be94e25688ca1"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga7a547a8e9db987215d7be94e25688ca1">Cy_SMIF_Set_DelayTapSel</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_Set_DelayTapSel(SMIF_Type *base, uint8_t tapSel)</div><div class="ttdoc">This function sets delay tap number for the SMIF master clock which is common for all memory devices ...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2911</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga810c01bc60e2eafeb53a7c9cfa0b7115"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga810c01bc60e2eafeb53a7c9cfa0b7115">Cy_SMIF_Get_DelayTapSel</a></div><div class="ttdeci">uint8_t Cy_SMIF_Get_DelayTapSel(SMIF_Type *base)</div><div class="ttdoc">This function returns delay tap number which has been set for the SMIF.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2937</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2415,10 +2430,10 @@ This is a blocking API. The API waits for encryption completion. Will exit if a 
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__context__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__context__t">cy_stc_smif_context_t</a></div><div class="ttdoc">The SMIF internal context data.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:989</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga49e4163f4131d692405b9e9430ac61b6"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga49e4163f4131d692405b9e9430ac61b6">Cy_SMIF_SetCryptoKey</a></div><div class="ttdeci">void Cy_SMIF_SetCryptoKey(SMIF_Type *base, uint32_t *key)</div><div class="ttdoc">Sets the AES-128 encryption key into SMIF crypto registers.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:1739</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga91a32005b94591adb8fd7daa1068ddbc"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga91a32005b94591adb8fd7daa1068ddbc">Cy_SMIF_Encrypt</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_Encrypt(SMIF_Type *base, uint32_t address, uint8_t data[], uint32_t size, cy_stc_smif_context_t const *context)</div><div class="ttdoc">Uses the Encryption engine to create an encrypted result when the input, key and data arrays are prov...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2076</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_gac43fe9363025064cfa881b2bed68c645"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gac43fe9363025064cfa881b2bed68c645">Cy_SMIF_SetCryptoIV</a></div><div class="ttdeci">void Cy_SMIF_SetCryptoIV(SMIF_Type *base, uint32_t *nonce)</div><div class="ttdoc">Sets the 96 bit initialization vector (nonce) into SMIF crypto registers.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:1760</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__context__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__context__t">cy_stc_smif_context_t</a></div><div class="ttdoc">The SMIF internal context data.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:994</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga49e4163f4131d692405b9e9430ac61b6"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga49e4163f4131d692405b9e9430ac61b6">Cy_SMIF_SetCryptoKey</a></div><div class="ttdeci">void Cy_SMIF_SetCryptoKey(SMIF_Type *base, uint32_t *key)</div><div class="ttdoc">Sets the AES-128 encryption key into SMIF crypto registers.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:1742</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga91a32005b94591adb8fd7daa1068ddbc"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga91a32005b94591adb8fd7daa1068ddbc">Cy_SMIF_Encrypt</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_Encrypt(SMIF_Type *base, uint32_t address, uint8_t data[], uint32_t size, cy_stc_smif_context_t const *context)</div><div class="ttdoc">Uses the Encryption engine to create an encrypted result when the input, key and data arrays are prov...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2079</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_gac43fe9363025064cfa881b2bed68c645"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gac43fe9363025064cfa881b2bed68c645">Cy_SMIF_SetCryptoIV</a></div><div class="ttdeci">void Cy_SMIF_SetCryptoIV(SMIF_Type *base, uint32_t *nonce)</div><div class="ttdoc">Sets the 96 bit initialization vector (nonce) into SMIF crypto registers.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:1763</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -3156,16 +3171,16 @@ This is a blocking API. The API waits for encryption completion. Will exit if a 
 <div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca">Cy_SMIF_SetRxCaptureMode</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9">CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>);</div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">/* Set Master DLP */</span></div>
-<div class="line">        SMIF_Status = Cy_SMIF_SetMasterDLP(SMIF, S25HS512T_DLP_PATTERN, S25HS512T_DLP_SIZE);</div>
+<div class="line">        SMIF_Status = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">Cy_SMIF_SetMasterDLP</a>(SMIF, S25HS512T_DLP_PATTERN, S25HS512T_DLP_SIZE);</div>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">if</span> (SMIF_Status == <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a>)</div>
 <div class="line">        {</div>
 <div class="line">            <span class="comment">/* Optional : To retrieve the DLP settings used by SMIF */</span></div>
 <div class="line">              <span class="comment">/* Get Master DLP Size */</span></div>
-<div class="line">              dlp_size = Cy_SMIF_GetMasterDLPSize(SMIF);</div>
+<div class="line">              dlp_size = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421">Cy_SMIF_GetMasterDLPSize</a>(SMIF);</div>
 <div class="line"> </div>
 <div class="line">              <span class="comment">/* Get Master DLP Pattern */</span></div>
-<div class="line">            dlp_pattern = Cy_SMIF_GetMasterDLP(SMIF);</div>
+<div class="line">            dlp_pattern = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b">Cy_SMIF_GetMasterDLP</a>(SMIF);</div>
 <div class="line">        }</div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">/* Enable SMIF */</span></div>
@@ -3178,20 +3193,374 @@ This is a blocking API. The API waits for encryption completion. Will exit if a 
 <div class="line">    (void)dlp_pattern;</div>
 <div class="line">    <span class="comment">/* Perform Memory slot Initialization and Read operation should use DLP in latency cycles duration */</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_aafd7927f913f7ce00475898ca8a032f8"><div class="ttname"><a href="group__group__smif__data__structures.html#aafd7927f913f7ce00475898ca8a032f8">cy_stc_smif_config_t::mode</a></div><div class="ttdeci">uint32_t mode</div><div class="ttdoc">Specifies the mode of operation cy_en_smif_mode_t.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:956</div></div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__config__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__config__t">cy_stc_smif_config_t</a></div><div class="ttdoc">The SMIF configuration structure.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:955</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_ga75fb83c49239ece738cfba778165cb41"><div class="ttname"><a href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a></div><div class="ttdeci">cy_en_smif_status_t</div><div class="ttdoc">The SMIF API return values.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:679</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9"><div class="ttname"><a href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9">CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</a></div><div class="ttdeci">@ CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</div><div class="ttdoc">Normal SPI with DLP (Data Learning Pattern).</div><div class="ttdef"><b>Definition:</b> cy_smif.h:733</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga2baa7c37d2cedf2e2c837facc753ab5da4fe852fb31547c77b31203ec5c43ca91"><div class="ttname"><a href="group__group__smif__enums.html#gga2baa7c37d2cedf2e2c837facc753ab5da4fe852fb31547c77b31203ec5c43ca91">CY_SMIF_NORMAL</a></div><div class="ttdeci">@ CY_SMIF_NORMAL</div><div class="ttdoc">Command mode (MMIO mode).</div><div class="ttdef"><b>Definition:</b> cy_smif.h:566</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga6a2149f74b63ec4ebc76b99a9eb633d2a2e6388423a1b56880779651f73b3d2b7"><div class="ttname"><a href="group__group__smif__enums.html#gga6a2149f74b63ec4ebc76b99a9eb633d2a2e6388423a1b56880779651f73b3d2b7">CY_SMIF_SEL_INVERTED_INTERNAL_CLK</a></div><div class="ttdeci">@ CY_SMIF_SEL_INVERTED_INTERNAL_CLK</div><div class="ttdoc">The SMIF internal inverted clock.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:745</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24"><div class="ttname"><a href="group__group__smif__enums.html#gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24">CY_SMIF_DATA_SEL0</a></div><div class="ttdeci">@ CY_SMIF_DATA_SEL0</div><div class="ttdoc">smif.spi_data[0] = DATA0, smif.spi_data[1] = DATA1, ..., smif.spi_data[7] = DATA7.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:545</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b"><div class="ttname"><a href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a></div><div class="ttdeci">@ CY_SMIF_BAD_PARAM</div><div class="ttdoc">The SMIF API received the wrong parameter.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:688</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_ggaf2f886b17b9d40712b212e704665341ea4ee6427df49e552167b2eb7a70f4afc4"><div class="ttname"><a href="group__group__smif__enums.html#ggaf2f886b17b9d40712b212e704665341ea4ee6427df49e552167b2eb7a70f4afc4">CY_SMIF_BUS_ERROR</a></div><div class="ttdeci">@ CY_SMIF_BUS_ERROR</div><div class="ttdoc">Generates a bus error.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:517</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_aafd7927f913f7ce00475898ca8a032f8"><div class="ttname"><a href="group__group__smif__data__structures.html#aafd7927f913f7ce00475898ca8a032f8">cy_stc_smif_config_t::mode</a></div><div class="ttdeci">uint32_t mode</div><div class="ttdoc">Specifies the mode of operation cy_en_smif_mode_t.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:961</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__config__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__config__t">cy_stc_smif_config_t</a></div><div class="ttdoc">The SMIF configuration structure.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:960</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_ga75fb83c49239ece738cfba778165cb41"><div class="ttname"><a href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a></div><div class="ttdeci">cy_en_smif_status_t</div><div class="ttdoc">The SMIF API return values.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:683</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9"><div class="ttname"><a href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9">CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</a></div><div class="ttdeci">@ CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</div><div class="ttdoc">Normal SPI with DLP (Data Learning Pattern).</div><div class="ttdef"><b>Definition:</b> cy_smif.h:738</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga2baa7c37d2cedf2e2c837facc753ab5da4fe852fb31547c77b31203ec5c43ca91"><div class="ttname"><a href="group__group__smif__enums.html#gga2baa7c37d2cedf2e2c837facc753ab5da4fe852fb31547c77b31203ec5c43ca91">CY_SMIF_NORMAL</a></div><div class="ttdeci">@ CY_SMIF_NORMAL</div><div class="ttdoc">Command mode (MMIO mode).</div><div class="ttdef"><b>Definition:</b> cy_smif.h:570</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga6a2149f74b63ec4ebc76b99a9eb633d2a2e6388423a1b56880779651f73b3d2b7"><div class="ttname"><a href="group__group__smif__enums.html#gga6a2149f74b63ec4ebc76b99a9eb633d2a2e6388423a1b56880779651f73b3d2b7">CY_SMIF_SEL_INVERTED_INTERNAL_CLK</a></div><div class="ttdeci">@ CY_SMIF_SEL_INVERTED_INTERNAL_CLK</div><div class="ttdoc">The SMIF internal inverted clock.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:750</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24"><div class="ttname"><a href="group__group__smif__enums.html#gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24">CY_SMIF_DATA_SEL0</a></div><div class="ttdeci">@ CY_SMIF_DATA_SEL0</div><div class="ttdoc">smif.spi_data[0] = DATA0, smif.spi_data[1] = DATA1, ..., smif.spi_data[7] = DATA7.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:549</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b"><div class="ttname"><a href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a></div><div class="ttdeci">@ CY_SMIF_BAD_PARAM</div><div class="ttdoc">The SMIF API received the wrong parameter.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:692</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_ggaf2f886b17b9d40712b212e704665341ea4ee6427df49e552167b2eb7a70f4afc4"><div class="ttname"><a href="group__group__smif__enums.html#ggaf2f886b17b9d40712b212e704665341ea4ee6427df49e552167b2eb7a70f4afc4">CY_SMIF_BUS_ERROR</a></div><div class="ttdeci">@ CY_SMIF_BUS_ERROR</div><div class="ttdoc">Generates a bus error.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:521</div></div>
 <div class="ttc" id="agroup__group__smif__low__level__functions_html_ga1df033f6664a2b41cf044f2c4ec60817"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga1df033f6664a2b41cf044f2c4ec60817">Cy_SMIF_SetDataSelect</a></div><div class="ttdeci">void Cy_SMIF_SetDataSelect(SMIF_Type *base, cy_en_smif_slave_select_t slaveSelect, cy_en_smif_data_select_t dataSelect)</div><div class="ttdoc">This function configures the data select option for a specific slave.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:420</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga25746c7a8d9bd474509d10dcf48133ca"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca">Cy_SMIF_SetRxCaptureMode</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_SetRxCaptureMode(SMIF_Type *base, cy_en_smif_capture_mode_t mode, cy_en_smif_slave_select_t slaveId)</div><div class="ttdoc">This function sets the Rx Capture mode setting for SMIF IP block instance.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2428</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga220136f6a2fe90ea720c3e1577f96421"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421">Cy_SMIF_GetMasterDLPSize</a></div><div class="ttdeci">uint8_t Cy_SMIF_GetMasterDLPSize(SMIF_Type *base)</div><div class="ttdoc">This function gets the data learning pattern size configured.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2534</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga25746c7a8d9bd474509d10dcf48133ca"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca">Cy_SMIF_SetRxCaptureMode</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_SetRxCaptureMode(SMIF_Type *base, cy_en_smif_capture_mode_t mode, cy_en_smif_slave_select_t slaveId)</div><div class="ttdoc">This function sets the Rx Capture mode setting for SMIF IP block instance.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2431</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga338f6c1d218cd2093c48254995f6f06b"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b">Cy_SMIF_GetMasterDLP</a></div><div class="ttdeci">uint16_t Cy_SMIF_GetMasterDLP(SMIF_Type *base)</div><div class="ttdoc">This function gets the data learning pattern configured.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2517</div></div>
 <div class="ttc" id="agroup__group__smif__low__level__functions_html_ga5428ca682fd56b837a1a3763fc2596b8"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga5428ca682fd56b837a1a3763fc2596b8">Cy_SMIF_Enable</a></div><div class="ttdeci">void Cy_SMIF_Enable(SMIF_Type *base, cy_stc_smif_context_t *context)</div><div class="ttdoc">Enables the operation of the SMIF block.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:921</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_ga6ecd1075db9d75ae45f4eb437dbfed8d"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">Cy_SMIF_SetMasterDLP</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_SetMasterDLP(SMIF_Type *base, uint16 dlp, uint8_t size)</div><div class="ttdoc">This function sets the data learning pattern.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2480</div></div>
 <div class="ttc" id="agroup__group__smif__low__level__functions_html_gaea2684847f04e2e7e2c85cfe7fd37881"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_Init(SMIF_Type *base, cy_stc_smif_config_t const *config, uint32_t timeout, cy_stc_smif_context_t *context)</div><div class="ttdoc">This function initializes the SMIF block as a communication block.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:75</div></div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="ga6ecd1075db9d75ae45f4eb437dbfed8d" name="ga6ecd1075db9d75ae45f4eb437dbfed8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6ecd1075db9d75ae45f4eb437dbfed8d">&#9670;&nbsp;</a></span>Cy_SMIF_SetMasterDLP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> Cy_SMIF_SetMasterDLP </td>
+          <td>(</td>
+          <td class="paramtype">SMIF_Type *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16&#160;</td>
+          <td class="paramname"><em>dlp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function sets the data learning pattern. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Holds the base address of the SMIF block registers.</td></tr>
+    <tr><td class="paramname">dlp</td><td>data learning pattern (maximum 16-bit)</td></tr>
+    <tr><td class="paramname">size</td><td>pattern size (allowed range 1 to 16 bits)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>status of configuration.<ul>
+<li><a class="el" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a></li>
+<li><a class="el" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a></li>
+</ul>
+</dd></dl>
+<div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Scenario: Using an external flash which supports DLP (Data Learning Pattern). */</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">    #define S25HS512T_DLP_PATTERN       (0U)</span></div>
+<div class="line"><span class="preprocessor">    #define S25HS512T_DLP_SIZE          (8U)</span></div>
+<div class="line"><span class="preprocessor">    #define TIMEOUT_1_S                 (1000U)</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_enumeration" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> status = <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a>;</div>
+<div class="line">    <a class="code hl_struct" href="group__group__smif__data__structures.html#structcy__stc__smif__context__t">cy_stc_smif_context_t</a> SMIFContext;</div>
+<div class="line">    uint16_t dlp_size = 0U;</div>
+<div class="line">    uint16_t dlp_pattern = 0U;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">/* SMIF configuration parameters */</span></div>
+<div class="line">    <a class="code hl_struct" href="group__group__smif__data__structures.html#structcy__stc__smif__config__t">cy_stc_smif_config_t</a> tst_smifConfig =</div>
+<div class="line">    {</div>
+<div class="line">        .<a class="code hl_variable" href="group__group__smif__data__structures.html#aafd7927f913f7ce00475898ca8a032f8">mode</a>           =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga2baa7c37d2cedf2e2c837facc753ab5da4fe852fb31547c77b31203ec5c43ca91">CY_SMIF_NORMAL</a>,      <span class="comment">/* Mode of operation */</span></div>
+<div class="line">        .deselectDelay  =  DESELECT_DELAY,      <span class="comment">/* Minimum duration of SPI deselection */</span></div>
+<div class="line">        .rxClockSel     =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga6a2149f74b63ec4ebc76b99a9eb633d2a2e6388423a1b56880779651f73b3d2b7">CY_SMIF_SEL_INVERTED_INTERNAL_CLK</a>,     <span class="comment">/* Clock source for the receiver clock. This field is not used in SMIF IP version 5 */</span></div>
+<div class="line">        .blockEvent     =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggaf2f886b17b9d40712b212e704665341ea4ee6427df49e552167b2eb7a70f4afc4">CY_SMIF_BUS_ERROR</a>    <span class="comment">/* What happens when there is a read</span></div>
+<div class="line"><span class="comment">                                                 * to an empty RX FIFO or write to a full TX FIFO</span></div>
+<div class="line"><span class="comment">                                                 */</span></div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_enumeration" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> SMIF_Status = <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a>;</div>
+<div class="line"> </div>
+<div class="line">    SMIF_Status = <a class="code hl_function" href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a>(SMIF, &amp;tst_smifConfig, TIMEOUT_1_MS, &amp;SMIFContext);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (SMIF_Status == <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a>)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="comment">/* Set Data Select */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga1df033f6664a2b41cf044f2c4ec60817">Cy_SMIF_SetDataSelect</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24">CY_SMIF_DATA_SEL0</a>);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Set RX Capture mode to Normal SPI with Data Learning Pattern */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca">Cy_SMIF_SetRxCaptureMode</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9">CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Set Master DLP */</span></div>
+<div class="line">        SMIF_Status = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">Cy_SMIF_SetMasterDLP</a>(SMIF, S25HS512T_DLP_PATTERN, S25HS512T_DLP_SIZE);</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordflow">if</span> (SMIF_Status == <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a>)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="comment">/* Optional : To retrieve the DLP settings used by SMIF */</span></div>
+<div class="line">              <span class="comment">/* Get Master DLP Size */</span></div>
+<div class="line">              dlp_size = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421">Cy_SMIF_GetMasterDLPSize</a>(SMIF);</div>
+<div class="line"> </div>
+<div class="line">              <span class="comment">/* Get Master DLP Pattern */</span></div>
+<div class="line">            dlp_pattern = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b">Cy_SMIF_GetMasterDLP</a>(SMIF);</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Enable SMIF */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga5428ca682fd56b837a1a3763fc2596b8">Cy_SMIF_Enable</a>(SMIF, &amp;SMIFContext);</div>
+<div class="line"> </div>
+<div class="line">    }</div>
+<div class="line">    <span class="comment">/* The following void casts are to eliminate unused-variable warnings at compile-time*/</span></div>
+<div class="line">    (void)status;</div>
+<div class="line">    (void)dlp_size;</div>
+<div class="line">    (void)dlp_pattern;</div>
+<div class="line">    <span class="comment">/* Perform Memory slot Initialization and Read operation should use DLP in latency cycles duration */</span></div>
+<div class="line"> </div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga338f6c1d218cd2093c48254995f6f06b" name="ga338f6c1d218cd2093c48254995f6f06b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga338f6c1d218cd2093c48254995f6f06b">&#9670;&nbsp;</a></span>Cy_SMIF_GetMasterDLP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t Cy_SMIF_GetMasterDLP </td>
+          <td>(</td>
+          <td class="paramtype">SMIF_Type *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function gets the data learning pattern configured. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Holds the base address of the SMIF block registers.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Data learning pattern configured</dd></dl>
+<div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Scenario: Using an external flash which supports DLP (Data Learning Pattern). */</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">    #define S25HS512T_DLP_PATTERN       (0U)</span></div>
+<div class="line"><span class="preprocessor">    #define S25HS512T_DLP_SIZE          (8U)</span></div>
+<div class="line"><span class="preprocessor">    #define TIMEOUT_1_S                 (1000U)</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_enumeration" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> status = <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a>;</div>
+<div class="line">    <a class="code hl_struct" href="group__group__smif__data__structures.html#structcy__stc__smif__context__t">cy_stc_smif_context_t</a> SMIFContext;</div>
+<div class="line">    uint16_t dlp_size = 0U;</div>
+<div class="line">    uint16_t dlp_pattern = 0U;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">/* SMIF configuration parameters */</span></div>
+<div class="line">    <a class="code hl_struct" href="group__group__smif__data__structures.html#structcy__stc__smif__config__t">cy_stc_smif_config_t</a> tst_smifConfig =</div>
+<div class="line">    {</div>
+<div class="line">        .<a class="code hl_variable" href="group__group__smif__data__structures.html#aafd7927f913f7ce00475898ca8a032f8">mode</a>           =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga2baa7c37d2cedf2e2c837facc753ab5da4fe852fb31547c77b31203ec5c43ca91">CY_SMIF_NORMAL</a>,      <span class="comment">/* Mode of operation */</span></div>
+<div class="line">        .deselectDelay  =  DESELECT_DELAY,      <span class="comment">/* Minimum duration of SPI deselection */</span></div>
+<div class="line">        .rxClockSel     =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga6a2149f74b63ec4ebc76b99a9eb633d2a2e6388423a1b56880779651f73b3d2b7">CY_SMIF_SEL_INVERTED_INTERNAL_CLK</a>,     <span class="comment">/* Clock source for the receiver clock. This field is not used in SMIF IP version 5 */</span></div>
+<div class="line">        .blockEvent     =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggaf2f886b17b9d40712b212e704665341ea4ee6427df49e552167b2eb7a70f4afc4">CY_SMIF_BUS_ERROR</a>    <span class="comment">/* What happens when there is a read</span></div>
+<div class="line"><span class="comment">                                                 * to an empty RX FIFO or write to a full TX FIFO</span></div>
+<div class="line"><span class="comment">                                                 */</span></div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_enumeration" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> SMIF_Status = <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a>;</div>
+<div class="line"> </div>
+<div class="line">    SMIF_Status = <a class="code hl_function" href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a>(SMIF, &amp;tst_smifConfig, TIMEOUT_1_MS, &amp;SMIFContext);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (SMIF_Status == <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a>)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="comment">/* Set Data Select */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga1df033f6664a2b41cf044f2c4ec60817">Cy_SMIF_SetDataSelect</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24">CY_SMIF_DATA_SEL0</a>);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Set RX Capture mode to Normal SPI with Data Learning Pattern */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca">Cy_SMIF_SetRxCaptureMode</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9">CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Set Master DLP */</span></div>
+<div class="line">        SMIF_Status = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">Cy_SMIF_SetMasterDLP</a>(SMIF, S25HS512T_DLP_PATTERN, S25HS512T_DLP_SIZE);</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordflow">if</span> (SMIF_Status == <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a>)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="comment">/* Optional : To retrieve the DLP settings used by SMIF */</span></div>
+<div class="line">              <span class="comment">/* Get Master DLP Size */</span></div>
+<div class="line">              dlp_size = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421">Cy_SMIF_GetMasterDLPSize</a>(SMIF);</div>
+<div class="line"> </div>
+<div class="line">              <span class="comment">/* Get Master DLP Pattern */</span></div>
+<div class="line">            dlp_pattern = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b">Cy_SMIF_GetMasterDLP</a>(SMIF);</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Enable SMIF */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga5428ca682fd56b837a1a3763fc2596b8">Cy_SMIF_Enable</a>(SMIF, &amp;SMIFContext);</div>
+<div class="line"> </div>
+<div class="line">    }</div>
+<div class="line">    <span class="comment">/* The following void casts are to eliminate unused-variable warnings at compile-time*/</span></div>
+<div class="line">    (void)status;</div>
+<div class="line">    (void)dlp_size;</div>
+<div class="line">    (void)dlp_pattern;</div>
+<div class="line">    <span class="comment">/* Perform Memory slot Initialization and Read operation should use DLP in latency cycles duration */</span></div>
+<div class="line"> </div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ga220136f6a2fe90ea720c3e1577f96421" name="ga220136f6a2fe90ea720c3e1577f96421"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga220136f6a2fe90ea720c3e1577f96421">&#9670;&nbsp;</a></span>Cy_SMIF_GetMasterDLPSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t Cy_SMIF_GetMasterDLPSize </td>
+          <td>(</td>
+          <td class="paramtype">SMIF_Type *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function gets the data learning pattern size configured. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Holds the base address of the SMIF block registers.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Data learning pattern size configured.</dd></dl>
+<div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Scenario: Using an external flash which supports DLP (Data Learning Pattern). */</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">    #define S25HS512T_DLP_PATTERN       (0U)</span></div>
+<div class="line"><span class="preprocessor">    #define S25HS512T_DLP_SIZE          (8U)</span></div>
+<div class="line"><span class="preprocessor">    #define TIMEOUT_1_S                 (1000U)</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_enumeration" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> status = <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a>;</div>
+<div class="line">    <a class="code hl_struct" href="group__group__smif__data__structures.html#structcy__stc__smif__context__t">cy_stc_smif_context_t</a> SMIFContext;</div>
+<div class="line">    uint16_t dlp_size = 0U;</div>
+<div class="line">    uint16_t dlp_pattern = 0U;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">/* SMIF configuration parameters */</span></div>
+<div class="line">    <a class="code hl_struct" href="group__group__smif__data__structures.html#structcy__stc__smif__config__t">cy_stc_smif_config_t</a> tst_smifConfig =</div>
+<div class="line">    {</div>
+<div class="line">        .<a class="code hl_variable" href="group__group__smif__data__structures.html#aafd7927f913f7ce00475898ca8a032f8">mode</a>           =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga2baa7c37d2cedf2e2c837facc753ab5da4fe852fb31547c77b31203ec5c43ca91">CY_SMIF_NORMAL</a>,      <span class="comment">/* Mode of operation */</span></div>
+<div class="line">        .deselectDelay  =  DESELECT_DELAY,      <span class="comment">/* Minimum duration of SPI deselection */</span></div>
+<div class="line">        .rxClockSel     =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga6a2149f74b63ec4ebc76b99a9eb633d2a2e6388423a1b56880779651f73b3d2b7">CY_SMIF_SEL_INVERTED_INTERNAL_CLK</a>,     <span class="comment">/* Clock source for the receiver clock. This field is not used in SMIF IP version 5 */</span></div>
+<div class="line">        .blockEvent     =  <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggaf2f886b17b9d40712b212e704665341ea4ee6427df49e552167b2eb7a70f4afc4">CY_SMIF_BUS_ERROR</a>    <span class="comment">/* What happens when there is a read</span></div>
+<div class="line"><span class="comment">                                                 * to an empty RX FIFO or write to a full TX FIFO</span></div>
+<div class="line"><span class="comment">                                                 */</span></div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_enumeration" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> SMIF_Status = <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41a858bf399de59819187ec0b3d8913107b">CY_SMIF_BAD_PARAM</a>;</div>
+<div class="line"> </div>
+<div class="line">    SMIF_Status = <a class="code hl_function" href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a>(SMIF, &amp;tst_smifConfig, TIMEOUT_1_MS, &amp;SMIFContext);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (SMIF_Status == <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a>)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="comment">/* Set Data Select */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga1df033f6664a2b41cf044f2c4ec60817">Cy_SMIF_SetDataSelect</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24">CY_SMIF_DATA_SEL0</a>);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Set RX Capture mode to Normal SPI with Data Learning Pattern */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca">Cy_SMIF_SetRxCaptureMode</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9">CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Set Master DLP */</span></div>
+<div class="line">        SMIF_Status = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">Cy_SMIF_SetMasterDLP</a>(SMIF, S25HS512T_DLP_PATTERN, S25HS512T_DLP_SIZE);</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordflow">if</span> (SMIF_Status == <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc">CY_SMIF_SUCCESS</a>)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="comment">/* Optional : To retrieve the DLP settings used by SMIF */</span></div>
+<div class="line">              <span class="comment">/* Get Master DLP Size */</span></div>
+<div class="line">              dlp_size = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421">Cy_SMIF_GetMasterDLPSize</a>(SMIF);</div>
+<div class="line"> </div>
+<div class="line">              <span class="comment">/* Get Master DLP Pattern */</span></div>
+<div class="line">            dlp_pattern = <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b">Cy_SMIF_GetMasterDLP</a>(SMIF);</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Enable SMIF */</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga5428ca682fd56b837a1a3763fc2596b8">Cy_SMIF_Enable</a>(SMIF, &amp;SMIFContext);</div>
+<div class="line"> </div>
+<div class="line">    }</div>
+<div class="line">    <span class="comment">/* The following void casts are to eliminate unused-variable warnings at compile-time*/</span></div>
+<div class="line">    (void)status;</div>
+<div class="line">    (void)dlp_size;</div>
+<div class="line">    (void)dlp_pattern;</div>
+<div class="line">    <span class="comment">/* Perform Memory slot Initialization and Read operation should use DLP in latency cycles duration */</span></div>
+<div class="line"> </div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="gae7f56e6919c991ce5b1e0947c0994644" name="gae7f56e6919c991ce5b1e0947c0994644"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae7f56e6919c991ce5b1e0947c0994644">&#9670;&nbsp;</a></span>Cy_SMIF_GetTapNumCapturedCorrectDLP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t Cy_SMIF_GetTapNumCapturedCorrectDLP </td>
+          <td>(</td>
+          <td class="paramtype">SMIF_Type *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>bit</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function gets number of delay taps used for specified data line. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Holds the base address of the SMIF block registers.</td></tr>
+    <tr><td class="paramname">bit</td><td>DLP Tap selection for the bit position mapped as per <a class="el" href="group__group__smif__low__level__functions.html#ga1df033f6664a2b41cf044f2c4ec60817">Cy_SMIF_SetDataSelect</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Data learning pattern configured</dd></dl>
+<div class="fragment"><div class="line">   uint8_t delaytap_bit0, delaytap_bit1, delaytap_bit2, delaytap_bit3;</div>
+<div class="line"> </div>
+<div class="line">   delaytap_bit0 = <a class="code hl_function" href="group__group__smif__low__level__functions.html#gae7f56e6919c991ce5b1e0947c0994644">Cy_SMIF_GetTapNumCapturedCorrectDLP</a>(SMIF, 0U);</div>
+<div class="line">   delaytap_bit1 = <a class="code hl_function" href="group__group__smif__low__level__functions.html#gae7f56e6919c991ce5b1e0947c0994644">Cy_SMIF_GetTapNumCapturedCorrectDLP</a>(SMIF, 0U);</div>
+<div class="line">   delaytap_bit2 = <a class="code hl_function" href="group__group__smif__low__level__functions.html#gae7f56e6919c991ce5b1e0947c0994644">Cy_SMIF_GetTapNumCapturedCorrectDLP</a>(SMIF, 0U);</div>
+<div class="line">   delaytap_bit3 = <a class="code hl_function" href="group__group__smif__low__level__functions.html#gae7f56e6919c991ce5b1e0947c0994644">Cy_SMIF_GetTapNumCapturedCorrectDLP</a>(SMIF, 0U);</div>
+<div class="line"> </div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_gae7f56e6919c991ce5b1e0947c0994644"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gae7f56e6919c991ce5b1e0947c0994644">Cy_SMIF_GetTapNumCapturedCorrectDLP</a></div><div class="ttdeci">uint8_t Cy_SMIF_GetTapNumCapturedCorrectDLP(SMIF_Type *base, uint8_t bit)</div><div class="ttdoc">This function gets number of delay taps used for specified data line.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2554</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="gae88b33af21e1dd8fc761317b4f81b4f4" name="gae88b33af21e1dd8fc761317b4f81b4f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae88b33af21e1dd8fc761317b4f81b4f4">&#9670;&nbsp;</a></span>CY_SMIF_GetDelayTapsNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t CY_SMIF_GetDelayTapsNumber </td>
+          <td>(</td>
+          <td class="paramtype">volatile void *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function returns tap number which the SMIF IP has. </p>
+<p >User can input both SMIF DEVICE block address and SMIF block address</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Base address of the SMIF block or the SMIF DEVICE block.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Delay tap Number of the SMIF IP </dd></dl>
+
 </div>
 </div>
 <a id="gab67d2aecdf1783c11ea54acb78ea2034" name="gab67d2aecdf1783c11ea54acb78ea2034"></a>
@@ -3268,13 +3637,13 @@ This is a blocking API. The API waits for encryption completion. Will exit if a 
 <div class="line"> </div>
 <div class="line">        <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga5428ca682fd56b837a1a3763fc2596b8">Cy_SMIF_Enable</a>(SMIF, &amp;smifContext);</div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_ab44796423b973958270b506d73cbdfa0"><div class="ttname"><a href="group__group__smif__data__structures.html#ab44796423b973958270b506d73cbdfa0">cy_stc_smif_cache_config_t::enabled</a></div><div class="ttdeci">bool enabled</div><div class="ttdoc">Enable/Disable SMIF Internal CACHE.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1046</div></div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_acf2fe2272c55899642e90e4645828069"><div class="ttname"><a href="group__group__smif__data__structures.html#acf2fe2272c55899642e90e4645828069">cy_stc_smif_cache_region_t::enabled</a></div><div class="ttdeci">bool enabled</div><div class="ttdoc">Enable/Disable CACHE Region.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1037</div></div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_af49d9fa4debd37d3120198f336a6cd02"><div class="ttname"><a href="group__group__smif__data__structures.html#af49d9fa4debd37d3120198f336a6cd02">cy_stc_smif_cache_config_t::cache_region_0</a></div><div class="ttdeci">cy_stc_smif_cache_region_t cache_region_0</div><div class="ttdoc">CACHE region 0 configuration.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1048</div></div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__cache__config__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__cache__config__t">cy_stc_smif_cache_config_t</a></div><div class="ttdoc">Specifies SMIF cache configuration.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1045</div></div>
-<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__cache__region__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__cache__region__t">cy_stc_smif_cache_region_t</a></div><div class="ttdoc">Specifies SMIF cache region configuration.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1036</div></div>
-<div class="ttc" id="agroup__group__smif__enums_html_gga2a1121193cee4d27da9f5a354c9b14c9a2fb5dbad17396457183283f6f9efa62f"><div class="ttname"><a href="group__group__smif__enums.html#gga2a1121193cee4d27da9f5a354c9b14c9a2fb5dbad17396457183283f6f9efa62f">CY_SMIF_CACHEABLE_WB_RWA</a></div><div class="ttdeci">@ CY_SMIF_CACHEABLE_WB_RWA</div><div class="ttdoc">Cacheable, Write Back, Read &amp; Write Allocate.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:915</div></div>
-<div class="ttc" id="agroup__group__smif__low__level__functions_html_gab67d2aecdf1783c11ea54acb78ea2034"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gab67d2aecdf1783c11ea54acb78ea2034">Cy_SMIF_InitCache</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_InitCache(SMIF_CACHE_BLOCK_Type *base, const cy_stc_smif_cache_config_t *cache_config)</div><div class="ttdoc">This function initializes SMIF internal CACHE with user provided configuration cy_stc_smif_cache_conf...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2955</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_ab44796423b973958270b506d73cbdfa0"><div class="ttname"><a href="group__group__smif__data__structures.html#ab44796423b973958270b506d73cbdfa0">cy_stc_smif_cache_config_t::enabled</a></div><div class="ttdeci">bool enabled</div><div class="ttdoc">Enable/Disable SMIF Internal CACHE.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1051</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_acf2fe2272c55899642e90e4645828069"><div class="ttname"><a href="group__group__smif__data__structures.html#acf2fe2272c55899642e90e4645828069">cy_stc_smif_cache_region_t::enabled</a></div><div class="ttdeci">bool enabled</div><div class="ttdoc">Enable/Disable CACHE Region.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1042</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_af49d9fa4debd37d3120198f336a6cd02"><div class="ttname"><a href="group__group__smif__data__structures.html#af49d9fa4debd37d3120198f336a6cd02">cy_stc_smif_cache_config_t::cache_region_0</a></div><div class="ttdeci">cy_stc_smif_cache_region_t cache_region_0</div><div class="ttdoc">CACHE region 0 configuration.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1053</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__cache__config__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__cache__config__t">cy_stc_smif_cache_config_t</a></div><div class="ttdoc">Specifies SMIF cache configuration.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1050</div></div>
+<div class="ttc" id="agroup__group__smif__data__structures_html_structcy__stc__smif__cache__region__t"><div class="ttname"><a href="group__group__smif__data__structures.html#structcy__stc__smif__cache__region__t">cy_stc_smif_cache_region_t</a></div><div class="ttdoc">Specifies SMIF cache region configuration.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:1041</div></div>
+<div class="ttc" id="agroup__group__smif__enums_html_gga2a1121193cee4d27da9f5a354c9b14c9a2fb5dbad17396457183283f6f9efa62f"><div class="ttname"><a href="group__group__smif__enums.html#gga2a1121193cee4d27da9f5a354c9b14c9a2fb5dbad17396457183283f6f9efa62f">CY_SMIF_CACHEABLE_WB_RWA</a></div><div class="ttdeci">@ CY_SMIF_CACHEABLE_WB_RWA</div><div class="ttdoc">Cacheable, Write Back, Read &amp; Write Allocate.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:920</div></div>
+<div class="ttc" id="agroup__group__smif__low__level__functions_html_gab67d2aecdf1783c11ea54acb78ea2034"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gab67d2aecdf1783c11ea54acb78ea2034">Cy_SMIF_InitCache</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_InitCache(SMIF_CACHE_BLOCK_Type *base, const cy_stc_smif_cache_config_t *cache_config)</div><div class="ttdoc">This function initializes SMIF internal CACHE with user provided configuration cy_stc_smif_cache_conf...</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2958</div></div>
 </div><!-- fragment -->
 </div>
 </div>

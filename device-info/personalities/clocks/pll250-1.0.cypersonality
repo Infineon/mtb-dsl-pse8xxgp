@@ -42,7 +42,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__pll.html' linkText='Open PLL Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__pll.html' linkText='Open PLL Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- PLL source clock and max device frequency -->
     <ParamString id='clockInst' default='`${"mxs22srss" eq getIpBlockName() ? getInstNumber("pll250m") : getInstNumber("dpll250") +1}`' />
@@ -52,7 +52,7 @@
     <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
 
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFrequency,accuracy)}`' visible='true' editable='false' desc='Source clock frequency' />
-    <!-- For ULP mode, Fpll_max = 50 MHz -->
+    <!-- For ULP mode, Fpll_max = 100 MHz, for LP mode Fpll_max = 350 MHz, for HP mode Fpll_max = 500 MHz -->
     <ParamString id='maxFrequency' default='`${"mxs22srss" eq getIpBlockName() ? 500 : 240}`' />
 
     <ParamBool id='lowFrequencyMode' name='Low Frequency Mode' group='General' default='false' visible='true' editable='false' desc='VCO frequency range selection' />
@@ -87,6 +87,7 @@
 
     <Variable id='pllPathNum' value='SRSS_DPLL_`${("mxs40ssrss" eq getIpBlockName()) ? "250M" : "LP"}`_`${dpllInst}`_PATH_NUM' />
     <Variable id='isMXS22' value='`${("mxs22srss" eq getIpBlockName())}`' />
+    <Variable id='maxFrequencyPwrMode' value='`${getExposedMember("srss[0].power[0]", "usingUlp") ? 100 : (getExposedMember("srss[0].power[0]", "usingLp") ? 350 : 500)}`' />
   </Variables>
 
   <DRCs>
@@ -94,15 +95,15 @@
       <FixIt action='ENABLE_BLOCK' target='`${sourceClockRsc}`' valid='true' />
     </DRC>
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz is higher than the maximum operating frequency `${maxFrequency}` MHz of the device' condition='`${!(isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingUlp")) &amp;&amp; desiredFrequency &gt; maxFrequency}`' paramId='desiredFrequency' />
-    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 50 MHz when the ULP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingUlp") &amp;&amp; desiredFrequency &gt; 50 &amp;&amp; "mxs22srss" eq getIpBlockName()}`' paramId='desiredFrequency' />
+    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of `${maxFrequencyPwrMode}` MHz when the ULP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingUlp") &amp;&amp; desiredFrequency &gt; maxFrequencyPwrMode &amp;&amp; "mxs22srss" eq getIpBlockName()}`' paramId='desiredFrequency' />
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 60 MHz when the ULP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingUlp") &amp;&amp; desiredFrequency &gt; 60 &amp;&amp; "mxs40ssrss" eq getIpBlockName()}`' paramId='desiredFrequency' />
 
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz is higher than the maximum operating frequency `${maxFrequency}` MHz of the device' condition='`${!(isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingLp")) &amp;&amp; desiredFrequency &gt; maxFrequency}`' paramId='desiredFrequency' />
-    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 160 MHz when the LP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingLp") &amp;&amp; desiredFrequency &gt; 160 &amp;&amp; "mxs22srss" eq getIpBlockName()}`' paramId='desiredFrequency' />
+    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of `${maxFrequencyPwrMode}` MHz when the LP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingLp") &amp;&amp; desiredFrequency &gt; maxFrequencyPwrMode &amp;&amp; "mxs22srss" eq getIpBlockName()}`' paramId='desiredFrequency' />
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 200 MHz when the LP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingLp") &amp;&amp; desiredFrequency &gt; 200 &amp;&amp; "mxs40ssrss" eq getIpBlockName()}`' paramId='desiredFrequency' />
 
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz is higher than the maximum operating frequency `${maxFrequency}` MHz of the device' condition='`${!("mxs22srss" eq getIpBlockName() ? isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingHp") : false) &amp;&amp; desiredFrequency &gt; maxFrequency}`' paramId='desiredFrequency' />
-    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 500 MHz when the HP mode is used' condition='`${("mxs22srss" eq getIpBlockName() ? isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingHp") : false) &amp;&amp; desiredFrequency &gt; 500}`' paramId='desiredFrequency' />
+    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of `${maxFrequency}` MHz when the HP mode is used' condition='`${("mxs22srss" eq getIpBlockName() ? isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingHp") : false) &amp;&amp; desiredFrequency &gt; maxFrequency}`' paramId='desiredFrequency' />
 
     <DRC type='ERROR' text='Source clock for PLL is outside the valid range of 4 MHz - 64 MHz' condition='`${(sourceFrequency &lt; 4000000) || (sourceFrequency &gt; 64000000)}`' paramId='sourceFrequencyInfo'/>
     <!-- Manual mode DRCs -->

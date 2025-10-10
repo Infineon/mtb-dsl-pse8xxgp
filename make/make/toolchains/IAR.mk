@@ -285,7 +285,7 @@ MTB_TOOLCHAIN_IAR__ARFLAGS:=--create
 
 # Enable Multi-Threaded build arguments
 # Note: If these RTOS-specific flags are modified, the instructions in ide.mk should be updated to reflect the changes.
-ifneq (,$(filter MW_ABSTRACTION_RTOS,$(COMPONENTS)))
+ifneq (,$(filter MW_ABSTRACTION_RTOS,$(filter-out $(DISABLE_COMPONENTS),$(MTB_CORE__FULL_COMPONENT_LIST))))
 MTB_TOOLCHAIN_IAR__CFLAGS  +=--dlib_config=full
 MTB_TOOLCHAIN_IAR__CXXFLAGS+=--dlib_config=full
 MTB_TOOLCHAIN_IAR__LDFLAGS +=--threaded_lib

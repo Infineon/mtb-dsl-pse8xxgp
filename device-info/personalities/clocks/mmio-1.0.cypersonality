@@ -51,7 +51,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__clk__peripheral__group.html' linkText='Open Peripherals Group Controls Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__peripheral__group.html' linkText='Open Peripherals Group Controls Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <Repeat count='$COUNT'>
       <!--$idx == group number-->

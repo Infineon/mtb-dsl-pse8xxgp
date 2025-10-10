@@ -44,6 +44,7 @@
     <ParamBool   id="isCustom" default='`${isBlockUsed("$PROTECTION_LOC") &amp;&amp; (protection_mode eq "SECURE_CUSTOM")}`'/>
     <ParamString id='peri' default='`${getInstNumber("peri")}`' />
     <ParamString id='note' group='Overview' name='Note' default='The current &apos;Protection Level&apos; disables peripheral configuration and yet PPC configuration is enabled.' visible='`${!isSupported}`' editable='false' />
+    <ParamString id='notice' group='' name='Notice' default='Some security aware PDL drivers require that multiple PPC regions are configured with the same security state. See the PDL driver documentation for details.' visible='`${isSupported}`' editable='false' />
 
     <!--The Repeat count needs to be >= the value of locationCnt for all supported dies.-->
     <ParamString id='locationCnt' default='`${getOrDefault(getCustomDataCount("/PPC_LOCATION"), 0)}`'/>
@@ -76,6 +77,7 @@
       <ParamString id='reg$idx_location_display' default='`${getOrDefault(getParamValue("location_display_" . reg$idx_locationIdx), "")}`'/>
       <ParamString id='reg$idx_associated' default='`${getOrDefault(getParamValue("associated_" . reg$idx_locationIdx), "")}`'/>
       <ParamString id='reg$idx_valid' default='`${getOrDefault(getParamValue("valid_" . reg$idx_locationIdx), false)}`'/>
+      <ParamString id='reg$idx_pcMask' default='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . regKey$idx . "\"]/@pcMask"), "")}`'/>
       <ParamPersonality id='reg$idx'
                         name='`${regKey$idx}`'
                         default='`${getOrDefault(getParamValue("parent_" . reg$idx_locationIdx), domain_unprotected)}`'
@@ -126,7 +128,6 @@
 
   <ConfigFirmware>
     <ConfigInclude value='cy_ppc.h' />
-    <ConfigInclude value='cycfg_protection.h' public='source'/>
 
     <ConfigDefine name='`${getExposedMember("vres[0].protection[0].domain[$idx]", "displayName") . "_ppc_" . peri}`_REGION_COUNT' value='`${splitCount(tcl_ppc_region_set$idx, " ")}`U' public='true' include='`${tcl_ppc_region_set$idx ne ""}`' repeatCount='$MAX_DOMAINS'/>
 
@@ -154,7 +155,7 @@
     <!-- Variable count for the PPC structures -->
     <ConfigVariable name='cycfg_ppc_`${peri}`_domains_count' type='size_t' const='true' value='sizeof(cycfg_ppc_`${peri}`_domains_config) / sizeof(cy_stc_ppc_cfg_t)' public='true' include='true' />
 
-    <ConfigFunction signature='cy_rslt_t Cy_PPC`${peri}`_Init(void)' public='true' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' >
+    <ConfigFunction signature='cy_rslt_t init_cycfg_ppc`${peri}`(void)' public='true' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' >
       <Line value='return Cy_PPC_Init(PPC`${peri}`, cycfg_ppc_`${peri}`_domains_config, cycfg_ppc_`${peri}`_domains_count, `${response}`);'/>
     </ConfigFunction>
   </ConfigFirmware>

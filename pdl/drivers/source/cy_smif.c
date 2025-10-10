@@ -1574,6 +1574,9 @@ cy_en_smif_status_t Cy_SMIF_ReceiveDataBlocking_Ext(SMIF_Type *base,
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_DATA_RATE, (uint32_t) dataRate) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_LAST_BYTE, 1U);
 
+            /* Add delay to ensure receiving mode was entered correctly */
+            Cy_SysLib_DelayUs(1);
+
             result = CY_SMIF_SUCCESS;
 
             if (NULL != rxBuffer)
@@ -3173,19 +3176,18 @@ cy_en_smif_status_t Cy_SMIF_Clean_Cache_by_Addr(SMIF_CACHE_BLOCK_Type *base, boo
     }
 
 #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SMIF_ENABLE_SRF_INTEG)
+    CY_UNUSED_PARAM(is_secure_view);
     mtb_srf_invec_ns_t* inVec = NULL;
     mtb_srf_outvec_ns_t* outVec = NULL;
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_smif_srf_clean_cache_in_t input_args;
+    cy_pdl_smif_srf_status_out_t output_args;
+    input_args.address = address;
+    input_args.size = size;
 
     cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, 1000);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
 
-    uint8_t input_args[sizeof(is_secure_view) + sizeof(address) + sizeof(size)];
-    memcpy(&(input_args[0]), &is_secure_view, sizeof(is_secure_view));
-    memcpy(&(input_args[sizeof(is_secure_view)]), &address, sizeof(address));
-    memcpy(&(input_args[sizeof(is_secure_view) + sizeof(address)]), &size, sizeof(size));
-
-    cy_en_smif_status_t op_result = 0;
     void* invec_bases[] = {(void *)address, NULL};
     size_t invec_sizes[] = {size, 0};
 
@@ -3198,10 +3200,10 @@ cy_en_smif_status_t Cy_SMIF_Clean_Cache_by_Addr(SMIF_CACHE_BLOCK_Type *base, boo
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SMIF,
         .base = base,
         .sub_block = ((base == SMIF0_CACHE_BLOCK) ? CY_SMIF_SUB_BLOCK_0: CY_SMIF_SUB_BLOCK_1),
-        .input_base = (uint8_t*)input_args,
+        .input_base = (uint8_t*)&input_args,
         .input_len = sizeof(input_args),
-        .output_base = (uint8_t*)&op_result,
-        .output_len = sizeof(op_result),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = invec_bases,
         .invec_sizes = invec_sizes,
         .outvec_bases = NULL,
@@ -3211,18 +3213,18 @@ cy_en_smif_status_t Cy_SMIF_Clean_Cache_by_Addr(SMIF_CACHE_BLOCK_Type *base, boo
     if (result == MTB_SRF_ERR_SECURITY_POLICY_VIOLATION)
     {
         (void)mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
-        return result;
+        return CY_SMIF_SECURITY_POLICY_VIOLATION;
     }
     else
     {
         CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
     }
-    memcpy(&op_result, (cy_rslt_t*)(&(output->output_values[0])), sizeof(cy_en_smif_status_t));
+    memcpy(&output_args, (cy_rslt_t*)(&(output->output_values[0])), sizeof(output_args));
     result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
     CY_UNUSED_PARAMETER(result);
 
-    return op_result;
+    return output_args.op_res;
 #else
     while (size != 0U)
     {
@@ -3276,19 +3278,18 @@ cy_en_smif_status_t Cy_SMIF_Invalidate_Cache_by_Addr(SMIF_CACHE_BLOCK_Type *base
     }
 
 #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SMIF_ENABLE_SRF_INTEG)
+    CY_UNUSED_PARAM(is_secure_view);
     mtb_srf_invec_ns_t* inVec = NULL;
     mtb_srf_outvec_ns_t* outVec = NULL;
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_smif_srf_invalidate_cache_in_t input_args;
+    cy_pdl_smif_srf_status_out_t output_args;
+    input_args.address = address;
+    input_args.size = size;
 
     cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, 1000);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
 
-    uint8_t input_args[sizeof(is_secure_view) + sizeof(address) + sizeof(size)];
-    memcpy(&(input_args[0]), &is_secure_view, sizeof(is_secure_view));
-    memcpy(&(input_args[sizeof(is_secure_view)]), &address, sizeof(address));
-    memcpy(&(input_args[sizeof(is_secure_view) + sizeof(address)]), &size, sizeof(size));
-
-    cy_en_smif_status_t op_result = 0;
     void* invec_bases[] = {(void *)address, NULL};
     size_t invec_sizes[] = {size, 0};
 
@@ -3301,10 +3302,10 @@ cy_en_smif_status_t Cy_SMIF_Invalidate_Cache_by_Addr(SMIF_CACHE_BLOCK_Type *base
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SMIF,
         .base = base,
         .sub_block = ((base == SMIF0_CACHE_BLOCK) ? CY_SMIF_SUB_BLOCK_0: CY_SMIF_SUB_BLOCK_1),
-        .input_base = (uint8_t*)input_args,
+        .input_base = (uint8_t*)&input_args,
         .input_len = sizeof(input_args),
-        .output_base = (uint8_t*)&op_result,
-        .output_len = sizeof(op_result),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = invec_bases,
         .invec_sizes = invec_sizes,
         .outvec_bases = NULL,
@@ -3314,18 +3315,18 @@ cy_en_smif_status_t Cy_SMIF_Invalidate_Cache_by_Addr(SMIF_CACHE_BLOCK_Type *base
     if (result == MTB_SRF_ERR_SECURITY_POLICY_VIOLATION)
     {
         (void)mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
-        return result;
+        return CY_SMIF_SECURITY_POLICY_VIOLATION;
     }
     else
     {
         CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
     }
-    memcpy(&op_result, (cy_rslt_t*)(&(output->output_values[0])), sizeof(cy_en_smif_status_t));
+    memcpy(&output_args, (cy_rslt_t*)(&(output->output_values[0])), sizeof(output_args));
     result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
     CY_UNUSED_PARAMETER(result);
 
-    return op_result;
+    return output_args.op_res;
 #else
     while (size != 0U)
     {
@@ -3380,19 +3381,18 @@ cy_en_smif_status_t Cy_SMIF_Clean_And_Invalidate_Cache_by_Addr(SMIF_CACHE_BLOCK_
     }
 
 #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SMIF_ENABLE_SRF_INTEG)
+    CY_UNUSED_PARAM(is_secure_view);
     mtb_srf_invec_ns_t* inVec = NULL;
     mtb_srf_outvec_ns_t* outVec = NULL;
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_smif_srf_cl_inv_cache_in_t input_args;
+    cy_pdl_smif_srf_status_out_t output_args;
+    input_args.address = address;
+    input_args.size = size;
 
     cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, 1000);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
 
-    uint8_t input_args[sizeof(is_secure_view) + sizeof(address) + sizeof(size)];
-    memcpy(&(input_args[0]), &is_secure_view, sizeof(is_secure_view));
-    memcpy(&(input_args[sizeof(is_secure_view)]), &address, sizeof(address));
-    memcpy(&(input_args[sizeof(is_secure_view) + sizeof(address)]), &size, sizeof(size));
-
-    cy_en_smif_status_t op_result = 0;
     void* invec_bases[] = {(void *)address, NULL};
     size_t invec_sizes[] = {size, 0};
 
@@ -3405,10 +3405,10 @@ cy_en_smif_status_t Cy_SMIF_Clean_And_Invalidate_Cache_by_Addr(SMIF_CACHE_BLOCK_
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SMIF,
         .base = base,
         .sub_block = ((base == SMIF0_CACHE_BLOCK) ? CY_SMIF_SUB_BLOCK_0: CY_SMIF_SUB_BLOCK_1),
-        .input_base = (uint8_t*)input_args,
+        .input_base = (uint8_t*)&input_args,
         .input_len = sizeof(input_args),
-        .output_base = (uint8_t*)&op_result,
-        .output_len = sizeof(op_result),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = invec_bases,
         .invec_sizes = invec_sizes,
         .outvec_bases = NULL,
@@ -3418,18 +3418,18 @@ cy_en_smif_status_t Cy_SMIF_Clean_And_Invalidate_Cache_by_Addr(SMIF_CACHE_BLOCK_
     if (result == MTB_SRF_ERR_SECURITY_POLICY_VIOLATION)
     {
         (void)mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
-        return result;
+        return CY_SMIF_SECURITY_POLICY_VIOLATION;
     }
     else
     {
         CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
     }
-    memcpy(&op_result, (cy_rslt_t*)(&(output->output_values[0])), sizeof(cy_en_smif_status_t));
+    memcpy(&output_args, (cy_rslt_t*)(&(output->output_values[0])), sizeof(output_args));
     result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
     CY_UNUSED_PARAMETER(result);
 
-    return op_result;
+    return output_args.op_res;
 #else
     while (size != 0U)
     {

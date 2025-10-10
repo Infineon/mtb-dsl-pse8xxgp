@@ -44,7 +44,7 @@
   </ExposedMembers>
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__gpio.html' linkText='Open GPIO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__gpio.html' linkText='Open GPIO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!--General-->
     <ParamBool id='is_mxs22ioss' default='`${(getIpBlockName() eq "mxs22ioss")}`' />

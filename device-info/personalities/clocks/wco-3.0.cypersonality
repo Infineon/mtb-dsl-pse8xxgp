@@ -51,7 +51,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__wco.html' linkText='Open WCO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__wco.html' linkText='Open WCO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
     <ParamString id='isWCOCSVPresent' default='`${lookupExpression("WCO_CSV_PRESENT", 0)}`' />
     <ParamString id='isCSVBAKPresent' default='`${lookupExpression("CSV_BAK_PRESENT", 0)}`' />
 

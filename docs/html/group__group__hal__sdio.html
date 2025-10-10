@@ -1084,7 +1084,7 @@ is_sdio_dev</td>
 <p>Perform a bulk data transfer. </p>
 <p >Sends <a class="el" href="group__group__hal__sdio.html#gga57865805de760a77120fc4085f834118a67a50ddec31d87ca84b49898ca80545b">MTB_HAL_SDIO_CMD_IO_RW_EXTENDED</a> command (CMD=53) which allows writing and reading of a large number of I/O registers with a single command. This will block until the transfer is completed.</p>
 <p >If D-cache is enabled, the user needs to make sure that the data pointer passed to the mtb_hal_sdio_host_bulk_transfer function points to a buffer which is aligned to the cache line size (__SCB_DCACHE_LINE_SIZE). The length of buffer data must be a multiple of the cache line size to ensure cache coherency. CY_ALIGN(__SCB_DCACHE_LINE_SIZE) macro can be used for alignment.</p>
-<p >Refer to <a class="el" href="md_deploy_doxygen_hal_input_dcache.html#DCACHE_Management">DCACHE_Management</a> for more information.</p>
+<p >Refer to <a class="el" href="dcacheManagement.html#DCACHE_Management">DCACHE_Management</a> for more information.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">obj</td><td>The SDIO host object </td></tr>

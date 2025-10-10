@@ -162,9 +162,6 @@
 
   <!-- Generated firmware -->
   <ConfigFirmware>
-
-    <ConfigInclude value='cycfg_mpc.h' include='true' />
-
     <ConfigDefine name='`${block_name}`_RESPONSE' value='`${AccessResponse}`' public='true' include='true' />
 
     <ConfigDefine name='`${block_name}`_REGION_COUNT' value='`${(isSmif ? region_count * 2 : region_count)}`U' public='true' include='true' />

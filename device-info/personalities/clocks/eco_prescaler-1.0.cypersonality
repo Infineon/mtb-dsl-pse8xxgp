@@ -48,7 +48,7 @@
   </BehaviorImplementation>
 
   <Parameters>
-     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__eco.html' linkText='Open ECO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__eco.html' linkText='Open ECO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
      <!-- Source clock -->
     <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember("$SRC_CLK_RSC", "frequency"), 0)}`' />

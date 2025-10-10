@@ -142,14 +142,15 @@ Enumerations</h2></td></tr>
 <td class="fieldname">
 maxSema</td>
 <td class="fielddoc">
-Maximum semaphores in system. </td></tr>
+Maximum semaphores in system. <p >Must be a multiple of 32. This count applies to both secure and non-secure semaphores </p>
+</td></tr>
 <tr><td class="fieldtype">
 <a id="ad04fb13a0736977c4ddc642a630c9f54" name="ad04fb13a0736977c4ddc642a630c9f54"></a>uint32_t *</td>
 <td class="fieldname">
 arrayPtr</td>
 <td class="fielddoc">
-Pointer to semaphores array <br  />
- </td></tr>
+Pointer to semaphores array. <p >Must have length maxSema / 32. This must be located in memory which is accessible to all processing environments which will interact with semaphores. </p>
+</td></tr>
 </table>
 
 </div>

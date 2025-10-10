@@ -41,7 +41,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__scb__ezi2c.html' linkText='Open EZI2C (SCB) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__scb__ezi2c.html' linkText='Open EZI2C (SCB) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='DataRate' name='Data Rate (kbps)' group='General' default='100' visible='true' editable='true' desc='Data rate that EZI2C operates.'>
       <Entry name='100' value='100' visible='true' />

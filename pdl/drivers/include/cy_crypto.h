@@ -35,18 +35,11 @@
 * It uses a hardware IP block to accelerate operations.
 *
 * The functions and other declarations used in this driver are in cy_crypto.h,
-* cy_crypto_core.h, and cy_crypto_server.h. You can also include cy_pdl.h
+* cy_crypto_core.h. You can also include cy_pdl.h
 * to get access to all functions and declarations in the PDL.
-*
-* The driver implements two usage models:
-* * \ref group_crypto_cli_srv
-* * \ref group_crypto_lld_api
-*
-* Mixing these usage models will result in undefined behaviour.
 *
 * The Crypto driver supports these standards: DES, TDES, AES (128, 192, 256 bits), CMAC-AES, SHA,
 * HMAC, PRNG, TRNG, CRC, RSA, ECP, and ECDSA.
-* \note ECP and ECDSA are only implemented for the \ref group_crypto_lld_api model.
 *
 * \section group_crypto_configuration_considerations Configuration Considerations
 *
@@ -77,7 +70,7 @@
 * other function for that technique, and re-initialize after you use a different
 * encryption technique.
 *
-* For example, use \ref Cy_Crypto_Aes_Init to configure an AES encryption
+* For example, use \ref Cy_Crypto_Core_Aes_Init to configure an AES encryption
 * operation with the encryption key, and key length.
 * Provide pointers to two context structures. You can then call the AES Run functions.
 * If you use DES after that, you must re-initialize the AES encryption before using
@@ -245,417 +238,11 @@
 *
 * See the "Cryptographic Function Block" chapter of the Technical Reference Manual.
 *
-* \defgroup group_crypto_cli_srv Client-Server Model
-* \{
-*   \defgroup group_crypto_cli_srv_macros Macros
-*   \defgroup group_crypto_cli_srv_functions Functions
-*   \{
-*     \defgroup group_crypto_cli_functions Client Functions
-*     \defgroup group_crypto_srv_functions Server Functions
-*   \}
-*   \defgroup group_crypto_cli_srv_data_structures Data Structures
-*   \{
-*     \defgroup group_crypto_config_structure Common Data Structures
-*     \defgroup group_crypto_cli_data_structures Client Data Structures
-*     \defgroup group_crypto_srv_data_structures Server Data Structures
-*   \}
-* \}
 * \defgroup group_crypto_lld_api Direct Crypto Core Access
 * \defgroup group_crypto_data_structures Common Data Structures
 * \defgroup group_crypto_enums Common Enumerated Types
+* \defgroup group_crypto_macros Common macro defines
 */
-
-/**
-* \addtogroup group_crypto_cli_srv
-* \{
-*   Use the client-server API to isolate the Crypto hardware from non-secure
-*   application access.
-*
-*   The functions and other declarations used in this part of the driver are in
-*   cy_crypto.h and cy_crypto_server.h. You can also include cy_pdl.h
-*   to get access to all functions and declarations in the
-*   PDL.
-*
-*   The firmware initializes and starts the Crypto server. The server can run on any
-*   core and works with the Crypto hardware. The Crypto server is implemented as
-*   a secure block. It performs all cryptographic operations for the client.
-*   Access to the server is through the Inter Process Communication (IPC) driver.
-*   Direct access is not allowed.
-*
-*   The Crypto client can run on any core too. The firmware initializes and starts
-*   the client. The firmware then provides configuration data required for
-*   the desired cryptographic technique and a request that the server run the
-*   cryptographic operation.
-*
-*   Note that Client-server model is not supported when DCache is enabled.
-*
-* This document contains the following topics:
-*   - \ref group_crypto_architecture
-*   - \ref group_crypto_configuration_structure
-*   - \ref group_crypto_server_init
-*   - \ref group_crypto_client_init
-*   - \ref group_crypto_common_use_cases
-*   - \ref group_crypto_rsa_considerations
-*   - \ref group_crypto_irq_implements
-*   - \ref group_crypto_definitions
-*   - \ref group_crypto_more_information
-*
-* \section group_crypto_architecture Architectural model
-* The client-server implementation uses:
-*   - one IPC channel for data exchange between client and server applications;
-*   - three interrupts: an IPC notify interrupt, an IPC release interrupt, and
-*     an interrupt for error handling.
-*
-* Firmware initializes and starts the Crypto server. The server can run on
-* any core and works with the Crypto hardware.
-* The Crypto server is implemented as a secure block. It performs all
-* cryptographic operations for the client. Access to the server is through the
-* Inter Process Communication (IPC) driver. Direct access is not allowed.
-*
-* The Crypto client can also run on any core. Firmware initializes and starts
-* the client. The firmware then provides the configuration data required for the
-* desired cryptographic technique, and requests that the server run the
-* cryptographic operation.
-*
-* \note
-* Only one Crypto server and only one Crypto client can be run at the same time
-* on any core. So, valid configurations are:
-* - one server instance runs on CM0+ and one client instance on CM4 (and vice versa).
-* - one server instance and one client instance run on CM0+
-*   (__** This is not recommended, use Direct Crypto API's to perform Crypto
-*   operations on a single core__).
-* - one server instance and one client instance run on CM4
-*   (__** This is not recommended, use Direct Crypto API's to perform Crypto
-*   operations on a single core__).
-*
-* \image html crypto_architecture.png
-*
-* IPC communication between the client and server is completely transparent.
-* Using IPC for communication provides a simple synchronization mechanism to
-* handle concurrent requests from different cores.
-*
-* \section group_crypto_configuration_structure Configuration Structure
-*
-* IPC communication for the Crypto driver is handled transparently. User should
-* select the IPC channel, and configure the required notify, release, and error
-* interrupts.
-*
-* These initialization routines, \ref Cy_Crypto_Server_Start (server)
-* and \ref Cy_Crypto_Init (client), use separate instances of the same
-* cy_stc_crypto_config_t configuration structure. Some fields should be the same,
-* and some are set specifically by either the server or client. The table lists
-* each field in the config structure, and which initialization routine sets the
-* value.
-*
-* <table>
-* <tr><th>Field</th><th>Which</th><th>Description</th><th>Notes</th></tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::ipcChannel ipcChannel\endlink</td>
-* <td>Server and Client</td>
-* <td>IPC channel for communication between client and server</td>
-* <td>IPC Channel, same for both</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::acquireNotifierChannel acquireNotifierChannel\endlink</td>
-* <td>Server and Client</td>
-* <td>IPC interrupt structure used for the new request notifications</td>
-* <td>Notify interrupt number, for Server side only</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::releaseNotifierChannel releaseNotifierChannel\endlink</td>
-* <td>Server and Client</td>
-* <td>IPC interrupt structure used for data ready notifications. Used to call
-*     userCompleteCallback handler function.</td>
-* <td>Release interrupt number, for Client side only</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::userCompleteCallback userCompleteCallback\endlink</td>
-* <td>Client</td>
-* <td>User-defined callback for the Release interrupt handler; can be NULL</td>
-* <td>See Implementing Crypto Interrupts</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::releaseNotifierConfig releaseNotifierConfig \endlink</td>
-* <td>Client</td>
-* <td>IRQ handler settings for data ready notifications. This interrupt occurs
-* when server completely processed all input data and released an IPC
-* communication channel.</td>
-* <td>configuration for the interrupt</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::userGetDataHandler userGetDataHandler\endlink</td>
-* <td>Server</td>
-* <td>User-defined function to override default interrupt handler; NULL = use default</td>
-* <td>ISR for the Notify interrupt</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::acquireNotifierConfig acquireNotifierConfig\endlink</td>
-* <td>Server</td>
-* <td>IRQ handler settings for new request notifications. This interrupt occurs
-* when client sent a new request for processing.</td>
-* <td>configuration for the interrupt</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::userErrorHandler userErrorHandler\endlink</td>
-* <td>Server</td>
-* <td>User-defined function to override default interrupt handler; NULL = use default</td>
-* <td>ISR for a server error</td>
-* </tr>
-* <tr>
-* <td>\link cy_stc_crypto_config_t::cryptoErrorIntrConfig cryptoErrorIntrConfig\endlink</td>
-* <td>Server</td>
-* <td>IRQ handler settings for hardware error events</td>
-* <td>configuration for the interrupt</td>
-* </tr>
-* </table>
-*
-* \section group_crypto_server_init Server Initialization
-*
-* Use a \ref Cy_Crypto_Server_Start function.
-* Provide the configuration parameters (cy_stc_crypto_config_t) and a pointer
-* to the server context (cy_stc_crypto_server_context_t) that will be used to
-* store all temporary data.
-*
-* \snippet crypto/snippet/main.c snippet_myCryptoServerStart
-*
-* Because the two cores operate asynchronously, ensure that server
-* initialization is complete before initializing the client.
-* There are several ways to do this:
-*
-*   - Use \ref Cy_Crypto_Sync as a blocking call, before initializing the client.
-*   - Enable the CM4 core (\ref Cy_SysEnableCM4) after
-*     Crypto Server Start executes successfully.
-*   - Check the return status from calls to \ref Cy_Crypto_Init or
-*     \ref Cy_Crypto_Enable to ensure \ref CY_CRYPTO_SUCCESS.
-*
-* All crypto operations are asynchronous. To ensure that any crypto operation
-* is complete and the result is valid, use \ref Cy_Crypto_Sync.
-* Use the \ref CY_CRYPTO_SYNC_NON_BLOCKING parameter to check status.
-* Use \ref CY_CRYPTO_SYNC_BLOCKING  to wait for the operation to complete.
-*
-* \section group_crypto_client_init Client initialization
-*
-* Use \ref Cy_Crypto_Init to initialize the Crypto client with the configuration
-* parameters (cy_stc_crypto_config_t) and a pointer to the context
-* (cy_stc_crypto_context_t). Do not fill in the values for the context structure.
-*
-* Then call \ref Cy_Crypto_Enable to enable the Crypto hardware IP block.
-* After this, the Crypto driver is ready to execute crypto functions.
-* These calls must be made on the client side.
-* Firmware can implement the client on either core.
-*
-* \snippet crypto/snippet/main.c snippet_myCryptoInit
-*
-* \section group_crypto_common_use_cases Common Use Cases
-*
-* \subsection group_crypto_Use_CRC CRC Calculation
-*
-* To calculate CRC of a data image:
-*   - Use \ref Cy_Crypto_Crc_Init to set parameters for selected CRC mode,
-*   - Call \ref Cy_Crypto_Crc_Run to calculate CRC for a data image.
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoCrcUse
-*
-* \subsection group_crypto_Use_PRNG Pseudo Random Number Generation
-*
-* To generate a pseudo random number:
-*   - Use \ref Cy_Crypto_Prng_Init to set required parameters,
-*   - Call \ref Cy_Crypto_Prng_Generate.
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoPrngUse
-*
-* \subsection group_crypto_Use_TRNG True Random Number Generation
-*
-* To generate a true random number:
-*   - Call \ref Cy_Crypto_Trng_Generate with needed parameters.
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoTrngUse
-*
-* \subsection group_crypto_Use_DES DES encryption
-*
-* To encrypt a message using the DES algorithm:
-*   - Place DES key into an array,
-*   - Call \ref Cy_Crypto_Des_Run with required parameters, including the key
-*     array
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoDesUse
-*
-* \subsection group_crypto_Use_TDES TDES encryption
-*
-* To encrypt a message using the TDES algorithm:
-*   - Place 3 DES keys into a solid array,
-*   - Call \ref Cy_Crypto_Tdes_Run with required parameters, including the array
-*     of keys
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoTdesUse
-*
-* \subsection group_crypto_Use_AES AES encryption
-*
-* The Crypto driver provides a four AES encryption algorithms (ECB, CBC, CFB
-* and CTR) that are used similarly.
-*
-* To encrypt a message using AES ECB algorithm (as example):
-*   - Place AES key into array of appropriate size
-*   - Use \ref Cy_Crypto_Aes_Init to configure the operation
-*   - Call \ref Cy_Crypto_Aes_Ecb_Run (\ref Cy_Crypto_Aes_Cbc_Run,
-*     \ref Cy_Crypto_Aes_Cfb_Run or \ref Cy_Crypto_Aes_Ctr_Run) with appropriate
-*     parameters to make an operation
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoAesEcbUse
-*
-* \subsection group_crypto_Use_SHA SHA digest calculation
-*
-* To calculate a SHA digest of a message:
-*   - Call \ref Cy_Crypto_Sha_Run with appropriate parameters to make an
-*     operation
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoSha256Use
-*
-* \subsection group_crypto_Use_CMAC CMAC calculation
-*
-* To calculate CMAC of a message:
-*   - Place AES key into array of appropriate size
-*   - Use \ref Cy_Crypto_Aes_Init to configure the operation
-*   - Call \ref Cy_Crypto_Aes_Ecb_Run with appropriate parameters to make an
-*     operation
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoCmacUse
-*
-* \subsection group_crypto_Use_HMAC HMAC calculation
-*
-* To calculate HMAC of a message:
-*   - Place HMAC key into array of appropriate size
-*   - Call \ref Cy_Crypto_Hmac_Run with appropriate parameters to make an
-*     operation
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoHmacUse
-*
-* \subsection group_crypto_Use_RSA_VER RSA signature verification
-*
-* To verify the RSA signature of the data image:
-*   - Fill RSA public key structure by RSA public key data
-*   - Use \ref Cy_Crypto_Sha_Run to calculate SHA digest of the data image
-*   - Use \ref Cy_Crypto_Rsa_Proc to decrypt present encrypted signature
-*   - Use \ref Cy_Crypto_Rsa_Verify to verify the decrypted signature with
-*     calculated SHA digest
-*
-* Code example:
-* \snippet crypto/snippet/main.c snippet_myCryptoRsaVerUse
-*
-* \section group_crypto_rsa_considerations RSA Usage Considerations
-*
-* General RSA encryption and decryption is supported.
-* \ref Cy_Crypto_Rsa_Proc encrypts or decrypts data based on the parameters
-* passed to the function. If you pass in plain text and a public key, the output
-* is encrypted (cipher text). If you pass in cipher text and a private key, the
-* output is decrypted (plain text).
-*
-* One parameter for this function call is a structure that defines the key:
-* cy_stc_crypto_rsa_pub_key_t. The four modulus and exponent fields are
-* mandatory. They represent the data for either the public or private key as
-* appropriate.
-*
-* \note The <b>modulus</b> and <b>exponent</b> values in the
-* \ref cy_stc_crypto_rsa_pub_key_t must be in little-endian order.<br>
-* Use the \ref Cy_Crypto_InvertEndianness function to convert to or from
-* little-endian order.
-*
-* The remaining fields represent three pre-calculated coefficients that can
-* reduce execution time by up to 5x. The fields are: coefficient for Barrett
-* reduction, binary inverse of the modulus, and the result of
-* (2^moduloLength mod modulo). These fields are optional, and can be set to NULL.
-*
-* Calculate these coefficients with \ref Cy_Crypto_Rsa_CalcCoefs.
-* Pass them in the address of the key structure with the modulus and exponent
-* values for the key. The function returns the coefficients for the key in the
-* key structure, replacing any previous values.
-*
-* The RSA functionality also implements functions to decrypt a signature using
-* a public key. This signature must follow the RSASSA-PKCS-v1_5 standard.
-* The signature must contain a SHA digest (hash).
-* MD2, MD4, and MD5 message digests are not supported.
-*
-* An encrypted signature is stored as big-endian data. It must be inverted for
-* RSA processing. To use the provided signature decryption, firmware must
-*   -# Calculate the SHA digest of the data to be verified with
-*      \ref Cy_Crypto_Sha_Run.
-*   -# Ensure that the RSA signature is in little-endian format.
-*      Use \ref Cy_Crypto_InvertEndianness.
-*   -# Decrypt the RSA signature with a public key, by calling
-*      \ref Cy_Crypto_Rsa_Proc.
-*   -# Invert the byte order of the output, to return to big-endian format.
-*      Use \ref Cy_Crypto_InvertEndianness.
-*   -# Call \ref Cy_Crypto_Rsa_Verify (which requires data in big-endian format).
-*
-* \section group_crypto_irq_implements Implementing Crypto Interrupts
-*
-* The Crypto driver uses three interrupts:
-*   - A notify interrupt when data is ready for a cryptographic operation
-*   - A release interrupt when a cryptographic operation is complete
-*   - An error interrupt if the server encounters a hardware error
-*
-* You can modify default behavior for each interrupt.
-*
-* <b>Notify Interrupt:</b> the Crypto server has a default ISR to handle this
-* interrupt, \ref Cy_Crypto_Server_GetDataHandler. The default ISR clears the
-* interrupt, retrieves the data from the IPC channel, and dispatches control to
-* the desired cryptographic operation.
-*
-* To use the default handler, set the \link
-* cy_stc_crypto_config_t::userGetDataHandler userGetDataHandler \endlink field
-* of the cy_stc_crypto_config_t structure to NULL.
-*
-* To override, populate this
-* field with your ISR. Then call Crypto Server Start function.
-* Your ISR can perform additional tasks required by your application logic,
-* but must also call \ref Cy_Crypto_Server_GetDataHandler to dispatch the data
-* to the correct cryptographic operation.
-*
-* \note \ref Cy_Crypto_Server_Process should be performed from this ISR or from
-* any other task in the multi-task environment.
-*
-* \snippet crypto/snippet/main.c snippet_myCryptoServerMyGetDataISR
-* \snippet crypto/snippet/main.c snippet_myCryptoServerStartMyGetDataISR
-*
-* <b>Release Interrupt:</b> The Crypto driver includes a handler for this
-* interrupt. The interrupt handler clears the interrupt and calls a user-provided
-* callback routine. You cannot override this interrupt handler.
-* By default the interrupt is disabled.
-*
-* To use default behavior (interrupt disabled), set the \link
-* cy_stc_crypto_config_t::userCompleteCallback userCompleteCallback \endlink
-* field of the cy_stc_crypto_config_t structure to NULL.
-* To enable the interrupt, populate this field with your callback function.
-* Then call \ref Cy_Crypto_Init. If the callback function is not NULL, the Init
-* function enables the interrupt, and default behavior calls your routine.
-*
-* When performing cryptographic operations, firmware must ensure the operation
-* is complete before acting on the results. If the release interrupt is disabled,
-* typically calls to \ref Cy_Crypto_Sync should be blocking. If the interrupt is
-* enabled, your callback function is called when the operation is complete.
-* This lets you avoid blocking calls to \ref Cy_Crypto_Sync.
-*
-* <b>Error Interrupt:</b> The Crypto server has a default ISR to handle this
-* interrupt. It clears the interrupt and sets an internal flag that an error
-* has occurred.
-*
-* To use the default handler, set the userErrorHandler field of the
-* cy_stc_crypto_config_t structure to NULL. To override, populate this field
-* with your ISR. Then call Crypto Server Start function.
-*
-* Your ISR must call \ref Cy_Crypto_Server_ErrorHandler, and can perform any
-* additional tasks required by your application logic.
-*/
-/** \} group_crypto_cli_srv */
 
 #if !defined (CY_CRYPTO_H)
 #define CY_CRYPTO_H
@@ -679,11 +266,7 @@ cy_en_crypto_status_t Cy_Crypto_GetLibraryInfo(cy_en_crypto_lib_info_t *cryptoIn
 
 /** \endcond */
 
-/**
-* \addtogroup group_crypto_cli_functions
-* \{
-*/
-
+/** \cond INTERNAL */
 /*******************************************************************************
 * Function Name: Cy_Crypto_Init
 ****************************************************************************//**
@@ -1903,9 +1486,7 @@ cy_en_crypto_status_t Cy_Crypto_ECDSA_VerifyHash(const uint8_t *sig,
 
 #endif /* defined(CY_CRYPTO_CFG_ECDSA_VERIFY_C) */
 #endif /* (CPUSS_CRYPTO_VU == 1) && defined(CY_CRYPTO_CFG_ECDSA_C) */
-
-
-/** \} group_crypto_cli_functions */
+/** \endcond */
 
 #if defined(__cplusplus)
 }

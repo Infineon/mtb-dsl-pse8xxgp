@@ -42,7 +42,11 @@
 #define CY_PDL_ENABLE_SECURE_AWARE_RTC (CY_PDL_ENABLE_SECURE_AWARE)
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE_RTC) */
 
-#if (CY_PDL_ENABLE_SECURE_AWARE_RTC && CYCFG_PPC_SECURED_RTC_BACKUP)
+#if !defined(_CY_PDL_RTC_PPC_SECURED_RTC)
+#define _CY_PDL_RTC_PPC_SECURED_RTC		        (CYCFG_PPC_SECURED_RTC_BACKUP)
+#endif /* !defined(_CY_PDL_RTC_PPC_SECURED_RTC) */
+
+#if (CY_PDL_ENABLE_SECURE_AWARE_RTC && _CY_PDL_RTC_PPC_SECURED_RTC)
 /* Inform the PDL to use SRF for RTC - only if Secure Aware RTC is enabled and the RTC PPC region is secured */
 #define CY_PDL_RTC_ENABLE_SRF_INTEG   (1)
 #endif

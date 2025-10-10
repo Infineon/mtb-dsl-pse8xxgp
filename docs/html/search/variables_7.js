@@ -179,10 +179,10 @@ var searchData=
   ['hsvref_176',['hsVref',['../group__group__autanalog__sar__data__structures.html#a75d1b49c9deb93eeda012c3555cee568',1,'cy_stc_autanalog_sar_sta_hs_t']]],
   ['hsync_5fwidth_177',['hsync_width',['../group__group__mipidsi__data__structures.html#a47d5ca7f8e42a72868555c0a6b6ce344',1,'cy_stc_mipidsi_display_params_t']]],
   ['huk_5flite_178',['HUK_LITE',['../structMAIN__NVM__Type.html#a63e408ccccce6b87d87b32b8af7f56d0',1,'MAIN_NVM_Type']]],
-  ['hvldoenable_179',['hvldoEnable',['../group__group__syspm__data__structures.html#a0c84704fb9a29975bf54d73d9c648026',1,'cy_stc_syspm_hvldo_params_t']]],
+  ['hvldoenable_179',['hvldoEnable',['../group__group__syspm.html#ga0c84704fb9a29975bf54d73d9c648026',1,'cy_stc_syspm_hvldo_params_t']]],
   ['hwparams_180',['HWPARAMS',['../structSMIF__CACHE__BLOCK__Type.html#a27d58353fda4c8867df598d606b929db',1,'SMIF_CACHE_BLOCK_Type']]],
-  ['hwsel_181',['hwSel',['../group__group__syspm__data__structures.html#a72b33486e1eb44af178c9ae841f70620',1,'cy_stc_syspm_hvldo_params_t']]],
-  ['hybridregioncount_182',['hybridRegionCount',['../structcy__stc__smif__mem__info__t.html#aa2809cef402ba3349bdde718e87b7349',1,'cy_stc_smif_mem_info_t::hybridRegionCount()'],['../group__group__smif__data__structures__memslot.html#af699412addf5631fb6e2d61ece8a89f0',1,'cy_stc_smif_mem_device_cfg_t::hybridRegionCount()']]],
-  ['hybridregioninfo_183',['hybridRegionInfo',['../structcy__stc__smif__mem__info__t.html#a4d606a619436cbb7e4ee8f32b41dce89',1,'cy_stc_smif_mem_info_t::hybridRegionInfo()'],['../group__group__smif__data__structures__memslot.html#a989bd3b0d57035f44bd936d185afb7bf',1,'cy_stc_smif_mem_device_cfg_t::hybridRegionInfo()']]],
+  ['hwsel_181',['hwSel',['../group__group__syspm.html#ga72b33486e1eb44af178c9ae841f70620',1,'cy_stc_syspm_hvldo_params_t']]],
+  ['hybridregioncount_182',['hybridRegionCount',['../group__group__smif__memnum.html#gaa2809cef402ba3349bdde718e87b7349',1,'cy_stc_smif_mem_info_t::hybridRegionCount()'],['../group__group__smif__data__structures__memslot.html#af699412addf5631fb6e2d61ece8a89f0',1,'cy_stc_smif_mem_device_cfg_t::hybridRegionCount()']]],
+  ['hybridregioninfo_183',['hybridRegionInfo',['../group__group__smif__memnum.html#ga4d606a619436cbb7e4ee8f32b41dce89',1,'cy_stc_smif_mem_info_t::hybridRegionInfo()'],['../group__group__smif__data__structures__memslot.html#a989bd3b0d57035f44bd936d185afb7bf',1,'cy_stc_smif_mem_device_cfg_t::hybridRegionInfo()']]],
   ['hysteresis_184',['hysteresis',['../group__group__lpcomp__data__structures.html#ad43e4f40af6d78d02b8c0a277cb10f96',1,'cy_stc_lpcomp_config_t']]]
 ];

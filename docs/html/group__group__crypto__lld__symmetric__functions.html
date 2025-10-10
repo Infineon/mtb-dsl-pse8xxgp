@@ -218,7 +218,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga4a236ef766ff442ee6d33a20f929a0df"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__lld__symmetric__functions.html#ga4a236ef766ff442ee6d33a20f929a0df">Cy_Crypto_Core_Aes_Ccm_Encrypt_Tag</a> (<a class="el" href="structCRYPTO__V2__Type.html">CRYPTO_Type</a> *base, uint32_t ivSize, uint8_t const *iv, uint32_t aadSize, uint8_t const *aad, uint32_t srcSize, uint8_t *cipherTxt, uint8_t const *plainTxt, uint32_t tagSize, uint8_t *tag, <a class="el" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__ccm__state__t">cy_stc_crypto_aes_ccm_state_t</a> *aesCcmState)</td></tr>
 <tr class="memdesc:ga4a236ef766ff442ee6d33a20f929a0df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs an AES CCM Encrypt operation.  <a href="group__group__crypto__lld__symmetric__functions.html#ga4a236ef766ff442ee6d33a20f929a0df">More...</a><br /></td></tr>
 <tr class="separator:ga4a236ef766ff442ee6d33a20f929a0df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga16446f2161c3478a11a58fb5cd9f0ea9"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__lld__symmetric__functions.html#ga16446f2161c3478a11a58fb5cd9f0ea9">Cy_Crypto_Core_Aes_Ccm_Decrypt</a> (<a class="el" href="structCRYPTO__V2__Type.html">CRYPTO_Type</a> *base, uint32_t ivSize, uint8_t const *iv, uint32_t aadSize, uint8_t const *aad, uint32_t srcSize, uint8_t *plainTxt, uint8_t const *cipherTxt, uint32_t tagSize, uint8_t const *tag, <a class="el" href="group__group__crypto__cli__data__structures.html#gadf7fb2e650ab952dc25a284423e04ce9">cy_en_crypto_aesccm_tag_verify_result_t</a> *isValid, <a class="el" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__ccm__state__t">cy_stc_crypto_aes_ccm_state_t</a> *aesCcmState)</td></tr>
+<tr class="memitem:ga16446f2161c3478a11a58fb5cd9f0ea9"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__lld__symmetric__functions.html#ga16446f2161c3478a11a58fb5cd9f0ea9">Cy_Crypto_Core_Aes_Ccm_Decrypt</a> (<a class="el" href="structCRYPTO__V2__Type.html">CRYPTO_Type</a> *base, uint32_t ivSize, uint8_t const *iv, uint32_t aadSize, uint8_t const *aad, uint32_t srcSize, uint8_t *plainTxt, uint8_t const *cipherTxt, uint32_t tagSize, uint8_t const *tag, cy_en_crypto_aesccm_tag_verify_result_t *isValid, <a class="el" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__ccm__state__t">cy_stc_crypto_aes_ccm_state_t</a> *aesCcmState)</td></tr>
 <tr class="memdesc:ga16446f2161c3478a11a58fb5cd9f0ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs an AES CCM Decrypt operation.  <a href="group__group__crypto__lld__symmetric__functions.html#ga16446f2161c3478a11a58fb5cd9f0ea9">More...</a><br /></td></tr>
 <tr class="separator:ga16446f2161c3478a11a58fb5cd9f0ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga83e74f9b3696484b4b86ad88a4624092"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__crypto__lld__symmetric__functions.html#ga83e74f9b3696484b4b86ad88a4624092">Cy_Crypto_Core_Aes_Ccm_Free</a> (<a class="el" href="structCRYPTO__V2__Type.html">CRYPTO_Type</a> *base, <a class="el" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__ccm__state__t">cy_stc_crypto_aes_ccm_state_t</a> *aesCcmState)</td></tr>
@@ -283,17 +283,17 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></dd></dl>
 <dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
-<div class="line">    uint8_t aesKey[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a>] = {</div>
+<div class="line">    uint8_t aesKey[<a class="code hl_define" href="group__group__crypto__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a>] = {</div>
 <div class="line">        0x2Bu, 0x7Eu, 0x15u, 0x16u, 0x28u, 0xAEu, 0xD2u, 0xA6u,</div>
 <div class="line">        0xABu, 0xF7u, 0x15u, 0x88u, 0x09u, 0xCFu, 0x4Fu, 0x3Cu</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    uint8_t aesEcbPlainText[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>]  = {</div>
+<div class="line">    uint8_t aesEcbPlainText[<a class="code hl_define" href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>]  = {</div>
 <div class="line">        0x6Bu, 0xC0u, 0xBCu, 0xE1u, 0x2Au, 0x45u, 0x99u, 0x91u,</div>
 <div class="line">        0xE1u, 0x34u, 0x74u, 0x1Au, 0x7Fu, 0x9Eu, 0x19u, 0x25u</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    uint8_t aesEcbCipherText[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
+<div class="line">    uint8_t aesEcbCipherText[<a class="code hl_define" href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a> aesState;</div>
 <div class="line">        <a class="code hl_enumeration" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a> cryptoStatus;</div>
@@ -324,15 +324,15 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* ... check for errors... */</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__crypto__cli__srv__macros_html_ga0170aa17289178203dcc2114a31c400e"><div class="ttname"><a href="group__group__crypto__cli__srv__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_128_KEY_SIZE</div><div class="ttdoc">Defines the Crypto AES_128 key maximum size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:139</div></div>
-<div class="ttc" id="agroup__group__crypto__cli__srv__macros_html_gab966285a569cc381f21ca7ebb9918128"><div class="ttname"><a href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_BLOCK_SIZE</div><div class="ttdoc">Defines the Crypto AES block size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:136</div></div>
-<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__state__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a></div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:774</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:538</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gga5402841d4798c0a82d41d8433c92b62fa1d7e508252e541450df0eb37f4c0bf6e"><div class="ttname"><a href="group__group__crypto__enums.html#gga5402841d4798c0a82d41d8433c92b62fa1d7e508252e541450df0eb37f4c0bf6e">CY_CRYPTO_KEY_AES_128</a></div><div class="ttdeci">@ CY_CRYPTO_KEY_AES_128</div><div class="ttdoc">The AES key size is 128 bits.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:480</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_ggae040fb530d4d110976bedfcdb7c8f09ca4b95ef1e3f73771b0c6a376c6d43e16d"><div class="ttname"><a href="group__group__crypto__enums.html#ggae040fb530d4d110976bedfcdb7c8f09ca4b95ef1e3f73771b0c6a376c6d43e16d">CY_CRYPTO_ENCRYPT</a></div><div class="ttdeci">@ CY_CRYPTO_ENCRYPT</div><div class="ttdoc">The forward mode, plain text will be encrypted into cipher text.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:490</div></div>
+<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__state__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a></div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:768</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:532</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gga5402841d4798c0a82d41d8433c92b62fa1d7e508252e541450df0eb37f4c0bf6e"><div class="ttname"><a href="group__group__crypto__enums.html#gga5402841d4798c0a82d41d8433c92b62fa1d7e508252e541450df0eb37f4c0bf6e">CY_CRYPTO_KEY_AES_128</a></div><div class="ttdeci">@ CY_CRYPTO_KEY_AES_128</div><div class="ttdoc">The AES key size is 128 bits.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:474</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_ggae040fb530d4d110976bedfcdb7c8f09ca4b95ef1e3f73771b0c6a376c6d43e16d"><div class="ttname"><a href="group__group__crypto__enums.html#ggae040fb530d4d110976bedfcdb7c8f09ca4b95ef1e3f73771b0c6a376c6d43e16d">CY_CRYPTO_ENCRYPT</a></div><div class="ttdeci">@ CY_CRYPTO_ENCRYPT</div><div class="ttdoc">The forward mode, plain text will be encrypted into cipher text.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:484</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__symmetric__functions_html_ga2b6e50fe58b6e41aa47b8a588808dc76"><div class="ttname"><a href="group__group__crypto__lld__symmetric__functions.html#ga2b6e50fe58b6e41aa47b8a588808dc76">Cy_Crypto_Core_Aes_Ecb</a></div><div class="ttdeci">__STATIC_INLINE cy_en_crypto_status_t Cy_Crypto_Core_Aes_Ecb(CRYPTO_Type *base, cy_en_crypto_dir_mode_t dirMode, uint8_t *dst, uint8_t const *src, cy_stc_crypto_aes_state_t *aesState)</div><div class="ttdoc">Performs the AES operation on a single block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_aes.h:275</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__symmetric__functions_html_ga6175ad8a73bb13bb2baea32c5e26239a"><div class="ttname"><a href="group__group__crypto__lld__symmetric__functions.html#ga6175ad8a73bb13bb2baea32c5e26239a">Cy_Crypto_Core_Aes_Free</a></div><div class="ttdeci">__STATIC_INLINE cy_en_crypto_status_t Cy_Crypto_Core_Aes_Free(CRYPTO_Type *base, cy_stc_crypto_aes_state_t *aesState)</div><div class="ttdoc">Clears AES operation context.</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_aes.h:223</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__symmetric__functions_html_gaea56d7bae9d75b93886094f248e26006"><div class="ttname"><a href="group__group__crypto__lld__symmetric__functions.html#gaea56d7bae9d75b93886094f248e26006">Cy_Crypto_Core_Aes_Init</a></div><div class="ttdeci">__STATIC_INLINE cy_en_crypto_status_t Cy_Crypto_Core_Aes_Init(CRYPTO_Type *base, uint8_t const *key, cy_en_crypto_aes_key_length_t keyLength, cy_stc_crypto_aes_state_t *aesState)</div><div class="ttdoc">Initializes AES mode of operation and prepares an inverse key.</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_aes.h:124</div></div>
+<div class="ttc" id="agroup__group__crypto__macros_html_ga0170aa17289178203dcc2114a31c400e"><div class="ttname"><a href="group__group__crypto__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_128_KEY_SIZE</div><div class="ttdoc">Defines the Crypto AES_128 key maximum size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:139</div></div>
+<div class="ttc" id="agroup__group__crypto__macros_html_gab966285a569cc381f21ca7ebb9918128"><div class="ttname"><a href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_BLOCK_SIZE</div><div class="ttdoc">Defines the Crypto AES block size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:136</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -432,17 +432,17 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></dd></dl>
 <dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
-<div class="line">    uint8_t aesKey[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a>] = {</div>
+<div class="line">    uint8_t aesKey[<a class="code hl_define" href="group__group__crypto__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a>] = {</div>
 <div class="line">        0x2Bu, 0x7Eu, 0x15u, 0x16u, 0x28u, 0xAEu, 0xD2u, 0xA6u,</div>
 <div class="line">        0xABu, 0xF7u, 0x15u, 0x88u, 0x09u, 0xCFu, 0x4Fu, 0x3Cu</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    uint8_t aesEcbPlainText[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>]  = {</div>
+<div class="line">    uint8_t aesEcbPlainText[<a class="code hl_define" href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>]  = {</div>
 <div class="line">        0x6Bu, 0xC0u, 0xBCu, 0xE1u, 0x2Au, 0x45u, 0x99u, 0x91u,</div>
 <div class="line">        0xE1u, 0x34u, 0x74u, 0x1Au, 0x7Fu, 0x9Eu, 0x19u, 0x25u</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    uint8_t aesEcbCipherText[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
+<div class="line">    uint8_t aesEcbCipherText[<a class="code hl_define" href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a> aesState;</div>
 <div class="line">        <a class="code hl_enumeration" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a> cryptoStatus;</div>
@@ -535,17 +535,17 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></dd></dl>
 <dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
-<div class="line">    uint8_t aesKey[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a>] = {</div>
+<div class="line">    uint8_t aesKey[<a class="code hl_define" href="group__group__crypto__macros.html#ga0170aa17289178203dcc2114a31c400e">CY_CRYPTO_AES_128_KEY_SIZE</a>] = {</div>
 <div class="line">        0x2Bu, 0x7Eu, 0x15u, 0x16u, 0x28u, 0xAEu, 0xD2u, 0xA6u,</div>
 <div class="line">        0xABu, 0xF7u, 0x15u, 0x88u, 0x09u, 0xCFu, 0x4Fu, 0x3Cu</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    uint8_t aesEcbPlainText[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>]  = {</div>
+<div class="line">    uint8_t aesEcbPlainText[<a class="code hl_define" href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>]  = {</div>
 <div class="line">        0x6Bu, 0xC0u, 0xBCu, 0xE1u, 0x2Au, 0x45u, 0x99u, 0x91u,</div>
 <div class="line">        0xE1u, 0x34u, 0x74u, 0x1Au, 0x7Fu, 0x9Eu, 0x19u, 0x25u</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    uint8_t aesEcbCipherText[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
+<div class="line">    uint8_t aesEcbCipherText[<a class="code hl_define" href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a> aesState;</div>
 <div class="line">        <a class="code hl_enumeration" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a> cryptoStatus;</div>
@@ -1729,9 +1729,9 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* ... check for errors... */</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__gcm__buffers__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__gcm__buffers__t">cy_stc_crypto_aes_gcm_buffers_t</a></div><div class="ttdoc">The structure for storing the AES GCM state.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:869</div></div>
-<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__gcm__state__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__gcm__state__t">cy_stc_crypto_aes_gcm_state_t</a></div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:889</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gga3a65158da3dc5cb6aa016ae599542aada254861d7a75c5e292718d39dbbe84319"><div class="ttname"><a href="group__group__crypto__enums.html#gga3a65158da3dc5cb6aa016ae599542aada254861d7a75c5e292718d39dbbe84319">CY_CRYPTO_BAD_PARAMS</a></div><div class="ttdeci">@ CY_CRYPTO_BAD_PARAMS</div><div class="ttdoc">The Crypto operation parameters are incorrect.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:570</div></div>
+<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__gcm__buffers__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__gcm__buffers__t">cy_stc_crypto_aes_gcm_buffers_t</a></div><div class="ttdoc">The structure for storing the AES GCM state.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:863</div></div>
+<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__gcm__state__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__gcm__state__t">cy_stc_crypto_aes_gcm_state_t</a></div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:883</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gga3a65158da3dc5cb6aa016ae599542aada254861d7a75c5e292718d39dbbe84319"><div class="ttname"><a href="group__group__crypto__enums.html#gga3a65158da3dc5cb6aa016ae599542aada254861d7a75c5e292718d39dbbe84319">CY_CRYPTO_BAD_PARAMS</a></div><div class="ttdeci">@ CY_CRYPTO_BAD_PARAMS</div><div class="ttdoc">The Crypto operation parameters are incorrect.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:564</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -2558,7 +2558,7 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* ... check for errors and check ver_result is CY_CRYPTO_TAG_VALID... */</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30"><div class="ttname"><a href="group__group__crypto__enums.html#gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30">CY_CRYPTO_KEY_AES_256</a></div><div class="ttdeci">@ CY_CRYPTO_KEY_AES_256</div><div class="ttdoc">The AES key size is 256 bits.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:482</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30"><div class="ttname"><a href="group__group__crypto__enums.html#gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30">CY_CRYPTO_KEY_AES_256</a></div><div class="ttdeci">@ CY_CRYPTO_KEY_AES_256</div><div class="ttdoc">The AES key size is 256 bits.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:476</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -3105,7 +3105,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group__group__crypto__cli__data__structures.html#gadf7fb2e650ab952dc25a284423e04ce9">cy_en_crypto_aesccm_tag_verify_result_t</a> *&#160;</td>
+          <td class="paramtype">cy_en_crypto_aesccm_tag_verify_result_t *&#160;</td>
           <td class="paramname"><em>isValid</em>, </td>
         </tr>
         <tr>

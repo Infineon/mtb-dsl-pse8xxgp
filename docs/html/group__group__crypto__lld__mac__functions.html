@@ -201,7 +201,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></dd></dl>
 <dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
-<div class="line">    uint8_t cmacKey[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga0b49d7f139227541dbc20bcd2a1867a4">CY_CRYPTO_AES_256_KEY_SIZE</a>] =</div>
+<div class="line">    uint8_t cmacKey[<a class="code hl_define" href="group__group__crypto__macros.html#ga0b49d7f139227541dbc20bcd2a1867a4">CY_CRYPTO_AES_256_KEY_SIZE</a>] =</div>
 <div class="line">    {</div>
 <div class="line">        0x60u, 0x3Du, 0xEBu, 0x10u, 0x15u, 0xCAu, 0x71u, 0xBEu,</div>
 <div class="line">        0x2Bu, 0x73u, 0xAEu, 0xF0u, 0x85u, 0x7Du, 0x77u, 0x81u,</div>
@@ -216,7 +216,7 @@ Functions</h2></td></tr>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Calculated CMAC */</span></div>
-<div class="line">    uint8_t cmac[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
+<div class="line">    uint8_t cmac[<a class="code hl_define" href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a>] = {0};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_enumeration" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a> cryptoStatus;</div>
 <div class="line">    <a class="code hl_struct" href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a> aesState;</div>
@@ -233,12 +233,12 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* ... check for errors... */</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__crypto__cli__srv__macros_html_ga0b49d7f139227541dbc20bcd2a1867a4"><div class="ttname"><a href="group__group__crypto__cli__srv__macros.html#ga0b49d7f139227541dbc20bcd2a1867a4">CY_CRYPTO_AES_256_KEY_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_256_KEY_SIZE</div><div class="ttdoc">Defines the Crypto AES_256 key maximum size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:145</div></div>
-<div class="ttc" id="agroup__group__crypto__cli__srv__macros_html_gab966285a569cc381f21ca7ebb9918128"><div class="ttname"><a href="group__group__crypto__cli__srv__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_BLOCK_SIZE</div><div class="ttdoc">Defines the Crypto AES block size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:136</div></div>
-<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__state__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a></div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:774</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:538</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30"><div class="ttname"><a href="group__group__crypto__enums.html#gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30">CY_CRYPTO_KEY_AES_256</a></div><div class="ttdeci">@ CY_CRYPTO_KEY_AES_256</div><div class="ttdoc">The AES key size is 256 bits.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:482</div></div>
+<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__aes__state__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__aes__state__t">cy_stc_crypto_aes_state_t</a></div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:768</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:532</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30"><div class="ttname"><a href="group__group__crypto__enums.html#gga5402841d4798c0a82d41d8433c92b62fa3b323f55c81fca9b412fea5ed28bcb30">CY_CRYPTO_KEY_AES_256</a></div><div class="ttdeci">@ CY_CRYPTO_KEY_AES_256</div><div class="ttdoc">The AES key size is 256 bits.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:476</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__mac__functions_html_ga4e225ac7b941ef415efa59b3b0c77f09"><div class="ttname"><a href="group__group__crypto__lld__mac__functions.html#ga4e225ac7b941ef415efa59b3b0c77f09">Cy_Crypto_Core_Cmac</a></div><div class="ttdeci">__STATIC_INLINE cy_en_crypto_status_t Cy_Crypto_Core_Cmac(CRYPTO_Type *base, uint8_t const *message, uint32_t messageSize, uint8_t const *key, cy_en_crypto_aes_key_length_t keyLength, uint8_t *cmac, cy_stc_crypto_aes_state_t *aesState)</div><div class="ttdoc">Calculates the AES Cipher-based Message Authentication Code (CMAC) on the input message with the prov...</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_cmac.h:99</div></div>
+<div class="ttc" id="agroup__group__crypto__macros_html_ga0b49d7f139227541dbc20bcd2a1867a4"><div class="ttname"><a href="group__group__crypto__macros.html#ga0b49d7f139227541dbc20bcd2a1867a4">CY_CRYPTO_AES_256_KEY_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_256_KEY_SIZE</div><div class="ttdoc">Defines the Crypto AES_256 key maximum size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:145</div></div>
+<div class="ttc" id="agroup__group__crypto__macros_html_gab966285a569cc381f21ca7ebb9918128"><div class="ttname"><a href="group__group__crypto__macros.html#gab966285a569cc381f21ca7ebb9918128">CY_CRYPTO_AES_BLOCK_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_AES_BLOCK_SIZE</div><div class="ttdoc">Defines the Crypto AES block size (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:136</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -548,7 +548,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></dd></dl>
 <dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
-<div class="line">    uint8_t hmac256Key[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga0b49d7f139227541dbc20bcd2a1867a4">CY_CRYPTO_AES_256_KEY_SIZE</a>] =</div>
+<div class="line">    uint8_t hmac256Key[<a class="code hl_define" href="group__group__crypto__macros.html#ga0b49d7f139227541dbc20bcd2a1867a4">CY_CRYPTO_AES_256_KEY_SIZE</a>] =</div>
 <div class="line">    {</div>
 <div class="line">        0x00u, 0x01u, 0x02u, 0x03u, 0x04u, 0x05u, 0x06u, 0x07u,</div>
 <div class="line">        0x08u, 0x09u, 0x0Au, 0x0Bu, 0x0Cu, 0x0Du, 0x0Eu, 0x0Fu,</div>
@@ -566,7 +566,7 @@ Functions</h2></td></tr>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Calculated HMAC */</span></div>
-<div class="line">    uint8_t hmac256[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] = {0};</div>
+<div class="line">    uint8_t hmac256[<a class="code hl_define" href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] = {0};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_enumeration" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a> cryptoStatus;</div>
 <div class="line"> </div>
@@ -582,9 +582,9 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* ... check for errors... */</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__crypto__cli__srv__macros_html_ga82ff1a7671e4f0cf2026cbda5ef7e12a"><div class="ttname"><a href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_SHA256_DIGEST_SIZE</div><div class="ttdoc">Hash size for the SHA256 mode (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:220</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f"><div class="ttname"><a href="group__group__crypto__enums.html#gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f">CY_CRYPTO_MODE_SHA256</a></div><div class="ttdeci">@ CY_CRYPTO_MODE_SHA256</div><div class="ttdoc">Sets the SHA256 mode.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:505</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f"><div class="ttname"><a href="group__group__crypto__enums.html#gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f">CY_CRYPTO_MODE_SHA256</a></div><div class="ttdeci">@ CY_CRYPTO_MODE_SHA256</div><div class="ttdoc">Sets the SHA256 mode.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:499</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__mac__functions_html_gaca9a7ef419e6a290f9622325fb62d37e"><div class="ttname"><a href="group__group__crypto__lld__mac__functions.html#gaca9a7ef419e6a290f9622325fb62d37e">Cy_Crypto_Core_Hmac</a></div><div class="ttdeci">__STATIC_INLINE cy_en_crypto_status_t Cy_Crypto_Core_Hmac(CRYPTO_Type *base, uint8_t *hmac, uint8_t const *message, uint32_t messageSize, uint8_t const *key, uint32_t keyLength, cy_en_crypto_sha_mode_t mode)</div><div class="ttdoc">Performs the HMAC calculation.</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_hmac.h:94</div></div>
+<div class="ttc" id="agroup__group__crypto__macros_html_ga82ff1a7671e4f0cf2026cbda5ef7e12a"><div class="ttname"><a href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_SHA256_DIGEST_SIZE</div><div class="ttdoc">Hash size for the SHA256 mode (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:220</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>

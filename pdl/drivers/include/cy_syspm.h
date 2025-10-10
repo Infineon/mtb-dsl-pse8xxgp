@@ -2103,6 +2103,23 @@ typedef struct
 } cy_stc_syspm_extraReq_params_t;
 
 #endif
+
+/** \cond INTERNAL */
+#if defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
+/** This is only used by secure-aware. The structure contains enable CM55 configuration parameters */
+typedef struct {
+    uint32_t vectorTableOffset;
+    uint32_t waitus;
+} cy_pdl_syspm_srf_sysenablecm55_in_t;
+
+
+/** This is only used by secure-aware. The structure contains reset CM55 configuration parameters */
+typedef struct {
+    uint32_t waitus;
+} cy_pdl_syspm_srf_sysresetcm55_in_t;
+
+#endif
+/** \endcode */
 /** \} group_syspm_data_structures */
 
 /**

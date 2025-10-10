@@ -34,7 +34,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sd__host.html' linkText='Open SD Host Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sd__host.html' linkText='Open SD Host Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- Internal -->
     <ParamString id='ip_version' name='version number' group='Internal' default='`${getVersion()}`' visible='false' editable='false' desc='' />

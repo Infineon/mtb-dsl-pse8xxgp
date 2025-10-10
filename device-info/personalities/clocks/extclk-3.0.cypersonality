@@ -49,7 +49,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk.html' linkText='Open System Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk.html' linkText='Open System Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamString id='maxFrequency' default='`${min(getDeviceAttr("CPU_MAX_MHZ"), 100)}`' />
 

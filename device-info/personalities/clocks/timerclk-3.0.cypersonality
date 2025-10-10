@@ -45,7 +45,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__clk__timer.html' linkText='Open Timer Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__timer.html' linkText='Open Timer Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${"mxs22srss" eq getIpBlockName() ? "iho" : "imo"}`' visible='`${"mxs40srss" eq getIpBlockName()}`' desc='The source clock for the CLK_TIMER'>
       <Entry name='IMO' value='imo' />

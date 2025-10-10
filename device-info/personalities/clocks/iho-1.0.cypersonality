@@ -45,7 +45,7 @@
     <ParamString id='is22srssAvailable' default='`${("mxs22srss" eq getIpBlockName())}`' />
 
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk.html' linkText='Open SysClk Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk.html' linkText='Open SysClk Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamString id='frequency' default='`${"mxs40ssrss" eq getIpBlockName() ? 48000000 : 50000000}`' />
     <ParamString id='accuracy' default='1' />

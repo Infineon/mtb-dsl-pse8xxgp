@@ -170,7 +170,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></dd></dl>
 <dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
 <div class="line">    uint8_t sha256PlainText[3]  = <span class="stringliteral">&quot;abc&quot;</span>;</div>
-<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] = {0};</div>
+<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] = {0};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_enumeration" href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a> cryptoStatus;</div>
 <div class="line"> </div>
@@ -184,10 +184,10 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* ... check for errors... */</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__crypto__cli__srv__macros_html_ga82ff1a7671e4f0cf2026cbda5ef7e12a"><div class="ttname"><a href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_SHA256_DIGEST_SIZE</div><div class="ttdoc">Hash size for the SHA256 mode (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:220</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:538</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f"><div class="ttname"><a href="group__group__crypto__enums.html#gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f">CY_CRYPTO_MODE_SHA256</a></div><div class="ttdeci">@ CY_CRYPTO_MODE_SHA256</div><div class="ttdoc">Sets the SHA256 mode.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:505</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:532</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f"><div class="ttname"><a href="group__group__crypto__enums.html#gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f">CY_CRYPTO_MODE_SHA256</a></div><div class="ttdeci">@ CY_CRYPTO_MODE_SHA256</div><div class="ttdoc">Sets the SHA256 mode.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:499</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__sha__functions_html_ga3023d5535203528b0ef7136c86f8a66c"><div class="ttname"><a href="group__group__crypto__lld__sha__functions.html#ga3023d5535203528b0ef7136c86f8a66c">Cy_Crypto_Core_Sha</a></div><div class="ttdeci">__STATIC_INLINE cy_en_crypto_status_t Cy_Crypto_Core_Sha(CRYPTO_Type *base, uint8_t const *message, uint32_t messageSize, uint8_t *digest, cy_en_crypto_sha_mode_t mode)</div><div class="ttdoc">Performs the SHA Hash function.</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_sha.h:85</div></div>
+<div class="ttc" id="agroup__group__crypto__macros_html_ga82ff1a7671e4f0cf2026cbda5ef7e12a"><div class="ttname"><a href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_SHA256_DIGEST_SIZE</div><div class="ttdoc">Hash size for the SHA256 mode (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:220</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>

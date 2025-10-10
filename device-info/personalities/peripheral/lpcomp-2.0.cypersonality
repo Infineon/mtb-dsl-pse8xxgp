@@ -35,7 +35,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__lpcomp.html' linkText='Open LPComp Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__lpcomp.html' linkText='Open LPComp Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamBool id='Hysteresis' name='Hysteresis' group='General' default='true' visible='true' editable='true' desc='Allows to add approximately 30 mV of hysteresis to the LPComp. This helps to ensure that slowly moving voltages or slightly noisy voltages will not cause the output of the LPComp to oscillate when the two input voltages are nearly equal.' />
     <ParamChoice id='OutputConfiguration' name='Output Configuration' group='General' default='CY_LPCOMP_OUT_DIRECT' visible='true' editable='true' desc='Defines mode of the LPCOMP output: Direct, Synchronized, or Pulse.' >

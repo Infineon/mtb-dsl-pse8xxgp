@@ -1,12 +1,13 @@
 /***************************************************************************//**
 * \file cy_ethif.h
-* \version 1.30
+* \version 1.40
 *
 * Provides an API declaration of the Ethernet Interface driver
 *
 ********************************************************************************
 * \copyright
-* Copyright 2020-2024 Cypress Semiconductor Corporation
+* Copyright (c) (2020-2025), Cypress Semiconductor Corporation (an Infineon company) or
+* an affiliate of Cypress Semiconductor Corporation.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,6 +77,43 @@
 * \section group_ethif_MISRA MISRA-C Compliance
 * The Ethernet driver has no specific deviations
 *
+* \section group_ethif_changelog Changelog
+* <table class="doxtable">
+*   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+*   <tr>
+*     <td>1.40</td>
+*     <td>Added initialization checks for \ref Cy_ETHIF_Get1588TimerValue and
+*         \ref Cy_ETHIF_Set1588TimerValue functions, added new
+*         \ref cy_en_ethif_status_t \ref CY_ETHIF_NOT_INITIALIZED return status.</td>
+*     <td>Defect fix.</td>
+*   </tr>
+*   <tr>
+*     <td>1.30</td>
+*     <td>Added an internal low power callback.</td>
+*     <td>Code enhancement.</td>
+*   </tr>
+*   <tr>
+*     <td>1.20</td>
+*     <td>Documentation update and updated pre-processor check for CM55.</td>
+*     <td>Code enhancement.</td>
+*   </tr>
+*   <tr>
+*     <td>1.10.1</td>
+*     <td>Build warning fixes due to redefinitions.</td>
+*     <td>Bug fixes.</td>
+*   </tr>
+*   <tr>
+*     <td>1.10</td>
+*     <td>Updated an internal API and fixed MISRA 2012 violations.</td>
+*     <td>MISRA 2012 compliance and code enhancement.</td>
+*   </tr>
+*   <tr>
+*     <td>1.0</td>
+*     <td>Initial version</td>
+*     <td></td>
+*   </tr>
+* </table>
+*
 * \defgroup group_ethif_macros Macros
 * \defgroup group_ethif_functions Functions
 * \defgroup group_ethif_data_structures Data Structures
@@ -104,7 +142,7 @@ extern "C" {
 #define CY_ETHIF_DRV_VERSION_MAJOR        1
 
 /** Driver minor version */
-#define CY_ETHIF_DRV_VERSION_MINOR        30
+#define CY_ETHIF_DRV_VERSION_MINOR        40
 
 /** Eth driver ID */
 #define CY_ETHIF_ID                     CY_PDL_DRV_ID(0x71U)

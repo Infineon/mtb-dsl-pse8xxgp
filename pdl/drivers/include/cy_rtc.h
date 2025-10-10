@@ -369,11 +369,12 @@ typedef enum
 **/
 typedef enum
 {
-    CY_RTC_CLK_SELECT_WCO               =        0U, /**< Select WCO as input to RTC */
-    CY_RTC_CLK_SELECT_ALTBAK            =        1U, /**< Select ALTBAK as input to RTC */
-    CY_RTC_CLK_SELECT_ILO               =        2U, /**< Select ILO as input to RTC */
-    CY_RTC_CLK_SELECT_LPECO_PRESCALER   =        3U, /**< Select LPECO_PRESCALER as input to RTC */
-    CY_RTC_CLK_SELECT_PILO              =        4U, /**< Select PILO as input to RTC */
+    CY_RTC_CLK_SELECT_WCO,              /**< Select WCO as input to RTC */
+    CY_RTC_CLK_SELECT_ALTBAK,           /**< Select ALTBAK as input to RTC */
+#if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || defined (CY_IP_MXS22SRSS)
+    CY_RTC_CLK_SELECT_ILO,              /**< Select ILO as input to RTC */
+    CY_RTC_CLK_SELECT_PILO              /**< Select PILO as input to RTC */
+#endif /* CY_IP_MXS28SRSS, CY_IP_MXS40SSRSS, (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 3), CY_IP_MXS22SRSS */
 } cy_en_rtc_clk_select_sources_t;
 
 /** Enumeration to select the sign of calibration for RTC */
@@ -505,6 +506,15 @@ typedef struct
     cy_stc_rtc_dst_format_t startDst;    /**< DST start time structure */
     cy_stc_rtc_dst_format_t stopDst;     /**< DST stop time structure */
 } cy_stc_rtc_dst_t;
+
+/** \cond INTERNAL */
+#if defined(CY_PDL_RTC_ENABLE_SRF_INTEG)
+/** This is only used by secure-aware. The structure contains Hour format configuration parameters */
+typedef struct {
+    cy_en_rtc_hours_format_t hrs_format;
+} cy_pdl_rtc_srf_get_hr_format_out_t;
+#endif
+/** \endcode */
 
 /** \} group_rtc_data_structures */
 
@@ -1157,7 +1167,8 @@ __STATIC_INLINE cy_en_rtc_hours_format_t Cy_RTC_GetHoursFormat(void)
     mtb_srf_invec_ns_t* inVec = NULL;
     mtb_srf_outvec_ns_t* outVec = NULL;
     mtb_srf_output_ns_t* output = NULL;
-    cy_en_rtc_hours_format_t hrs_format = CY_RTC_24_HOURS; /* Default, equivalent to 0x0 */
+    cy_pdl_rtc_srf_get_hr_format_out_t output_args;
+    output_args.hrs_format = CY_RTC_24_HOURS; /* Default, equivalent to 0x0 */
 
     cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, CY_PDL_RTC_SRF_POOL_TIMEOUT);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
@@ -1173,8 +1184,8 @@ __STATIC_INLINE cy_en_rtc_hours_format_t Cy_RTC_GetHoursFormat(void)
         .sub_block = 0UL,
         .input_base = NULL,
         .input_len = 0UL,
-        .output_base = (uint8_t*)&hrs_format,
-        .output_len = sizeof(hrs_format),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = NULL,
         .invec_sizes = 0UL,
         .outvec_bases = NULL,
@@ -1184,13 +1195,13 @@ __STATIC_INLINE cy_en_rtc_hours_format_t Cy_RTC_GetHoursFormat(void)
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
 
     /* Output values are passed in by value. Make a copy before freeing the ioVec */
-    memcpy(&hrs_format, (cy_en_rtc_hours_format_t*)(&(output->output_values[0])), sizeof(cy_en_rtc_hours_format_t));
+    memcpy(&output_args, (cy_en_rtc_hours_format_t*)(&(output->output_values[0])), sizeof(output_args));
 
     result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
     CY_UNUSED_PARAMETER(result);
 
-    return hrs_format;
+    return output_args.hrs_format;
 #else
     return((_FLD2BOOL(BACKUP_RTC_TIME_CTRL_12HR, BACKUP_RTC_TIME)) ? CY_RTC_12_HOURS : CY_RTC_24_HOURS);
 #endif

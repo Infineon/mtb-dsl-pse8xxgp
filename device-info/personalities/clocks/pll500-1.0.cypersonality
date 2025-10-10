@@ -46,7 +46,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__pll.html' linkText='Open PLL Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__pll.html' linkText='Open PLL Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- PLL source clock and max device frequency -->
     <ParamString id='pll500mInst' default='`${getInstNumber("pll500m")}`' />
@@ -81,18 +81,23 @@
     <ParamString id='frequencyInfo' name='Actual Frequency' group='General' default='`${getOrDefault(formatFrequency(frequency), "No source")}`' visible='true' editable='false' desc='The calculated resulting PLL output frequency' />
   </Parameters>
 
+  <Variables>
+    <!-- Manual DRC verify params -->
+    <Variable id='maxFrequencyPwrMode' value='`${getExposedMember("srss[0].power[0]", "usingUlp") ? 100 : (getExposedMember("srss[0].power[0]", "usingLp") ? 350 : 500)}`' />
+  </Variables>
+
   <DRCs>
     <DRC type='ERROR' text='Source clock for PLL is not enabled' condition='`${!isBlockUsed(sourceClockRsc)}`' >
       <FixIt action='ENABLE_BLOCK' target='`${sourceClockRsc}`' valid='true' />
     </DRC>
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz is higher than the maximum operating frequency $MAX_FREQ MHz of the device' condition='`${!(isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingUlp")) &amp;&amp; desiredFrequency &gt; $MAX_FREQ}`' paramId='desiredFrequency' />
-    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 100 MHz when the ULP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingUlp") &amp;&amp; desiredFrequency &gt; 100}`' paramId='desiredFrequency' />
+    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of `${maxFrequencyPwrMode}` MHz when the ULP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingUlp") &amp;&amp; desiredFrequency &gt; maxFrequencyPwrMode}`' paramId='desiredFrequency' />
 
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz is higher than the maximum operating frequency $MAX_FREQ MHz of the device' condition='`${!(isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingLp")) &amp;&amp; desiredFrequency &gt; $MAX_FREQ}`' paramId='desiredFrequency' />
-    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 350 MHz when the LP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingLp") &amp;&amp; desiredFrequency &gt; 350}`' paramId='desiredFrequency' />
+    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of `${maxFrequencyPwrMode}` MHz when the LP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingLp") &amp;&amp; desiredFrequency &gt; maxFrequencyPwrMode}`' paramId='desiredFrequency' />
 
     <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz is higher than the maximum operating frequency $MAX_FREQ MHz of the device' condition='`${!(isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingHp")) &amp;&amp; desiredFrequency &gt; $MAX_FREQ}`' paramId='desiredFrequency' />
-    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of 500 MHz when the HP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingHp") &amp;&amp; desiredFrequency &gt; 500}`' paramId='desiredFrequency' />
+    <DRC type='ERROR' text='The desired PLL frequency `${desiredFrequency}` MHz exceeds the maximum of $MAX_FREQ MHz when the HP mode is used' condition='`${isBlockUsed("srss[0].power[0]") &amp;&amp; getExposedMember("srss[0].power[0]", "usingHp") &amp;&amp; desiredFrequency &gt; $MAX_FREQ}`' paramId='desiredFrequency' />
 
     <DRC type='ERROR' text='Source clock for PLL is outside the valid range of 4 MHz - 64 MHz' condition='`${(sourceFrequency &lt; 4000000) || (sourceFrequency &gt; 64000000)}`' paramId='sourceFrequencyInfo'/>
   </DRCs>

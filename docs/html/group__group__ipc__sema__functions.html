@@ -147,13 +147,16 @@ Functions</h2></td></tr>
 
 <p>This function initializes the semaphores subsystem. </p>
 <p >The user must create an array of unsigned 32-bit words to hold the semaphore bits. The number of semaphores will be the size of the array * 32. The total semaphores count will always be a multiple of 32.</p>
+<p >Either this function or <a class="el" href="group__group__ipc__sema__functions.html#ga84360b76b923e0c249832a0c7690d589">Cy_IPC_Sema_InitExt</a> must be called from each core that will use IPC semaphores.</p>
 <dl class="section note"><dt>Note</dt><dd>In a multi-CPU system this init function should be called with all initialized parameters on one CPU only to provide a pointer to SRAM that can be shared between all the CPUs in the system that will use semaphores. On other CPUs user must specify the IPC semaphores channel and pass 0 / NULL to count and memPtr parameters correspondingly.</dd></dl>
-<p>On cores that support DCache, user needs to make sure that the memPtr pointer passed to the Cy_IPC_Sema_Init function points to 32 byte aligned array of words that contain the semaphore data. User can use CY_ALIGN(32) macro for 32 byte alignment.</p>
+<p>If semaphores will be used from within a secure processing environment, the secure processing environment must call either this function or <a class="el" href="group__group__ipc__sema__functions.html#ga84360b76b923e0c249832a0c7690d589">Cy_IPC_Sema_InitExt</a> with non-0 / NULL arguments, and it must do so before launching any other processing environment.</p>
+<p >On cores that support DCache, user needs to make sure that the memPtr pointer passed to the Cy_IPC_Sema_Init function points to 32 byte aligned array of words that contain the semaphore data. User can use CY_ALIGN(32) macro for 32 byte alignment.</p>
+<p >If semaphores will be used from within a secure processing environment, the secure processing environment must <a class="el" href="group__group__ipc__sema__functions.html#ga84360b76b923e0c249832a0c7690d589">Cy_IPC_Sema_InitExt</a> with non-0 / NULL arguments. This must be done even if this function or <a class="el" href="group__group__ipc__sema__functions.html#ga84360b76b923e0c249832a0c7690d589">Cy_IPC_Sema_InitExt</a> was previously called from another (non-secure) processing environment.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ipcChannel</td><td>The IPC channel number used for semaphores</td></tr>
     <tr><td class="paramname">count</td><td>The maximum number of semaphores to be supported (multiple of 32).</td></tr>
-    <tr><td class="paramname">memPtr</td><td>This points to the array of (count/32) words that contain the semaphore data.</td></tr>
+    <tr><td class="paramname">memPtr</td><td>This points to the array of (count/32) words that contain the semaphore data. This must be located in memory which is accessible to all processing environments which will interact with semaphores</td></tr>
   </table>
   </dd>
 </dl>
@@ -187,7 +190,7 @@ Functions</h2></td></tr>
 <div class="line">    }</div>
 <div class="line"><span class="preprocessor">#endif  </span><span class="comment">/* (CY_CPU_CORTEX_M0P) */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agroup__group__ipc__sema__enums_html_gga64ee08d87c6d84e39749834cbdd6b7b9a3aa7b86b286b7666ee4482ae040d6d1b"><div class="ttname"><a href="group__group__ipc__sema__enums.html#gga64ee08d87c6d84e39749834cbdd6b7b9a3aa7b86b286b7666ee4482ae040d6d1b">CY_IPC_SEMA_SUCCESS</a></div><div class="ttdeci">@ CY_IPC_SEMA_SUCCESS</div><div class="ttdoc">No error has occurred.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.h:98</div></div>
-<div class="ttc" id="agroup__group__ipc__sema__functions_html_ga1cbc3b147c650c8716de10a1ee8423bd"><div class="ttname"><a href="group__group__ipc__sema__functions.html#ga1cbc3b147c650c8716de10a1ee8423bd">Cy_IPC_Sema_Init</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Init(uint32_t ipcChannel, uint32_t count, uint32_t memPtr[])</div><div class="ttdoc">This function initializes the semaphores subsystem.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:80</div></div>
+<div class="ttc" id="agroup__group__ipc__sema__functions_html_ga1cbc3b147c650c8716de10a1ee8423bd"><div class="ttname"><a href="group__group__ipc__sema__functions.html#ga1cbc3b147c650c8716de10a1ee8423bd">Cy_IPC_Sema_Init</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Init(uint32_t ipcChannel, uint32_t count, uint32_t memPtr[])</div><div class="ttdoc">This function initializes the semaphores subsystem.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:104</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -220,11 +223,13 @@ Functions</h2></td></tr>
 
 <p>This function initializes the semaphores subsystem. </p>
 <p >The user must create an array of unsigned 32-bit words to hold the semaphore bits. The number of semaphores will be the size of the array * 32. The total semaphores count will always be a multiple of 32.</p>
+<p >Either this function or <a class="el" href="group__group__ipc__sema__functions.html#ga1cbc3b147c650c8716de10a1ee8423bd">Cy_IPC_Sema_Init</a> must be called from each core that will use IPC semaphores.</p>
 <dl class="section note"><dt>Note</dt><dd>In a multi-CPU system this init function should be called with all initialized parameters on one CPU only to provide a pointer to SRAM that can be shared between all the CPUs in the system that will use semaphores. On other CPUs user must specify the IPC semaphores channel and pass 0 / NULL to count and memPtr parameters correspondingly.</dd></dl>
+<p>If semaphores will be used from within a secure processing environment, the secure processing environment must this function with non-0 / NULL arguments. This must be done even if this function or <a class="el" href="group__group__ipc__sema__functions.html#ga1cbc3b147c650c8716de10a1ee8423bd">Cy_IPC_Sema_Init</a> was previously called from another (non-secure) processing environment.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ipcChannel</td><td>The IPC channel number used for semaphores</td></tr>
-    <tr><td class="paramname">ipcSema</td><td>This is configuration structure of the IPC semaphore. See <a class="el" href="group__group__ipc__sema__enums.html#structcy__stc__ipc__sema__t">cy_stc_ipc_sema_t</a>.</td></tr>
+    <tr><td class="paramname">ipcSema</td><td>This is configuration structure of the IPC semaphore. This struct must be located in memory which is accessible to all processing environments which will interact with semaphores. See <a class="el" href="group__group__ipc__sema__enums.html#structcy__stc__ipc__sema__t">cy_stc_ipc_sema_t</a>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -321,9 +326,8 @@ Functions</h2></td></tr>
 <div class="ttc" id="agroup__group__ipc__sema__enums_html_gga64ee08d87c6d84e39749834cbdd6b7b9a143eff28bd0bc98a860fce473075d1ac"><div class="ttname"><a href="group__group__ipc__sema__enums.html#gga64ee08d87c6d84e39749834cbdd6b7b9a143eff28bd0bc98a860fce473075d1ac">CY_IPC_SEMA_OUT_OF_RANGE</a></div><div class="ttdeci">@ CY_IPC_SEMA_OUT_OF_RANGE</div><div class="ttdoc">Semaphore API return when semaphore number is out of the range.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.h:106</div></div>
 <div class="ttc" id="agroup__group__ipc__sema__enums_html_gga64ee08d87c6d84e39749834cbdd6b7b9a21f1c980ff46f66bd0bef3ff5958204b"><div class="ttname"><a href="group__group__ipc__sema__enums.html#gga64ee08d87c6d84e39749834cbdd6b7b9a21f1c980ff46f66bd0bef3ff5958204b">CY_IPC_SEMA_NOT_ACQUIRED</a></div><div class="ttdeci">@ CY_IPC_SEMA_NOT_ACQUIRED</div><div class="ttdoc">Semaphore API return when IPC channel was not acquired.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.h:109</div></div>
 <div class="ttc" id="agroup__group__ipc__sema__enums_html_gga64ee08d87c6d84e39749834cbdd6b7b9a626c7f517e6dbd4f20281b4fa42300ed"><div class="ttname"><a href="group__group__ipc__sema__enums.html#gga64ee08d87c6d84e39749834cbdd6b7b9a626c7f517e6dbd4f20281b4fa42300ed">CY_IPC_SEMA_LOCKED</a></div><div class="ttdeci">@ CY_IPC_SEMA_LOCKED</div><div class="ttdoc">Semaphore API return status when semaphore channel is busy or locked by another process.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.h:112</div></div>
-<div class="ttc" id="agroup__group__ipc__sema__functions_html_ga455867cd3b817d61d355f0407221a9a9"><div class="ttname"><a href="group__group__ipc__sema__functions.html#ga455867cd3b817d61d355f0407221a9a9">Cy_IPC_Sema_Set</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Set(uint32_t semaNumber, bool preemptable)</div><div class="ttdoc">This function tries to acquire a semaphore.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:254</div></div>
+<div class="ttc" id="agroup__group__ipc__sema__functions_html_ga455867cd3b817d61d355f0407221a9a9"><div class="ttname"><a href="group__group__ipc__sema__functions.html#ga455867cd3b817d61d355f0407221a9a9">Cy_IPC_Sema_Set</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Set(uint32_t semaNumber, bool preemptable)</div><div class="ttdoc">This function tries to acquire a semaphore.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:336</div></div>
 </div><!-- fragment --> </dd></dl>
-<p >check cy_semaIpcStruct != NULL</p>
 
 </div>
 </div>
@@ -404,9 +408,8 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">default</span>: <span class="keywordflow">break</span>;</div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__ipc__sema__functions_html_gaec88ff547d0d3185e7336c78a7411781"><div class="ttname"><a href="group__group__ipc__sema__functions.html#gaec88ff547d0d3185e7336c78a7411781">Cy_IPC_Sema_Clear</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Clear(uint32_t semaNumber, bool preemptable)</div><div class="ttdoc">This functions tries to releases a semaphore.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:381</div></div>
+<div class="ttc" id="agroup__group__ipc__sema__functions_html_gaec88ff547d0d3185e7336c78a7411781"><div class="ttname"><a href="group__group__ipc__sema__functions.html#gaec88ff547d0d3185e7336c78a7411781">Cy_IPC_Sema_Clear</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Clear(uint32_t semaNumber, bool preemptable)</div><div class="ttdoc">This functions tries to releases a semaphore.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:455</div></div>
 </div><!-- fragment --> </dd></dl>
-<p >check cy_semaIpcStruct != NULL</p>
 
 </div>
 </div>
@@ -464,9 +467,8 @@ Functions</h2></td></tr>
 <div class="line">    }</div>
 <div class="ttc" id="agroup__group__ipc__sema__enums_html_gga64ee08d87c6d84e39749834cbdd6b7b9a920300a84a7ca2e96ce187423ac2eb18"><div class="ttname"><a href="group__group__ipc__sema__enums.html#gga64ee08d87c6d84e39749834cbdd6b7b9a920300a84a7ca2e96ce187423ac2eb18">CY_IPC_SEMA_STATUS_LOCKED</a></div><div class="ttdeci">@ CY_IPC_SEMA_STATUS_LOCKED</div><div class="ttdoc">Semaphore status return that the semaphore is set.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.h:114</div></div>
 <div class="ttc" id="agroup__group__ipc__sema__enums_html_gga64ee08d87c6d84e39749834cbdd6b7b9af009b6acf4579107d5384100f9f2e60c"><div class="ttname"><a href="group__group__ipc__sema__enums.html#gga64ee08d87c6d84e39749834cbdd6b7b9af009b6acf4579107d5384100f9f2e60c">CY_IPC_SEMA_STATUS_UNLOCKED</a></div><div class="ttdeci">@ CY_IPC_SEMA_STATUS_UNLOCKED</div><div class="ttdoc">Semaphore status return that the semaphore is cleared.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.h:116</div></div>
-<div class="ttc" id="agroup__group__ipc__sema__functions_html_gaaa39cd088ef1e2ee9cd0555ae733c98f"><div class="ttname"><a href="group__group__ipc__sema__functions.html#gaaa39cd088ef1e2ee9cd0555ae733c98f">Cy_IPC_Sema_Status</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Status(uint32_t semaNumber)</div><div class="ttdoc">This function returns the status of the semaphore.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:491</div></div>
+<div class="ttc" id="agroup__group__ipc__sema__functions_html_gaaa39cd088ef1e2ee9cd0555ae733c98f"><div class="ttname"><a href="group__group__ipc__sema__functions.html#gaaa39cd088ef1e2ee9cd0555ae733c98f">Cy_IPC_Sema_Status</a></div><div class="ttdeci">cy_en_ipcsema_status_t Cy_IPC_Sema_Status(uint32_t semaNumber)</div><div class="ttdoc">This function returns the status of the semaphore.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:558</div></div>
 </div><!-- fragment --> </dd></dl>
-<p >check cy_semaIpcStruct != NULL</p>
 
 </div>
 </div>
@@ -497,7 +499,7 @@ Functions</h2></td></tr>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* The MY_SEMA_NUM is valid */</span></div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__ipc__sema__functions_html_gaf8dd9fc553a66939d37a988fa17eb3c1"><div class="ttname"><a href="group__group__ipc__sema__functions.html#gaf8dd9fc553a66939d37a988fa17eb3c1">Cy_IPC_Sema_GetMaxSems</a></div><div class="ttdeci">uint32_t Cy_IPC_Sema_GetMaxSems(void)</div><div class="ttdoc">This function returns the number of semaphores in the semaphores subsystem.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:570</div></div>
+<div class="ttc" id="agroup__group__ipc__sema__functions_html_gaf8dd9fc553a66939d37a988fa17eb3c1"><div class="ttname"><a href="group__group__ipc__sema__functions.html#gaf8dd9fc553a66939d37a988fa17eb3c1">Cy_IPC_Sema_GetMaxSems</a></div><div class="ttdeci">uint32_t Cy_IPC_Sema_GetMaxSems(void)</div><div class="ttdoc">This function returns the number of semaphores in the semaphores subsystem.</div><div class="ttdef"><b>Definition:</b> cy_ipc_sema.c:629</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>

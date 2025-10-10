@@ -41,7 +41,7 @@
   </ExposedMembers>
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__dma.html' linkText='Open DMA Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__dma.html' linkText='Open DMA Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamString id='block' name='block number' group='Internal' default='`${"dw0" eq getBlockType(1) ? 0 : 1}`' visible='false' editable='false' desc='' />
     <ParamString id='base' name='base address' group='Internal' default='`${getBlockType(1)}`' visible='false' editable='false' desc='' />

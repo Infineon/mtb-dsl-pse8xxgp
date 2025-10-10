@@ -27,7 +27,7 @@
   </BehaviorImplementation>
 
   <Parameters>
-    <ParamDoc id='doc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/page_prot_person.html#MPC_personality' linkText='Open MPC Documentation' visible='true' desc='Open MPC Documentation' />
+    <ParamDoc id='doc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/page_prot_person.html#MPC_personality' linkText='Open MPC Documentation' visible='true' desc='Open MPC Documentation' />
 
     <!-- Calculated here to not allow a response setting to be configured if no memory regions are associated with a particular physical memory -->
     <ParamString id='regionCountRRAM' default='`${splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]"))}`' />
@@ -108,11 +108,23 @@
   </DRCs>
 
   <ConfigFirmware>
+    <ConfigInclude value='cy_device.h' />
     <ConfigInclude value='cy_mpc.h' include='`${isBlockUsed("vres[0].memory[0]")}`' />
-    <ConfigInclude value='cycfg_system.h' include='`${isBlockUsed("vres[0].memory[0]")}`' />
-    <ConfigInclude value='cycfg_mpc.h' include='`${isBlockUsed("vres[0].memory[0]")}`' />
-    <ConfigDefine name='`${toUpper(getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName"))}`_UNIFIED_MPC_DOMAIN_IDX' value='`${mpc_domain_idx$idx{domainIdx}}`U' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' public='true' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'/>
 
+    <ConfigInclude value='stdbool.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
+    <ConfigInclude value='stdint.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
+    <ConfigInclude value='string.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
+    <ConfigInclude value='ifx_se_platform.h' guard='defined(CY_PDL_TZ_ENABLED)' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
+    <ConfigInclude value='cy_smif.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' guard='(smif_0_mpc_0_REGION_COUNT > 0U) || (smif_1_mpc_0_REGION_COUNT > 0U)' />
+    <ConfigInclude value='mtb_srf.h' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF)' />
+
+    <ConfigDefine name='`${toUpper(getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName"))}`_UNIFIED_MPC_DOMAIN_IDX' value='`${mpc_domain_idx$idx{domainIdx}}`U' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' public='true' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'/>
+    <ConfigDefine name='SMIF_DESELECT_DELAY' value='(7U)' public='false' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='(smif_0_mpc_0_REGION_COUNT > 0U) || (smif_1_mpc_0_REGION_COUNT > 0U)' />
+    <ConfigDefine name='TIMEOUT_1_MS' value='(1000U)' public='false' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='(smif_0_mpc_0_REGION_COUNT > 0U) || (smif_1_mpc_0_REGION_COUNT > 0U)' />
+    <ConfigDefine name='CY_MPC_PC_LAST' value='(`${$PC_COUNT}`)' public='false' include='`${isBlockUsed("vres[0].memory[0]")}`' />
+
+    <!-- Backwards compatibility -->
+    <ConfigDefine name='Cy_MPC_Init' value='init_cycfg_mpc' public='true' />
 
     <ConfigArray name='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_cfg' type='cy_stc_mpc_rot_cfg_t' const='true' public='true' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' guard='defined (CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'>
       <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "pc$idx{pcIdx}") &amp;&amp; ((getOrDefault(getCustomData("/ProtectionContext[@key=\"" . $idx{pcIdx} . "\"]/@bus_master_ids"), "-1") == $M33_BUS_MASTER_ID) || (getOrDefault(getCustomData("/ProtectionContext[@key=\"" . $idx{pcIdx} . "\"]/@bus_master_ids"), "-1") == $M55_BUS_MASTER_ID) || (getOrDefault(getCustomData("/ProtectionContext[@key=\"" . $idx{pcIdx} . "\"]/@bus_master_ids"), "-1") == $TC_BUS_MASTER_ID))}`' repeatCount='$PC_COUNT' repeatId='pcIdx'>
@@ -242,42 +254,7 @@
 
     <ConfigVariable name='mtb_srf_protection_range_s_count' type='uint8_t' const='true' value='sizeof(mtb_srf_memory_protection_s) / sizeof(mtb_srf_memory_protection_s_t)' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF)' />
 
-    <ConfigFile repeatCount='1' name='cycfg_mpc.h' include='`${isBlockUsed("vres[0].memory[0]")}`'>
-      <Line value='/* This file is automatically generated. */'/>
-      <Line value='#ifndef CYCFG_MPC_H'/>
-      <Line value='#define CYCFG_MPC_H'/>
-      <Line value='#include &lt;stdbool.h&gt;'/>
-      <Line value='#include &lt;stdint.h&gt;'/>
-      <Line value='#include "cy_device.h"'/>
-      <Line value='#include "cy_mpc.h"'/>
-      <Line value=''/>
-      <Line value='cy_rslt_t Cy_MPC_Init(void);'/>
-      <Line value=''/>
-      <Line value='#endif /* #ifndef CYCFG_MPC_H */' />
-    </ConfigFile>
-
-    <ConfigFile repeatCount='1' name='cycfg_mpc.c' include='`${isBlockUsed("vres[0].memory[0]")}`'>
-      <Line value='/* This file is automatically generated. */'/>
-      <Line value='#include "cycfg_mpc.h"'/>
-      <Line value='#include "cycfg_protection.h"'/>
-      <Line value='#if defined(CY_PDL_TZ_ENABLED)' />
-      <Line value='#include "ifx_se_platform.h"'/>
-      <Line value='#endif // defined(CY_PDL_TZ_ENABLED)'/>
-      <Line value='#include &lt;string.h&gt;'/>
-      <Line value=''/>
-      <Line value='#if (smif_0_mpc_0_REGION_COUNT > 0U) || (smif_1_mpc_0_REGION_COUNT > 0U)'/>
-      <Line value='#include "cy_smif.h"'/>
-      <Line value=''/>
-      <Line value='#define SMIF_DESELECT_DELAY  (7U)'/>
-      <Line value='#define TIMEOUT_1_MS         (1000U)'/>
-      <Line value='#endif // (smif_0_mpc_0_REGION_COUNT > 0U)|| (smif_1_mpc_0_REGION_COUNT > 0U)'/>
-      <Line value=''/>
-      <Line value='/* Value generated through device-configurator settings */'/>
-      <Line value='#define CY_MPC_PC_LAST (`${$PC_COUNT}`)'/>
-      <Line value=''/>
-      <Line value='#if defined(CY_PDL_TZ_ENABLED)'/>
-      <Line value='cy_rslt_t _cy_mpc_init_rram(const cy_stc_mpc_regions_t* region, const cy_stc_mpc_rot_cfg_t* cfg, uint8_t cfg_count)'/>
-      <Line value='{'/>
+    <ConfigFunction public='in_source_file_only' signature='cy_rslt_t _cycfg_mpc_init_regions_rram(const cy_stc_mpc_regions_t* region, const cy_stc_mpc_rot_cfg_t* cfg, uint8_t cfg_count)' guard='defined(CY_PDL_TZ_ENABLED)' include='`${isBlockUsed("vres[0].memory[0]")}`' >
       <Line value='    cy_rslt_t result = CY_RSLT_SUCCESS;'/>
       <Line value='    ifx_se_mpc_rot_cfg_t rotConfigRram;'/>
       <Line value='    ifx_se_mpc_rot_cfg_crc_t rotConfigCrcRram;'/>
@@ -309,10 +286,9 @@
       <Line value='    }'/>
       <Line value=''/>
       <Line value='    return result;'/>
-      <Line value='}'/>
-      <Line value=''/>
-      <Line value='cy_rslt_t _cy_mpc_init(const cy_stc_mpc_regions_t* region, const cy_stc_mpc_rot_cfg_t* config, uint8_t cfg_count)'/>
-      <Line value='{'/>
+    </ConfigFunction>
+
+    <ConfigFunction public='in_source_file_only' signature='cy_rslt_t _cycfg_mpc_init_regions(const cy_stc_mpc_regions_t* region, const cy_stc_mpc_rot_cfg_t* config, uint8_t cfg_count)' guard='defined(CY_PDL_TZ_ENABLED)'>
       <Line value='    // Will return an error if one occurs at all in the setup process'/>
       <Line value='    cy_rslt_t retResult = CY_RSLT_SUCCESS;'/>
       <Line value='    // Will track the current iteration for errors'/>
@@ -329,10 +305,9 @@
       <Line value='    }'/>
       <Line value=''/>
       <Line value='    return retResult;'/>
-      <Line value='}'/>
-      <Line value=''/>
-      <Line value='cy_rslt_t Cy_MPC_Init(void)'/>
-      <Line value='{'/>
+    </ConfigFunction>
+
+    <ConfigFunction public='prototype_in_header' signature='cy_rslt_t init_cycfg_mpc(void)' guard='defined(CY_PDL_TZ_ENABLED)'>
       <Line value='    // Will return an error if one occurs at all in the setup process'/>
       <Line value='    cy_rslt_t retResult = CY_RSLT_SUCCESS;'/>
       <Line value='    // Will track the current iteration for errors'/>
@@ -406,14 +381,14 @@
       <Line value=''/>
       <Line value='            if (region-&gt;base == (MPC_Type*)RRAMC0_MPC0)'/>
       <Line value='            {'/>
-      <Line value='                currentResult = _cy_mpc_init_rram(region, &amp;(domain-&gt;cfg[0]), domain->cfg_count);'/>
+      <Line value='                currentResult = _cycfg_mpc_init_regions_rram(region, &amp;(domain-&gt;cfg[0]), domain->cfg_count);'/>
       <Line value='            }'/>
       <Line value='            else'/>
       <Line value='            {'/>
       <Line value='                // Check for an empty regions struct'/>
       <Line value='                if (region->base != NULL)'/>
       <Line value='                {'/>
-      <Line value='                    currentResult = _cy_mpc_init(region, &amp;(domain-&gt;cfg[0]), domain->cfg_count);'/>
+      <Line value='                    currentResult = _cycfg_mpc_init_regions(region, &amp;(domain-&gt;cfg[0]), domain->cfg_count);'/>
       <Line value='                }'/>
       <Line value='            }'/>
       <Line value=''/>
@@ -441,10 +416,7 @@
       <Line value='#endif // (smif_0_mpc_0_REGION_COUNT > 0U)'/>
       <Line value=''/>
       <Line value='    return retResult;'/>
-      <Line value='}'/>
-      <Line value='#endif // defined(CY_PDL_TZ_ENABLED)'/>
-    </ConfigFile>
-
+    </ConfigFunction>
   </ConfigFirmware>
 
 </PersonalityTemplate>

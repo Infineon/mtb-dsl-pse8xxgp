@@ -38,7 +38,9 @@
 /*******************************************************************************
 *       Internal Functions
 *******************************************************************************/
-
+#if defined (__ARMCC_VERSION)
+static void __attribute__((optnone)) Cy_SysPm_SetTrimRamCtl(uint8_t index, uint32_t trimValue);
+#endif
 
 /*******************************************************************************
 *       Internal Defines
@@ -161,6 +163,32 @@ static uint32_t cy_DeepSleepMode = CY_SYSPM_MODE_DEEPSLEEP;
 /*******************************************************************************
 *    Secure Aware Support
 *******************************************************************************/
+#if defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
+typedef struct {
+    cy_en_syspm_status_t retVal;
+} cy_pdl_syspm_srf_status_out_t;
+
+typedef struct {
+    cy_en_syspm_waitfor_t waitFor;
+} cy_pdl_syspm_srf_cpuentersleep_in_t;
+
+typedef struct {
+    cy_en_syspm_waitfor_t waitFor;
+} cy_pdl_syspm_srf_cpuenterdeepsleep_in_t;
+
+typedef struct {
+    uint32_t mode;
+} cy_pdl_syspm_srf_getprogrammedpwrmode_out_t;
+
+typedef struct {
+    uint32_t mode;
+} cy_pdl_syspm_srf_setpwrmode_in_t;
+
+typedef struct {
+    bool retVal;
+} cy_pdl_syspm_srf_islpmready_out_t;
+#endif
+
 #if defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
 __WEAK mtb_srf_permission_s_t mtb_pdl_syspm_srf_cm55_permissions[] =
 {
@@ -206,14 +234,17 @@ cy_rslt_t cy_pdl_syspm_srf_cpuentersleep_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
-    cy_en_syspm_status_t retVal = CY_SYSPM_SUCCESS;
-    cy_en_syspm_waitfor_t waitFor;
 
-    memcpy(&waitFor, &inputs_ns->input_values[0], sizeof(waitFor));
-    retVal = Cy_SysPm_CpuEnterSleep(waitFor);
-    memcpy(&outputs_ns->output_values[0], &retVal, sizeof(retVal));
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_cpuentersleep_in_t input;
+    cy_pdl_syspm_srf_status_out_t output;
+    status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
+    if (status != CY_RSLT_SUCCESS)
+        return status;
+    output.retVal = Cy_SysPm_CpuEnterSleep(input.waitFor);
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
 
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+    return status;
 }
 
 
@@ -228,14 +259,17 @@ cy_rslt_t cy_pdl_syspm_srf_cpuenterdeepsleep_impl_s(mtb_srf_input_ns_t* inputs_n
     CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
-    cy_en_syspm_status_t retVal = CY_SYSPM_SUCCESS;
-    cy_en_syspm_waitfor_t waitFor;
 
-    memcpy(&waitFor, &inputs_ns->input_values[0], sizeof(waitFor));
-    retVal = Cy_SysPm_CpuEnterDeepSleep(waitFor);
-    memcpy(&outputs_ns->output_values[0], &retVal, sizeof(retVal));
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_cpuenterdeepsleep_in_t input;
+    cy_pdl_syspm_srf_status_out_t output;
+    status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
+    if (status != CY_RSLT_SUCCESS)
+        return status;
+    output.retVal = Cy_SysPm_CpuEnterSleep(input.waitFor);
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
 
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+    return status;
 }
 
 
@@ -251,12 +285,13 @@ cy_rslt_t cy_pdl_syspm_srf_systementerhibernate_impl_s(mtb_srf_input_ns_t* input
     CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
-    cy_en_syspm_status_t retVal = CY_SYSPM_SUCCESS;
 
-    retVal = Cy_SysPm_SystemEnterHibernate();
-    memcpy(&outputs_ns->output_values[0], &retVal, sizeof(retVal));
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_status_out_t output;
+    output.retVal = Cy_SysPm_SystemEnterHibernate();
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
 
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+    return status;
 }
 
 cy_rslt_t cy_pdl_syspm_srf_getprogrammedpwrmode_impl_s(mtb_srf_input_ns_t* inputs_ns,
@@ -271,12 +306,13 @@ cy_rslt_t cy_pdl_syspm_srf_getprogrammedpwrmode_impl_s(mtb_srf_input_ns_t* input
     CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
-    uint32_t mode;
 
-    mode = (uint32_t)cy_pd_ppu_get_programmed_power_mode((struct ppu_v1_reg *)((inputs_ns->request).base));
-    memcpy(&outputs_ns->output_values[0], &mode, sizeof(mode));
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_getprogrammedpwrmode_out_t output;
+    output.mode = (uint32_t)cy_pd_ppu_get_programmed_power_mode((struct ppu_v1_reg *)((inputs_ns->request).base));
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
 
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+    return status;
 }
 
 cy_rslt_t cy_pdl_syspm_srf_setpwrmode_impl_s(mtb_srf_input_ns_t* inputs_ns,
@@ -291,11 +327,15 @@ cy_rslt_t cy_pdl_syspm_srf_setpwrmode_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
-    uint32_t mode;
-    memcpy(&mode, &inputs_ns->input_values[0], sizeof(mode));
-    (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)((inputs_ns->request).base), (uint32_t)mode);
 
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_setpwrmode_in_t input;
+    status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
+    if (status != CY_RSLT_SUCCESS)
+        return status;
+    (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)((inputs_ns->request).base), (uint32_t)input.mode);
+
+    return status;
 }
 
 cy_rslt_t cy_pdl_syspm_srf_islpmready_impl_s(mtb_srf_input_ns_t* inputs_ns,
@@ -310,12 +350,13 @@ cy_rslt_t cy_pdl_syspm_srf_islpmready_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
-    bool retVal;
 
-    retVal = Cy_SysPm_IsLpmReady();
-    memcpy(&outputs_ns->output_values[0], &retVal, sizeof(retVal));
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_islpmready_out_t output;
+    output.retVal = Cy_SysPm_IsLpmReady();
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
 
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+    return status;
 }
 
 cy_rslt_t cy_pdl_syspm_srf_sysenablecm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
@@ -331,17 +372,21 @@ cy_rslt_t cy_pdl_syspm_srf_sysenablecm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
 
-    uint32_t input_base[2U];
-    memcpy(input_base, &inputs_ns->input_values[0], sizeof(input_base));
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_sysenablecm55_in_t input;
+    status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
+    if (status != CY_RSLT_SUCCESS)
+        return status;
     Cy_SysEnableCM55(
         #if defined(_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55) && (_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55)
         (MXCM55_Type *)((inputs_ns->request).base),
         #else
         (MXCM55_Type *)GET_NSALIAS_ADDRESS((inputs_ns->request).base),
         #endif
-        input_base[0U],
-        input_base[1U]);
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+        input.vectorTableOffset,
+        input.waitus);
+
+    return status;
 }
 
 cy_rslt_t cy_pdl_syspm_srf_sysresetcm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
@@ -357,16 +402,20 @@ cy_rslt_t cy_pdl_syspm_srf_sysresetcm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
 
-    uint32_t input_base;
-    memcpy(&input_base, &inputs_ns->input_values[0], sizeof(input_base));
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_sysresetcm55_in_t input;
+    status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
+    if (status != CY_RSLT_SUCCESS)
+        return status;
     Cy_SysResetCM55(
         #if defined(_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55) && (_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55)
         (MXCM55_Type *)((inputs_ns->request).base),
         #else
         (MXCM55_Type *)GET_NSALIAS_ADDRESS((inputs_ns->request).base),
         #endif
-        input_base);
-    return (cy_rslt_t)CY_RSLT_SUCCESS;
+        input.waitus);
+
+    return status;
 }
 
 cy_rslt_t cy_pdl_syspm_srf_sysdisablecm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
@@ -396,8 +445,8 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .op_id = CY_PDL_SYSPM_OP_CPUENTERSLEEP,
         .write_required = false,
         .impl = cy_pdl_syspm_srf_cpuentersleep_impl_s,
-        .input_values_len = sizeof(cy_en_syspm_waitfor_t),
-        .output_values_len = sizeof(cy_en_syspm_status_t),
+        .input_values_len = sizeof(cy_pdl_syspm_srf_cpuentersleep_in_t),
+        .output_values_len = sizeof(cy_pdl_syspm_srf_status_out_t),
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
         .output_len ={ 0UL, 0UL, 0UL },
@@ -410,8 +459,8 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .op_id = CY_PDL_SYSPM_OP_CPUENTERDEEPSLEEP,
         .write_required = false,
         .impl = cy_pdl_syspm_srf_cpuenterdeepsleep_impl_s,
-        .input_values_len = sizeof(cy_en_syspm_waitfor_t),
-        .output_values_len = sizeof(cy_en_syspm_status_t),
+        .input_values_len = sizeof(cy_pdl_syspm_srf_cpuenterdeepsleep_in_t),
+        .output_values_len = sizeof(cy_pdl_syspm_srf_status_out_t),
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
         .output_len ={ 0UL, 0UL, 0UL },
@@ -425,7 +474,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .write_required = false,
         .impl = cy_pdl_syspm_srf_systementerhibernate_impl_s,
         .input_values_len = 0UL,
-        .output_values_len = sizeof(cy_en_syspm_status_t),
+        .output_values_len = sizeof(cy_pdl_syspm_srf_status_out_t),
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
         .output_len ={ 0UL, 0UL, 0UL },
@@ -439,7 +488,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .write_required = false,
         .impl = cy_pdl_syspm_srf_getprogrammedpwrmode_impl_s,
         .input_values_len = 0UL,
-        .output_values_len = sizeof(uint32_t),
+        .output_values_len = sizeof(cy_pdl_syspm_srf_getprogrammedpwrmode_out_t),
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
         .output_len ={ 0UL, 0UL, 0UL },
@@ -452,7 +501,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .op_id = CY_PDL_SYSPM_OP_SETPWRMODE,
         .write_required = false,
         .impl = cy_pdl_syspm_srf_setpwrmode_impl_s,
-        .input_values_len = sizeof(uint32_t),
+        .input_values_len = sizeof(cy_pdl_syspm_srf_setpwrmode_in_t),
         .output_values_len = 0UL,
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
@@ -467,7 +516,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .write_required = false,
         .impl = cy_pdl_syspm_srf_islpmready_impl_s,
         .input_values_len = 0UL,
-        .output_values_len = sizeof(bool),
+        .output_values_len = sizeof(cy_pdl_syspm_srf_islpmready_out_t),
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
         .output_len ={ 0UL, 0UL, 0UL },
@@ -480,7 +529,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .op_id = CY_PDL_SYSPM_OP_SYSENABLECM55,
         .write_required = true,
         .impl = cy_pdl_syspm_srf_sysenablecm55_impl_s,
-        .input_values_len = sizeof(uint32_t) * 2UL,
+        .input_values_len = sizeof(cy_pdl_syspm_srf_sysenablecm55_in_t),
         .output_values_len = 0UL,
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
@@ -494,7 +543,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .op_id = CY_PDL_SYSPM_OP_SYSRESETCM55,
         .write_required = true,
         .impl = cy_pdl_syspm_srf_sysresetcm55_impl_s,
-        .input_values_len = sizeof(uint32_t),
+        .input_values_len = sizeof(cy_pdl_syspm_srf_sysresetcm55_in_t),
         .output_values_len = 0UL,
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
@@ -605,6 +654,9 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterSleep(cy_en_syspm_waitfor_t waitFor)
         SCB_SCR &= (uint32_t) ~SCB_SCR_SLEEPDEEP_Msk;
         #else
         mtb_srf_output_ns_t* output = NULL;
+        cy_pdl_syspm_srf_cpuentersleep_in_t input_args;
+        cy_pdl_syspm_srf_status_out_t output_args;
+        input_args.waitFor = waitFor;
         cy_pdl_invoke_srf_args invoke_args =
         {
             .inVec = inVec,
@@ -614,10 +666,10 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterSleep(cy_en_syspm_waitfor_t waitFor)
             .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
             .base = NULL,
             .sub_block = 0UL,
-            .input_base = (uint8_t*)&waitFor,
-            .input_len = sizeof(waitFor),
-            .output_base = (uint8_t*)&retVal,
-            .output_len = sizeof(retVal),
+            .input_base = (uint8_t*)&input_args,
+            .input_len = sizeof(input_args),
+            .output_base = (uint8_t*)&output_args,
+            .output_len = sizeof(output_args),
             .invec_bases = NULL,
             .invec_sizes = 0UL,
             .outvec_bases = NULL,
@@ -625,7 +677,8 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterSleep(cy_en_syspm_waitfor_t waitFor)
         };
         result = _Cy_PDL_Invoke_SRF(&invoke_args);
         CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-        memcpy(&retVal, &(output->output_values[0]), sizeof(retVal));
+        memcpy(&output_args, &(output->output_values[0]), sizeof(output_args));
+        retVal = output_args.retVal;
         #endif /* defined(COMPONENT_SECURE_DEVICE) || !defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) || (CY_CPU_CORTEX_M55) */
 
         Cy_SysLib_ExitCriticalSection(interruptState);
@@ -670,10 +723,6 @@ cy_en_syspm_status_t Cy_SysPm_SetSysDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_SRAM1_BASE, (uint32_t)CY_SYSTEM_SRAM1_PPU_DEEPSLEEP_MODE); /* Suppress a compiler warning about unused return value */
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_SYSCPU_BASE, (uint32_t)CY_SYSTEM_SYSCPU_PPU_DEEPSLEEP_MODE); /* Suppress a compiler warning about unused return value */
 
-#if (defined (CY_CPU_CORTEX_M33) && CY_CPU_CORTEX_M33) || (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
-            SCS_CPPWR &= ~(SCS_CPPWR_SU10_Msk);
-#endif
-
             retVal = CY_SYSPM_SUCCESS;
         }
         break;
@@ -684,11 +733,6 @@ cy_en_syspm_status_t Cy_SysPm_SetSysDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_SRAM0_BASE, (uint32_t)CY_SYSTEM_SRAM0_PPU_DEEPSLEEP_RAM_MODE); /* Suppress a compiler warning about unused return value */
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_SRAM1_BASE, (uint32_t)CY_SYSTEM_SRAM1_PPU_DEEPSLEEP_RAM_MODE); /* Suppress a compiler warning about unused return value */
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_SYSCPU_BASE, (uint32_t)CY_SYSTEM_SYSCPU_PPU_DEEPSLEEP_RAM_MODE); /* Suppress a compiler warning about unused return value */
-
-#if (defined (CY_CPU_CORTEX_M33) && CY_CPU_CORTEX_M33) || (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
-            SCS_CPPWR |= SCS_CPPWR_SU10_Msk;
-#endif
-
 
 #if (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
             MEM_CTL_MSCR &= ~(MEMSYSCTL_MSCR_ICACTIVE_Msk);
@@ -708,9 +752,6 @@ cy_en_syspm_status_t Cy_SysPm_SetSysDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_SRAM1_BASE, (uint32_t)CY_SYSTEM_SRAM1_PPU_DEEPSLEEP_OFF_MODE); /* Suppress a compiler warning about unused return value */
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_SYSCPU_BASE, (uint32_t)CY_SYSTEM_SYSCPU_PPU_DEEPSLEEP_OFF_MODE); /* Suppress a compiler warning about unused return value */
 
-#if (defined (CY_CPU_CORTEX_M33) && CY_CPU_CORTEX_M33) || (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
-            SCS_CPPWR |= SCS_CPPWR_SU10_Msk;
-#endif
 #if (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
             MEM_CTL_MSCR &= ~(MEMSYSCTL_MSCR_ICACTIVE_Msk);
             MEM_CTL_MSCR &= ~(MEMSYSCTL_MSCR_DCACTIVE_Msk);
@@ -742,6 +783,7 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetSysDeepSleepMode(void)
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
 
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_syspm_srf_getprogrammedpwrmode_out_t output_args;
     cy_pdl_invoke_srf_args invoke_args =
     {
         .inVec = inVec,
@@ -753,8 +795,8 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetSysDeepSleepMode(void)
         .sub_block = 0UL,
         .input_base = NULL,
         .input_len = 0UL,
-        .output_base = (uint8_t*)&mode,
-        .output_len = sizeof(mode),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = NULL,
         .invec_sizes = 0UL,
         .outvec_bases = NULL,
@@ -762,7 +804,8 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetSysDeepSleepMode(void)
     };
     retVal = _Cy_PDL_Invoke_SRF(&invoke_args);
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
-    memcpy((void*)&mode, (void*)&(output->output_values[0]), sizeof(mode));
+    memcpy((void*)&output_args, (void*)&(output->output_values[0]), sizeof(output_args));
+    mode = output_args.mode;
 
     retVal = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
@@ -806,7 +849,6 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
     cy_en_syspm_status_t retVal = CY_SYSPM_FAIL;
 
     #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
-    uint32_t mode;
     cy_rslt_t result = CY_RSLT_SUCCESS;
     mtb_srf_invec_ns_t* inVec = NULL;
     mtb_srf_outvec_ns_t* outVec = NULL;
@@ -815,6 +857,7 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
 
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_syspm_srf_setpwrmode_in_t input_args;
     cy_pdl_invoke_srf_args invoke_args =
     {
         .inVec = inVec,
@@ -824,8 +867,8 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
         .base = NULL,
         .sub_block = 0UL,
-        .input_base = (uint8_t*)&mode,
-        .input_len = sizeof(mode),
+        .input_base = (uint8_t*)&input_args,
+        .input_len = sizeof(input_args),
         .output_base = NULL,
         .output_len = 0UL,
         .invec_bases = NULL,
@@ -840,15 +883,15 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
         case CY_SYSPM_MODE_DEEPSLEEP:
         {
             #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
-            mode = CY_SYSTEM_PD1_PPU_DEEPSLEEP_MODE;
+            input_args.mode = CY_SYSTEM_PD1_PPU_DEEPSLEEP_MODE;
             invoke_args.base = (void*)CY_PPU_PD1_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-            mode = CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_MODE;
+            input_args.mode = CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_MODE;
             invoke_args.base = (void*)CY_PPU_APPCPU_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-            mode = CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_MODE;
+            input_args.mode = CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_MODE;
             invoke_args.base = (void*)CY_PPU_APPCPUSS_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
@@ -857,9 +900,7 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_APPCPU_BASE, (uint32_t)CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_MODE); /* Suppress a compiler warning about unused return value */
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_APPCPUSS_BASE, (uint32_t)CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_MODE); /* Suppress a compiler warning about unused return value */
             #endif
-#if (defined (CY_CPU_CORTEX_M33) && CY_CPU_CORTEX_M33) || (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
-            SCS_CPPWR &= ~(SCS_CPPWR_SU10_Msk);
-#endif
+
             retVal = CY_SYSPM_SUCCESS;
         }
         break;
@@ -867,15 +908,15 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
         case CY_SYSPM_MODE_DEEPSLEEP_RAM:
         {
             #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
-            mode = CY_SYSTEM_PD1_PPU_DEEPSLEEP_RAM_MODE;
+            input_args.mode = CY_SYSTEM_PD1_PPU_DEEPSLEEP_RAM_MODE;
             invoke_args.base = (void*)CY_PPU_PD1_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-            mode = CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_RAM_MODE;
+            input_args.mode = CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_RAM_MODE;
             invoke_args.base = (void*)CY_PPU_APPCPU_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-            mode = CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_RAM_MODE;
+            input_args.mode = CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_RAM_MODE;
             invoke_args.base = (void*)CY_PPU_APPCPUSS_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
@@ -884,11 +925,6 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_APPCPU_BASE, (uint32_t)CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_RAM_MODE); /* Suppress a compiler warning about unused return value */
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_APPCPUSS_BASE, (uint32_t)CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_RAM_MODE); /* Suppress a compiler warning about unused return value */
             #endif
-
-#if (defined (CY_CPU_CORTEX_M33) && CY_CPU_CORTEX_M33) || (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
-            SCS_CPPWR |= SCS_CPPWR_SU10_Msk;
-#endif
-
 
 #if (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
             MEM_CTL_MSCR &= ~(MEMSYSCTL_MSCR_ICACTIVE_Msk);
@@ -903,15 +939,15 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
         case CY_SYSPM_MODE_DEEPSLEEP_OFF:
         {
             #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
-            mode = CY_SYSTEM_PD1_PPU_DEEPSLEEP_OFF_MODE;
+            input_args.mode = CY_SYSTEM_PD1_PPU_DEEPSLEEP_OFF_MODE;
             invoke_args.base = (void*)CY_PPU_PD1_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-            mode = CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_OFF_MODE;
+            input_args.mode = CY_SYSTEM_APPCPU_PPU_DEEPSLEEP_OFF_MODE;
             invoke_args.base = (void*)CY_PPU_APPCPU_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-            mode = CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_OFF_MODE;
+            input_args.mode = CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_OFF_MODE;
             invoke_args.base = (void*)CY_PPU_APPCPUSS_BASE;
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
@@ -921,9 +957,6 @@ cy_en_syspm_status_t Cy_SysPm_SetAppDeepSleepMode(cy_en_syspm_deep_sleep_mode_t 
             (void)cy_pd_ppu_set_power_mode((struct ppu_v1_reg *)CY_PPU_APPCPUSS_BASE, (uint32_t)CY_SYSTEM_APPCPUSS_PPU_DEEPSLEEP_OFF_MODE); /* Suppress a compiler warning about unused return value */
             #endif
 
-#if (defined (CY_CPU_CORTEX_M33) && CY_CPU_CORTEX_M33) || (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
-            SCS_CPPWR |= SCS_CPPWR_SU10_Msk;
-#endif
 #if (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)
             MEM_CTL_MSCR &= ~(MEMSYSCTL_MSCR_ICACTIVE_Msk);
             MEM_CTL_MSCR &= ~(MEMSYSCTL_MSCR_DCACTIVE_Msk);
@@ -962,6 +995,7 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetAppDeepSleepMode(void)
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
 
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_syspm_srf_getprogrammedpwrmode_out_t output_args;
     cy_pdl_invoke_srf_args invoke_args =
     {
         .inVec = inVec,
@@ -973,8 +1007,8 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetAppDeepSleepMode(void)
         .sub_block = 0UL,
         .input_base = NULL,
         .input_len = 0UL,
-        .output_base = (uint8_t*)&mode,
-        .output_len = sizeof(mode),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = NULL,
         .invec_sizes = 0UL,
         .outvec_bases = NULL,
@@ -982,7 +1016,8 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetAppDeepSleepMode(void)
     };
     retVal = _Cy_PDL_Invoke_SRF(&invoke_args);
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
-    memcpy((void*)&mode, (void*)&(output->output_values[0]), sizeof(mode));
+    memcpy((void*)&output_args, (void*)&(output->output_values[0]), sizeof(output_args));
+    mode = output_args.mode;
 
     retVal = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
@@ -1103,6 +1138,7 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetDeepSleepMode(void)
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
 
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_syspm_srf_getprogrammedpwrmode_out_t output_args;
     cy_pdl_invoke_srf_args invoke_args =
     {
         .inVec = inVec,
@@ -1114,8 +1150,8 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetDeepSleepMode(void)
         .sub_block = 0UL,
         .input_base = NULL,
         .input_len = 0UL,
-        .output_base = (uint8_t*)&mode,
-        .output_len = sizeof(mode),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = NULL,
         .invec_sizes = 0UL,
         .outvec_bases = NULL,
@@ -1123,7 +1159,8 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetDeepSleepMode(void)
     };
     retVal = _Cy_PDL_Invoke_SRF(&invoke_args);
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
-    memcpy((void*)&mode, (void*)&(output->output_values[0]), sizeof(mode));
+    memcpy((void*)&output_args, (void*)&(output->output_values[0]), sizeof(output_args));
+    mode = output_args.mode;
 
     retVal = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(retVal == CY_RSLT_SUCCESS);
@@ -1292,15 +1329,13 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterDeepSleep(cy_en_syspm_waitfor_t waitFor)
             SCB_SCR |= SCB_SCR_SLEEPDEEP_Msk;
             __DSB();                   /* Ensure completion of memory access */
 
-            #if defined (CORE_NAME_CM33_0)
-            /* Disable FPU for CM33-NS for DS-RAM/DS-OFF Entry to work*/
+            /* Disable FPU for DS-RAM/DS-OFF Entry to work*/
             if(((uint32_t)CY_SYSPM_MODE_DEEPSLEEP_RAM == cbDeepSleepRootIdx) || ((uint32_t)CY_SYSPM_MODE_DEEPSLEEP_OFF == cbDeepSleepRootIdx))
             {
                 SCS_CPPWR |= (SCS_ENABLE_CPPWR_SU10_SU11);
                 SCB_CPACR &= ~(SCB_ENABLE_CPACR_CP10_CP11);
                 __DSB();                   /* Ensure completion of memory access */
             }
-            #endif /* defined (CORE_NAME_CM33_0) */
 
             #if (defined (CY_IP_MXS22SRSS_VERSION) && defined (CY_IP_MXS22SRSS_VERSION_MINOR)) && \
              ((CY_IP_MXS22SRSS_VERSION == 1) && (CY_IP_MXS22SRSS_VERSION_MINOR == 0))
@@ -1319,10 +1354,9 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterDeepSleep(cy_en_syspm_waitfor_t waitFor)
             Cy_SysPm_SetRamTrimsPostDs();
             #endif /* ((CY_IP_MXS22SRSS_VERSION == 1) && (CY_IP_MXS22SRSS_VERSION_MINOR == 0)) */
 
-            #if defined (CORE_NAME_CM33_0) && defined (__FPU_USED) && (__FPU_USED == 1U)
-            /* Enable back FPU if it was used for CM33 in case of DS-RAM/DS-OFF.
+            /* Enable back FPU if it was used in case of DS-RAM/DS-OFF.
              *
-             * This is not required for DS-RAM/DS-OFF  because device should goes to reset after __WFI.
+             * This is not required for DS-RAM/DS-OFF because device should go to reset after __WFI.
              * If requirements for entering into DS-RAM/DS-OFF were not met (for example, active debug session),
              * the device will operate as in normal deep sleep mode.
              * Because of that FPU is re-enabling.
@@ -1333,13 +1367,15 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterDeepSleep(cy_en_syspm_waitfor_t waitFor)
                 SCB->CPACR |= SCB_ENABLE_CPACR_CP10_CP11;
                 __DSB();                   /* Ensure completion of memory access */
             }
-            #endif /* defined (CORE_NAME_CM33_0) && defined (__FPU_USED) && (__FPU_USED == 1U) */
 
             /* Clear SCB_SCR_SLEEPDEEP flag */
             SCB_SCR &= (uint32_t) ~SCB_SCR_SLEEPDEEP_Msk;
 
             #else
             mtb_srf_output_ns_t* output = NULL;
+            cy_pdl_syspm_srf_cpuenterdeepsleep_in_t input_args;
+            cy_pdl_syspm_srf_status_out_t output_args;
+            input_args.waitFor = waitFor;
             cy_pdl_invoke_srf_args invoke_args =
             {
                 .inVec = inVec,
@@ -1349,10 +1385,10 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterDeepSleep(cy_en_syspm_waitfor_t waitFor)
                 .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
                 .base = NULL,
                 .sub_block = 0UL,
-                .input_base = (uint8_t*)&waitFor,
-                .input_len = sizeof(waitFor),
-                .output_base = (uint8_t*)&retVal,
-                .output_len = sizeof(retVal),
+                .input_base = (uint8_t*)&input_args,
+                .input_len = sizeof(input_args),
+                .output_base = (uint8_t*)&output_args,
+                .output_len = sizeof(output_args),
                 .invec_bases = NULL,
                 .invec_sizes = 0UL,
                 .outvec_bases = NULL,
@@ -1360,7 +1396,8 @@ cy_en_syspm_status_t Cy_SysPm_CpuEnterDeepSleep(cy_en_syspm_waitfor_t waitFor)
             };
             result = _Cy_PDL_Invoke_SRF(&invoke_args);
             CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-            memcpy(&retVal, &(output->output_values[0]), sizeof(retVal));
+            memcpy(&output_args, &(output->output_values[0]), sizeof(output_args));
+            retVal = output_args.retVal;
             #endif /* defined(COMPONENT_SECURE_DEVICE) || !defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) || (CY_CPU_CORTEX_M55) */
 
 
@@ -1473,6 +1510,7 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterHibernate(void)
         */
         #else
         mtb_srf_output_ns_t* output = NULL;
+        cy_pdl_syspm_srf_status_out_t output_args;
         cy_pdl_invoke_srf_args invoke_args =
         {
             .inVec = inVec,
@@ -1484,8 +1522,8 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterHibernate(void)
             .sub_block = 0UL,
             .input_base = NULL,
             .input_len = 0UL,
-            .output_base = (uint8_t*)&retVal,
-            .output_len = sizeof(retVal),
+            .output_base = (uint8_t*)&output_args,
+            .output_len = sizeof(output_args),
             .invec_bases = NULL,
             .invec_sizes = 0UL,
             .outvec_bases = NULL,
@@ -1494,7 +1532,8 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterHibernate(void)
         result = _Cy_PDL_Invoke_SRF(&invoke_args);
         CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
         CY_UNUSED_PARAMETER(result);
-        memcpy(&retVal, &(output->output_values[0]), sizeof(retVal));
+        memcpy(&output_args, &(output->output_values[0]), sizeof(output_args));
+        retVal = output_args.retVal;
         #endif /* defined(COMPONENT_SECURE_DEVICE) || !defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) || (CY_CPU_CORTEX_M55) */
 
         Cy_SysLib_ExitCriticalSection(interruptState);
@@ -2229,13 +2268,13 @@ bool Cy_SysPm_IsLpmReady(void)
     cy_rslt_t result = CY_RSLT_SUCCESS;
     mtb_srf_invec_ns_t* inVec = NULL;
     mtb_srf_outvec_ns_t* outVec = NULL;
-    bool retVal = false;
     result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, CY_PDL_SYSPM_SRF_POOL_TIMEOUT);
     if (result != CY_RSLT_SUCCESS)
     {
-        return retVal;
+        return false;
     }
     mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_syspm_srf_islpmready_out_t output_args;
     cy_pdl_invoke_srf_args invoke_args =
     {
         .inVec = inVec,
@@ -2247,8 +2286,8 @@ bool Cy_SysPm_IsLpmReady(void)
         .sub_block = 0UL,
         .input_base = NULL,
         .input_len = 0UL,
-        .output_base = (uint8_t*)&retVal,
-        .output_len = sizeof(retVal),
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
         .invec_bases = NULL,
         .invec_sizes = 0UL,
         .outvec_bases = NULL,
@@ -2256,12 +2295,12 @@ bool Cy_SysPm_IsLpmReady(void)
     };
     result = _Cy_PDL_Invoke_SRF(&invoke_args);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
-    memcpy((void*)&retVal, (void*)&(output->output_values[0]), sizeof(retVal));
+    memcpy((void*)&output_args, (void*)&(output->output_values[0]), sizeof(output_args));
 
     result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
     CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
 
-    return retVal;
+    return output_args.retVal;
     #else
     return (_FLD2BOOL(SRSS_PWR_CTL_LPM_READY, SRSS_PWR_CTL)? true : false);
     #endif /* !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) */

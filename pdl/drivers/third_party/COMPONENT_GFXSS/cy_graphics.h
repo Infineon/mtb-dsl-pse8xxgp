@@ -340,9 +340,9 @@ typedef struct
 typedef struct {
     cy_en_gfx_layer_type_t  layer_type;            /**< Layer type */
     gctADDRESS              *buffer_address;       /**< Buffer */
-    gctADDRESS              *uv_buffer_address;    /**< UV Buffer */
-    viv_input_format_type   input_format_type;     /**< Inout format */
-    viv_tiling_type         tiling_type;           /**< Tiliing format */
+    gctADDRESS              *uv_buffer_address;    /**< UV Buffer, this is not available for overlay 1 */
+    viv_input_format_type   input_format_type;     /**< Input format, Overlay 1 supports only linear format while Graphics/Video Layer and Overlay 0 support both linear and tiled formats */
+    viv_tiling_type         tiling_type;           /**< Tiliing format, Overlay 1 supports only vivLINEAR tiling type */
     viv_layer_alpha_mode    alpha_mode;            /**< Alpha mode */
     gctUINT32               pos_x;                 /**< Position X */
     gctUINT32               pos_y;                 /**< Position Y */
@@ -421,11 +421,11 @@ typedef struct
 /**
 * \addtogroup group_graphics_functions
 *  Following section describes the functions available in graphics subsystem.
-* For GPU specific functions, Please refer to
-* pdl\drivers\third_party\COMPONENT_GFXSS\vsi\gcnano\inc\vg_lite.h
+*  For GPU specific functions,Please refer to <a href="vglite.pdf"> VGLite API Reference Manual </a>
 *
-* Display controller functionality is taken care with high level graphics API implementation. If user is looking for any specific functionality using direct display controller API directly, please refer to
-* pdl\drivers\third_party\COMPONENT_GFXSS\vsi\dcnano8000\DCUser\viv_dc_setting.h
+*  Display controller functionality is taken care with high level graphics API implementation.
+*  If user is looking for any specific functionality using direct display controller API directly,
+*  please refer to <a href="dpu_api.pdf"> DPU API reference guide </a>
 * \{
 */
 

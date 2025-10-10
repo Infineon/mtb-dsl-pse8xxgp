@@ -46,7 +46,7 @@ extern "C" {
 
 static void cy_gfxss_update_display_rect_params(viv_display_size_type display_size, viv_dc_rect *dc_rect);
 static uint8_t cy_gfxss_get_bpp_from_format(viv_input_format_type        format);
-static uint32_t cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *config, cy_stc_mipidsi_config_t *mipi_dsi_cfg);
+static vivSTATUS cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *config, cy_stc_mipidsi_config_t *mipi_dsi_cfg);
 
 
 static void cy_gfxss_update_display_rect_params(viv_display_size_type display_size, viv_dc_rect *dc_rect)
@@ -229,9 +229,9 @@ static uint32_t cy_gfxss_configure_layer(cy_stc_gfx_layer_config_t *layer_config
     return ret;
 }
 /** Display controller initialization */
-static uint32_t cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *config, cy_stc_mipidsi_config_t *mipi_dsi_cfg)
+static vivSTATUS cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *config, cy_stc_mipidsi_config_t *mipi_dsi_cfg)
 {
-    gctINT ret = 0;
+    vivSTATUS ret = vivSTATUS_OK;
     viv_dc_rect display_rect;
     viv_output display_output;
 
@@ -291,6 +291,13 @@ static uint32_t cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *confi
     /* Configure Overlay 1 Layer */
     if(config->ovl1_layer_config != NULL && config->ovl1_layer_config->layer_enable )
     {
+        /* Check if Overlay 1 is using YUV format and unsupported tiling type */
+    if ((config->ovl1_layer_config->input_format_type >= vivYUY2 && config->ovl1_layer_config->input_format_type <= vivNV21)
+            || config->ovl1_layer_config->tiling_type != vivLINEAR )
+        {
+            return vivSTATUS_NOT_SUPPORT;
+        }
+
         cy_gfxss_configure_layer(config->ovl1_layer_config);
     }
 

@@ -27,10 +27,10 @@
 * limitations under the License.
 *******************************************************************************/
 /**
-* \addtogroup group_smif
+* \addtogroup group_smif_memnum
 * \{
-* \section group_smif_section_secure_aware Secure Aware RTC
-* Some RTC APIs are marked as Secure Aware.  This means that if the RTC is marked
+* \section group_smif_section_secure_aware Secure Aware SMIF
+* Some SMIF APIs are marked as Secure Aware.  This means that if the SMIF is marked
 * as a secure resource in the Peripheral Protection Controller (PPC) and these
 * APIs are called from a non-secure CPU state, the PDL will submit a request to the
 * Secure Request Framework (SRF) middleware to transition to a secure CPU state to
@@ -38,12 +38,12 @@
 * the same whether it is called from a secure or non-secure CPU state albeit slower.
 *
 * This functionality is automatically enabled on devices with ARM TrustZone processors.
-* To disable, set the DEFINE+=CY_PDL_ENABLE_SECURE_AWARE_RTC=0 in the application
+* To disable, set the DEFINE+=CY_PDL_ENABLE_SECURE_AWARE_SMIF=0 in the application
 * Makefile.
 *
 * For more information on Secure Aware PDL behavior, see \ref group_pdl_srf_general.
 *
-* \} group_smif  */
+*/
 
 #if !defined (CY_SMIF_MEMORYNUM_H)
 #define CY_SMIF_MEMORYNUM_H
@@ -126,6 +126,32 @@ typedef struct
 
 } cy_stc_smif_mem_info_t;
 
+/** \cond INTERNAL */
+#if defined(CY_PDL_SMIF_ENABLE_SRF_INTEG)
+/** This is only used by secure-aware. The structure contains SMIF status parameters */
+typedef struct {
+    cy_en_smif_status_t op_res;
+} cy_pdl_smif_srf_status_out_t;
+
+/** This is only used by secure-aware. The structure contains clean SMIF cache configuration parameters */
+typedef struct {
+    uint32_t address;
+    uint32_t size;
+} cy_pdl_smif_srf_clean_cache_in_t;
+
+/** This is only used by secure-aware. The structure contains invalidate SMIF cache configuration parameters */
+typedef struct {
+    uint32_t address;
+    uint32_t size;
+} cy_pdl_smif_srf_invalidate_cache_in_t;
+
+/** This is only used by secure-aware. The structure contains clean/invalidate SMIF cache configuration parameters */
+typedef struct {
+    uint32_t address;
+    uint32_t size;
+} cy_pdl_smif_srf_cl_inv_cache_in_t;
+#endif
+/** \endcode */
 
 /*******************************************************************************
 * Function Name: Cy_SMIF_MemNumInit
@@ -223,7 +249,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumSetupNonSecure(SMIF_Type *base,
 * cross-core calls, not calls between security contexts on the same core.
 *
 *******************************************************************************/
-cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(cy_stc_smif_mem_context_t *context,
+cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *context,
                             uint8_t memNum,
                             cy_stc_smif_mem_info_t *memNumInfo);
 
@@ -516,5 +542,6 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusWrite(cy_stc_smif_mem_context_t *conte
 
 #endif /* (CY_SMIF_MEMORYSLOT_H) */
 
+/** \} group_smif_memnum */
 
 /* [] END OF FILE */

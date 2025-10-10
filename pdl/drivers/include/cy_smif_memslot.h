@@ -975,6 +975,7 @@ cy_en_smif_status_t Cy_SMIF_HyperBus_InitDevice(SMIF_Type *base, const cy_stc_sm
 * center tap of the longest sequence of matches and applies this tap.
 *
 * \note Function assumes that any SMIF has the same number of delay taps
+* \note This API is deprecated, instead please use \ref Cy_SMIF_MemCalibrateSDL API
 *
 * \param base
 * Holds the base address of the SMIF Device registers.

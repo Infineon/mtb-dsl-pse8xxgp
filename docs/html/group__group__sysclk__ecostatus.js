@@ -1,6 +1,7 @@
 var group__group__sysclk__ecostatus =
 [
-    [ "CY_SYSCLK_ECOSTAT_AMPLITUDE", "group__group__sysclk__ecostatus.html#ga1eb088e2bce67f0b1c8e8956d12ee6d9", null ],
-    [ "CY_SYSCLK_ECOSTAT_INACCURATE", "group__group__sysclk__ecostatus.html#ga9890a5835f8dea7ae3596ea242911ae1", null ],
-    [ "CY_SYSCLK_ECOSTAT_STABLE", "group__group__sysclk__ecostatus.html#ga1fbb771899bde3d2a8914bdfab9d47a0", null ]
+    [ "CY_SYSCLK_ECOSTAT_UNUSABLE", "group__group__sysclk__ecostatus.html#ga21cf6465aa61cd6f94e75dd38cd7b088", null ],
+    [ "CY_SYSCLK_ECOSTAT_OK", "group__group__sysclk__ecostatus.html#ga9b82dee248343020f09615c8c54b9d42", null ],
+    [ "CY_SYSCLK_ECOSTAT_READY", "group__group__sysclk__ecostatus.html#gaba7165c1e910456c84318a3cb8bf226b", null ],
+    [ "CY_SYSCLK_ECOSTAT_OK_AND_READY", "group__group__sysclk__ecostatus.html#gaf579a1842eaf186b3c3b8650df733867", null ]
 ];

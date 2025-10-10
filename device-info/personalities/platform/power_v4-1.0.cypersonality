@@ -51,7 +51,7 @@
   </BehaviorImplementation>
   <Parameters>
     <!-- Documentation -->
-    <ParamDoc id='pdlDoc' name='SysPm API Reference' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__syspm.html' linkText='Open SysPm Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='SysPm API Reference' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__syspm.html' linkText='Open SysPm Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='actPwrMode' name='System Active Power Profile' group='General' default='POWER_PROFILE_LP' visible='true'
       desc='Selects the system operating power mode.'>

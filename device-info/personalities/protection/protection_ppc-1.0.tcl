@@ -52,9 +52,6 @@ for {set idx 0} {$idx < $locationCnt} {incr idx} {
 # configured for it.
 array set domainToRegions {}
 
-# Define list of regions to filter out from domainToRegions
-set filteredRegions [list "PROT_PERI1_PPC1_PPC_PPC_SECURE" "PROT_PERI1_PPC1_PPC_PPC_NONSECURE" "PROT_PERI0_GR0_GROUP" "PROT_PERI0_GR0_BOOT" "PROT_PERI0_GR1_BOOT" "PROT_PERI0_GR2_BOOT" "PROT_PERI0_GR3_BOOT" "PROT_PERI0_GR4_BOOT" "PROT_PERI0_GR5_BOOT" "PROT_PERI0_RRAMC0_RRAM_EXTRA_AREA_RRAMC_PROTECTED" "PROT_PERI0_RRAMC0_RRAM_EXTRA_AREA_RRAMC_REPAIR" "PROT_PERI0_RRAMC0_RRAM_EXTRA_AREA_RRAMC_EXTRA" "PROT_PERI0_RRAMC0_RRAMC0_RRAMC_M0SEC" "PROT_PERI0_RRAMC0_MPC0_PPC_MPC_MAIN" "PROT_PERI0_RRAMC0_MPC1_PPC_MPC_MAIN" "PROT_PERI0_RRAMC0_MPC0_PPC_MPC_PC" "PROT_PERI0_RRAMC0_MPC1_PPC_MPC_PC" "PROT_PERI0_RRAMC0_MPC0_PPC_MPC_ROT" "PROT_PERI0_RRAMC0_MPC1_PPC_MPC_ROT" "PROT_PERI0_RRAMC0_RRAM_SFR_RRAMC_SFR_FPGA" "PROT_PERI0_RRAMC0_RRAM_SFR_RRAMC_SFR_NONUSER" "PROT_PERI0_RAMC0_BOOT" "PROT_PERI0_RAMC1_BOOT" "PROT_PERI0_MXCM33_BOOT_PC0" "PROT_PERI0_MXCM33_BOOT_PC1" "PROT_PERI0_MXCM33_BOOT_PC3" "PROT_PERI0_MXCM33_BOOT" "PROT_PERI0_CPUSS_AP" "PROT_PERI0_MS0_MAIN" "PROT_PERI0_MS4_MAIN" "PROT_PERI0_MS5_MAIN" "PROT_PERI0_MS6_MAIN" "PROT_PERI0_MS7_MAIN" "PROT_PERI0_MS8_MAIN" "PROT_PERI0_MS9_MAIN" "PROT_PERI0_MS10_MAIN" "PROT_PERI0_MS11_MAIN" "PROT_PERI0_MS29_MAIN" "PROT_PERI0_MS31_MAIN" "PROT_PERI0_MS_PC31_PRIV" "PROT_PERI0_CPUSS_SL_CTL_GROUP" "PROT_PERI0_SRSS_SECURE2" "PROT_PERI0_M0SECCPUSS_STATUS_MAIN" "PROT_PERI0_M0SECCPUSS_STATUS_PC1" "PROT_PERI0_PPC0_PPC_PPC_SECURE" "PROT_PERI0_PPC0_PPC_PPC_NONSECURE" "PROT_PERI0_SRSS_SECURE" ]
-
 for {set idx 0} {$idx < $regCnt} {incr idx} {
 
     set valid [dict get $param_dict [format "reg%d_valid" $idx]]
@@ -65,8 +62,14 @@ for {set idx 0} {$idx < $regCnt} {incr idx} {
         set region [dict get $param_dict [format "reg%d_enum_name" $idx]]
 
         # Create dictionary of unique domains with their associated regions
-        # Filter out regions that are in the filteredRegions list
-        set shouldFilter [expr {$region in $filteredRegions}]
+        # Filter out regions beforehand that initialization should not touch:
+        # Filter if peri 0 and access to PC0 or if PPC1_PPC_PPC_SECURE/PPC1_PPC_PPC_NONSECURE
+        # Regions that meet that criteria will break functionality if configured at runtime initialization
+        set peri [dict get $param_dict "peri"]
+        set pcMask [dict get $param_dict [format "reg%d_pcMask" $idx]]
+
+        set shouldFilter [expr { ( ($peri == 0) && ( ($pcMask & 0x01) != 0 ) ) || ( $region eq "PROT_PERI1_PPC1_PPC_PPC_SECURE" || $region eq "PROT_PERI1_PPC1_PPC_PPC_NONSECURE" ) }]
+
         if {$domain ne "" && $region ne "" && !$shouldFilter} {
             if {[info exists domainToRegions($domain)]} {
                 lappend domainToRegions($domain) $region

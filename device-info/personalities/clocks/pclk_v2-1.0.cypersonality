@@ -49,10 +49,11 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__sysclk__clk__peripheral.html' linkText='Open Peripherals Clock Dividers Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__peripheral.html' linkText='Open Peripherals Clock Dividers Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- Find the root HF clock used, if applicable -->
     <ParamSignal port='clk_pclk_root[0]' canBeEmpty='true' visible='false' group='' name='' desc=''  />
+    <ParamString id='clk_pclk_root_value' default='`${findConnectedBlock("clk_pclk_root[0]","srss.clock.hfclk") . ".root_clk[0]"}`'/>
     <ParamString id='hf_clk_idx' name='' group='Internal' default='`${getInstFromLocation(findConnectedBlock("clk_pclk_root[0]","srss.clock.hfclk"), "hfclk")}`' visible='false' editable='false' desc='' />
 
     <!-- Instance name -->

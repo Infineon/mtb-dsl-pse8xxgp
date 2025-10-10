@@ -49,11 +49,12 @@ ifneq ($(_MTB_TOOLCHAIN_LLVM_ARM__USER_2_DIR),)
 MTB_TOOLCHAIN_LLVM_ARM__BASE_DIR:=$(call mtb_core__escaped_path,$(CY_COMPILER_LLVM_ARM_DIR))
 endif
 
+check_toolchain_install:
 ifeq ($(MTB_TOOLCHAIN_LLVM_ARM__BASE_DIR),)
-$(info CY_TOOL_llvm_arm_BASE_ABS=$(CY_TOOL_llvm_arm_BASE_ABS) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_TOOL_llvm_arm_BASE_ABS))),exists,absent)])
-$(info CY_COMPILER_PATH=$(CY_COMPILER_PATH) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_PATH))),exists,absent)])
-$(info CY_COMPILER_LLVM_ARM_DIR=$(CY_COMPILER_LLVM_ARM_DIR) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_LLVM_ARM_DIR))),exists,absent)])
-#$(error Unable to find LLVM_ARM base directory.)
+	$(info CY_TOOL_llvm_arm_BASE_ABS=$(CY_TOOL_llvm_arm_BASE_ABS) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_TOOL_llvm_arm_BASE_ABS))),exists,absent)])
+	$(info CY_COMPILER_PATH=$(CY_COMPILER_PATH) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_PATH))),exists,absent)])
+	$(info CY_COMPILER_LLVM_ARM_DIR=$(CY_COMPILER_LLVM_ARM_DIR) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_LLVM_ARM_DIR))),exists,absent)])
+	$(error Error: Cannot find LLVM_ARM toolchain. Go to https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/ to download and install it. Create an environment variable CY_COMPILER_LLVM_ARM_DIR to specify the path to the installation directory)
 endif
 
 # Elf to bin conversion tool

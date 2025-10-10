@@ -129,7 +129,7 @@ Functions</h2></td></tr>
 
 <p>This function handles the transition of the SMIF into and out of Deep Sleep mode. </p>
 <p >It prevents the device from entering DeepSleep if SMIF is actively communicating, or there is any data in the TX or RX FIFOs, or SMIF is in memory mode.</p>
-<p >This function should be called while execution of <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca">Cy_SysPm_CpuEnterDeepSleep</a> therefore must be registered as a callback before the call. To register it call <a class="el" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a> and specify <a class="el" href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d">CY_SYSPM_DEEPSLEEP</a> as the callback type.</p>
+<p >This function should be called while execution of Cy_SysPm_CpuEnterDeepSleep therefore must be registered as a callback before the call. To register it call Cy_SysPm_RegisterCallback and specify <a class="el" href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d">CY_SYSPM_DEEPSLEEP</a> as the callback type.</p>
 <dl class="section note"><dt>Note</dt><dd>This API is template and user should add code for external memory enter/exit low power mode.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -158,7 +158,7 @@ Functions</h2></td></tr>
 <div class="line">        <span class="comment">/* .nextItm        */</span> NULL,</div>
 <div class="line">        <span class="comment">/* .order          */</span> 0</div>
 <div class="line">    };</div>
-<div class="line">    <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;smifDeepSleepCb);</div>
+<div class="line">    Cy_SysPm_RegisterCallback(&amp;smifDeepSleepCb);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Register SMIF SysPm callback for hibernate mode*/</span></div>
 <div class="line">    <a class="code hl_struct" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a> smifHibernateCb=</div>
@@ -171,15 +171,14 @@ Functions</h2></td></tr>
 <div class="line">        <span class="comment">/* .nextItm        */</span> NULL,</div>
 <div class="line">        <span class="comment">/* .order          */</span> 0</div>
 <div class="line">    };</div>
-<div class="line">    <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;smifHibernateCb);</div>
+<div class="line">    Cy_SysPm_RegisterCallback(&amp;smifHibernateCb);</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__smif__functions__syspm__callback_html_ga30a41308d83905b3feb36f67a80d9f71"><div class="ttname"><a href="group__group__smif__functions__syspm__callback.html#ga30a41308d83905b3feb36f67a80d9f71">Cy_SMIF_HibernateCallback</a></div><div class="ttdeci">cy_en_syspm_status_t Cy_SMIF_HibernateCallback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)</div><div class="ttdoc">This function handles the transition of the SMIF into Hibernate mode.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2820</div></div>
-<div class="ttc" id="agroup__group__smif__functions__syspm__callback_html_ga89e417482a719f6fd6b4d4ff11f6e1f6"><div class="ttname"><a href="group__group__smif__functions__syspm__callback.html#ga89e417482a719f6fd6b4d4ff11f6e1f6">Cy_SMIF_DeepSleepCallback</a></div><div class="ttdeci">cy_en_syspm_status_t Cy_SMIF_DeepSleepCallback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)</div><div class="ttdoc">This function handles the transition of the SMIF into and out of Deep Sleep mode.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2696</div></div>
+<div class="ttc" id="agroup__group__smif__functions__syspm__callback_html_ga30a41308d83905b3feb36f67a80d9f71"><div class="ttname"><a href="group__group__smif__functions__syspm__callback.html#ga30a41308d83905b3feb36f67a80d9f71">Cy_SMIF_HibernateCallback</a></div><div class="ttdeci">cy_en_syspm_status_t Cy_SMIF_HibernateCallback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)</div><div class="ttdoc">This function handles the transition of the SMIF into Hibernate mode.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2823</div></div>
+<div class="ttc" id="agroup__group__smif__functions__syspm__callback_html_ga89e417482a719f6fd6b4d4ff11f6e1f6"><div class="ttname"><a href="group__group__smif__functions__syspm__callback.html#ga89e417482a719f6fd6b4d4ff11f6e1f6">Cy_SMIF_DeepSleepCallback</a></div><div class="ttdeci">cy_en_syspm_status_t Cy_SMIF_DeepSleepCallback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)</div><div class="ttdoc">This function handles the transition of the SMIF into and out of Deep Sleep mode.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2699</div></div>
 <div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga8c2960c0164ead1cfa86e7d6846b6ff0a613e2f83e3ab88e3569cf34ff0fa5912"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0a613e2f83e3ab88e3569cf34ff0fa5912">CY_SYSPM_HIBERNATE</a></div><div class="ttdeci">@ CY_SYSPM_HIBERNATE</div><div class="ttdoc">The Hibernate enum callback type.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1389</div></div>
 <div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d">CY_SYSPM_DEEPSLEEP</a></div><div class="ttdeci">@ CY_SYSPM_DEEPSLEEP</div><div class="ttdoc">The Deep Sleep enum callback type.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1388</div></div>
 <div class="ttc" id="agroup__group__syspm__data__structures_html_structcy__stc__syspm__callback__params__t"><div class="ttname"><a href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a></div><div class="ttdoc">The structure contains syspm callback parameters.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1923</div></div>
 <div class="ttc" id="agroup__group__syspm__data__structures_html_structcy__stc__syspm__callback__t"><div class="ttname"><a href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a></div><div class="ttdoc">Structure with syspm callback configuration elements.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1937</div></div>
-<div class="ttc" id="agroup__group__syspm__functions__callback_html_ga0d58b00c8dc764a6371590f70e2f73c7"><div class="ttname"><a href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a></div><div class="ttdeci">bool Cy_SysPm_RegisterCallback(cy_stc_syspm_callback_t *handler)</div><div class="ttdoc">Registers a new syspm callback.</div><div class="ttdef"><b>Definition:</b> cy_syspm_v4.c:1951</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -211,7 +210,7 @@ Functions</h2></td></tr>
 
 <p>This function handles the transition of the SMIF into Hibernate mode. </p>
 <p >It prevents the device from entering Hibernate if the SMIF is actively communicating, or there is any data in the TX or RX FIFO, or SMIF is in memory mode.</p>
-<p >This function should be called during execution of <a class="el" href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate</a> therefore it must be registered as a callback before the call. To register it call <a class="el" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a> and specify <a class="el" href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0a613e2f83e3ab88e3569cf34ff0fa5912">CY_SYSPM_HIBERNATE</a> as the callback type.</p>
+<p >This function should be called during execution of Cy_SysPm_SystemEnterHibernate therefore it must be registered as a callback before the call. To register it call Cy_SysPm_RegisterCallback and specify <a class="el" href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0a613e2f83e3ab88e3569cf34ff0fa5912">CY_SYSPM_HIBERNATE</a> as the callback type.</p>
 <dl class="section note"><dt>Note</dt><dd>This API is template and user should add code for external memory enter/exit low power mode.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -240,7 +239,7 @@ Functions</h2></td></tr>
 <div class="line">        <span class="comment">/* .nextItm        */</span> NULL,</div>
 <div class="line">        <span class="comment">/* .order          */</span> 0</div>
 <div class="line">    };</div>
-<div class="line">    <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;smifDeepSleepCb);</div>
+<div class="line">    Cy_SysPm_RegisterCallback(&amp;smifDeepSleepCb);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Register SMIF SysPm callback for hibernate mode*/</span></div>
 <div class="line">    <a class="code hl_struct" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a> smifHibernateCb=</div>
@@ -253,7 +252,7 @@ Functions</h2></td></tr>
 <div class="line">        <span class="comment">/* .nextItm        */</span> NULL,</div>
 <div class="line">        <span class="comment">/* .order          */</span> 0</div>
 <div class="line">    };</div>
-<div class="line">    <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;smifHibernateCb);</div>
+<div class="line">    Cy_SysPm_RegisterCallback(&amp;smifHibernateCb);</div>
 <div class="line"> </div>
 </div><!-- fragment -->
 </div>

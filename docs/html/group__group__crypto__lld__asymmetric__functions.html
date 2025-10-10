@@ -1267,7 +1267,7 @@ Functions</h2></td></tr>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Previously calculated SHA-256 digest of the image */</span></div>
-<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] =</div>
+<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] =</div>
 <div class="line">    {</div>
 <div class="line">        0xf4u, 0xcbu, 0x29u, 0x53u, 0xadu, 0xc2u, 0xbdu, 0x49u,</div>
 <div class="line">        0x6bu, 0x43u, 0x28u, 0x2bu, 0x63u, 0xb7u, 0x0du, 0x16u,</div>
@@ -1320,15 +1320,15 @@ Functions</h2></td></tr>
 <div class="line">        <span class="comment">/* Verification FAILED */</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__crypto__cli__srv__macros_html_ga82ff1a7671e4f0cf2026cbda5ef7e12a"><div class="ttname"><a href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_SHA256_DIGEST_SIZE</div><div class="ttdoc">Hash size for the SHA256 mode (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:220</div></div>
-<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__rsa__pub__key__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__rsa__pub__key__t">cy_stc_crypto_rsa_pub_key_t</a></div><div class="ttdoc">All fields for the context structure are internal.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:322</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:538</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gaf08f93b8b21962a60f119157337b2113"><div class="ttname"><a href="group__group__crypto__enums.html#gaf08f93b8b21962a60f119157337b2113">cy_en_crypto_rsa_ver_result_t</a></div><div class="ttdeci">cy_en_crypto_rsa_ver_result_t</div><div class="ttdoc">Signature verification status.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:530</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f"><div class="ttname"><a href="group__group__crypto__enums.html#gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f">CY_CRYPTO_MODE_SHA256</a></div><div class="ttdeci">@ CY_CRYPTO_MODE_SHA256</div><div class="ttdoc">Sets the SHA256 mode.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:505</div></div>
-<div class="ttc" id="agroup__group__crypto__enums_html_ggaf08f93b8b21962a60f119157337b2113ae4b7e089501db168bf6ef127b8dbcb21"><div class="ttname"><a href="group__group__crypto__enums.html#ggaf08f93b8b21962a60f119157337b2113ae4b7e089501db168bf6ef127b8dbcb21">CY_CRYPTO_RSA_VERIFY_SUCCESS</a></div><div class="ttdeci">@ CY_CRYPTO_RSA_VERIFY_SUCCESS</div><div class="ttdoc">PKCS1-v1.5 verify SUCCESS.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:531</div></div>
+<div class="ttc" id="agroup__group__crypto__data__structures_html_structcy__stc__crypto__rsa__pub__key__t"><div class="ttname"><a href="group__group__crypto__data__structures.html#structcy__stc__crypto__rsa__pub__key__t">cy_stc_crypto_rsa_pub_key_t</a></div><div class="ttdoc">All fields for the context structure are internal.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:323</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_ga3a65158da3dc5cb6aa016ae599542aad"><div class="ttname"><a href="group__group__crypto__enums.html#ga3a65158da3dc5cb6aa016ae599542aad">cy_en_crypto_status_t</a></div><div class="ttdeci">cy_en_crypto_status_t</div><div class="ttdoc">Errors of the Crypto block.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:532</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gaf08f93b8b21962a60f119157337b2113"><div class="ttname"><a href="group__group__crypto__enums.html#gaf08f93b8b21962a60f119157337b2113">cy_en_crypto_rsa_ver_result_t</a></div><div class="ttdeci">cy_en_crypto_rsa_ver_result_t</div><div class="ttdoc">Signature verification status.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:524</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f"><div class="ttname"><a href="group__group__crypto__enums.html#gga66ead9efce36e261e978cad722bf2dbba2212390919051b39d22d567c508c6d1f">CY_CRYPTO_MODE_SHA256</a></div><div class="ttdeci">@ CY_CRYPTO_MODE_SHA256</div><div class="ttdoc">Sets the SHA256 mode.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:499</div></div>
+<div class="ttc" id="agroup__group__crypto__enums_html_ggaf08f93b8b21962a60f119157337b2113ae4b7e089501db168bf6ef127b8dbcb21"><div class="ttname"><a href="group__group__crypto__enums.html#ggaf08f93b8b21962a60f119157337b2113ae4b7e089501db168bf6ef127b8dbcb21">CY_CRYPTO_RSA_VERIFY_SUCCESS</a></div><div class="ttdeci">@ CY_CRYPTO_RSA_VERIFY_SUCCESS</div><div class="ttdoc">PKCS1-v1.5 verify SUCCESS.</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:525</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__asymmetric__functions_html_gae83f35c8c5a35e9b7321ada249d40d95"><div class="ttname"><a href="group__group__crypto__lld__asymmetric__functions.html#gae83f35c8c5a35e9b7321ada249d40d95">Cy_Crypto_Core_Rsa_Proc</a></div><div class="ttdeci">cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Proc(CRYPTO_Type *base, cy_stc_crypto_rsa_pub_key_t const *key, uint8_t const *message, uint32_t messageSize, uint8_t *processedMessage)</div><div class="ttdoc">RSA process algorithm based on the Montgomery algorithm using Barrett reduction.</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_rsa.c:1219</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__asymmetric__functions_html_gae8aee459272ad30568e9c13a4c5dc729"><div class="ttname"><a href="group__group__crypto__lld__asymmetric__functions.html#gae8aee459272ad30568e9c13a4c5dc729">Cy_Crypto_Core_Rsa_Verify</a></div><div class="ttdeci">cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Verify(CRYPTO_Type *base, cy_en_crypto_rsa_ver_result_t *verResult, cy_en_crypto_sha_mode_t digestType, uint8_t const *digest, uint8_t const *decryptedSignature, uint32_t decryptedSignatureLength)</div><div class="ttdoc">RSA verification with checks for content, paddings and signature format.</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_rsa.c:171</div></div>
 <div class="ttc" id="agroup__group__crypto__lld__hw__functions_html_ga5d74ed1e6161b72e972fac828fa3aea9"><div class="ttname"><a href="group__group__crypto__lld__hw__functions.html#ga5d74ed1e6161b72e972fac828fa3aea9">Cy_Crypto_Core_InvertEndianness</a></div><div class="ttdeci">void Cy_Crypto_Core_InvertEndianness(void *inArrPtr, uint32_t byteSize)</div><div class="ttdoc">This function reverts byte-array memory block, like:  inArr[0] &lt;—&gt; inArr[n]  inArr[1] &lt;—&gt; inArr[n-1] ...</div><div class="ttdef"><b>Definition:</b> cy_crypto_core_hw.c:728</div></div>
+<div class="ttc" id="agroup__group__crypto__macros_html_ga82ff1a7671e4f0cf2026cbda5ef7e12a"><div class="ttname"><a href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a></div><div class="ttdeci">#define CY_CRYPTO_SHA256_DIGEST_SIZE</div><div class="ttdoc">Hash size for the SHA256 mode (in bytes)</div><div class="ttdef"><b>Definition:</b> cy_crypto_common.h:220</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -1513,7 +1513,7 @@ Functions</h2></td></tr>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Previously calculated SHA-256 digest of the image */</span></div>
-<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] =</div>
+<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] =</div>
 <div class="line">    {</div>
 <div class="line">        0xf4u, 0xcbu, 0x29u, 0x53u, 0xadu, 0xc2u, 0xbdu, 0x49u,</div>
 <div class="line">        0x6bu, 0x43u, 0x28u, 0x2bu, 0x63u, 0xb7u, 0x0du, 0x16u,</div>
@@ -1735,7 +1735,7 @@ Functions</h2></td></tr>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Previously calculated SHA-256 digest of the image */</span></div>
-<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__cli__srv__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] =</div>
+<div class="line">    uint8_t sha256Digest[<a class="code hl_define" href="group__group__crypto__macros.html#ga82ff1a7671e4f0cf2026cbda5ef7e12a">CY_CRYPTO_SHA256_DIGEST_SIZE</a>] =</div>
 <div class="line">    {</div>
 <div class="line">        0xf4u, 0xcbu, 0x29u, 0x53u, 0xadu, 0xc2u, 0xbdu, 0x49u,</div>
 <div class="line">        0x6bu, 0x43u, 0x28u, 0x2bu, 0x63u, 0xb7u, 0x0du, 0x16u,</div>

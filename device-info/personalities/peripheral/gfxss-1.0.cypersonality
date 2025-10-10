@@ -34,7 +34,7 @@
   </ExposedMembers>
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id="pdlDoc" name="Configuration Help" group="Overview" default="file:///`${cy_libs_path()}`/docs/pdl_api_reference_manual/html/group__group__graphics.html" linkText="Open GFXSS Documentation" visible="true" desc="Opens the Peripheral Driver Library Documentation" />
+    <ParamDoc id="pdlDoc" name="Configuration Help" group="Overview" default="file:///`${cy_libs_path()}`/docs/html/group__group__graphics.html" linkText="Open GFXSS Documentation" visible="true" desc="Opens the Peripheral Driver Library Documentation" />
 
     <!-- Clocks -->
     <ParamSignal port="clk_hf[0]" name="Main Clock" group="Clocks" visible="true" desc="High frequency main clock." canBeEmpty="false" />
@@ -284,8 +284,6 @@
       <Entry name="ARGB8888" value="vivARGB8888" visible="true" />
 	  <Entry name="ARGB1555" value="vivARGB1555" visible="true" />
 	  <Entry name="ARGB4444" value="vivARGB4444" visible="true" />
-	  <Entry name="Packed YUV422" value="vivYUY2" visible="true" />
-	  <Entry name="YUV 420 semi-planar" value="vivNV12" visible="true" />
     </ParamChoice>
     <ParamRange id="layer2_pos_x" name="X Position" group="Overlay 1" default="0" min="0" max="`${display_width}`" resolution="1" visible="`${layer2_enabled}`" editable="true" desc="Overlay1- Position." />
     <ParamRange id="layer2_pos_y" name="Y Position" group="Overlay 1" default="0" min="0" max="`${display_height}`" resolution="1" visible="`${layer2_enabled}`" editable="true" desc="Overlay1- Position." />
@@ -346,7 +344,7 @@
       <Member name="buffer_address" value="(gctADDRESS *)CY_SOCMEM_RAM_BASE" />
       <Member name="uv_buffer_address" value="(gctADDRESS *)CY_SOCMEM_RAM_BASE" />
       <Member name="input_format_type" value="`${layer2_format}`" />
-      <Member name="tiling_type" value="`${((layer2_format eq vivNV12) || (layer2_format eq vivYUY2)) ? &quot;vivTILED4X4&quot; : &quot;vivLINEAR&quot;}`" />
+      <Member name="tiling_type" value="vivLINEAR" />
       <Member name="pos_x" value="`${layer2_pos_x}`" />
       <Member name="pos_y" value="`${layer2_pos_y}`" />
       <Member name="width" value="`${layer2_width}`" />

@@ -34,7 +34,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Peripheral Documentation' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__cy__i3c.html' linkText='Open I3C Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Peripheral Documentation' default='file:///`${cy_libs_path()}`/docs/html/group__group__cy__i3c.html' linkText='Open I3C Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- General -->
     <ParamChoice id='ModeUser' name='Mode' group='General' default='`${"CY_I3C_CONTROLLER"}`' visible='true' editable='true' desc='This parameter defines the I3C operation mode as: the Target or Controller. Target mode is only supported in PSE84B0.'>

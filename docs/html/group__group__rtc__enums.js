@@ -40,7 +40,6 @@ var group__group__rtc__enums =
       [ "CY_RTC_CLK_SELECT_WCO", "group__group__rtc__enums.html#gga6620485d475a6116576bd6981e01108ea93b4396c0bab2d5e25228c8ffe53bc8c", null ],
       [ "CY_RTC_CLK_SELECT_ALTBAK", "group__group__rtc__enums.html#gga6620485d475a6116576bd6981e01108ea261ab8c2da0f1d1f5a38729fea0cc7e1", null ],
       [ "CY_RTC_CLK_SELECT_ILO", "group__group__rtc__enums.html#gga6620485d475a6116576bd6981e01108ea1f71ed937334fcebc3edca826cacbda6", null ],
-      [ "CY_RTC_CLK_SELECT_LPECO_PRESCALER", "group__group__rtc__enums.html#gga6620485d475a6116576bd6981e01108ea6ba43c7552d0a1b0867f5200a519f1a2", null ],
       [ "CY_RTC_CLK_SELECT_PILO", "group__group__rtc__enums.html#gga6620485d475a6116576bd6981e01108ea6bc54987a5d16de34245545744294a67", null ]
     ] ],
     [ "cy_en_rtc_calib_sign_t", "group__group__rtc__enums.html#ga27d0d203e4fec44e87b25fdaedb8a534", [

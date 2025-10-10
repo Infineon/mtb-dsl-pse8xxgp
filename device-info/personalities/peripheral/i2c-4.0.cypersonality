@@ -40,7 +40,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/pdl/html/group__group__scb__i2c.html' linkText='Open I2C (SCB) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__scb__i2c.html' linkText='Open I2C (SCB) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamBool id='DeepSleepCapable' name='DeepSleepCapable' group='Internal' default='`${DEEPSLEEP eq 1}`' visible='false' editable='false' desc='This parameter specifies if SCB block can wakeup from Deep Sleep.' />
     <ParamBool id='SlaveCapable' name='SlaveCapable' group='Internal' default='`${I2C_S eq 1}`' visible='false' editable='false' desc='This parameter specifies if SCB block supports Slave mode.' />

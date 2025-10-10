@@ -47,6 +47,7 @@
 #define _MTB_HAL_LPTIMER_MCWDT_A
 #endif
 
+#define MTB_HAL_LPTIMER_CFG_LFCLK_FREQ
 
 /**
  * @brief LPTIMER object

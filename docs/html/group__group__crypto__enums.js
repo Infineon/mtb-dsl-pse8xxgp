@@ -47,5 +47,11 @@ var group__group__crypto__enums =
       [ "CY_CRYPTO_EDDSA_CTX", "group__group__crypto__enums.html#ggab07bfdbc2dd702f0350c8c73bfe94fe9a22632c720d07ecd02a9f3a6bd56aeee5", null ],
       [ "CY_CRYPTO_EDDSA_PREHASH", "group__group__crypto__enums.html#ggab07bfdbc2dd702f0350c8c73bfe94fe9a90fe983a852e7ee4edd31696cae44717", null ],
       [ "CY_CRYPTO_EDDSA_NONE", "group__group__crypto__enums.html#ggab07bfdbc2dd702f0350c8c73bfe94fe9a430cc8ec8213c7e7269b46b26e826829", null ]
+    ] ],
+    [ "cy_en_crypto_trng_bs_sel_t", "group__group__crypto__enums.html#ga26559a89feed5a73e617eebdeee04ce7", [
+      [ "CY_CRYPTO_TRMON_BS_DAS", "group__group__crypto__enums.html#gga26559a89feed5a73e617eebdeee04ce7af49c3ca1d03e14dbbb7ec0bc2ac052be", null ],
+      [ "CY_CRYPTO_TRMON_BS_RED", "group__group__crypto__enums.html#gga26559a89feed5a73e617eebdeee04ce7a00e1f9be0a0c7aaf6885004a577464d9", null ],
+      [ "CY_CRYPTO_TRMON_BS_TR", "group__group__crypto__enums.html#gga26559a89feed5a73e617eebdeee04ce7af5b964656d38993613da36e5a579f302", null ],
+      [ "CY_CRYPTO_TRMON_BS_UNDEF", "group__group__crypto__enums.html#gga26559a89feed5a73e617eebdeee04ce7a7c118b65c846fbdf16e05a5a6e1f5e9e", null ]
     ] ]
 ];

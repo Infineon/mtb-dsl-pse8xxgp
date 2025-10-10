@@ -35,7 +35,7 @@
   <ExposedMembers />
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id="pdlDoc" name="Configuration Help" group="Overview" default="file:///`${cy_libs_path()}`/docs/pdl_api_reference_manual/html/group__group__pdm__pcm__v2.html" linkText="Open PDM_PCM Documentation" visible="true" desc="Opens the Peripheral Driver Library Documentation." />
+    <ParamDoc id="pdlDoc" name="Configuration Help" group="Overview" default="file:///`${cy_libs_path()}`/docs/html/group__group__pdm__pcm__v2.html" linkText="Open PDM_PCM Documentation" visible="true" desc="Opens the Peripheral Driver Library Documentation." />
     <ParamRange id="pdmInst" name="PDM instance Number" group="Internal" default="`${getInstNumber(&quot;pdm&quot;)}`" min="0" max="3" resolution="1" visible="false" editable="false" desc="" />
     <!-- Channels -->
 	<ParamChoice id="interface_type" name="Interface Format" group="Channel Info" default="1" visible="true" editable="true" desc="Set channels enabled.">

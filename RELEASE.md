@@ -4,6 +4,8 @@
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
 ## Defect Fixes
+### v1.1.1
+* Bug fix on secure aware implementation of Cy_SysPm_CpuEnterDeepSleep
 ### v1.1.0
 * Documentation updates
 * Personality updates

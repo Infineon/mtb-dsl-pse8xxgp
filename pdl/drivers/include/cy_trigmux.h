@@ -165,7 +165,7 @@ extern "C" {
                                                  (CY_TRIGGER_TWO_CYCLES == (cycles)) || \
                                                  (CY_TRIGGER_INFINITE   == (cycles)))
 #define CY_TRIGMUX_IS_CYCLES_VALID(cycles)      (CY_TRIGMUX_V2_IS_CYCLES_VALID(cycles))
-
+ 
 
 # if defined (CY_IP_MXSPERI) && (CY_IP_MXSPERI_INSTANCES == 2)
 #define CY_TRIGMUX_INTRIG_MASK                  (PERI_TR_CMD_GROUP_SEL_Msk | PERI_TR_GR_TR_OUT_CTL_TR_SEL_Msk | PERI_INSTANCE_1_IDENT_Msk)

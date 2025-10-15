@@ -101,7 +101,7 @@
 * \section group_dma_more_information More Information.
 * See: the DMA chapter of the device technical reference manual (TRM);
 *      the DMA Component datasheet;
-
+ 
 *
 * \defgroup group_dma_macros Macros
 * \defgroup group_dma_functions Functions

@@ -41,7 +41,7 @@
 * access control beyond the basic secure/non-secure distinction.
 *
 * Up to 1024 regions can be protected by the PPC. However, the configuration of the response on an access violation
-* is only available at the PPC instance level. Therefore, every region associated with a given PPC instance will have
+* is only available at the PPC instance level. Therefore, every region associated with a given PPC instance will have 
 * the same response type for access violations.
 *
 * The PPC driver provides APIs to configure the security attributes, privilege levels, and protection context masks

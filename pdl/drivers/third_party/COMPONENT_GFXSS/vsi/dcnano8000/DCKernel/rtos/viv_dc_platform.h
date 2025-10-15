@@ -31,3 +31,4 @@ vivSTATUS dev_init();
 vivSTATUS dev_deinit();
 
 gctINT dev_ioctl(gctUINT cmd, gctPOINTER arg);
+

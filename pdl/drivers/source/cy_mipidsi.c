@@ -289,7 +289,7 @@ void pll_reprogramming(cy_stc_mipidsi_config_t const *config)
     dphy_reg_write(0x016E, 0x0A); // DPHY reg 0x16e: pll_prop_cntrl_wr[5:0]=6'b001010
 
     if (bandwidth < 450U)
-    {
+    { 
         dphy_reg_write(0x01AC, 0x10); // For frequencies below 450Mbps clkdiv_clk_en must be enabled.
     }
     /* Added M/N factor for PLL reprogramming, M - 0x179, N - 0x178
@@ -364,7 +364,7 @@ void pll_reprogramming(cy_stc_mipidsi_config_t const *config)
         case 650U:
             dphy_reg_write(0x0178, 0xD8); // N
             dphy_reg_write(0x0179, 0x2A); // M
-            dphy_reg_write(0x017A, 0x01); // Carry forward from M
+            dphy_reg_write(0x017A, 0x01); // Carry forward from M 
             dphy_reg_write(0x0002, 0x07); // DPHY reg 0x2, hsfreqrange_ovr_rw    = 7'b0000111 (600Mbps)
             dphy_reg_write(0x017B, 0xBD); // DPHY reg 0x17b: pll_vco_cntrl_ovr_en_rw=1, pll_vco_cntrl_ovr_rw=0x1E, pll_m_ovr_en_rw=1
             break;
@@ -391,7 +391,7 @@ void pll_reprogramming(cy_stc_mipidsi_config_t const *config)
         case 950U:
             dphy_reg_write(0x0178, 0xD8); // N
             dphy_reg_write(0x0179, 0x11); // M
-            dphy_reg_write(0x017A, 0x01); // Carry forward from M
+            dphy_reg_write(0x017A, 0x01); // Carry forward from M 
             dphy_reg_write(0x0002, 0x29); // DPHY reg 0x2, hsfreqrange_ovr_rw    = 7'b0101001 (900Mbps)
             dphy_reg_write(0x017B, 0x91); // DPHY reg 0x17b: pll_vco_cntrl_ovr_en_rw=1, pll_vco_cntrl_ovr_rw=0x8, pll_m_ovr_en_rw=1
             break;
@@ -411,7 +411,7 @@ void pll_reprogramming(cy_stc_mipidsi_config_t const *config)
         case 1150U:
             dphy_reg_write(0x0178, 0xD8); // N
             dphy_reg_write(0x0179, 0x11); // M
-            dphy_reg_write(0x017A, 0x01); // Carry forward from M
+            dphy_reg_write(0x017A, 0x01); // Carry forward from M 
             dphy_reg_write(0x0002, 0x2A); // DPHY reg 0x2, hsfreqrange_ovr_rw    = 7'b0101010 (1.1Gbps)
             dphy_reg_write(0x017B, 0x91); // DPHY reg 0x17b: pll_vco_cntrl_ovr_en_rw=1, pll_vco_cntrl_ovr_rw=0x8, pll_m_ovr_en_rw=1
             break;
@@ -419,14 +419,14 @@ void pll_reprogramming(cy_stc_mipidsi_config_t const *config)
         case 1250U:
             dphy_reg_write(0x0178, 0xD8); // N
             dphy_reg_write(0x0179, 0x2A); // M
-            dphy_reg_write(0x017A, 0x01); // Carry forward from M
+            dphy_reg_write(0x017A, 0x01); // Carry forward from M 
             dphy_reg_write(0x0002, 0x0B); // DPHY reg 0x2, hsfreqrange_ovr_rw    = 7'b0001011 (1.2Gbps)
             dphy_reg_write(0x017B, 0x91); // DPHY reg 0x17b: pll_vco_cntrl_ovr_en_rw=1, pll_vco_cntrl_ovr_rw=0x8, pll_m_ovr_en_rw=1
             break;
      case 1300U:
             dphy_reg_write(0x0178, 0xD8); // N
             dphy_reg_write(0x0179, 0x43); // M
-            dphy_reg_write(0x017A, 0x01); // Carry forward from M
+            dphy_reg_write(0x017A, 0x01); // Carry forward from M 
             dphy_reg_write(0x0002, 0x2B); // DPHY reg 0x2, hsfreqrange_ovr_rw    = 7'b0101011 (1.3Gbps)
             dphy_reg_write(0x017B, 0x87); // DPHY reg 0x17b: pll_vco_cntrl_ovr_en_rw=1, pll_vco_cntrl_ovr_rw=0x3, pll_m_ovr_en_rw=1
             break;
@@ -440,14 +440,14 @@ void pll_reprogramming(cy_stc_mipidsi_config_t const *config)
         case 1450U:
             dphy_reg_write(0x0178, 0xD8); // N
             dphy_reg_write(0x0179, 0x5C); // M
-            dphy_reg_write(0x017A, 0x01); // Carry forward from M
+            dphy_reg_write(0x017A, 0x01); // Carry forward from M 
             dphy_reg_write(0x0002, 0x0C); // DPHY reg 0x2, hsfreqrange_ovr_rw    = 7'b0001100 (1.4Gbps)
             dphy_reg_write(0x017B, 0x87); // DPHY reg 0x17b: pll_vco_cntrl_ovr_en_rw=1, pll_vco_cntrl_ovr_rw=0x3, pll_m_ovr_en_rw=1
             break;
     default:
             dphy_reg_write(0x0178, 0xD8); // N
             dphy_reg_write(0x0179, 0x75); // M
-            dphy_reg_write(0x017A, 0x01); // Carry forward from M
+            dphy_reg_write(0x017A, 0x01); // Carry forward from M 
             dphy_reg_write(0x0002, 0x2C); // DPHY reg 0x2, hsfreqrange_ovr_rw    = 7'b0101100 (1.5Gbps)
             dphy_reg_write(0x017B, 0x87); // DPHY reg 0x17b: pll_vco_cntrl_ovr_en_rw=1, pll_vco_cntrl_ovr_rw=0x3, pll_m_ovr_en_rw=1
             break;
@@ -1088,7 +1088,7 @@ cy_en_mipidsi_status_t Cy_MIPIDSI_CMD_MODE_DCS_SetLowPower(GFXSS_MIPIDSI_Type *b
                                       |  GFXSS_MIPIDSI_DWCMIPIDSI_CMD_MODE_CFG_CMD_MODE_CFG_DCS_SR_0P_TX_Msk
                                       |  GFXSS_MIPIDSI_DWCMIPIDSI_CMD_MODE_CFG_CMD_MODE_CFG_DCS_LW_TX_Msk);
     }
-
+    
     return CY_MIPIDSI_SUCCESS;
 }
 

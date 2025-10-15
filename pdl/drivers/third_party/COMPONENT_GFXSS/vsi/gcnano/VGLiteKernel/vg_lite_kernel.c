@@ -103,7 +103,7 @@ size_t physical_address;
 #endif
 
 #if gcdVG_ENABLE_COMMAND_BUFFER_CACHE
-static frame_buffer_command_t fb_command_backup = { 0 };
+static frame_buffer_command_t fb_command_backup = { 0 }; 
 #endif
 
 static int s_reference = 0;
@@ -195,7 +195,7 @@ static vg_lite_error_t backup_power_context_buffer(uint32_t *command_buffer_klog
     int index              = 0;
     uint32_t command       = 0;
     uint32_t address       = 0;
-    uint32_t context_index = 0;
+    uint32_t context_index = 0; 
     uint32_t data          = 0;
 
     if (NULL == command_buffer_klogical) {
@@ -352,7 +352,7 @@ static vg_lite_error_t init_vglite(vg_lite_kernel_initialize_t * data)
 
     // Construct the context.
     context_usr = (vg_lite_kernel_context_t  __user *) data->context;
-#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 0, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 0, 0)    
      if (!access_ok(VERIFY_READ, context_usr, sizeof(*context_usr)) ||
        !access_ok(VERIFY_WRITE, context_usr, sizeof(*context_usr))) {
 #else
@@ -428,11 +428,11 @@ static vg_lite_error_t init_vglite(vg_lite_kernel_initialize_t * data)
                 /* Free any allocated memory. */
                 vg_lite_kernel_terminate_t terminate = { context };
                 do_terminate(&terminate);
-
+                
                 /* Out of memory. */
                 ONERROR(error);
             }
-
+            
             /* Return command buffer logical pointer and GPU address. */
             data->command_buffer[i] = context->command_buffer_logical[i];
             data->command_buffer_gpu[i] = context->command_buffer_physical[i];
@@ -477,7 +477,7 @@ static vg_lite_error_t init_vglite(vg_lite_kernel_initialize_t * data)
         index = push_command(STATE_COMMAND(0x0AC8), 0x00000000, index);
         index = push_command(STATE_COMMAND(0x0ACB), 0x00000000, index);
         index = push_command(STATE_COMMAND(0x0ACC), 0x00000000, index);
-#endif
+#endif  
         index = push_command(STATE_COMMAND(0x0A90), 0x00000000, index);
         index = push_command(STATE_COMMAND(0x0A91), 0x00000000, index);
         index = push_command(STATE_COMMAND(0x0A92), 0x00000000, index);
@@ -529,7 +529,7 @@ static vg_lite_error_t init_vglite(vg_lite_kernel_initialize_t * data)
 #endif
 
     /* Allocate the tessellation buffer. */
-    if ((data->tess_width > 0) && (data->tess_height > 0))
+    if ((data->tess_width > 0) && (data->tess_height > 0)) 
     {
         int width = data->tess_width;
         int height = 0;
@@ -566,7 +566,7 @@ static vg_lite_error_t init_vglite(vg_lite_kernel_initialize_t * data)
             ts_buffer_size = buffer_size;
         }
 #else /* (CHIPID==0x355 || CHIPID==0x255) */
-        {
+        {   
             /* Check if we can used tiled tessellation (128x16). */
             if (((width & 127) == 0) && ((height & 15) == 0)) {
                 data->capabilities.cap.tiled = 0x3;
@@ -907,25 +907,25 @@ static vg_lite_error_t do_wait(vg_lite_kernel_wait_t * data)
 
         debug = vg_lite_hal_peek(VG_LITE_HW_CLOCK_CONTROL);
         vg_lite_kernel_print("QAHiClockControl = 0x%x\n", debug);
-
-        for(iter =0; iter < 16 ; iter ++)
-        {
+        
+        for(iter =0; iter < 16 ; iter ++) 
+        {   
              vg_lite_hal_poke(0x470, iter);
              debug = vg_lite_hal_peek(0x448);
              vg_lite_kernel_print("0x448[%d] = 0x%x\n", iter, debug);
-        }
-        for(iter =0; iter < 16 ; iter ++)
-        {
+        }     
+        for(iter =0; iter < 16 ; iter ++) 
+        {   
              vg_lite_hal_poke(0x470, iter<<8);
              debug = vg_lite_hal_peek(0x44C);
              vg_lite_kernel_print("0x44c[%d] = 0x%x\n", iter, debug);
         }
-        for(iter =0; iter < 28 ; iter ++)
-        {
+        for(iter =0; iter < 28 ; iter ++) 
+        {   
              vg_lite_hal_poke(0x470, iter<<16);
              debug = vg_lite_hal_peek(0x450);
              vg_lite_kernel_print("0x450[%d] = 0x%x\n", iter, debug);
-        }
+        }   
         for (iter = 0; iter < 31; iter++)
         {
             vg_lite_hal_poke(0x470, iter<<24);
@@ -992,7 +992,7 @@ static vg_lite_error_t do_wait(vg_lite_kernel_wait_t * data)
         debug = vg_lite_hal_peek(0xA8);
         vg_lite_kernel_print("0x%x = 0x%08x\n", 0xA8, debug);
         debug = vg_lite_hal_peek(0xE8);
-        vg_lite_kernel_print("0x%x = 0x%08x\n", 0xE8, debug);
+        vg_lite_kernel_print("0x%x = 0x%08x\n", 0xE8, debug); 
 #if gcdVG_ENABLE_DUMP_COMMAND && gcdVG_ENABLE_BACKUP_COMMAND
         dump_last_frame();
 #endif
@@ -1072,14 +1072,14 @@ static vg_lite_error_t restore_gpu_state(void)
 
     vg_lite_kernel_print("after resume and the power_context is:\n");
     for (i = 0; i < total_size / 4; i += 4) {
-            vg_lite_kernel_print("0x%08X 0x%08X",
+            vg_lite_kernel_print("0x%08X 0x%08X", 
                                   power_context_klogical[i], power_context_klogical[i + 1]);
             if ((i + 2) <= (total_size / 4 - 1))
 #if defined(__linux__)
-                vg_lite_kernel_print(KERN_CONT " 0x%08X 0x%08X\n",
+                vg_lite_kernel_print(KERN_CONT " 0x%08X 0x%08X\n", 
                                   power_context_klogical[i + 2], power_context_klogical[i + 3]);
 #else
-                vg_lite_kernel_print(" 0x%08X 0x%08X\n",
+                vg_lite_kernel_print(" 0x%08X 0x%08X\n", 
                                   power_context_klogical[i + 2], power_context_klogical[i + 3]);
 #endif
     }
@@ -1088,13 +1088,13 @@ static vg_lite_error_t restore_gpu_state(void)
     /* submit the backup power context */
     error = restore_init_command(global_power_context.power_context_physical, total_size);
     if (error == VG_LITE_SUCCESS)
-        vg_lite_kernel_print("Initialize the GPU state success!\n");
+        vg_lite_kernel_print("Initialize the GPU state success!\n"); 
 
     /* submit last frame before suspend */
     /*error = restore_init_command(backup_command_buffer_physical, backup_command_buffer_size);
     if (error == VG_LITE_SUCCESS)
         vg_lite_kernel_print("Initialize the GPU state success!\n");*/
-
+    
     return error;
 }
 #endif
@@ -1141,7 +1141,7 @@ static vg_lite_error_t do_map(vg_lite_kernel_map_t * data)
         return VG_LITE_OUT_OF_RESOURCES;
     else if ((long)data->memory_handle == (long)-1)
         return VG_LITE_NOT_SUPPORT;
-    else
+    else 
         return VG_LITE_SUCCESS;
 }
 
@@ -1251,10 +1251,10 @@ static vg_lite_error_t set_delay_resume(vg_lite_kernel_delay_resume_t* data)
 
 static int do_query_delay_resume(void)
 {
-    if (delay_resume == 1)
+    if (delay_resume == 1) 
     {
         /* Reset delay resume to 0 after query*/
-        delay_resume = 0;
+        delay_resume = 0; 
         return 1;
     }
     else
@@ -1299,7 +1299,7 @@ static vg_lite_error_t do_export_memory(vg_lite_kernel_export_memory_t * data)
 {
     vg_lite_error_t error = VG_LITE_SUCCESS;
 
-    error = vg_lite_hal_memory_export(&data->fd);
+    error = vg_lite_hal_memory_export(&data->fd); 
 
     return error;
 }
@@ -1391,7 +1391,7 @@ vg_lite_error_t vg_lite_kernel(vg_lite_kernel_command_t command, void * data)
         case VG_LITE_RESET:
             /* Reset the GPU. */
             return do_reset(data);
-
+            
         case VG_LITE_DEBUG:
             /* Perform debugging features. */
             return do_debug();
@@ -1456,7 +1456,7 @@ vg_lite_error_t vg_lite_kernel(vg_lite_kernel_command_t command, void * data)
 
         case VG_LITE_QUERY_DELAY_RESUME:
             return do_query_delay_resume();
-
+        
         case VG_LITE_SET_GPU_CLOCK_STATE:
             return set_gpu_clock_state(data);
 #endif

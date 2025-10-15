@@ -860,8 +860,8 @@ vivSTATUS viv_hw_layer_set_position(
 
         default:
             //IFXEXP-180
-		max_height = 1080;
-		max_width = 1920;
+        	max_height = 1080;
+        	max_width = 1920;
             //viv_os_print("current resolution is not supported!\n");
             //return vivSTATUS_NOT_SUPPORT;
             break;

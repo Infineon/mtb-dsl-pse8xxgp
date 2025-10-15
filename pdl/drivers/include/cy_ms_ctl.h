@@ -31,7 +31,7 @@
 *
 * MSC is instantiated on non-CPU paths to provide security extension attributes
 * and to add TrustZone-M capability. MSC Driver provides APIs to configure
-* access rights to the given master (a core, DMA, etc) for each Protection Context
+* access rights to the given master (a core, DMA, etc) for each Protection Context 
 * (provides a more precise way of applying memory restrictions).
 * Maximum of 32 masters are supported. It also provides API to set the active PC.
 *
@@ -41,10 +41,10 @@
 *
 * You can use this driver to protect the transactions initiated on the bus.
 *
-* Devices support multiple CPU subsystems, viz. SYSCPUSS (Power Domain 0 powered by a
-* low-power 32-bit Arm® Cortex-M33 (CM33) CPU, which handles security, control, communication)
-* and APPCPUSS (Power Domain 1 powered by an Arm Cortex-M55 (CM55) processor,
-* which supports M-profile vector extension (MVE), Digital Signal Processing (DSP),
+* Devices support multiple CPU subsystems, viz. SYSCPUSS (Power Domain 0 powered by a 
+* low-power 32-bit Arm® Cortex-M33 (CM33) CPU, which handles security, control, communication) 
+* and APPCPUSS (Power Domain 1 powered by an Arm Cortex-M55 (CM55) processor, 
+* which supports M-profile vector extension (MVE), Digital Signal Processing (DSP), 
 * and Machine Learning (ML) capabilities).
 *
 * The default MSC configuration is pre-defined and can be found in the architecture TRM.

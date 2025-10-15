@@ -96,7 +96,7 @@
       <Line value='/* The WDT is unlocked in the default startup code */' />
       <Line value='Cy_SysClk_ClkLfSetSource(CY_SYSCLK_CLKLF_IN_`${sourceClockApiName}`);' />
     </ConfigFunction>
-
+    
     <ConfigFunction signature='__STATIC_INLINE void Cy_SysClk_ClkLfCsvInit(void)' public='false' include='`${ClkLfCsv}`'>
       <Line value='Cy_SysClk_ClkLfCsvConfigure(CY_SYSCLK_CLKLF_CSV_REF_`${sourceClockCsv}`, CY_CFG_SYSCLK_CLKLF_CSV_ACCURACY);' />
       <Line value='Cy_SysClk_ClkLfCsvEnable();' />

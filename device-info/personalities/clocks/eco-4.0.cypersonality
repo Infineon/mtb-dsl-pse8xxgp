@@ -54,25 +54,25 @@
 
     <ParamRange id='ecoFrequency' name='Frequency (MHz)' group='General' default='17.2032' visible='true' editable='true' min='4' max='38' resolution='0.0001' desc='' />
     <ParamRange id='frequency' name='Frequency (Hz)' group='Internal' default='`${ecoFrequency * 1000000}`' visible='false' editable='false' min='4000000' max='38000000' resolution='1' desc='' />
-    <ParamRange id='esr' name='ESR (ohms)' group='General' default='100' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal equivalent series resistance. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='esr' name='ESR (ohms)' group='General' default='100' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal equivalent series resistance. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
         Only after providing values for all parameters, the configurability can be determined.' />
-    <ParamRange id='cshunt' name='Cshunt (pF)' group='General' default='2' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal shunt cap. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='cshunt' name='Cshunt (pF)' group='General' default='2' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal shunt cap. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
         Only after providing values for all parameters, the configurability can be determined.' />
-    <ParamRange id='ctrace' name='Ctrace (pF)' group='General' default='2' min='0' max='65535' resolution='1' visible='true' editable='true' desc='External trace cap at crystal terminals wrt gnd. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='ctrace' name='Ctrace (pF)' group='General' default='2' min='0' max='65535' resolution='1' visible='true' editable='true' desc='External trace cap at crystal terminals wrt gnd. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
         Only after providing values for all parameters, the configurability can be determined.' />
-    <ParamRange id='cmotional' name='Cmotional (fF)' group='General' default='9' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal motional (series) cap. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='cmotional' name='Cmotional (fF)' group='General' default='9' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal motional (series) cap. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
         Only after providing values for all parameters, the configurability can be determined.' />
-    <ParamRange id='dls' name='Drive Level spec (uW)' group='General' default='100' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal drive level max limit. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='dls' name='Drive Level spec (uW)' group='General' default='100' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal drive level max limit. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
         Only after providing values for all parameters, the configurability can be determined.' />
     <ParamChoice id='ec' name='External Cap' group='General' default='0' visible='true' editable='true' desc='Select Yes for ceramic resonator, No for crystal.'>
   <Entry name='Crystal' value='0' visible='true'/>
   <Entry name='Ceramic Resonator' value='1' visible='true'/>
 </ParamChoice>
-    <ParamRange id='cload' name='Cload (pF)' group='General' default='10' min='0' max='65535' resolution='1' visible='`${ec eq 0}`' editable='true' desc='Only for crystal. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='cload' name='Cload (pF)' group='General' default='10' min='0' max='65535' resolution='1' visible='`${ec eq 0}`' editable='true' desc='Only for crystal. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
 Only after providing values for all parameters, the configurability can be determined.' />
-    <ParamRange id='c1' name='C1 (pF)' group='General' default='20' min='0' max='65535' resolution='1' visible='`${ec eq 1}`' editable='true' desc='Only  for ceramic resonator. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='c1' name='C1 (pF)' group='General' default='20' min='0' max='65535' resolution='1' visible='`${ec eq 1}`' editable='true' desc='Only  for ceramic resonator. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
 Only after providing values for all parameters, the configurability can be determined.' />
-    <ParamRange id='c2' name='C2 (pF)' group='General' default='20' min='0' max='65535' resolution='1' visible='`${ec eq 1}`' editable='true' desc='Only  for ceramic resonator. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually.
+    <ParamRange id='c2' name='C2 (pF)' group='General' default='20' min='0' max='65535' resolution='1' visible='`${ec eq 1}`' editable='true' desc='Only  for ceramic resonator. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
 Only after providing values for all parameters, the configurability can be determined.' />
     <ParamString id='path' name='path' group='General' default='`${cy_libs_path()}`/device-info/personalities/clocks/'  visible='false' editable='false' desc='Script path' />
 

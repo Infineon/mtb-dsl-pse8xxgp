@@ -103,7 +103,7 @@ vg_lite_error_t vg_lite_CreateMutex(void **Mutex)
 
     assert(Mutex!=NULL);
     handle = CreateMutex(NULL, 0, NULL);
-
+    
     if (handle == NULL)
     {
         return VG_LITE_OUT_OF_RESOURCES;
@@ -540,7 +540,7 @@ static FILE *_SetDumpFile(FILE *File, int CloseOldFile)
 
 #ifdef _WIN32
     vglitemLOCKSECTION();
-#else
+#else 
     pthread_mutex_lock(&_dumpFileMutex);
 #endif
     tmpCurPos = _currentPos;
@@ -664,7 +664,7 @@ FILE * _GetDumpFile()
 
 exit:
 #ifdef __linux__
-    pthread_mutex_unlock(&_dumpFileMutex);
+    pthread_mutex_unlock(&_dumpFileMutex); 
 #else
     vglitemUNLOCKSECTION();
 #endif
@@ -1289,7 +1289,7 @@ vg_lite_error_t vg_lite_dump_png(const char *name, vg_lite_buffer_t *buffer)
                     q[1] = (color & 0x0C) << 2 | (color & 0x0C) << 4 | (color & 0x0C) << 6 |(color & 0x0C);
                     q[2] = (color & 0x30) << 2 | (color & 0x30) << 4 | (color & 0x30) << 6 |(color & 0x30);
                     break;
-
+                    
                 case VG_LITE_BGRA2222:
                     color = *(uint8_t*)p;
                     p += 1;
@@ -1348,3 +1348,4 @@ vg_lite_error_t vg_lite_dump_png(const char *name, vg_lite_buffer_t *buffer)
     /* Success. */
     return status;
 }
+

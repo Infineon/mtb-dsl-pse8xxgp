@@ -48,7 +48,7 @@
 * devices/include/pse84_config.h).
 *
 * As an illustration of the clocking system, the following diagram shows the
-* PSOC EDGE E8 clock tree.
+* PSOC EDGE E8 clock tree. 
 * The actual tree may vary depending on the device series.
 * Consult the Technical Reference Manual for your device for details.
 *

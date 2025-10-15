@@ -44,7 +44,7 @@
   */
 
 /** \addtogroup group_cmsis_data_structures
-  * \{
+  * \{ 
   */
 
 #if defined(CY_PDL_TZ_ENABLED) || defined(DOXYGEN)
@@ -54,7 +54,7 @@ typedef struct {
     uint32_t    base_addr; /**< Base address of SAU region. */
     uint32_t    size;      /**< Size of SAU region. */
     bool        nsc;       /**< Is this region Non-Secure Callable? */
-} cy_stc_sau_config_t;
+} cy_stc_sau_config_t; 
 #endif /* defined(CY_PDL_TZ_ENABLED) || defined(DOXYGEN) */
 
 /** Configuration for an MPU region */
@@ -69,17 +69,17 @@ typedef struct {
     uint8_t     cacheable;          /**< On CPUs with a cache, should access to this memory be cached? */
     bool        is_device;          /**< Is this memory used for peripheral control registers */
     uint8_t     device_attrs;       /**< Only applicable if is_device is true. Attributes for device memory access */
-} cy_stc_mpu_config_t;
+} cy_stc_mpu_config_t; 
 
 /** \} group_cmsis_data_structures */
 
 /** \addtogroup group_cmsis_functions
-  * \{
+  * \{ 
   */
 
 #if defined(CY_PDL_TZ_ENABLED) || defined(DOXYGEN)
 /** Applies the specified configuration to the SAU
-  *
+  * 
   * \param base Base address for the SAU
   * \param region_config Array of configurations structs for each SAU region
   * \param region_count Length of the region_config array
@@ -100,7 +100,7 @@ static inline void Cy_SAU_Init(SAU_Type* base, const cy_stc_sau_config_t* region
 #endif /* defined(CY_PDL_TZ_ENABLED) || defined(DOXYGEN) */
 
 /** Applies the specified configuration to the MPU for the current processor
-  *
+  * 
   * \param region_config Array of configurations structs for each MPU region
   * \param region_count Length of the region_config array
   */
@@ -122,13 +122,13 @@ static inline void Cy_MPU_Init(const cy_stc_mpu_config_t* region_config, uint8_t
         {
             access_permissions |= 1u << 1;
         }
-        uint32_t rbarValue = ((region_config[i].base_addr & MPU_RBAR_BASE_Msk)                                // Set the base address'
+        uint32_t rbarValue = ((region_config[i].base_addr & MPU_RBAR_BASE_Msk)                                // Set the base address' 
                            | ((region_config[i].shareable << MPU_RBAR_SH_Pos) & MPU_RBAR_SH_Msk)              // Set Shareability (SH)
                            | ((access_permissions << MPU_RBAR_AP_Pos) & MPU_RBAR_AP_Msk)                      // Set Access Permissions (AP)
                            | ((region_config[i].executable ? 0 : 1 << MPU_RBAR_XN_Pos) & MPU_RBAR_XN_Msk));   // Set Execute Never (XN) bit
         uint32_t rlarValue = ((region_config[i].end_addr & MPU_RLAR_LIMIT_Msk)                                // Set the limit address
                            | ((region_config[i].reg_num  << MPU_RLAR_AttrIndx_Pos) & MPU_RLAR_AttrIndx_Msk)    // Attribute index
-                           | (MPU_RLAR_EN_Msk));                                                              // Enable bit
+                           | (MPU_RLAR_EN_Msk));                                                              // Enable bit 
         ARM_MPU_SetRegion(region_config[i].reg_num, rbarValue, rlarValue);
         if(region_config[i].is_device)
         {
@@ -151,14 +151,14 @@ static inline void Cy_MPU_Init(const cy_stc_mpu_config_t* region_config, uint8_t
 
 /** \} group_cmsis */
 
-/** \cond INTERNAL
+/** \cond INTERNAL 
   * These defines form a private interface with the SAU personality
   */
 /*******************************************************************************
 *               NSC region addresses
 *******************************************************************************/
 #ifdef __ICCARM__
-#pragma section = "NSC"
+#pragma section = "NSC" 
 #ifndef NSC_START_ADDRESS
 #define NSC_START_ADDRESS  (uint32_t) (__section_begin("NSC"))
 #endif /* NSC_START_ADDRESS */
@@ -171,25 +171,25 @@ static inline void Cy_MPU_Init(const cy_stc_mpu_config_t* region_config, uint8_t
 extern uint32_t Image$$app_codeNsc$$Base;
 extern uint32_t Image$$app_codeNsc$$Length;
 #ifndef NSC_START_ADDRESS
-#define NSC_START_ADDRESS  (uint32_t)&Image$$app_codeNsc$$Base
+#define NSC_START_ADDRESS  (uint32_t)&Image$$app_codeNsc$$Base 
 #endif /* NSC_START_ADDRESS */
 #ifndef NSC_SIZE
 #define NSC_SIZE  (uint32_t)&Image$$app_codeNsc$$Length
 #endif /* NSC_SIZE */
 
-#elif defined(__llvm__) || defined (__GNUC__)
+#elif defined(__llvm__) || defined (__GNUC__) 
 
 extern uint32_t __nsc_region_start;
 extern uint32_t __nsc_region_size;
 #ifndef NSC_START_ADDRESS
-#define NSC_START_ADDRESS  (uint32_t)&__nsc_region_start
+#define NSC_START_ADDRESS  (uint32_t)&__nsc_region_start 
 #endif /* NSC_START_ADDRESS */
 #ifndef NSC_SIZE
 #define NSC_SIZE  (uint32_t)&__nsc_region_size
 #endif /* NSC_SIZE */
 
 #else
-#error "Unsupported toolchain"
+#error "Unsupported toolchain" 
 #endif
 
 /** \endcond */

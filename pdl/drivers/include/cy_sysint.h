@@ -152,7 +152,7 @@ extern "C" {
 *       Global Variable
 ***************************************/
 
-
+ 
 
 /***************************************
 *       Global Interrupt
@@ -176,7 +176,7 @@ extern "C" {
 #define CY_SYSINT_INTRSRC_MASK           (0x0FFFUL)  /**< Bit 0-11 indicate system interrupt and bit 12-15 will indicate the CPU IRQ */
 #define CY_SYSINT_INTRSRC_MUXIRQ_SHIFT   (12UL)      /**< Bit 0-11 indicate system interrupt and bit 12-15 will indicate the CPU IRQ */
 #endif /* defined (CY_IP_M7CPUSS) */
-
+ 
 /** \} group_sysint_macros */
 
 

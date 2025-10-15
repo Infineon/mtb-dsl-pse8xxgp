@@ -38,7 +38,7 @@
       <Resource name='peri\.mmio' />
     </MappingRules>
   </FittingRules>
-
+  
   <BehaviorImplementation>
     <Implements type='clock_mmio_v1'>
       <ExposedMember key='frequency$idx' paramId='DIVIDED_FREQ_$idx' repeatCount='$COUNT' />
@@ -66,30 +66,30 @@
         <ParamString id='TARGET$idx_$idx{1}' default='`${$idx &lt; TARGETS_CNT_$idx{1} ? getOrDefault(getBlockDisplayName(splitAt(TARGETS_$idx{1}, $idx), false), "") : ""}`' visible='false' editable='false' group='' name='' desc='' />
       </Repeat>
       <ParamString id='JOINED_TARGETS_$idx' visible='false' editable='false' group='' name='' desc=''
-                  default='`${TARGET0_$idx . splitSeparator() .
+                  default='`${TARGET0_$idx . splitSeparator() . 
                               TARGET1_$idx . splitSeparator() .
-                              TARGET2_$idx . splitSeparator() .
-                              TARGET3_$idx . splitSeparator() .
-                              TARGET4_$idx . splitSeparator() .
-                              TARGET5_$idx . splitSeparator() .
-                              TARGET6_$idx . splitSeparator() .
-                              TARGET7_$idx . splitSeparator() .
-                              TARGET8_$idx . splitSeparator() .
-                              TARGET9_$idx . splitSeparator() .
-                              TARGET10_$idx . splitSeparator() .
-                              TARGET11_$idx . splitSeparator() .
-                              TARGET12_$idx . splitSeparator() .
-                              TARGET13_$idx . splitSeparator() .
-                              TARGET14_$idx . splitSeparator() .
-                              TARGET15_$idx . splitSeparator() .
-                              TARGET16_$idx . splitSeparator() .
-                              TARGET17_$idx . splitSeparator() .
-                              TARGET18_$idx . splitSeparator() .
-                              TARGET19_$idx . splitSeparator() .
-                              TARGET20_$idx . splitSeparator() .
-                              TARGET21_$idx . splitSeparator() .
-                              TARGET22_$idx . splitSeparator() .
-                              TARGET23_$idx . splitSeparator() .
+                              TARGET2_$idx . splitSeparator() . 
+                              TARGET3_$idx . splitSeparator() . 
+                              TARGET4_$idx . splitSeparator() . 
+                              TARGET5_$idx . splitSeparator() . 
+                              TARGET6_$idx . splitSeparator() . 
+                              TARGET7_$idx . splitSeparator() . 
+                              TARGET8_$idx . splitSeparator() . 
+                              TARGET9_$idx . splitSeparator() . 
+                              TARGET10_$idx . splitSeparator() . 
+                              TARGET11_$idx . splitSeparator() . 
+                              TARGET12_$idx . splitSeparator() . 
+                              TARGET13_$idx . splitSeparator() . 
+                              TARGET14_$idx . splitSeparator() . 
+                              TARGET15_$idx . splitSeparator() . 
+                              TARGET16_$idx . splitSeparator() . 
+                              TARGET17_$idx . splitSeparator() . 
+                              TARGET18_$idx . splitSeparator() . 
+                              TARGET19_$idx . splitSeparator() . 
+                              TARGET20_$idx . splitSeparator() . 
+                              TARGET21_$idx . splitSeparator() . 
+                              TARGET22_$idx . splitSeparator() . 
+                              TARGET23_$idx . splitSeparator() . 
                               TARGET24_$idx . splitSeparator()}`' />
       <!--Calling splitJoin will throw away any empty strings in the provided list-->
       <ParamString id='TARGET_DISPLAY_$idx' default='`${splitJoin(JOINED_TARGETS_$idx, ", ")}`' visible='false' editable='false' group='' name='' desc='' />

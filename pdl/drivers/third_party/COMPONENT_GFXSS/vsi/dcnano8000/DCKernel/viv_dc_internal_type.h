@@ -117,3 +117,4 @@ typedef struct _viv_dc_layer
 viv_dc_layer;
 
 #endif
+

@@ -266,7 +266,7 @@ cy_rslt_t cy_pdl_syspm_srf_cpuenterdeepsleep_impl_s(mtb_srf_input_ns_t* inputs_n
     status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
     if (status != CY_RSLT_SUCCESS)
         return status;
-    output.retVal = Cy_SysPm_CpuEnterSleep(input.waitFor);
+    output.retVal = Cy_SysPm_CpuEnterDeepSleep(input.waitFor);
     status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
 
     return status;

@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"group__group__gpio__data__structures.html#a224590619198ad520a196319b618deda":[2,2,9,2,1,3],
 "group__group__gpio__data__structures.html#a3ad84c6941c092aeb4b7d04b0727f58c":[2,2,9,2,0,0],
 "group__group__gpio__data__structures.html#a3d8fa53684ea40041db124e3da5412db":[2,2,9,2,0,6],
 "group__group__gpio__data__structures.html#a48aff556861a97796f9e8aa9dbdc8e64":[2,2,9,2,0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "group__group__graphics__enums.html#gaa3b9e26ae3fed0e00684db67f6e7b6df":[2,2,8,3,6],
 "group__group__graphics__enums.html#gadd2920f6bdf1c7dad28827c4d6a3ce8a":[2,2,8,3,7],
 "group__group__graphics__enums.html#gade48300ba622cda0b060ccff7f566574":[2,2,8,3,5],
-"group__group__graphics__enums.html#gga0c1bccb570c24b819b131acc32641174a065304cd7e7afd855e1b76acc173806e":[2,2,8,3,2,0],
-"group__group__graphics__enums.html#gga0c1bccb570c24b819b131acc32641174a53e25eff1e74484fb6d1ca67e67c3165":[2,2,8,3,2,1]
+"group__group__graphics__enums.html#gga0c1bccb570c24b819b131acc32641174a065304cd7e7afd855e1b76acc173806e":[2,2,8,3,2,0]
 };

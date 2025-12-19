@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__hal__spi.html',''); init
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -118,17 +118,17 @@ Snippet 1: SPI controller or target initialization</h2>
 <div class="line">    <span class="comment">// Configuring the SPI interface: Specify the SPI interface pins, frame size, SPI Motorola</span></div>
 <div class="line">    <span class="comment">// mode and slave/master mode</span></div>
 <div class="line">    rslt = <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gabe68169c810119b93e1164127663033c">Cy_SCB_SPI_Init</a>(SPI_HW, &amp;SPI_config, &amp;spi_context);</div>
-<div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#ga7e5d7cb17044cdd8ab1543e038bf89a8">Cy_SCB_SPI_Enable</a>(SPI_HW);</div>
 <div class="line">    rslt = mtb_hal_spi_setup(&amp;spi_inst, &amp;SPI_hal_cfg, &amp;spi_context, NULL);</div>
+<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a>(&amp;spi_inst, <span class="keyword">true</span>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Activate SSEL pin you selected</span></div>
 <div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a>(SPI_HW, <a class="code hl_enumvalue" href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a>);</div>
 <div class="line"> </div>
+<div class="ttc" id="agroup__group__hal__spi_html_ga4958fc08f71f7281e4bede14ebd3095e"><div class="ttname"><a href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a></div><div class="ttdeci">cy_rslt_t mtb_hal_spi_enable(mtb_hal_spi_t *obj, bool enable)</div><div class="ttdoc">Enable/disable the SPI.</div></div>
 <div class="ttc" id="agroup__group__result_html_gaca79700fcc701534ce61778a9bcf57d1"><div class="ttname"><a href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a></div><div class="ttdeci">uint32_t cy_rslt_t</div><div class="ttdoc">Provides the result of an operation as a structured bitfield.</div><div class="ttdef"><b>Definition:</b> cy_result.h:459</div></div>
-<div class="ttc" id="agroup__group__scb__spi__data__structures_html_structcy__stc__scb__spi__context__t"><div class="ttname"><a href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a></div><div class="ttdoc">SPI context structure.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:604</div></div>
-<div class="ttc" id="agroup__group__scb__spi__enums_html_gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972"><div class="ttname"><a href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a></div><div class="ttdeci">@ CY_SCB_SPI_SLAVE_SELECT0</div><div class="ttdoc">Master will use Slave Select 0.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:369</div></div>
-<div class="ttc" id="agroup__group__scb__spi__general__functions_html_ga7e5d7cb17044cdd8ab1543e038bf89a8"><div class="ttname"><a href="group__group__scb__spi__general__functions.html#ga7e5d7cb17044cdd8ab1543e038bf89a8">Cy_SCB_SPI_Enable</a></div><div class="ttdeci">__STATIC_INLINE void Cy_SCB_SPI_Enable(CySCB_Type *base)</div><div class="ttdoc">Enables the SCB block for the SPI operation.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:944</div></div>
-<div class="ttc" id="agroup__group__scb__spi__general__functions_html_gaa94d2ec7eb38573274587eeff5635288"><div class="ttname"><a href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a></div><div class="ttdeci">__STATIC_INLINE void Cy_SCB_SPI_SetActiveSlaveSelect(CySCB_Type *base, cy_en_scb_spi_slave_select_t slaveSelect)</div><div class="ttdoc">Selects an active slave select line from one of four available.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:1003</div></div>
+<div class="ttc" id="agroup__group__scb__spi__data__structures_html_structcy__stc__scb__spi__context__t"><div class="ttname"><a href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a></div><div class="ttdoc">SPI context structure.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:608</div></div>
+<div class="ttc" id="agroup__group__scb__spi__enums_html_gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972"><div class="ttname"><a href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a></div><div class="ttdeci">@ CY_SCB_SPI_SLAVE_SELECT0</div><div class="ttdoc">Master will use Slave Select 0.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:373</div></div>
+<div class="ttc" id="agroup__group__scb__spi__general__functions_html_gaa94d2ec7eb38573274587eeff5635288"><div class="ttname"><a href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a></div><div class="ttdeci">__STATIC_INLINE void Cy_SCB_SPI_SetActiveSlaveSelect(CySCB_Type *base, cy_en_scb_spi_slave_select_t slaveSelect)</div><div class="ttdoc">Selects an active slave select line from one of four available.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:1007</div></div>
 <div class="ttc" id="agroup__group__scb__spi__general__functions_html_gabe68169c810119b93e1164127663033c"><div class="ttname"><a href="group__group__scb__spi__general__functions.html#gabe68169c810119b93e1164127663033c">Cy_SCB_SPI_Init</a></div><div class="ttdeci">cy_en_scb_spi_status_t Cy_SCB_SPI_Init(CySCB_Type *base, cy_stc_scb_spi_config_t const *config, cy_stc_scb_spi_context_t *context)</div><div class="ttdoc">Initializes the SCB for SPI operation.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.c:68</div></div>
 <div class="ttc" id="astructmtb__hal__spi__t_html"><div class="ttname"><a href="structmtb__hal__spi__t.html">mtb_hal_spi_t</a></div><div class="ttdoc">SPI object.</div><div class="ttdef"><b>Definition:</b> mtb_hal_hw_types_spi_scb.h:58</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_spi_snippet_2"></a>
@@ -143,8 +143,8 @@ Snippet 2: SPI controller - Single byte transfer operation (Read and Write)</h2>
 <div class="line">    <span class="comment">// Configuring the SPI controller: Specify the SPI interface pins, frame size, SPI Motorola mode</span></div>
 <div class="line">    <span class="comment">// and controller mode</span></div>
 <div class="line">    rslt = <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gabe68169c810119b93e1164127663033c">Cy_SCB_SPI_Init</a>(SPI_HW, &amp;SPI_config, &amp;spi_context);</div>
-<div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#ga7e5d7cb17044cdd8ab1543e038bf89a8">Cy_SCB_SPI_Enable</a>(SPI_HW);</div>
 <div class="line">    rslt = mtb_hal_spi_setup(&amp;spi_controller, &amp;SPI_hal_cfg, &amp;spi_context, NULL);</div>
+<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a>(&amp;spi_controller, <span class="keyword">true</span>);</div>
 <div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a>(SPI_HW, <a class="code hl_enumvalue" href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Set the data rate to 1 Mbps</span></div>
@@ -175,8 +175,8 @@ Snippet 3: SPI Target - Single byte transfer operation (Read and Write)</h2>
 <div class="line">    <span class="comment">// Configuring the SPI target: Specify the SPI interface pins, frame size, SPI Motorola mode</span></div>
 <div class="line">    <span class="comment">// and target mode</span></div>
 <div class="line">    rslt = <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gabe68169c810119b93e1164127663033c">Cy_SCB_SPI_Init</a>(SPI_HW, &amp;SPI_config, &amp;spi_context);</div>
-<div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#ga7e5d7cb17044cdd8ab1543e038bf89a8">Cy_SCB_SPI_Enable</a>(SPI_HW);</div>
 <div class="line">    rslt = mtb_hal_spi_setup(&amp;spi_target, &amp;SPI_hal_cfg, &amp;spi_context, NULL);</div>
+<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a>(&amp;spi_target, <span class="keyword">true</span>);</div>
 <div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a>(SPI_HW, <a class="code hl_enumvalue" href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Set the data rate to 1 Mbps</span></div>
@@ -213,8 +213,8 @@ Snippet 4: SPI Block Data transfer</h2>
 <div class="line">    <span class="comment">// Configuring the SPI interface: Specify the SPI interface pins, frame size, SPI Motorola</span></div>
 <div class="line">    <span class="comment">// mode and target/controller mode</span></div>
 <div class="line">    rslt = <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gabe68169c810119b93e1164127663033c">Cy_SCB_SPI_Init</a>(SPI_HW, &amp;SPI_config, &amp;spi_context);</div>
-<div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#ga7e5d7cb17044cdd8ab1543e038bf89a8">Cy_SCB_SPI_Enable</a>(SPI_HW);</div>
 <div class="line">    rslt = mtb_hal_spi_setup(&amp;spi__obj, &amp;SPI_hal_cfg, &amp;spi_context, NULL);</div>
+<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a>(&amp;spi__obj, <span class="keyword">true</span>);</div>
 <div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a>(SPI_HW, <a class="code hl_enumvalue" href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a>);</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a> intr_cfg = { .<a class="code hl_variable" href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">intrSrc</a> = SPI_IRQ, .intrPriority = INT_PRIORITY };</div>
@@ -239,8 +239,8 @@ Snippet 4: SPI Block Data transfer</h2>
 <div class="line"> </div>
 <div class="ttc" id="agroup__group__hal__spi_html_ga3ebc405007719a8bf3bab63067b1082e"><div class="ttname"><a href="group__group__hal__spi.html#ga3ebc405007719a8bf3bab63067b1082e">mtb_hal_spi_transfer</a></div><div class="ttdeci">cy_rslt_t mtb_hal_spi_transfer(mtb_hal_spi_t *obj, const uint8_t *tx, size_t tx_length, uint8_t *rx, size_t rx_length, uint8_t write_fill)</div><div class="ttdoc">Synchronously Write a block out and receive a value.</div><div class="ttdef"><b>Definition:</b> mtb_hal_spi.c:491</div></div>
 <div class="ttc" id="agroup__group__hal__spi_html_ga3fad1b35e2d2b2cfe869a993c58632cb"><div class="ttname"><a href="group__group__hal__spi.html#ga3fad1b35e2d2b2cfe869a993c58632cb">mtb_hal_spi_process_interrupt</a></div><div class="ttdeci">cy_rslt_t mtb_hal_spi_process_interrupt(mtb_hal_spi_t *obj)</div><div class="ttdoc">Process interrupts related to a SPI instance.</div><div class="ttdef"><b>Definition:</b> mtb_hal_spi.c:590</div></div>
-<div class="ttc" id="agroup__group__sysint__data__structures_html_a6da08d81da65a7f93d3e4c46a4b8d950"><div class="ttname"><a href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">cy_stc_sysint_t::intrSrc</a></div><div class="ttdeci">IRQn_Type intrSrc</div><div class="ttdoc">Interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:227</div></div>
-<div class="ttc" id="agroup__group__sysint__data__structures_html_structcy__stc__sysint__t"><div class="ttname"><a href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a></div><div class="ttdoc">Initialization configuration structure for a single interrupt channel.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:225</div></div>
+<div class="ttc" id="agroup__group__sysint__data__structures_html_a6da08d81da65a7f93d3e4c46a4b8d950"><div class="ttname"><a href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">cy_stc_sysint_t::intrSrc</a></div><div class="ttdeci">IRQn_Type intrSrc</div><div class="ttdoc">Interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:229</div></div>
+<div class="ttc" id="agroup__group__sysint__data__structures_html_structcy__stc__sysint__t"><div class="ttname"><a href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a></div><div class="ttdoc">Initialization configuration structure for a single interrupt channel.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:227</div></div>
 <div class="ttc" id="agroup__group__sysint__functions_html_gab2ff6820a898e9af3f780000054eea5d"><div class="ttname"><a href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a></div><div class="ttdeci">cy_en_sysint_status_t Cy_SysInt_Init(const cy_stc_sysint_t *config, cy_israddress userIsr)</div><div class="ttdoc">Initializes the referenced interrupt by setting the priority and the interrupt vector.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:80</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_spi_snippet_5"></a>
 Snippet 5: SPI Target - Write Block Data</h2>
@@ -263,8 +263,8 @@ Snippet 5: SPI Target - Write Block Data</h2>
 <div class="line">    <span class="comment">// Configuring the SPI Target: Specify the SPI interface pins, frame size, SPI Motorola</span></div>
 <div class="line">    <span class="comment">// mode and target mode</span></div>
 <div class="line">    rslt = <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gabe68169c810119b93e1164127663033c">Cy_SCB_SPI_Init</a>(SPI_HW, &amp;SPI_config, &amp;spi_context);</div>
-<div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#ga7e5d7cb17044cdd8ab1543e038bf89a8">Cy_SCB_SPI_Enable</a>(SPI_HW);</div>
 <div class="line">    rslt = mtb_hal_spi_setup(&amp;spi_s_obj, &amp;SPI_hal_cfg, &amp;spi_context, NULL);</div>
+<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a>(&amp;spi_s_obj, <span class="keyword">true</span>);</div>
 <div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a>(SPI_HW, <a class="code hl_enumvalue" href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a>);</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a> intr_cfg = { .<a class="code hl_variable" href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">intrSrc</a> = SPI_IRQ, .intrPriority = INT_PRIORITY };</div>
@@ -318,8 +318,8 @@ Snippet 6: Interrupts on SPI events</h2>
 <div class="line">    <span class="comment">// Configuring the SPI interface: Specify the SPI interface pins, frame size, SPI Motorola</span></div>
 <div class="line">    <span class="comment">// mode and controller/target mode</span></div>
 <div class="line">    rslt = <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gabe68169c810119b93e1164127663033c">Cy_SCB_SPI_Init</a>(SPI_HW, &amp;SPI_config, &amp;spi_context);</div>
-<div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#ga7e5d7cb17044cdd8ab1543e038bf89a8">Cy_SCB_SPI_Enable</a>(SPI_HW);</div>
 <div class="line">    rslt = mtb_hal_spi_setup(&amp;spi_obj, &amp;SPI_hal_cfg, &amp;spi_context, NULL);</div>
+<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a>(&amp;spi_obj, <span class="keyword">true</span>);</div>
 <div class="line">    <a class="code hl_function" href="group__group__scb__spi__general__functions.html#gaa94d2ec7eb38573274587eeff5635288">Cy_SCB_SPI_SetActiveSlaveSelect</a>(SPI_HW, <a class="code hl_enumvalue" href="group__group__scb__spi__enums.html#gga65ae7c131e5e5cae3327aeb6ac870488ac079cf67f8f5dd8df4feed6930320972">CY_SCB_SPI_SLAVE_SELECT0</a>);</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a> intr_cfg = { .<a class="code hl_variable" href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">intrSrc</a> = SPI_IRQ, .intrPriority = INT_PRIORITY };</div>
@@ -403,6 +403,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga4958fc08f71f7281e4bede14ebd3095e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">mtb_hal_spi_enable</a> (<a class="el" href="structmtb__hal__spi__t.html">mtb_hal_spi_t</a> *obj, bool enable)</td></tr>
+<tr class="memdesc:ga4958fc08f71f7281e4bede14ebd3095e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable the SPI.  <a href="group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e">More...</a><br /></td></tr>
+<tr class="separator:ga4958fc08f71f7281e4bede14ebd3095e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0f3e46217b46ed98ea29ca0a9fa9340a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__spi.html#ga0f3e46217b46ed98ea29ca0a9fa9340a">mtb_hal_spi_set_frequency</a> (<a class="el" href="structmtb__hal__spi__t.html">mtb_hal_spi_t</a> *obj, uint32_t hz)</td></tr>
 <tr class="memdesc:ga0f3e46217b46ed98ea29ca0a9fa9340a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the SPI baud rate.  <a href="group__group__hal__spi.html#ga0f3e46217b46ed98ea29ca0a9fa9340a">More...</a><br /></td></tr>
 <tr class="separator:ga0f3e46217b46ed98ea29ca0a9fa9340a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -493,6 +496,45 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga4958fc08f71f7281e4bede14ebd3095e" name="ga4958fc08f71f7281e4bede14ebd3095e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4958fc08f71f7281e4bede14ebd3095e">&#9670;&nbsp;</a></span>mtb_hal_spi_enable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_spi_enable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmtb__hal__spi__t.html">mtb_hal_spi_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable/disable the SPI. </p>
+<p >The function returns without waiting for the enable to complete.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The SPI object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>Enable/disable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the enable request </dd></dl>
+
+</div>
+</div>
 <a id="ga0f3e46217b46ed98ea29ca0a9fa9340a" name="ga0f3e46217b46ed98ea29ca0a9fa9340a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga0f3e46217b46ed98ea29ca0a9fa9340a">&#9670;&nbsp;</a></span>mtb_hal_spi_set_frequency()</h2>
 

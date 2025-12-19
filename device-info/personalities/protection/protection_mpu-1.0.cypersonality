@@ -20,6 +20,7 @@
     <ParamBool id='executable' name='Executable' group='' default='false' visible='true' desc='Are these memory locations executable?' />
     <ParamBool id='device' name='Device Memory' group='' default='false' visible='true' desc='Is this memory used for peripheral control registers?' />
     <ParamBool id='early_write' name='Early Write Acknowledge' group='' default='false' visible='`${device}`' desc='Can these memory locations be buffered?' />
+    <ParamBool id='shareable' name='Shareable' group='' default='false' visible='true' desc='Can these memory locations be shared?' />
     <ParamChoice id='cacheable' name='Cacheable' group='' default='1' visible='`${!device}`' desc='Can these memory locations be cached?'>
       <Entry name='Non-Cacheable' value='0' visible='true' />
       <Entry name='Write-Back Non-Transient' value='1' visible='true' />

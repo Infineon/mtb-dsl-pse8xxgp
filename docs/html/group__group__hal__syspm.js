@@ -21,7 +21,8 @@ var group__group__hal__syspm =
       [ "MTB_HAL_SYSPM_CB_SYSTEM_HIBERNATE", "group__group__hal__syspm.html#gga691dc5889dbab1928b10cbaa4d0c34d4aec8cf572dcb28aad02bfc4dea07ebd9b", null ],
       [ "MTB_HAL_SYSPM_CB_SYSTEM_NORMAL", "group__group__hal__syspm.html#gga691dc5889dbab1928b10cbaa4d0c34d4a943e0e33811979e063eaa3c4cca89a37", null ],
       [ "MTB_HAL_SYSPM_CB_SYSTEM_LOW", "group__group__hal__syspm.html#gga691dc5889dbab1928b10cbaa4d0c34d4a2d69e8f9b51e1f50e6b64166b8d64082", null ],
-      [ "MTB_HAL_SYSPM_CB_SYSTEM_HIGH", "group__group__hal__syspm.html#gga691dc5889dbab1928b10cbaa4d0c34d4a070f5803e00b0d463059a4611dc6e9a5", null ]
+      [ "MTB_HAL_SYSPM_CB_SYSTEM_HIGH", "group__group__hal__syspm.html#gga691dc5889dbab1928b10cbaa4d0c34d4a070f5803e00b0d463059a4611dc6e9a5", null ],
+      [ "MTB_HAL_SYSPM_CB_CPU_HIBERNATE_RAM", "group__group__hal__syspm.html#gga691dc5889dbab1928b10cbaa4d0c34d4af70acd9e3154ea2c7cbd6c5c2415f9fd", null ]
     ] ],
     [ "mtb_hal_syspm_callback_mode_t", "group__group__hal__syspm.html#ga8c1406573cb935a6e847b1914a492d70", [
       [ "MTB_HAL_SYSPM_CHECK_READY", "group__group__hal__syspm.html#gga8c1406573cb935a6e847b1914a492d70a1ec5f520b677b096ac6d7ffd4695236f", null ],
@@ -36,6 +37,8 @@ var group__group__hal__syspm =
     [ "mtb_hal_syspm_deepsleep", "group__group__hal__syspm.html#gacfaa3dc405630a0acfc06a6bae7f511c", null ],
     [ "mtb_hal_syspm_lock_deepsleep", "group__group__hal__syspm.html#ga001357e514b21137e4a5aea186bb3376", null ],
     [ "mtb_hal_syspm_unlock_deepsleep", "group__group__hal__syspm.html#ga120dcd9be700a41962cbf4d43afae8c8", null ],
+    [ "mtb_hal_syspm_hibernate_ram", "group__group__hal__syspm.html#ga7d925b3c3ce6422c6de42c3c0333bbf1", null ],
+    [ "mtb_hal_syspm_tickless_hibernate_ram", "group__group__hal__syspm.html#gafe9b220e963117f6df4c18fcd01c3d25", null ],
     [ "mtb_hal_syspm_tickless_deepsleep", "group__group__hal__syspm.html#ga34e4d3222a2d65f31f177c9155a36dfc", null ],
     [ "mtb_hal_syspm_tickless_sleep", "group__group__hal__syspm.html#gafe35e11b5d4ab953a6556da3d3f0560f", null ],
     [ "mtb_hal_syspm_get_deepsleep_mode", "group__group__hal__syspm.html#gaa74f4937237e9a9c925e1c1e92784ec0", null ]

@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__ipc__functions.html','')
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -200,10 +200,10 @@ Functions</h2></td></tr>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__ipc__enums_html_ggab838549fe808bd6cb1bfc52d2b5cbf25a8748b3bf3a2b39bd469c0d41217a2cb2"><div class="ttname"><a href="group__group__ipc__enums.html#ggab838549fe808bd6cb1bfc52d2b5cbf25a8748b3bf3a2b39bd469c0d41217a2cb2">CY_IPC_DRV_SUCCESS</a></div><div class="ttdeci">@ CY_IPC_DRV_SUCCESS</div><div class="ttdoc">Function was successfully executed.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:356</div></div>
+<div class="ttc" id="agroup__group__ipc__enums_html_ggab838549fe808bd6cb1bfc52d2b5cbf25a8748b3bf3a2b39bd469c0d41217a2cb2"><div class="ttname"><a href="group__group__ipc__enums.html#ggab838549fe808bd6cb1bfc52d2b5cbf25a8748b3bf3a2b39bd469c0d41217a2cb2">CY_IPC_DRV_SUCCESS</a></div><div class="ttdeci">@ CY_IPC_DRV_SUCCESS</div><div class="ttdoc">Function was successfully executed.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:360</div></div>
 <div class="ttc" id="agroup__group__ipc__functions_html_ga60f75f0403a88420eb1268f54b21ed27"><div class="ttname"><a href="group__group__ipc__functions.html#ga60f75f0403a88420eb1268f54b21ed27">Cy_IPC_Drv_SendMsgWord</a></div><div class="ttdeci">cy_en_ipcdrv_status_t Cy_IPC_Drv_SendMsgWord(IPC_STRUCT_Type *base, uint32_t notifyEventIntr, uint32_t message)</div><div class="ttdoc">This function is used to send a 32-bit word message through an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.c:114</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_gaa1ca9b002b286f12fde442c8653aa3bf"><div class="ttname"><a href="group__group__ipc__functions.html#gaa1ca9b002b286f12fde442c8653aa3bf">Cy_IPC_Drv_GetIpcBaseAddress</a></div><div class="ttdeci">__STATIC_INLINE IPC_STRUCT_Type * Cy_IPC_Drv_GetIpcBaseAddress(uint32_t ipcIndex)</div><div class="ttdoc">This function takes an IPC channel index as a parameter and returns the base address the IPC register...</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:440</div></div>
-<div class="ttc" id="astructIPC__STRUCT__Type_html"><div class="ttname"><a href="structIPC__STRUCT__Type.html">IPC_STRUCT_Type</a></div><div class="ttdoc">IPC structure (IPC_STRUCT)</div><div class="ttdef"><b>Definition:</b> cyip_ipc.h:43</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_gaa1ca9b002b286f12fde442c8653aa3bf"><div class="ttname"><a href="group__group__ipc__functions.html#gaa1ca9b002b286f12fde442c8653aa3bf">Cy_IPC_Drv_GetIpcBaseAddress</a></div><div class="ttdeci">__STATIC_INLINE IPC_STRUCT_Type * Cy_IPC_Drv_GetIpcBaseAddress(uint32_t ipcIndex)</div><div class="ttdoc">This function takes an IPC channel index as a parameter and returns the base address the IPC register...</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:444</div></div>
+<div class="ttc" id="astructIPC__STRUCT__Type_html"><div class="ttname"><a href="structIPC__STRUCT__Type.html">IPC_STRUCT_Type</a></div><div class="ttdoc">IPC structure (IPC_STRUCT)</div><div class="ttdef"><b>Definition:</b> cyip_ipc.h:40</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -239,9 +239,9 @@ Functions</h2></td></tr>
 <div class="line"><span class="preprocessor">    #endif </span><span class="comment">/* MY_IPC_INTR_INDEX */</span><span class="preprocessor"></span></div>
 <div class="line">    <a class="code hl_struct" href="structIPC__INTR__STRUCT__Type.html">IPC_INTR_STRUCT_Type</a> * myIpcIntr = <a class="code hl_function" href="group__group__ipc__functions.html#gaea293f27dc3d6d69eb40ef2d8f5c8d2b">Cy_IPC_Drv_GetIntrBaseAddr</a>(MY_IPC_INTR_INDEX);</div>
 <div class="line">    uint32_t intrStatus = <a class="code hl_function" href="group__group__ipc__functions.html#ga0caa401ab6f35b70e99768a0c442c71a">Cy_IPC_Drv_GetInterruptStatus</a>(myIpcIntr);</div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga0caa401ab6f35b70e99768a0c442c71a"><div class="ttname"><a href="group__group__ipc__functions.html#ga0caa401ab6f35b70e99768a0c442c71a">Cy_IPC_Drv_GetInterruptStatus</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetInterruptStatus(IPC_INTR_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to read the pending interrupts.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:599</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_gaea293f27dc3d6d69eb40ef2d8f5c8d2b"><div class="ttname"><a href="group__group__ipc__functions.html#gaea293f27dc3d6d69eb40ef2d8f5c8d2b">Cy_IPC_Drv_GetIntrBaseAddr</a></div><div class="ttdeci">__STATIC_INLINE IPC_INTR_STRUCT_Type * Cy_IPC_Drv_GetIntrBaseAddr(uint32_t ipcIntrIndex)</div><div class="ttdoc">This function takes an IPC interrupt structure index and returns the base address of the IPC interrup...</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:469</div></div>
-<div class="ttc" id="astructIPC__INTR__STRUCT__Type_html"><div class="ttname"><a href="structIPC__INTR__STRUCT__Type.html">IPC_INTR_STRUCT_Type</a></div><div class="ttdoc">IPC interrupt structure (IPC_INTR_STRUCT)</div><div class="ttdef"><b>Definition:</b> cyip_ipc.h:56</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga0caa401ab6f35b70e99768a0c442c71a"><div class="ttname"><a href="group__group__ipc__functions.html#ga0caa401ab6f35b70e99768a0c442c71a">Cy_IPC_Drv_GetInterruptStatus</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetInterruptStatus(IPC_INTR_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to read the pending interrupts.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:603</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_gaea293f27dc3d6d69eb40ef2d8f5c8d2b"><div class="ttname"><a href="group__group__ipc__functions.html#gaea293f27dc3d6d69eb40ef2d8f5c8d2b">Cy_IPC_Drv_GetIntrBaseAddr</a></div><div class="ttdeci">__STATIC_INLINE IPC_INTR_STRUCT_Type * Cy_IPC_Drv_GetIntrBaseAddr(uint32_t ipcIntrIndex)</div><div class="ttdoc">This function takes an IPC interrupt structure index and returns the base address of the IPC interrup...</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:473</div></div>
+<div class="ttc" id="astructIPC__INTR__STRUCT__Type_html"><div class="ttname"><a href="structIPC__INTR__STRUCT__Type.html">IPC_INTR_STRUCT_Type</a></div><div class="ttdoc">IPC interrupt structure (IPC_INTR_STRUCT)</div><div class="ttdef"><b>Definition:</b> cyip_ipc.h:53</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -317,9 +317,9 @@ Functions</h2></td></tr>
 <div class="line">            <span class="comment">/* Insert error handling */</span></div>
 <div class="line">        }</div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga1ed2f8f6a0343bdeedbe4f81c0df5e1a"><div class="ttname"><a href="group__group__ipc__functions.html#ga1ed2f8f6a0343bdeedbe4f81c0df5e1a">Cy_IPC_Drv_IsLockAcquired</a></div><div class="ttdeci">__STATIC_INLINE bool Cy_IPC_Drv_IsLockAcquired(IPC_STRUCT_Type const *base)</div><div class="ttdoc">The function is used to test the status of an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:866</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga47dfdecf96bad000b825ae79bfea0f80"><div class="ttname"><a href="group__group__ipc__functions.html#ga47dfdecf96bad000b825ae79bfea0f80">Cy_IPC_Drv_AcquireNotify</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_AcquireNotify(IPC_STRUCT_Type *base, uint32_t notifyEventIntr)</div><div class="ttdoc">The function generates a acquire notification event by IPC interrupt structure.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:703</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga8691465b9797f0b764505e9c77d41b02"><div class="ttname"><a href="group__group__ipc__functions.html#ga8691465b9797f0b764505e9c77d41b02">Cy_IPC_Drv_LockAcquire</a></div><div class="ttdeci">__STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_LockAcquire(IPC_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to acquire the IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:1041</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga1ed2f8f6a0343bdeedbe4f81c0df5e1a"><div class="ttname"><a href="group__group__ipc__functions.html#ga1ed2f8f6a0343bdeedbe4f81c0df5e1a">Cy_IPC_Drv_IsLockAcquired</a></div><div class="ttdeci">__STATIC_INLINE bool Cy_IPC_Drv_IsLockAcquired(IPC_STRUCT_Type const *base)</div><div class="ttdoc">The function is used to test the status of an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:870</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga47dfdecf96bad000b825ae79bfea0f80"><div class="ttname"><a href="group__group__ipc__functions.html#ga47dfdecf96bad000b825ae79bfea0f80">Cy_IPC_Drv_AcquireNotify</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_AcquireNotify(IPC_STRUCT_Type *base, uint32_t notifyEventIntr)</div><div class="ttdoc">The function generates a acquire notification event by IPC interrupt structure.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:707</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga8691465b9797f0b764505e9c77d41b02"><div class="ttname"><a href="group__group__ipc__functions.html#ga8691465b9797f0b764505e9c77d41b02">Cy_IPC_Drv_LockAcquire</a></div><div class="ttdeci">__STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_LockAcquire(IPC_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to acquire the IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:1045</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -391,7 +391,7 @@ Functions</h2></td></tr>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
 <div class="ttc" id="agroup__group__ipc__functions_html_gadf7235959bc77bc9d71f6660e315741a"><div class="ttname"><a href="group__group__ipc__functions.html#gadf7235959bc77bc9d71f6660e315741a">Cy_IPC_Drv_ReadMsgWord</a></div><div class="ttdeci">cy_en_ipcdrv_status_t Cy_IPC_Drv_ReadMsgWord(IPC_STRUCT_Type const *base, uint32_t *message)</div><div class="ttdoc">This function is used to read a 32-bit word message through an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.c:166</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_gae012b59909da4867ac1112f69f9dd3a1"><div class="ttname"><a href="group__group__ipc__functions.html#gae012b59909da4867ac1112f69f9dd3a1">Cy_IPC_Drv_ReleaseNotify</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_ReleaseNotify(IPC_STRUCT_Type *base, uint32_t notifyEventIntr)</div><div class="ttdoc">The function generates a release notification event by IPC interrupt structure.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:731</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_gae012b59909da4867ac1112f69f9dd3a1"><div class="ttname"><a href="group__group__ipc__functions.html#gae012b59909da4867ac1112f69f9dd3a1">Cy_IPC_Drv_ReleaseNotify</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_ReleaseNotify(IPC_STRUCT_Type *base, uint32_t notifyEventIntr)</div><div class="ttdoc">The function generates a release notification event by IPC interrupt structure.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:735</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -554,7 +554,7 @@ Functions</h2></td></tr>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga2641f60d4f3147aaea537d4c66d2b3a1"><div class="ttname"><a href="group__group__ipc__functions.html#ga2641f60d4f3147aaea537d4c66d2b3a1">Cy_IPC_Drv_ReadMsgPtr</a></div><div class="ttdeci">__STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_ReadMsgPtr(IPC_STRUCT_Type const *base, void **msgPtr)</div><div class="ttdoc">This function is used to read a 32-bit pointer message through an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:1013</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga2641f60d4f3147aaea537d4c66d2b3a1"><div class="ttname"><a href="group__group__ipc__functions.html#ga2641f60d4f3147aaea537d4c66d2b3a1">Cy_IPC_Drv_ReadMsgPtr</a></div><div class="ttdeci">__STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_ReadMsgPtr(IPC_STRUCT_Type const *base, void **msgPtr)</div><div class="ttdoc">This function is used to read a 32-bit pointer message through an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:1017</div></div>
 <div class="ttc" id="agroup__group__ipc__functions_html_ga7c675e2c6b20599160bfb0046cfee109"><div class="ttname"><a href="group__group__ipc__functions.html#ga7c675e2c6b20599160bfb0046cfee109">Cy_IPC_Drv_LockRelease</a></div><div class="ttdeci">cy_en_ipcdrv_status_t Cy_IPC_Drv_LockRelease(IPC_STRUCT_Type *base, uint32_t releaseEventIntr)</div><div class="ttdoc">The function is used to release an IPC channel from the locked state.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.c:61</div></div>
 </div><!-- fragment --> </dd></dl>
 
@@ -661,7 +661,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="comment">     * such a user/privileged, secure/non-secure access modes,</span></div>
 <div class="line"><span class="comment">     * protection context, bus master, etc.</span></div>
 <div class="line"><span class="comment">     */</span></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_gaa178a606ff01af93d7545c7e3a25c648"><div class="ttname"><a href="group__group__ipc__functions.html#gaa178a606ff01af93d7545c7e3a25c648">Cy_IPC_Drv_GetLockStatus</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetLockStatus(IPC_STRUCT_Type const *base)</div><div class="ttdoc">The function is used to get the status of an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:891</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_gaa178a606ff01af93d7545c7e3a25c648"><div class="ttname"><a href="group__group__ipc__functions.html#gaa178a606ff01af93d7545c7e3a25c648">Cy_IPC_Drv_GetLockStatus</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetLockStatus(IPC_STRUCT_Type const *base)</div><div class="ttdoc">The function is used to get the status of an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:895</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -1040,7 +1040,7 @@ Functions</h2></td></tr>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__ipc__functions_html_gab9e1b6079cd81d9b918b354d9437744d"><div class="ttname"><a href="group__group__ipc__functions.html#gab9e1b6079cd81d9b918b354d9437744d">Cy_IPC_Drv_SendMsgPtr</a></div><div class="ttdeci">__STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_SendMsgPtr(IPC_STRUCT_Type *base, uint32_t notifyEventIntr, void const *msgPtr)</div><div class="ttdoc">This function is used to send a message pointer through an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:978</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_gab9e1b6079cd81d9b918b354d9437744d"><div class="ttname"><a href="group__group__ipc__functions.html#gab9e1b6079cd81d9b918b354d9437744d">Cy_IPC_Drv_SendMsgPtr</a></div><div class="ttdeci">__STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_SendMsgPtr(IPC_STRUCT_Type *base, uint32_t notifyEventIntr, void const *msgPtr)</div><div class="ttdoc">This function is used to send a message pointer through an IPC channel.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:982</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -1224,11 +1224,11 @@ Functions</h2></td></tr>
 <div class="line"><span class="comment">     * #MY_IPC_INTR_INDEX when they are not needed anymore</span></div>
 <div class="line"><span class="comment">     */</span></div>
 <div class="line">    <a class="code hl_function" href="group__group__ipc__functions.html#ga741e9137775cdfab6275adaf45dd5406">Cy_IPC_Drv_SetInterruptMask</a>(myIpcIntr, <a class="code hl_define" href="group__group__ipc__macros.html#ga8c02b33010a796cc0d610491bda52827">CY_IPC_NO_NOTIFICATION</a>, <a class="code hl_define" href="group__group__ipc__macros.html#ga8c02b33010a796cc0d610491bda52827">CY_IPC_NO_NOTIFICATION</a>);</div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga0a79aaa6be9b9d40fe8c8ff17fce058b"><div class="ttname"><a href="group__group__ipc__functions.html#ga0a79aaa6be9b9d40fe8c8ff17fce058b">Cy_IPC_Drv_GetInterruptMask</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetInterruptMask(IPC_INTR_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to read the interrupt mask.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:535</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga408e08c5842189246a35ca2be89d62ea"><div class="ttname"><a href="group__group__ipc__functions.html#ga408e08c5842189246a35ca2be89d62ea">Cy_IPC_Drv_ClearInterrupt</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_ClearInterrupt(IPC_INTR_STRUCT_Type *base, uint32_t ipcReleaseMask, uint32_t ipcNotifyMask)</div><div class="ttdoc">This function is used to clear the interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:666</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga423a1a0df8939384794e95f7e05b1e03"><div class="ttname"><a href="group__group__ipc__functions.html#ga423a1a0df8939384794e95f7e05b1e03">Cy_IPC_Drv_GetInterruptStatusMasked</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetInterruptStatusMasked(IPC_INTR_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to read the active unmasked interrupt.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:567</div></div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga741e9137775cdfab6275adaf45dd5406"><div class="ttname"><a href="group__group__ipc__functions.html#ga741e9137775cdfab6275adaf45dd5406">Cy_IPC_Drv_SetInterruptMask</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_SetInterruptMask(IPC_INTR_STRUCT_Type *base, uint32_t ipcReleaseMask, uint32_t ipcNotifyMask)</div><div class="ttdoc">This function is used to set the interrupt mask for an IPC Interrupt.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:501</div></div>
-<div class="ttc" id="agroup__group__ipc__macros_html_ga8c02b33010a796cc0d610491bda52827"><div class="ttname"><a href="group__group__ipc__macros.html#ga8c02b33010a796cc0d610491bda52827">CY_IPC_NO_NOTIFICATION</a></div><div class="ttdeci">#define CY_IPC_NO_NOTIFICATION</div><div class="ttdoc">Defines a value to indicate that no notification events are needed.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:308</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga0a79aaa6be9b9d40fe8c8ff17fce058b"><div class="ttname"><a href="group__group__ipc__functions.html#ga0a79aaa6be9b9d40fe8c8ff17fce058b">Cy_IPC_Drv_GetInterruptMask</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetInterruptMask(IPC_INTR_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to read the interrupt mask.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:539</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga408e08c5842189246a35ca2be89d62ea"><div class="ttname"><a href="group__group__ipc__functions.html#ga408e08c5842189246a35ca2be89d62ea">Cy_IPC_Drv_ClearInterrupt</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_ClearInterrupt(IPC_INTR_STRUCT_Type *base, uint32_t ipcReleaseMask, uint32_t ipcNotifyMask)</div><div class="ttdoc">This function is used to clear the interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:670</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga423a1a0df8939384794e95f7e05b1e03"><div class="ttname"><a href="group__group__ipc__functions.html#ga423a1a0df8939384794e95f7e05b1e03">Cy_IPC_Drv_GetInterruptStatusMasked</a></div><div class="ttdeci">__STATIC_INLINE uint32_t Cy_IPC_Drv_GetInterruptStatusMasked(IPC_INTR_STRUCT_Type const *base)</div><div class="ttdoc">This function is used to read the active unmasked interrupt.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:571</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga741e9137775cdfab6275adaf45dd5406"><div class="ttname"><a href="group__group__ipc__functions.html#ga741e9137775cdfab6275adaf45dd5406">Cy_IPC_Drv_SetInterruptMask</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_SetInterruptMask(IPC_INTR_STRUCT_Type *base, uint32_t ipcReleaseMask, uint32_t ipcNotifyMask)</div><div class="ttdoc">This function is used to set the interrupt mask for an IPC Interrupt.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:505</div></div>
+<div class="ttc" id="agroup__group__ipc__macros_html_ga8c02b33010a796cc0d610491bda52827"><div class="ttname"><a href="group__group__ipc__macros.html#ga8c02b33010a796cc0d610491bda52827">CY_IPC_NO_NOTIFICATION</a></div><div class="ttdeci">#define CY_IPC_NO_NOTIFICATION</div><div class="ttdoc">Defines a value to indicate that no notification events are needed.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:312</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -1516,7 +1516,7 @@ Functions</h2></td></tr>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* See the \ref Cy_IPC_Drv_SetInterruptMask function usage */</span></div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__ipc__functions_html_ga5fb9bd90c225d8cc4bc8c9ef1a829948"><div class="ttname"><a href="group__group__ipc__functions.html#ga5fb9bd90c225d8cc4bc8c9ef1a829948">Cy_IPC_Drv_SetInterrupt</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_SetInterrupt(IPC_INTR_STRUCT_Type *base, uint32_t ipcReleaseMask, uint32_t ipcNotifyMask)</div><div class="ttdoc">This function is used to set the interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:632</div></div>
+<div class="ttc" id="agroup__group__ipc__functions_html_ga5fb9bd90c225d8cc4bc8c9ef1a829948"><div class="ttname"><a href="group__group__ipc__functions.html#ga5fb9bd90c225d8cc4bc8c9ef1a829948">Cy_IPC_Drv_SetInterrupt</a></div><div class="ttdeci">__STATIC_INLINE void Cy_IPC_Drv_SetInterrupt(IPC_INTR_STRUCT_Type *base, uint32_t ipcReleaseMask, uint32_t ipcNotifyMask)</div><div class="ttdoc">This function is used to set the interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_ipc_drv.h:636</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>

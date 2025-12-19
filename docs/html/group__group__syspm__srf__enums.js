@@ -7,9 +7,9 @@ var group__group__syspm__srf__enums =
       [ "CY_PDL_SYSPM_OP_GETPROGRAMMEDPWRMODE", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7a1f46a45f44e684fd0a1ea60c72e75bd0", null ],
       [ "CY_PDL_SYSPM_OP_SETPWRMODE", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7a8ecf8686d91347935f0caf599142e125", null ],
       [ "CY_PDL_SYSPM_OP_ISLPMREADY", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7a89f584d78f05d3e2a6d16227e38880e6", null ],
-      [ "CY_PDL_SYSPM_OP_SYSENABLECM55", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7abf25e0613c69fdcf7652c8d8ee266728", null ],
-      [ "CY_PDL_SYSPM_OP_SYSRESETCM55", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7a9f4d4225020c68e49e2454b633ac4a42", null ],
-      [ "CY_PDL_SYSPM_OP_SYSDISABLECM55", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7a016f2c0d5f0c36d1e26e6723c2144ec9", null ],
+      [ "CY_PDL_SYSPM_OP_SYSCM55ENABLE", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7a9082b16288aa88722f07c0ae867fde84", null ],
+      [ "CY_PDL_SYSPM_OP_SYSCM55RESET", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7a90137247d7d0773583c5deb4c3976d68", null ],
+      [ "CY_PDL_SYSPM_OP_SYSCM55DISABLE", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7af5be061f9cf7d92b53162627e2ab634d", null ],
       [ "CY_PDL_SYSPM_OP_MAX", "group__group__syspm__srf__enums.html#gga7ff13905a8073479b23118fe479986d7aa3fba41f06370a55bbf3576c62a7a2ec", null ]
     ] ]
 ];

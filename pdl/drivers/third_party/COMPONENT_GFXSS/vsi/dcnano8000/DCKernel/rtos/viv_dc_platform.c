@@ -199,4 +199,3 @@ gctINT dev_ioctl(gctUINT cmd, gctPOINTER arg)
 
     return vivSTATUS_OK;
 }
-

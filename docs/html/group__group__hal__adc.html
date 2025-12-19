@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__hal__adc.html',''); init
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('group__group__hal__adc.html',''); init
 <div class="header">
   <div class="summary">
 <a href="#groups">API Reference</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">ADC (Analog to Digital Converter)<div class="ingroups"><a class="el" href="group__group__hal__top.html">HAL API Reference</a> &raquo; <a class="el" href="group__group__hal.html">HAL Drivers</a></div></div></div>
 </div><!--header-->
@@ -192,6 +193,23 @@ API Reference</h2></td></tr>
 <tr class="memdesc:group__group__hal__results__adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">ADC specific return codes. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga9fc1fe40bcf282a2ca7e4ce7a47bef63"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__adc.html#ga9fc1fe40bcf282a2ca7e4ce7a47bef63">mtb_hal_adc_filter_t</a> { <br />
+&#160;&#160;<a class="el" href="group__group__hal__adc.html#gga9fc1fe40bcf282a2ca7e4ce7a47bef63ad71a5660e7018c0f7e7d9339292c8aa8">MTB_HAL_ADC_FILTER_MEDIAN</a> = 0
+, <br />
+&#160;&#160;<a class="el" href="group__group__hal__adc.html#gga9fc1fe40bcf282a2ca7e4ce7a47bef63a327712171228fe0a3844c9b125ee2470">MTB_HAL_ADC_FILTER_LIF</a> = 1
+, <br />
+&#160;&#160;<a class="el" href="group__group__hal__adc.html#gga9fc1fe40bcf282a2ca7e4ce7a47bef63a558a0bea10618b65ae15d77ab4c49053">MTB_HAL_ADC_FILTER_AVG</a> = 2
+, <br />
+&#160;&#160;<a class="el" href="group__group__hal__adc.html#gga9fc1fe40bcf282a2ca7e4ce7a47bef63a574004e26ec1da7092c650bb2a849503">MTB_HAL_ADC_FILTER_CIC</a> = 3
+, <br />
+&#160;&#160;<a class="el" href="group__group__hal__adc.html#gga9fc1fe40bcf282a2ca7e4ce7a47bef63a07e095cc4d4a5b30a26c062b7a1994fe">MTB_HAL_ADC_FILTER_LPF</a> = 4
+<br />
+ }</td></tr>
+<tr class="memdesc:ga9fc1fe40bcf282a2ca7e4ce7a47bef63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum of ADC filter types that get applied to the acquired ADC data.  <a href="group__group__hal__adc.html#ga9fc1fe40bcf282a2ca7e4ce7a47bef63">More...</a><br /></td></tr>
+<tr class="separator:ga9fc1fe40bcf282a2ca7e4ce7a47bef63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gaca5af65e04a892d71430cf9a3bb589cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__adc.html#gaca5af65e04a892d71430cf9a3bb589cf">mtb_hal_adc_setup</a> (<a class="el" href="structmtb__hal__adc__t.html">mtb_hal_adc_t</a> *obj, const <a class="el" href="structmtb__hal__adc__configurator__t.html">mtb_hal_adc_configurator_t</a> *config, <a class="el" href="structmtb__hal__clock__t.html">mtb_hal_clock_t</a> *clk, <a class="el" href="structmtb__hal__adc__channel__t.html">mtb_hal_adc_channel_t</a> **channels)</td></tr>
@@ -212,7 +230,45 @@ Functions</h2></td></tr>
 <tr class="memitem:ga37fb86a5ac856ecd92abbe614afc5cc8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__adc.html#ga37fb86a5ac856ecd92abbe614afc5cc8">mtb_hal_adc_start_convert</a> (<a class="el" href="structmtb__hal__adc__t.html">mtb_hal_adc_t</a> *obj)</td></tr>
 <tr class="memdesc:ga37fb86a5ac856ecd92abbe614afc5cc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers start of conversion for all enabled channels.  <a href="group__group__hal__adc.html#ga37fb86a5ac856ecd92abbe614afc5cc8">More...</a><br /></td></tr>
 <tr class="separator:ga37fb86a5ac856ecd92abbe614afc5cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga47fbfac730704aa482b61197aca1cbae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__adc.html#ga47fbfac730704aa482b61197aca1cbae">mtb_hal_adc_enable</a> (<a class="el" href="structmtb__hal__adc__t.html">mtb_hal_adc_t</a> *obj, bool enable)</td></tr>
+<tr class="memdesc:ga47fbfac730704aa482b61197aca1cbae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable the ADC.  <a href="group__group__hal__adc.html#ga47fbfac730704aa482b61197aca1cbae">More...</a><br /></td></tr>
+<tr class="separator:ga47fbfac730704aa482b61197aca1cbae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6bbca2276985a6288cc61e6a5bded203"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__adc.html#ga6bbca2276985a6288cc61e6a5bded203">mtb_hal_adc_is_ready</a> (<a class="el" href="structmtb__hal__adc__t.html">mtb_hal_adc_t</a> *obj)</td></tr>
+<tr class="memdesc:ga6bbca2276985a6288cc61e6a5bded203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if ADC is ready to be used.  <a href="group__group__hal__adc.html#ga6bbca2276985a6288cc61e6a5bded203">More...</a><br /></td></tr>
+<tr class="separator:ga6bbca2276985a6288cc61e6a5bded203"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafd064a4a48805b2da412ab0ea15bccc4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__adc.html#gafd064a4a48805b2da412ab0ea15bccc4">mtb_hal_adc_read_filtered</a> (const <a class="el" href="structmtb__hal__adc__channel__t.html">mtb_hal_adc_channel_t</a> *obj, <a class="el" href="group__group__hal__adc.html#ga9fc1fe40bcf282a2ca7e4ce7a47bef63">mtb_hal_adc_filter_t</a> filter, int32_t *result)</td></tr>
+<tr class="memdesc:gafd064a4a48805b2da412ab0ea15bccc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the filtered result of the most recent scan for the specified channel and writes it to the given <code>result</code> location.  <a href="group__group__hal__adc.html#gafd064a4a48805b2da412ab0ea15bccc4">More...</a><br /></td></tr>
+<tr class="separator:gafd064a4a48805b2da412ab0ea15bccc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga9fc1fe40bcf282a2ca7e4ce7a47bef63" name="ga9fc1fe40bcf282a2ca7e4ce7a47bef63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9fc1fe40bcf282a2ca7e4ce7a47bef63">&#9670;&nbsp;</a></span>mtb_hal_adc_filter_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__group__hal__adc.html#ga9fc1fe40bcf282a2ca7e4ce7a47bef63">mtb_hal_adc_filter_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enum of ADC filter types that get applied to the acquired ADC data. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga9fc1fe40bcf282a2ca7e4ce7a47bef63ad71a5660e7018c0f7e7d9339292c8aa8" name="gga9fc1fe40bcf282a2ca7e4ce7a47bef63ad71a5660e7018c0f7e7d9339292c8aa8"></a>MTB_HAL_ADC_FILTER_MEDIAN&#160;</td><td class="fielddoc"><p >Median filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a327712171228fe0a3844c9b125ee2470" name="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a327712171228fe0a3844c9b125ee2470"></a>MTB_HAL_ADC_FILTER_LIF&#160;</td><td class="fielddoc"><p >Linear interpolation filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a558a0bea10618b65ae15d77ab4c49053" name="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a558a0bea10618b65ae15d77ab4c49053"></a>MTB_HAL_ADC_FILTER_AVG&#160;</td><td class="fielddoc"><p >Average filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a574004e26ec1da7092c650bb2a849503" name="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a574004e26ec1da7092c650bb2a849503"></a>MTB_HAL_ADC_FILTER_CIC&#160;</td><td class="fielddoc"><p >Cascaded integrated comb filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a07e095cc4d4a5b30a26c062b7a1994fe" name="gga9fc1fe40bcf282a2ca7e4ce7a47bef63a07e095cc4d4a5b30a26c062b7a1994fe"></a>MTB_HAL_ADC_FILTER_LPF&#160;</td><td class="fielddoc"><p >Low pass filter. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="gaca5af65e04a892d71430cf9a3bb589cf" name="gaca5af65e04a892d71430cf9a3bb589cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaca5af65e04a892d71430cf9a3bb589cf">&#9670;&nbsp;</a></span>mtb_hal_adc_setup()</h2>
@@ -434,6 +490,118 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The status of the conversion request </dd></dl>
+
+</div>
+</div>
+<a id="ga47fbfac730704aa482b61197aca1cbae" name="ga47fbfac730704aa482b61197aca1cbae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga47fbfac730704aa482b61197aca1cbae">&#9670;&nbsp;</a></span>mtb_hal_adc_enable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_adc_enable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmtb__hal__adc__t.html">mtb_hal_adc_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable/disable the ADC. </p>
+<p >The function returns without waiting for the enable to complete. Check the ADC status using mtb_hal_adc_is_ready.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The ADC object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>Enable/disable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the enable request </dd></dl>
+
+</div>
+</div>
+<a id="ga6bbca2276985a6288cc61e6a5bded203" name="ga6bbca2276985a6288cc61e6a5bded203"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6bbca2276985a6288cc61e6a5bded203">&#9670;&nbsp;</a></span>mtb_hal_adc_is_ready()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mtb_hal_adc_is_ready </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmtb__hal__adc__t.html">mtb_hal_adc_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if ADC is ready to be used. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The ADC object </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the ADC ready state </dd></dl>
+
+</div>
+</div>
+<a id="gafd064a4a48805b2da412ab0ea15bccc4" name="gafd064a4a48805b2da412ab0ea15bccc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafd064a4a48805b2da412ab0ea15bccc4">&#9670;&nbsp;</a></span>mtb_hal_adc_read_filtered()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_adc_read_filtered </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structmtb__hal__adc__channel__t.html">mtb_hal_adc_channel_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__hal__adc.html#ga9fc1fe40bcf282a2ca7e4ce7a47bef63">mtb_hal_adc_filter_t</a>&#160;</td>
+          <td class="paramname"><em>filter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t *&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reads the filtered result of the most recent scan for the specified channel and writes it to the given <code>result</code> location. </p>
+<p >This function will return the latest available value.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The ADC object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">filter</td><td>Filter type </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">result</td><td>Scanned result </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the read operation </dd></dl>
 
 </div>
 </div>

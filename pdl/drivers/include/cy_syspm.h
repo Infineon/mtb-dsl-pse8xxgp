@@ -61,10 +61,15 @@
 *   - \ref group_syspm_wakingup_from_sleep_deepsleep
 *   - \ref group_syspm_switching_into_hibernate
 *   - \ref group_syspm_wakingup_from_hibernate
+* * \ref group_syspm_system_active_state_transitions
+*   - \ref group_syspm_system_ulp_to_lp_transition
+*   - \ref group_syspm_system_lp_to_hp_transition
+*   - \ref group_syspm_system_hp_to_lp_transition
+*   - \ref group_syspm_system_lp_to_ulp_transition
+*  - \ref group_syspm_system_transition_abs_levels
 * * \ref group_syspm_system_reg_curr_mode
 *   - \ref group_syspm_system_set_min_reg_curr_mode
 *   - \ref group_syspm_system_set_normal_reg_curr_mode
-* * \ref group_syspm_migration_guide_for_syspm_4_0
 * * \ref group_syspm_cb
 *   - \ref group_syspm_cb_example
 *   - \ref group_syspm_cb_config_consideration
@@ -313,6 +318,131 @@
 * the system by WDT interrupt. Refer to \ref Cy_SysPm_SetHibernateWakeupSource()
 * for more detail.
 *
+* \subsection group_syspm_system_active_state_transitions System Active state Transitions
+*
+* The system operates in three defined active modes, each tailored for specific
+* performance and power requirements:
+* - ULP (Ultra Low Power)
+* - LP (Low Power)
+* - HP (High Performance)
+*
+*
+* Transitioning between these operational modes requires meticulous adherence to
+* defined sequences to prevent timing-related issues.
+* The application is responsible for managing system frequency during these transitions,
+* ensuring it stays within the valid range for both current and target modes.
+* The driver assumes all frequency requirements are met before mode transition
+* APIs are called.
+*
+* \attention Transitions from ULP to HP modes (or vice versa) are only allowed in steps.
+* These transitions must proceed via the intermediate LP mode
+* (ULP -> LP -> HP or the reverse). This staged approach ensures system stability
+* and reliable operations. These steps are handled internally by the driver
+* when using one of the APIs: \ref Cy_SysPm_SystemEnterHp(),
+* \ref Cy_SysPm_SystemEnterLp(), or \ref Cy_SysPm_SystemEnterUlp().
+*
+* The driver provides dedicated APIs for transitions:
+* - \ref Cy_SysPm_SystemTransitionUlpToLp() - Transition from ULP to LP
+* - \ref Cy_SysPm_SystemTransitionLpToHp() - Transition from LP to HP
+* - \ref Cy_SysPm_SystemTransitionHpToLp() - Transition from HP to LP
+* - \ref Cy_SysPm_SystemTransitionLpToUlp() - Transition from LP to ULP
+*
+* The following sections outline the required conditions and sequence of operations
+* for each supported transition.
+*
+* \subsection group_syspm_system_ulp_to_lp_transition System ULP to LP Transition
+*
+* To transition the system from Ultra Low Power (ULP) to Low Power (LP) mode, follow
+* these steps in the secure processing environment:
+* -# Suspend Operations:
+*    1. Initiate M0SECCPUSS suspension with ifx_se_disable().
+* -# Reduce Operating Frequency:
+*    2. Lower the \ref group_syspm_sram_transition_clock frequency by at least 18%.
+* -# Initiate Transition:
+*    3. Call \ref Cy_SysPm_SystemTransitionUlpToLp() to perform the mode change.
+* -# Restore Frequency:
+*    4. After the transition, the \ref group_syspm_sram_transition_clock frequency
+*    can be increased up to the new mode's
+*    maximum.
+* -# Resume Operations:
+*    5. Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().
+*
+* \subsection group_syspm_system_lp_to_hp_transition System LP to HP Transition
+*
+* To transition the system from Low Power (LP) to High Power (HP) mode, follow
+* these steps in the secure processing environment:
+* -# Suspend Operations:
+*    1. Initiate M0SECCPUSS suspension with ifx_se_disable().
+* -# Reduce Operating Frequency:
+*    2. Lower the \ref group_syspm_sram_transition_clock frequency by at least 38%.
+* -# Initiate Transition:
+*    3. Call \ref Cy_SysPm_SystemTransitionLpToHp() to perform the mode change.
+* -# Restore Frequency:
+*    4. After the transition, the \ref group_syspm_sram_transition_clock frequency
+*    can be increased up to the new mode's maximum.
+* -# Resume Operations:
+*    5. Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().
+*
+* \subsection group_syspm_system_hp_to_lp_transition System HP to LP Transition
+*
+* To transition the system from High Power (HP) to Low Power (LP) mode, follow
+* these steps in the secure processing environment:
+* -# Suspend Operations:
+*    1. Initiate M0SECCPUSS suspension with ifx_se_disable().
+* -# Reduce Operating Frequency:
+*    2. Lower the \ref group_syspm_sram_transition_clock frequency by at least 82%.
+* -# Initiate Transition:
+*    3. Call \ref Cy_SysPm_SystemTransitionHpToLp() to perform the mode change.
+* -# Restore Frequency:
+*    4. After the transition, the \ref group_syspm_sram_transition_clock frequency
+*    can be increased up to the new mode's maximum.
+* -# Resume Operations:
+*    5. Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().
+*
+* \subsection group_syspm_system_lp_to_ulp_transition System LP to ULP Transition
+*
+* To transition the system from Low Power (LP) to Ultra Low Power (ULP) mode, follow
+* these steps in the secure processing environment:
+* -# Suspend Operations:
+*    1. Initiate M0SECCPUSS suspension with ifx_se_disable().
+* -# Reduce Operating Frequency:
+*    2. Lower the \ref group_syspm_sram_transition_clock frequency by at least 66%.
+* -# Initiate Transition:
+*    3. Call \ref Cy_SysPm_SystemTransitionLpToUlp() to perform the mode change.
+* -# Restore Frequency:
+*    4. After the transition, the \ref group_syspm_sram_transition_clock frequency
+*    can be increased up to the new mode's maximum.
+* -# Resume Operations:
+*    5. Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().
+*
+* \subsection group_syspm_system_transition_abs_levels System Transitions
+* (Levels of Abstraction)
+*
+* The driver supports two operational abstraction levels for system transitions:
+* -# High Level - The application invokes a single API that manages the entire
+* transition workflow internally. This method simplifies development, requiring minimum
+* user intervention, but offers limited opportunity for customization or speed optimization.
+* -# Low Level - The application remains responsible for all prerequisite checks and initiates
+* each step of the transition sequence. This grants granular control, allowing adjustments for
+* specialized use cases or the fastest possible transitions.
+*
+* \attention The application is responsible for invoking the correct steps at the appropriate
+* stage of transition:
+* - High Level Approach:
+*   + Reduce operating frequency within the CY_SYSPM_BEFORE_TRANSITION callback.
+*   + Use the relevant transition function: \ref Cy_SysPm_SystemEnterHp(),
+*   \ref Cy_SysPm_SystemEnterLp(), or \ref Cy_SysPm_SystemEnterUlp().
+*   + Restore operating frequency in the CY_SYSPM_AFTER_TRANSITION callback.
+*
+* - Low Level Approach:
+*   + The application must carefully follow the outlined sequences described in
+*   \ref group_syspm_system_active_state_transitions for the desired transition.
+*
+*
+* \subsubsection group_syspm_sram_transition_clock SRAM Clock
+* When the system is performing a power transition all the clocks used to access the SRAM
+* must be adapted to the new power mode. The SRAM clock frequency must be reduced
+* before the transition and can be increased after the transition is completed.
 * \subsection group_syspm_system_reg_curr_mode System Regulator Current Mode
 * In addition to system ULP and LP modes, the five different resource
 * power settings can be configured to reduce current consumption:
@@ -759,7 +889,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "cy_device.h"
 #include "cy_device_headers.h"
 #include "cy_syslib.h"
 
@@ -787,7 +916,7 @@ extern "C" {
 #define CY_SYSPM_DRV_VERSION_MAJOR       5
 
 /** Driver minor version */
-#define CY_SYSPM_DRV_VERSION_MINOR       180
+#define CY_SYSPM_DRV_VERSION_MINOR       190
 
 /** SysPm driver identifier */
 #define CY_SYSPM_ID                      (CY_PDL_DRV_ID(0x10U))
@@ -1430,7 +1559,7 @@ typedef enum
 typedef enum
 {
     CY_SYSPM_CORE_BUCK_MODE_LP    = 0x01U,    /**< Low Power Mode. */
-    CY_SYSPM_CORE_BUCK_MODE_HP    = 0x11U,    /**< High Power Mode(Low Ripple Mode) */
+    CY_SYSPM_CORE_BUCK_MODE_HP    = 0x11U,    /**< High Performance mode(Low Ripple Mode) */
 } cy_en_syspm_core_buck_mode_t;
 
 
@@ -2029,7 +2158,7 @@ typedef struct
     uint8_t   voltageSel;      /**< Core Buck Voltage Select \ref cy_en_syspm_core_buck_voltage_t */
     uint8_t   mode;            /**< Core Buck Mode :
                                     0x01 - Low Power Mode,
-                                    0x11 - High Power Mode(Low Ripple Mode) */
+                                    0x11 - High Performance mode(Low Ripple Mode) */
     bool      override;        /**< Core Buck Override : Forces Corebuck to
                                     use the setting in the PWR_CBUCK_CTL register */
     bool      copySettings;    /**< Core Buck Copy Settings :
@@ -2049,7 +2178,7 @@ typedef struct
     uint8_t   coreBuckVoltSel;     /**< Core Buck Voltage Select \ref cy_en_syspm_core_buck_voltage_t */
     uint8_t   coreBuckMode;        /**< Core Buck Mode :
                                     0x01 - Low Power Mode,
-                                    0x11 - High Power Mode(Low Ripple Mode) */
+                                    0x11 - High Performance mode(Low Ripple Mode) */
 
     /* This field applicable only for SDR0 */
     uint8_t   coreBuckDpSlpVoltSel; /**< Deep Sleep Core Buck Voltage Select \ref cy_en_syspm_core_buck_voltage_t */
@@ -2057,7 +2186,7 @@ typedef struct
     /* This field applicable only for SDR0 */
     uint8_t   coreBuckDpSlpMode;    /**< Deep sleep Core Buck Mode :
                                      0x01 - Low Power Mode,
-                                     0x11 - High Power Mode(Low Ripple Mode) */
+                                     0x11 - High Performance mode(Low Ripple Mode) */
 
     uint8_t   sdrVoltSel;           /**< SDR Regulator Voltage Select \ref cy_en_syspm_sdr_voltage_t */
 
@@ -2109,17 +2238,18 @@ typedef struct
 /** This is only used by secure-aware. The structure contains enable CM55 configuration parameters */
 typedef struct {
     uint32_t vectorTableOffset;
+    cy_app_cpu_dbg_port_type_t dbgMode;
     uint32_t waitus;
-} cy_pdl_syspm_srf_sysenablecm55_in_t;
+} cy_pdl_syspm_srf_syscm55enable_in_t;
 
 
 /** This is only used by secure-aware. The structure contains reset CM55 configuration parameters */
 typedef struct {
     uint32_t waitus;
-} cy_pdl_syspm_srf_sysresetcm55_in_t;
+} cy_pdl_syspm_srf_syscm55reset_in_t;
 
 #endif
-/** \endcode */
+/** \endcond */
 /** \} group_syspm_data_structures */
 
 /**
@@ -2730,6 +2860,70 @@ cy_en_syspm_status_t Cy_SysPm_SetSOCMEMDeepSleepMode(cy_en_syspm_deep_sleep_mode
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SetPPUDeepSleepMode(uint32_t ppu, uint32_t mode);
 
+/*******************************************************************************
+* Function Name: Cy_SysPm_SystemTransitionHpToLp
+****************************************************************************//**
+*
+* Performs system transition from High Performance mode(HP) to Low Power mode(LP) mode.
+*
+* \note This API is secure aware. See header subsection Secure Aware SYSPM for further details.
+* The involved PPC regions is PROT_PERI0_SRSS_MAIN.
+*
+* \return
+* - CY_SYSPM_SUCCESS - Successfully transitioned from HP to LP mode.
+* - CY_SYSPM_FAIL - The transition failed.
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionHpToLp(void);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_SystemTransitionLpToHp
+****************************************************************************//**
+*
+* Performs system transition from Low Power mode(LP) to High Performance mode(HP) mode.
+*
+* \note This API is secure aware. See header subsection Secure Aware SYSPM for further details.
+* The involved PPC regions is PROT_PERI0_SRSS_MAIN.
+*
+* \return
+* - CY_SYSPM_SUCCESS - Successfully transitioned from LP to HP mode.
+* - CY_SYSPM_FAIL - The transition failed.
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToHp(void);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_SystemTransitionUlpToLp
+****************************************************************************//**
+*
+* Performs system transition from Ultra Low Power mode(ULP) to Low Power mode(LP) mode.
+*
+* \note This API is secure aware. See header subsection Secure Aware SYSPM for further details.
+* The involved PPC regions is PROT_PERI0_SRSS_MAIN.
+*
+* \return
+* - CY_SYSPM_SUCCESS - Successfully transitioned from ULP to LP mode.
+* - CY_SYSPM_FAIL - The transition failed.
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionUlpToLp(void);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_SystemTransitionLpToUlp
+****************************************************************************//**
+*
+* Performs system transition from Low Power mode(LP) to Ultra Low Power mode(ULP) mode.
+*
+* \note This API is secure aware. See header subsection Secure Aware SYSPM for further details.
+* The involved PPC regions is PROT_PERI0_SRSS_MAIN.
+*
+* \return
+* - CY_SYSPM_SUCCESS - Successfully transitioned from LP to ULP mode.
+* - CY_SYSPM_FAIL - The transition failed.
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToUlp(void);
+
 
 #endif /* defined (CY_IP_MXS22SRSS) */
 
@@ -2958,6 +3152,10 @@ he LP mode
 * callbacks with the CY_SYSPM_CHECK_READY parameter call return CY_SYSPM_FAIL,
 * the remaining CY_SYSPM_LP callbacks with the
 * CY_SYSPM_CHECK_READY parameter calls are skipped.
+* All of the CY_SYSPM_LP callbacks with the CY_SYSPM_BEFORE_TRANSITION
+* require to reduce the clock frequency before entering LP mode.
+* All of the CY_SYSPM_LP callbacks with the CY_SYSPM_AFTER_TRANSITION
+* may now increase the Clock frequency to the target for LP mode.
 *
 * After a CY_SYSPM_FAIL, all of the CY_SYSPM_LP callbacks with
 * CY_SYSPM_CHECK_FAIL parameter are executed that correspond to the
@@ -3039,6 +3237,11 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void);
 * callback with the CY_SYSPM_CHECK_READY parameter call returns CY_SYSPM_FAIL,
 * the remaining CY_SYSPM_ULP callbacks with the CY_SYSPM_CHECK_READY parameter
 * are skipped.
+*
+* All of the CY_SYSPM_ULP callbacks with the CY_SYSPM_BEFORE_TRANSITION
+* require to reduce the clock frequency before entering ULP mode.
+* All of the CY_SYSPM_ULP callbacks with the CY_SYSPM_AFTER_TRANSITION
+* may now increase the Clock frequency to the target for ULP mode.
 *
 * After a CY_SYSPM_FAIL, all of the CY_SYSPM_ULP callbacks with the
 * CY_SYSPM_CHECK_FAIL parameter are executed that correspond to the
@@ -3122,6 +3325,10 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterUlp(void);
 * callback with the CY_SYSPM_CHECK_READY parameter call returns CY_SYSPM_FAIL,
 * the remaining CY_SYSPM_HP callbacks with the CY_SYSPM_CHECK_READY parameter
 * are skipped.
+* All of the CY_SYSPM_HP callbacks with the CY_SYSPM_BEFORE_TRANSITION
+* require to reduce the clock frequency before entering HP mode.
+* All of the CY_SYSPM_HP callbacks with the CY_SYSPM_AFTER_TRANSITION
+* may now increase the Clock frequency to the target for HP mode.
 *
 * After a CY_SYSPM_FAIL, all of the CY_SYSPM_HP callbacks with the
 * CY_SYSPM_CHECK_FAIL parameter are executed that correspond to the
@@ -3585,7 +3792,6 @@ __STATIC_INLINE bool Cy_SysPm_SystemIsMinRegulatorCurrentSet(void)
 }
 #endif /* defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_DOXYGEN) */
 /** \} group_syspm_functions_power */
-
 
 /**
 * \addtogroup group_syspm_functions_ldo

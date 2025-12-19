@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__sysclk__ext__funcs.html'
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -142,11 +142,11 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* In case if there is a need to get the EXT CLK frequency */</span></div>
 <div class="line">    uint32_t extClkFreq = <a class="code hl_function" href="group__group__sysclk__ext__funcs.html#ga164b8c0287b292af7bdab5e216831b9b">Cy_SysClk_ExtClkGetFrequency</a>();</div>
-<div class="ttc" id="agroup__group__gpio__driveModes_html_gaf2fe5dc00ba1770b37e620a01169485c"><div class="ttname"><a href="group__group__gpio__driveModes.html#gaf2fe5dc00ba1770b37e620a01169485c">CY_GPIO_DM_HIGHZ</a></div><div class="ttdeci">#define CY_GPIO_DM_HIGHZ</div><div class="ttdoc">Digital High-Z.</div><div class="ttdef"><b>Definition:</b> cy_gpio.h:514</div></div>
+<div class="ttc" id="agroup__group__gpio__driveModes_html_gaf2fe5dc00ba1770b37e620a01169485c"><div class="ttname"><a href="group__group__gpio__driveModes.html#gaf2fe5dc00ba1770b37e620a01169485c">CY_GPIO_DM_HIGHZ</a></div><div class="ttdeci">#define CY_GPIO_DM_HIGHZ</div><div class="ttdoc">Digital High-Z.</div><div class="ttdef"><b>Definition:</b> cy_gpio.h:517</div></div>
 <div class="ttc" id="agroup__group__gpio__functions__init_html_gaf57c501727276013d3e8974a9fb7d0a7"><div class="ttname"><a href="group__group__gpio__functions__init.html#gaf57c501727276013d3e8974a9fb7d0a7">Cy_GPIO_Pin_FastInit</a></div><div class="ttdeci">void Cy_GPIO_Pin_FastInit(GPIO_PRT_Type *base, uint32_t pinNum, uint32_t driveMode, uint32_t outVal, en_hsiom_sel_t hsiom)</div><div class="ttdoc">Initialize the most common configuration settings for all pin types.</div><div class="ttdef"><b>Definition:</b> cy_gpio.c:420</div></div>
 <div class="ttc" id="agroup__group__sysclk__ext__funcs_html_ga164b8c0287b292af7bdab5e216831b9b"><div class="ttname"><a href="group__group__sysclk__ext__funcs.html#ga164b8c0287b292af7bdab5e216831b9b">Cy_SysClk_ExtClkGetFrequency</a></div><div class="ttdeci">uint32_t Cy_SysClk_ExtClkGetFrequency(void)</div><div class="ttdoc">Returns the frequency of the External Clock Source (EXTCLK) from the internal storage.</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4155</div></div>
 <div class="ttc" id="agroup__group__sysclk__ext__funcs_html_gad4b77c61d47878007b5c50e3baf13e51"><div class="ttname"><a href="group__group__sysclk__ext__funcs.html#gad4b77c61d47878007b5c50e3baf13e51">Cy_SysClk_ExtClkSetFrequency</a></div><div class="ttdeci">void Cy_SysClk_ExtClkSetFrequency(uint32_t freq)</div><div class="ttdoc">Sets the signal frequency of the External Clock Source (EXTCLK) into the internal storage to be used ...</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4134</div></div>
-<div class="ttc" id="agroup__group__sysclk__path__src__enums_html_gga8ddaf9023a02dee0d1f9a5629d6ccfe6aca51f919d42d3b386f0c631768916c16"><div class="ttname"><a href="group__group__sysclk__path__src__enums.html#gga8ddaf9023a02dee0d1f9a5629d6ccfe6aca51f919d42d3b386f0c631768916c16">CY_SYSCLK_CLKPATH_IN_EXT</a></div><div class="ttdeci">@ CY_SYSCLK_CLKPATH_IN_EXT</div><div class="ttdoc">Select the EXT as the output of the path mux.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:826</div></div>
+<div class="ttc" id="agroup__group__sysclk__path__src__enums_html_gga8ddaf9023a02dee0d1f9a5629d6ccfe6aca51f919d42d3b386f0c631768916c16"><div class="ttname"><a href="group__group__sysclk__path__src__enums.html#gga8ddaf9023a02dee0d1f9a5629d6ccfe6aca51f919d42d3b386f0c631768916c16">CY_SYSCLK_CLKPATH_IN_EXT</a></div><div class="ttdeci">@ CY_SYSCLK_CLKPATH_IN_EXT</div><div class="ttdoc">Select the EXT as the output of the path mux.</div><div class="ttdef"><b>Definition:</b> cy_sysclk.h:829</div></div>
 <div class="ttc" id="agroup__group__sysclk__path__src__funcs_html_ga517f603266062d0013947ea950ed5b60"><div class="ttname"><a href="group__group__sysclk__path__src__funcs.html#ga517f603266062d0013947ea950ed5b60">Cy_SysClk_ClkPathSetSource</a></div><div class="ttdeci">cy_en_sysclk_status_t Cy_SysClk_ClkPathSetSource(uint32_t clkPath, cy_en_clkpath_in_sources_t source)</div><div class="ttdoc">Configures the source for the specified clock path.</div><div class="ttdef"><b>Definition:</b> cy_sysclk_v2.c:4693</div></div>
 </div><!-- fragment --> </dd></dl>
 

@@ -7,7 +7,9 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2025 Cypress Semiconductor Corporation
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_ppc
@@ -41,7 +44,7 @@
 * access control beyond the basic secure/non-secure distinction.
 *
 * Up to 1024 regions can be protected by the PPC. However, the configuration of the response on an access violation
-* is only available at the PPC instance level. Therefore, every region associated with a given PPC instance will have 
+* is only available at the PPC instance level. Therefore, every region associated with a given PPC instance will have
 * the same response type for access violations.
 *
 * The PPC driver provides APIs to configure the security attributes, privilege levels, and protection context masks

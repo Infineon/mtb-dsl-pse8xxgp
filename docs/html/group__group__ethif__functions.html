@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__ethif__functions.html','
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -137,6 +137,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga74a4c26a1d44dd43bc923eac2e0fc5fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__ethif__functions.html#ga74a4c26a1d44dd43bc923eac2e0fc5fe">Cy_ETHIF_DiscardNonVLANFrames</a> (<a class="el" href="structETH__Type.html">ETH_Type</a> *base, bool enable)</td></tr>
 <tr class="memdesc:ga74a4c26a1d44dd43bc923eac2e0fc5fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">With VLAN tagged frame processing setup, this function configure MAC to receive only VLAN tagged frames and discard all.  <a href="group__group__ethif__functions.html#ga74a4c26a1d44dd43bc923eac2e0fc5fe">More...</a><br /></td></tr>
 <tr class="separator:ga74a4c26a1d44dd43bc923eac2e0fc5fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad38bb682262691e1db99b8f6155e3aaf"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__ethif__functions.html#gad38bb682262691e1db99b8f6155e3aaf">Cy_ETHIF_GetPrivateData</a> (<a class="el" href="structETH__Type.html">ETH_Type</a> *base)</td></tr>
+<tr class="memdesc:gad38bb682262691e1db99b8f6155e3aaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pointer to private data.  <a href="group__group__ethif__functions.html#gad38bb682262691e1db99b8f6155e3aaf">More...</a><br /></td></tr>
+<tr class="separator:gad38bb682262691e1db99b8f6155e3aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga29e43c154e518f268b7c1b7c627644ac" name="ga29e43c154e518f268b7c1b7c627644ac"></a>
@@ -782,6 +785,33 @@ CY_ETHIF_BAD_PARAM Parameter passed contains invalid values</dd></dl>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="gad38bb682262691e1db99b8f6155e3aaf" name="gad38bb682262691e1db99b8f6155e3aaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad38bb682262691e1db99b8f6155e3aaf">&#9670;&nbsp;</a></span>Cy_ETHIF_GetPrivateData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void * Cy_ETHIF_GetPrivateData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structETH__Type.html">ETH_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get pointer to private data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to register area of Ethernet MAC</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to private data or NULL in case wrong parameter </dd></dl>
 
 </div>
 </div>

@@ -116,7 +116,7 @@
 
 #if !gcFEATURE_VG_MATH_PRECISION_FIX && (CHIPID == 0x555)
 #define VG_SW_BLIT_PRECISION_OPT 1
-#else 
+#else
 #define VG_SW_BLIT_PRECISION_OPT 0
 #endif
 
@@ -301,7 +301,7 @@ void _SetDumpFileInfo();
 vg_lite_error_t vglitefDumpBuffer_single(char* Tag, size_t Physical, void* Logical, size_t Offset, size_t Bytes);
 #define vglitemDUMP_single                             vglitefDump
 #define vglitemDUMP_BUFFER_single                     vglitefDumpBuffer_single
-#endif 
+#endif
 #if DUMP_CAPTURE
 void _SetDumpFileInfo();
 vg_lite_error_t vglitefDump(char* String, ...);

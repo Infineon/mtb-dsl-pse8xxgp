@@ -11,6 +11,7 @@ var group__group__hal__timer =
       [ "MTB_HAL_TIMER_EVENT_ALL", "group__group__hal__timer.html#gga013ba93ab4f58680dbb80bd68aea8e1bae201d40d75b1b9d18b0f9ec20068665e", null ]
     ] ],
     [ "mtb_hal_timer_setup", "group__group__hal__timer.html#ga5df17e8d4ec40a698c722b8c8dd10a30", null ],
+    [ "mtb_hal_timer_enable", "group__group__hal__timer.html#gadc9cf4e85b6c70e3541d311036506b2d", null ],
     [ "mtb_hal_timer_start", "group__group__hal__timer.html#ga7ced1a8474a0e7234472baeb49bab372", null ],
     [ "mtb_hal_timer_stop", "group__group__hal__timer.html#gabe38c8c9919b2f62e380fd025cad1073", null ],
     [ "mtb_hal_timer_reset", "group__group__hal__timer.html#gaca6059a19482d04ffadb99d41479caed", null ],

@@ -57,7 +57,7 @@
 
 #define VGLITE_MEM_ALIGNMENT      128
 
-#define VGLITE_EVENT_FRAME_END    2  
+#define VGLITE_EVENT_FRAME_END    2
 
 #ifdef __cplusplus
 extern "C" {
@@ -276,13 +276,13 @@ vg_lite_error_t vg_lite_hal_unmap_memory(vg_lite_kernel_unmap_memory_t *node);
 int32_t vg_lite_hal_wait_interrupt(uint32_t timeout, uint32_t mask, uint32_t *value);
 
 /*!
- @brief After call vg_lite_hal_map(), flush cpu cache according the direction 
+ @brief After call vg_lite_hal_map(), flush cpu cache according the direction
  spicified by parameter cache_op.
  */
 vg_lite_error_t vg_lite_hal_operation_cache(void *handle, vg_lite_cache_op_t cache_op);
 
 /*!
- @brief export memory to dma buf, and get the dma buf fd 
+ @brief export memory to dma buf, and get the dma buf fd
  */
 vg_lite_error_t vg_lite_hal_memory_export(int32_t *fd);
 

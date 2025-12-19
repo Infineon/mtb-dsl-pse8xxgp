@@ -39,6 +39,7 @@
     <Variable id='isMXS22' value='`${("mxs22srss" eq getIpBlockName())}`' />
 
     <Variable id='is_psoc64' value='`${isMXS40 &amp;&amp; getOrDefault((getDeviceAttr("Security") ne "NA"), false)}`' />
+    <Variable id='is_mxs22srssv2_1' value='`${isMXS22 &amp;&amp; (getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 1)}`' />
   </Variables>
 
   <DRCs>
@@ -290,8 +291,11 @@
 
     <!-- Reset and configure platform clocks -->
     <ConfigInstruction value='/* Reset and configure platform clocks */' purpose='INITIALIZE' />
-    <ConfigInstruction value='Cy_WDT_Unlock(); /* Unlock WDT to be able to modify LFCLK registers */' purpose='INITIALIZE' />
-
+    <ConfigInstruction value='Cy_WDT_Unlock(); /* Unlock WDT to be able to modify LFCLK registers */' purpose='INITIALIZE' include='`${!is_mxs22srssv2_1}`'/>
+    <ConfigInstruction value='Cy_WDTx_Unlock(WDT_STRUCT0); /* Unlock WDT to be able to modify LFCLK registers */' purpose='INITIALIZE' include='`${is_mxs22srssv2_1}`'/>
+    <ConfigInstruction value='#if defined(SRSS_NUM_WDT_A) &amp;&amp; (SRSS_NUM_WDT_A > 0)' purpose='INITIALIZE' include='`${is_mxs22srssv2_1}`' />
+    <ConfigInstruction value='Cy_WDTx_Unlock(WDT_STRUCT1); /* Unlock WDT to be able to modify LFCLK registers */' purpose='INITIALIZE' include='`${is_mxs22srssv2_1}`'/>
+    <ConfigInstruction value='#endif /* defined(SRSS_NUM_WDT_A) &amp;&amp; (SRSS_NUM_WDT_A > 0) */' purpose='INITIALIZE' include='`${is_mxs22srssv2_1}`' />
     <ConfigInstruction value='Cy_SysClk_ClkFastSetDivider(0U);' purpose='INITIALIZE' include='`${hasBlock("srss[0].clock[0].fastclk[0]")}`' />
     <ConfigInstruction value='Cy_SysClk_ClkPeriSetDivider(1U);' purpose='INITIALIZE' include='`${hasBlock("srss[0].clock[0].periclk[0]")}`' />
     <ConfigInstruction value='Cy_SysClk_ClkSlowSetDivider(0U);' purpose='INITIALIZE' include='`${hasBlock("srss[0].clock[0].slowclk[0]")}`' />
@@ -461,16 +465,23 @@
       <Line value=''/>
       <Line value='#include "cy_sysclk.h"' />
       <Line value=''/>
+      <Line value='/**  HF Clock Configuration  */' include='`${NUM_HFROOT &gt; 0}`'/>
       <Line value='typedef struct' include='`${NUM_HFROOT &gt; 0}`' />
       <Line value='{' include='`${NUM_HFROOT &gt; 0}`' />
+      <Line value='    /**  HF clock source  */' include='`${NUM_HFROOT &gt; 0}`'/>
       <Line value='    cy_en_clkhf_in_sources_t source;' include='`${NUM_HFROOT &gt; 0}`' />
+      <Line value='    /**  HF clock divider  */' include='`${NUM_HFROOT &gt; 0}`'/>
       <Line value='    cy_en_clkhf_dividers_t divider;' include='`${NUM_HFROOT &gt; 0}`' />
       <Line value='} cycfg_clkhf_config_t;' include='`${NUM_HFROOT &gt; 0}`' />
       <Line value='' include='`${NUM_HFROOT &gt; 0}`' />
+      <Line value='/**  HF Clock Supervisor Configuration  */' include='`${CSV_PRESENT &gt; 0}`'/>
       <Line value='typedef struct' include='`${CSV_PRESENT &gt; 0}`' />
       <Line value='{' include='`${CSV_PRESENT &gt; 0}`' />
+      <Line value='    /**  HF Clock Supervisor reference clock  */' include='`${CSV_PRESENT &gt; 0}`'/>
       <Line value='    cy_en_clkhf_csv_ref_clk_t refClk;' include='`${CSV_PRESENT &gt; 0}`' />
+      <Line value='    /**  HF Clock Supervisor accuracy  */' include='`${CSV_PRESENT &gt; 0}`'/>
       <Line value='    uint32_t accuracy;' include='`${CSV_PRESENT &gt; 0}`' />
+      <Line value='    /**  HF Clock Supervisor action  */' include='`${CSV_PRESENT &gt; 0}`'/>
       <Line value='    cy_en_clkhf_csv_action_t action;' include='`${CSV_PRESENT &gt; 0}`' />
       <Line value='} cycfg_clkhf_csv_config_t;' include='`${CSV_PRESENT &gt; 0}`' />
       <Line value='' include='`${CSV_PRESENT &gt; 0}`' />

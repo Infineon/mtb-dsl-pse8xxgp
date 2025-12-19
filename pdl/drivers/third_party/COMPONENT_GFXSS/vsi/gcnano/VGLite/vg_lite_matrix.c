@@ -58,7 +58,7 @@ static void multiply(vg_lite_matrix_t * matrix, vg_lite_matrix_t * mult)
 {
     vg_lite_matrix_t temp;
     int row, column;
-    
+
     /* Process all rows. */
     for (row = 0; row < 3; row++) {
         /* Process all columns. */
@@ -135,7 +135,7 @@ vg_lite_error_t vg_lite_rotate(vg_lite_float_t degrees, vg_lite_matrix_t * matri
     /* Compuet cosine and sine values. */
     vg_lite_float_t cos_angle = cosf(angle);
     vg_lite_float_t sin_angle = sinf(angle);
-    
+
     /* Set rotation matrix. */
     vg_lite_matrix_t r = {
         {

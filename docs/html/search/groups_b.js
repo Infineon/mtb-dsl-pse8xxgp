@@ -13,6 +13,7 @@ var searchData=
   ['message_20authentication_20code_20_28cmac_2c_20hmac_29_10',['Message Authentication Code (CMAC, HMAC)',['../group__group__crypto__lld__mac.html',1,'']]],
   ['mipi_20dsi_20_20_20_20_20_28mipi_20display_20serial_20interface_29_11',['MIPI DSI     (MIPI Display Serial Interface)',['../group__group__mipidsi.html',1,'']]],
   ['mode_20flags_12',['Mode Flags',['../group__group__mipidsi__mode__macros.html',1,'']]],
-  ['mpc_20_20_20_20_20_20_20_20_20_20_28memory_20protection_20controller_29_13',['MPC          (Memory Protection Controller)',['../group__group__mpc.html',1,'']]],
-  ['ms_5fctl_20_20_20_20_20_20_20_28master_20security_20controller_29_14',['MS_CTL       (Master Security Controller)',['../group__group__ms__ctl.html',1,'']]]
+  ['month_20definitions_13',['Month definitions',['../group__group__rtc__month.html',1,'']]],
+  ['mpc_20_20_20_20_20_20_20_20_20_20_28memory_20protection_20controller_29_14',['MPC          (Memory Protection Controller)',['../group__group__mpc.html',1,'']]],
+  ['ms_5fctl_20_20_20_20_20_20_20_28master_20security_20controller_29_15',['MS_CTL       (Master Security Controller)',['../group__group__ms__ctl.html',1,'']]]
 ];

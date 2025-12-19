@@ -64,7 +64,7 @@
 *
 * MIPI-DSI Host Controller and D-PHY (MIPIDSI)
 * - DPI-2 and and DBI-2 Type B displays.
-* - Up to 2 data lanes, max 1.5 Gbps per lane. 
+* - Up to 2 data lanes, max 1.5 Gbps per lane.
 * - PLL for high-speed mode clock generation.
 * - Generic command interface (DCS and proprietary read & write).
 * - Video Pattern generator.
@@ -210,7 +210,7 @@ typedef enum
 typedef enum
 {
      CY_GFX_RLAD_NORMAL_OPERATION,   /**< No fail state or Normal Operation. */
-     CY_GFX_RLAD_AXI_ERROR,          /**< An AXI error response was received when reading compressed image data. */ 
+     CY_GFX_RLAD_AXI_ERROR,          /**< An AXI error response was received when reading compressed image data. */
      CY_GFX_RLAD_BUF_TOO_SMALL,      /**< The RLAD_SIZE setting is inconsistent with the compressed image data (image decompression not complete when end of buffer was reached). */
      CY_GFX_RLAD_BUF_TOO_LARGE,      /**< The RLAD_SIZE setting is inconsistent with the compressed image data (image decompression completed before end of buffer was reached). */
      CY_GFX_RLAD_DC_INVALID_SIZE,    /**< The DC was reading the first pixel of a frame when it was not expected. This means an inconsistent setup of RLAD and DC configuration. */
@@ -242,7 +242,7 @@ typedef enum {
     GFX_DISP_TYPE_DSI_DBI,
     GFX_DISP_TYPE_DSI_DPI
 }cy_en_gfx_display_type_t;
-  
+
 /** Display format type */
 typedef enum {
     /* DPI */
@@ -252,7 +252,7 @@ typedef enum {
     GFX_DPI_D16CFG3,
     GFX_DPI_D18CFG1,
     GFXSS_DPI_D18CFG2,
-  
+
      /* DBI */
     GFX_DBI_D8R3G3B2,
     GFX_DBI_D8R4G4B4,
@@ -303,7 +303,7 @@ typedef struct {
     bool     enable;                      /**<  Layer state */
 }cy_stc_gfx_cursor_config_t;
 
- 
+
 /** RLAD configuration structure */
 typedef struct
 {
@@ -351,7 +351,7 @@ typedef struct {
     gctUINT8                zorder;                /**< Z Order */
     gctBOOL                 layer_enable;          /**< Layer status */
     gctBOOL                 visibility;            /**< Layer visibility */
- 
+
  }cy_stc_gfx_layer_config_t;
 
 /** Display controller Configuration */
@@ -367,7 +367,7 @@ typedef struct {
    uint32_t                        display_width;         /**< Display width */
    uint32_t                        display_height;        /**< Display height */
    /** Interrupt mask refer to \ref group_graphics_macros_intrupter_macros */
-   uint32_t                        interrupt_mask;        
+   uint32_t                        interrupt_mask;
 } cy_stc_gfx_dc_config_t;
 
 /** Display controller context */
@@ -385,7 +385,7 @@ typedef struct {
    uint32_t                        display_width;         /**< Display width */
    uint32_t                        display_height;         /**< Display height */
    uint32_t                        interrupt_mask;        /**< Interrupt mask */
-      
+
     /** \endcond */
 }cy_stc_gfx_dc_context_t;
 
@@ -397,7 +397,7 @@ typedef struct {
     cy_en_gfx_disp_buffer_update_type_t      display_update_type; /**< Single / Dual / Split */
     uint32_t clockHz;     /**< The frequency of the clock connected to the GFXSS block in Hz. */
 }cy_stc_gfx_config_t;
- 
+
  /** The Graphics internal context data. The user must not modify it. */
 typedef struct
 {
@@ -609,7 +609,7 @@ __STATIC_INLINE cy_en_gfx_rlad_status_t Cy_GFXSS_Get_RLAD_Status(GFXSS_Type *bas
 * \return
 * CY_GFX_SUCCESS/CY_GFX_BAD_PARAM
 *
-* \note Framebuffer base address and stride for linear data should be 
+* \note Framebuffer base address and stride for linear data should be
 *       128-byte aligned.
 *
 *******************************************************************************/
@@ -636,8 +636,9 @@ cy_en_gfx_status_t Cy_GFXSS_Set_FrameBuffer(GFXSS_Type *base, uint32_t* gfx_laye
 * \return
 * CY_GFX_SUCCESS/CY_GFX_BAD_PARAM
 *
-* \note YUV Framebuffer base address and stride for linear data should be 
+* \note YUV Framebuffer base address and stride for linear data should be
 *       64-byte aligned.
+*       For YUY2_Packed Format uv_buffer can be set to NULL.
 *
 *******************************************************************************/
 cy_en_gfx_status_t Cy_GFXSS_Set_FrameBuffer_YUV(GFXSS_Type *base, uint32_t* y_buffer, uint32_t* uv_buffer, cy_stc_gfx_context_t *context);
@@ -879,7 +880,7 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
 * \param base
 * Pointer to the graphics sub system base address.
 *
-* \param start_line_offset 
+* \param start_line_offset
 * Start line offset from the top of the frame buffer, beginning of partial frame.
 *
 * \param end_line_offset

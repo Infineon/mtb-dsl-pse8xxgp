@@ -67,10 +67,10 @@
     <!-- Display Resolution -->
     <ParamRange id="display_width" name="Width" group="General" default="1" min="1" max="`${max_display_width}`" resolution="1" visible="true" editable="true" desc="Display Width." />
     <ParamRange id="display_height" name="Height" group="General" default="1" min="1" max="`${max_display_height}`" resolution="1" visible="true" editable="true" desc="Display Height." />
-	  
+
     <!-- FPS -->
     <ParamRange id="fps" name="Target FPS" group="General" default="60" min="1" max="60" resolution="1" visible="`${display_type eq GFX_DISP_TYPE_DSI_DPI}`" editable="true" desc="Frames Per Second." />
-    
+
     <!-- Display Format -->
     <ParamChoice id="format" name="Display Interface" group="General" default="`${(display_type eq GFX_DISP_TYPE_DBI_C) ? vivD1R5G6B5OP1 : ((display_type eq GFX_DISP_TYPE_DSI_DPI) ? vivD24 : vivD8R5G6B5)}`" visible="true" editable="true" desc="Select display interface." >
         <Entry name="DPI-24bit" value="vivD24" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" />
@@ -258,7 +258,7 @@
     <ParamRange id="layer0_width" name="Width" group="Graphics/Video Layer" default="`${display_width}`" min="1" max="`${max_display_width}`" resolution="1" visible="`${layer0_enabled}`" editable="true" desc="Graphics/Video Layer Width." />
     <ParamRange id="layer0_height" name="Height" group="Graphics/Video Layer" default="`${display_height}`" min="1" max="`${max_display_height}`" resolution="1" visible="`${layer0_enabled}`" editable="true" desc="Graphics/Video Layer Height." />
     <ParamRange id="layer0_zorder" name="Z Order" group="Graphics/Video Layer" default="0" min="0" max="2" resolution="1" visible="`${layer0_enabled}`" editable="true" desc="Graphics/Video Layer Height." />
-    
+
     <!-- Layer 1 -->
     <ParamBool id="layer1_enabled" name="Enable Overlay0" group="Layer Configuration" default="false" visible="true" editable="true" desc="Enable Overlay0." />
     <ParamBool id="layer1_visibility" name="Visibility" group="Overlay 0" default="true" visible="`${layer1_enabled}`" editable="true" desc="Toggle visibility for Overlay0." />
@@ -291,7 +291,7 @@
     <ParamRange id="layer2_height" name="Height" group="Overlay 1" default="`${display_height}`" min="1" max="`${max_display_height}`" resolution="1" visible="`${layer2_enabled}`" editable="true" desc="Overlay1 Height." />
     <ParamRange id="layer2_zorder" name="Z Order" group="Overlay 1" default="0" min="0" max="2" resolution="1" visible="`${layer2_enabled}`" editable="true" desc="Graphics/Video Layer Height." />
  </Parameters>
-  
+
 <DRCs>
     <DRC type="WARNING" text="Graphics/Video Layer stride (width * bytes per pixel) should be a multiple of 128 bytes as per Display Controller requirements."
          condition="`${(layer0_enabled eq false? 128 : (layer0_format eq vivRGB565) ? (layer0_width * 2) : ((layer0_format eq vivARGB8888) || (layer0_format eq vivARGB1555)) ? (layer0_width * 4) : (layer0_width)) % 128 != 0}`" />
@@ -300,17 +300,17 @@
     <DRC type="WARNING" text="Overlay 1 stride (width * bytes per pixel) should be a multiple of 128 bytes as per Display Controller requirements."
          condition="`${(layer2_enabled eq false? 128 : (layer2_format eq vivRGB565) ? (layer2_width * 2) : ((layer2_format eq vivARGB8888) || (layer2_format eq vivARGB1555)) ? (layer2_width * 4) : (layer2_width)) % 128 != 0}`" />
 </DRCs>
-  
+
   <ConfigFirmware>
     <ConfigInclude value="cy_graphics.h" include="true" />
     <ConfigInclude value="cy_sysclk.h" include="true" />
     <ConfigInclude value="cyhal_hwmgr.h" include="true" guard="defined (CY_USING_HAL)" />
-	  
-	<ConfigDefine name="GFXSS_HW" value="GFXSS" public="true" include="true" />  
+
+	<ConfigDefine name="GFXSS_HW" value="GFXSS" public="true" include="true" />
     <ConfigDefine name="GFXSS_GPU_IRQ" value="gfxss_interrupt_gpu_IRQn" public="true" include="true" />
     <ConfigDefine name="GFXSS_DC_IRQ" value="gfxss_interrupt_dc_IRQn" public="true" include="true" />
     <ConfigDefine name="GFXSS_MIPIDSI_IRQ" value="gfxss_interrupt_mipidsi_IRQn" public="true" include="true" />
-	
+
 	<ConfigStruct name="GFXSS_graphics_layer" type="cy_stc_gfx_layer_config_t" const="false" public="true" include="true">
       <Member name="layer_type" value="GFX_LAYER_GRAPHICS" />
       <Member name="buffer_address" value="(gctADDRESS *)CY_SOCMEM_RAM_BASE" />
@@ -344,7 +344,7 @@
       <Member name="buffer_address" value="(gctADDRESS *)CY_SOCMEM_RAM_BASE" />
       <Member name="uv_buffer_address" value="(gctADDRESS *)CY_SOCMEM_RAM_BASE" />
       <Member name="input_format_type" value="`${layer2_format}`" />
-      <Member name="tiling_type" value="vivLINEAR" /> 
+      <Member name="tiling_type" value="vivLINEAR" />
       <Member name="pos_x" value="`${layer2_pos_x}`" />
       <Member name="pos_y" value="`${layer2_pos_y}`" />
       <Member name="width" value="`${layer2_width}`" />
@@ -374,14 +374,14 @@
       <Member name="hdisplay" value="`${display_width}`" />
       <Member name="hsync_width" value="`${hsync_width}`" />
       <Member name="hfp" value="`${hfp}`" />
-      <Member name="hbp" value="`${hbp}`" /> 
+      <Member name="hbp" value="`${hbp}`" />
       <Member name="vdisplay" value="`${display_height}`" />
       <Member name="vsync_width" value="`${vsync_width}`" />
       <Member name="vfp" value="`${vfp}`" />
       <Member name="vbp" value="`${vbp}`" />
-      <Member name="polarity_flags" value="0" /> 
+      <Member name="polarity_flags" value="0" />
     </ConfigStruct>
-	
+
 	<ConfigStruct name="GFXSS_mipi_dsi_config" type="cy_stc_mipidsi_config_t" const="false" public="true" include="true">
       <Member name="virtual_ch" value="0" /> <!-- Default Channel 0 -->
       <Member name="num_of_lanes" value="`${no_of_dsi_lines}`" />
@@ -389,23 +389,23 @@
       <Member name="dpi_fmt" value="`${(display_type eq GFX_DISP_TYPE_DSI_DPI) ? ((format eq vivD24) ? &quot;CY_MIPIDSI_FMT_RGB888&quot; : ((format eq vivD18CFG2) ? &quot;CY_MIPIDSI_FMT_RGB666&quot; : &quot;CY_MIPIDSI_FMT_RGB565&quot;)):
 	                                   ((format eq vivD8R3G3B2) ? &quot;CY_MIPIDSI_FMT_8BIT_8BPP&quot; :
 									   (format eq vivD8R4G4B4) ? &quot;CY_MIPIDSI_FMT_8BIT_12BPP&quot; :
-									   (format eq vivD8R5G6B5) ? &quot;CY_MIPIDSI_FMT_8BIT_16BPP&quot; : 
+									   (format eq vivD8R5G6B5) ? &quot;CY_MIPIDSI_FMT_8BIT_16BPP&quot; :
 									   (format eq vivD8R6G6B6) ? &quot;CY_MIPIDSI_FMT_8BIT_18BPP&quot; :
 									   (format eq vivD9R6G6B6) ? &quot;CY_MIPIDSI_FMT_9BIT_18BPP&quot; :
 									   (format eq vivD16R3G3B2) ? &quot;CY_MIPIDSI_FMT_16BIT_8BPP&quot; :
 									   (format eq vivD16R4G4B4) ? &quot;CY_MIPIDSI_FMT_16BIT_12BPP&quot; :
 									   (format eq vivD16R5G6B5) ? &quot;CY_MIPIDSI_FMT_16BIT_16BPP&quot; :
-									   (format eq vivD16R6G6B6OP1) ? &quot;CY_MIPIDSI_FMT_16BIT_18BPP_OP1&quot; : 
-									   (format eq vivD16R6G6B6OP2) ? &quot;CY_MIPIDSI_FMT_16BIT_18BPP_OP2&quot; : 
+									   (format eq vivD16R6G6B6OP1) ? &quot;CY_MIPIDSI_FMT_16BIT_18BPP_OP1&quot; :
+									   (format eq vivD16R6G6B6OP2) ? &quot;CY_MIPIDSI_FMT_16BIT_18BPP_OP2&quot; :
 									   (format eq vivD16R8G8B8OP1) ? &quot;CY_MIPIDSI_FMT_16BIT_24BPP_OP1&quot; : &quot;CY_MIPIDSI_FMT_16BIT_24BPP_OP2&quot;)}`" />
       <Member name="dsi_mode" value="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)? &quot;DSI_VIDEO_MODE&quot; : &quot;DSI_COMMAND_MODE&quot;}`" />
       <Member name="max_phy_clk" value="2500000000" />
-      <Member name="mode_flags" value="`${(lp_mode_cmd_transfer) ? 
+      <Member name="mode_flags" value="`${(lp_mode_cmd_transfer) ?
                                                           (lp_mode_video_transfer ? mode_flags . &quot; | ENABLE_LOW_POWER_CMD | ENABLE_LOW_POWER&quot; : mode_flags . &quot; | ENABLE_LOW_POWER_CMD&quot;) :
 														  (lp_mode_video_transfer ? mode_flags . &quot; | ENABLE_LOW_POWER&quot; : mode_flags)}`"/>
       <Member name="display_params" value="&amp;GFXSS_mipidsi_display_params" />
     </ConfigStruct>
-	
+
 	<ConfigStruct name="GFXSS_config" type="cy_stc_gfx_config_t" const="false" public="true" include="true">
       <Member name="dc_cfg" value="&amp;GFXSS_dc_config" />
       <Member name="gpu_cfg" value="&amp;GFXSS_gpu_config" />

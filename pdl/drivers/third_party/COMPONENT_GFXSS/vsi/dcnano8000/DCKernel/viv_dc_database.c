@@ -399,4 +399,3 @@ _DCQueryFeatures(
     }
     return &gDCFeatureInfos[8]; //IFXEXP-176 Awaiting for new delivery from VSI
 }
-

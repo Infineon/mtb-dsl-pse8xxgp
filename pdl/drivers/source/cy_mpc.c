@@ -211,14 +211,14 @@ static cy_en_mpc_status_t _Cy_Mpc_WaitForInitCompletion(MPC_Type* base)
 * \param base
 * Base address of MPC being configured
 *
-* \param start 
+* \param start
 * The first block to be configured for provided blkIdx
 *
 * \param end
 * The last block to be configured for provided blkIdx
 *
 * \param mask
-* Mask to set to, for RoT version: 
+* Mask to set to, for RoT version:
 *   - bit[0] : NS/S
 *   - bit[1] : R
 *   - bit[2] : W
@@ -228,13 +228,13 @@ static cy_en_mpc_status_t _Cy_Mpc_WaitForInitCompletion(MPC_Type* base)
 *
 * \param blkIdx
 * Block index to configure
-* 
+*
 * \param rot
-* Specifies whether ROT or non-ROT version is to be configured 
+* Specifies whether ROT or non-ROT version is to be configured
 *
 * \param isPartial
 * Specifies whether not whole IDX is to be configured, if true masks new value of with an old one
-* Partial initialization is ignored during non ROT configuration  
+* Partial initialization is ignored during non ROT configuration
 *
 *******************************************************************************/
 static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uint32_t end, const uint32_t mask, uint32_t blkIdx, bool rot, bool isPartial)
@@ -242,8 +242,8 @@ static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uin
     CY_ASSERT(base != NULL);
     uint32_t fieldMaskVal = 0UL, value = 0UL;
     uint32_t fieldMask = (rot) ? 0xFUL : 0x1UL;
-    uint32_t blockBitCount = (rot) 
-        ? CY_MPC_ROT_BLOCK_BIT_COUNT 
+    uint32_t blockBitCount = (rot)
+        ? CY_MPC_ROT_BLOCK_BIT_COUNT
         : CY_MPC_BLOCK_BIT_COUNT;
 
     for (uint32_t i = start; i <= end; i++)
@@ -251,7 +251,7 @@ static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uin
         fieldMaskVal |= (fieldMask << (blockBitCount * i));
         value |= (mask << (blockBitCount * i));
     }
-    
+
     if (rot) {
         base->ROT_BLK_IDX = blkIdx;
         base->ROT_BLK_LUT = ((isPartial) ? ((base->ROT_BLK_LUT & ~fieldMaskVal) | value) : value);
@@ -284,7 +284,7 @@ static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uin
 * Mask to set to
 *
 * \param rot
-* Specifies whether ROT or non-ROT version is to be configured 
+* Specifies whether ROT or non-ROT version is to be configured
 *
 *******************************************************************************/
 static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, const uint32_t size, const uint32_t blockSize, const uint32_t mask, bool rot)
@@ -294,7 +294,7 @@ static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, c
     uint32_t totalBlocks = size/blockSize;
     uint32_t freeBlocks = blocksPerIdx - start;
 
-    uint32_t end = 0, newAddr = 0, newSize = 0; 
+    uint32_t end = 0, newAddr = 0, newSize = 0;
     if (totalBlocks <= freeBlocks)
     {
         end = (totalBlocks + start - 1UL) % blocksPerIdx;
@@ -305,7 +305,7 @@ static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, c
         newAddr = ((address/(blocksPerIdx * blockSize)) + 1UL) * blockSize * blocksPerIdx;
         newSize = size - (freeBlocks * blockSize);
     }
-    
+
     uint32_t blkIdx = address/(blockSize * blocksPerIdx);
     _Cy_Mpc_ConfigHelper(base, start, end, mask, blkIdx, rot, true);
 
@@ -333,7 +333,7 @@ static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, c
 * Function Name: Cy_Mpc_ConfigRotMpcStruct
 ****************************************************************************//**
 *
-* \brief Initializes the referenced mpc by setting the Protection Context (PC), 
+* \brief Initializes the referenced mpc by setting the Protection Context (PC),
 * NS/S and RW/R/W permissions. This is called by ROT (Root of Trust) module.
 *
 *
@@ -367,7 +367,7 @@ cy_en_mpc_status_t Cy_Mpc_ConfigRotMpcStruct(MPC_Type* base, const uint32_t addO
     }
 
     uint32_t blockSize = CY_MPC_GET_BLOCK_SIZE(base);
-    
+
     /* Check address and size boundaries */
     if ((addOffset%(blockSize) != 0UL) ||
         (size%(blockSize))){
@@ -470,7 +470,7 @@ cy_en_mpc_status_t Cy_Mpc_ConfigMpcStruct(MPC_Type* base, const uint32_t addOffs
     {
         return CY_MPC_INVALID_STATE;
     }
-    
+
     /* Disable auto increment */
     uint8_t autoInc = (uint8_t)_FLD2VAL(RAMC_MPC_CTRL_AUTO_INC, base->ROT_CTRL);
     Cy_Mpc_AutoInc(base, 0u);

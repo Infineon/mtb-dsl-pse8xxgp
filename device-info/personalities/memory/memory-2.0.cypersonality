@@ -28,6 +28,7 @@
 
 <PersonalityTemplate id='memory' name='Memory Regions' version='2.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v14'>
   <Constants>
+    <Const id="PROTECTION_LOC" value='vres[0].protection[0]'/>
     <Const id='MAX_REGIONS' value='64' />
     <Const id='MAX_CORES' value='4' />
     <Const id='MAX_VIEW_MAPS' value='4' />
@@ -85,6 +86,8 @@
   </Parameters>
 
   <Variables>
+    <Variable id='domain_reserved' value='`${getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")}`' />
+
     <Variable id='numCores' value='`${getVirtualCoreCount()}`'/>
     <Repeat count='$MAX_CORES' repeatId='core'>
       <Variable id='coreId$idx{core}' value='`${$idx{core} &lt; numCores ? splitAt(getVirtualCoreDefineNames(), $idx{core}) : ""}`'/>
@@ -134,6 +137,7 @@
     <Variable id='invalidUsedMemoryIdsCnt' value='`${getTclVar("invalidUsedMemoryIdsCnt", tclData)}`'/>
     <Variable id='invalidUsedMemoryIds' value='`${getTclVar("invalidUsedMemoryIds", tclData)}`'/>
     <Variable id='invalidUsedMemoryId$idx{mem}' value='`${$idx{mem} &lt; invalidUsedMemoryIdsCnt ? splitAt(invalidUsedMemoryIds, $idx{mem}) : ""}`' repeatCount='$MAX_MEMORIES' repeatId='mem' />
+    <Variable id='memReportRegionCount' value='`${getTclVar("memReportRegionCount", tclData)}`'/>
   </Variables>
 
   <DRCs>
@@ -1488,6 +1492,25 @@
       <Line value='        }' />
       <Line value='    ],' />
       <Line value='    "version" : 1' />
+      <Line value='}' />
+    </ConfigFile>
+
+    <!-- Memory Report JSON file -->
+    <ConfigFile name='device_mem.json'>
+      <Line value='{' />
+      <Line value='    "version" : 1.0,' />
+      <Line value='    "memoryData" :' />
+      <Line value='    {' />
+      <Line value='        "physical" :' />
+      <Line value='        [' />
+      <Line value='            `${($idx == (numMemories - 1)) ? getTclVar("memReportPhysEntry$idx", tclData) : getTclVar("memReportPhysEntry$idx", tclData) . ","}`' include='`${$idx &lt; numMemories}`' repeatCount='$MAX_MEMORIES' />
+      <Line value='        ],' />
+      <Line value='        "region" :' />
+      <Line value='        [' />
+      <!-- Do not include entries for any regions that are associated with the reserved domain -->
+      <Line value='            `${($idx == (memReportRegionCount - 1)) ? getTclVar("memReportRegionEntry$idx", tclData) : getTclVar("memReportRegionEntry$idx", tclData) . ","}`' include='`${$idx &lt; memReportRegionCount}`' repeatCount='`${memReportRegionCount}`' />
+      <Line value='        ]' />
+      <Line value='    }' />
       <Line value='}' />
     </ConfigFile>
   </ConfigFirmware>

@@ -2,13 +2,14 @@
 * \file cy_rtc_srf.h
 * \version 2.100
 *
-* This file provides macros and exposes operations for the APIs for the Secure
-* Aware Real-Time Clock (RTC).
+* \brief
+* This file provides macros and exposes operations for the APIs for the Secure Aware Real-Time Clock (RTC).
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +23,8 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_rtc_srf
@@ -43,7 +44,8 @@
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE_RTC) */
 
 #if !defined(_CY_PDL_RTC_PPC_SECURED_RTC)
-#define _CY_PDL_RTC_PPC_SECURED_RTC		        (CYCFG_PPC_SECURED_RTC_BACKUP)
+/** Macro to identify the RTC driver as secured */
+#define _CY_PDL_RTC_PPC_SECURED_RTC             (CYCFG_PPC_SECURED_RTC_BACKUP)
 #endif /* !defined(_CY_PDL_RTC_PPC_SECURED_RTC) */
 
 #if (CY_PDL_ENABLE_SECURE_AWARE_RTC && _CY_PDL_RTC_PPC_SECURED_RTC)

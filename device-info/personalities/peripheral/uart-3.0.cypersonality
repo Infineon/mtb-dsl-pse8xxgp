@@ -154,9 +154,9 @@
     <ParamString id='hfclockperi' name='PCLK Destination Clock' group='Internal' default='srss[0].clock[0].periclk[0]' visible='false' editable='false' desc='String variable used for source peri clock.' />
     <ParamString id='hfclock1' name='PCLK Destination Clock' group='Internal' default='srss[0].clock[0].hfclk[1]' visible='false' editable='false' desc='String variable used for source HF clock1.' />
     <ParamString id='hfclock2' name='PCLK Destination Clock' group='Internal' default='srss[0].clock[0].hfclk[2]' visible='false' editable='false' desc='String variable used for source HF clock2.' />
-    <ParamString id='hfclock10' name='PCLK Destination Clock' group='Internal' default='srss[0].clock[0].hfclk[10]' visible='false' editable='false' desc='String variable used for source HF clock10.' />
+    <ParamString id='hfclock_mxs22' name='PCLK Destination Clock' group='Internal' default='`${hasBlock(&quot;srss[0].clock[0].hfclk[10]&quot;) ? &quot;srss[0].clock[0].hfclk[10]&quot; : &quot;srss[0].clock[0].hfclk[2]&quot;}`' visible='false' editable='false' desc='String variable used for source HF on mxs22.' />
 
-    <ParamString id='hfclocksource' name='PCLK Destination' group='Internal' default='`${((ipName ne "mxs22scb") ? ((version eq 1)  ? hfclockperi : ((version eq 4) ? hfclock1 : hfclock2)) : hfclock10) }`' visible='false' editable='false' desc='Generates PCLK connection define.' />
+    <ParamString id='hfclocksource' name='PCLK Destination' group='Internal' default='`${((ipName ne "mxs22scb") ? ((version eq 1)  ? hfclockperi : ((version eq 4) ? hfclock1 : hfclock2)) : hfclock_mxs22) }`' visible='false' editable='false' desc='Generates PCLK connection define.' />
 
     <ParamRange  id='clkPeriHz' name='clkPeriHz' group='Internal' default='`${getExposedMember(hfclocksource, "frequency")}`' min='0' max='400000000' resolution='1' visible='false' editable='false' desc='Clk_Peri frequency.' />
     <ParamRange  id='uartDiv' name='uartDiv' group='Internal' default='`${clkPeriHz / cast(float, uartClkHz)}`' min='1' max='16777216' resolution='1' visible='false' editable='false' desc='UART pclk divider value.' />

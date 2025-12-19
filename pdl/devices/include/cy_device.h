@@ -78,7 +78,7 @@
 CY_MISRA_FP_BLOCK_START('MISRA C-2012 Rule 8.6', 1, \
 'Checked manually. The definition is a part of linker script.')
 
-/* Device descriptor type */
+/** Device descriptor type */
 typedef struct
 {
     /* Base HW addresses */
@@ -2681,7 +2681,7 @@ extern const uint32_t IPC_BASE_PTR[CY_IPC_INSTANCES];
                                                                                     IPC_BASE_PTR[((ipcIndex)-((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE))/CY_IPC_CHANNELS_PER_INSTANCE]) : \
                                                                                     ( (ipcIndex == 0) ? (CY_IPC_STRUCT_PTR_FOR_IP(0,IPC_BASE_PTR[0])) : \
                                                                                     ((ipcIndex == (CY_IPC_CHANNELS_PER_INSTANCE * CY_IPC_INSTANCES)) ? \
-                                                                                    (CY_IPC_STRUCT_PTR_FOR_IP(((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE),IPC_BASE_PTR[CY_IPC_INSTANCES -1])) : NULL   ) )) 
+                                                                                    (CY_IPC_STRUCT_PTR_FOR_IP(((ipcIndex)%CY_IPC_CHANNELS_PER_INSTANCE),IPC_BASE_PTR[CY_IPC_INSTANCES -1])) : NULL   ) ))
 #define CY_IPC_INTR_STRUCT_PTR(ipcIntrIndex)                                     CY_IPC_INTR_STRUCT_PTR_FOR_IP(((ipcIntrIndex)%CY_IPC_INTERRUPTS_PER_INSTANCE), IPC_BASE_PTR[((ipcIntrIndex)-((ipcIntrIndex)%CY_IPC_INTERRUPTS_PER_INSTANCE))/CY_IPC_INTERRUPTS_PER_INSTANCE])
 /* ipcChannel comprises of total number of channels present in all IPC IP instances */
 #define CY_IPC_PIPE_COMPUTE_INTR_MASK(ipcChannel, ipcIntrmask)                   (((ipcChannel)<CY_IPC_CHANNELS_PER_INSTANCE)?(ipcIntrmask):((((ipcIntrmask)&0xFFFF0000U) != 0x0U)?((ipcIntrmask)>>CY_IPC_CHANNELS_PER_INSTANCE):(ipcIntrmask)))

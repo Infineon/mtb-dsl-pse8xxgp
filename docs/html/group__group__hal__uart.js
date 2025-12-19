@@ -17,6 +17,7 @@ var group__group__hal__uart =
       [ "MTB_HAL_UART_IRQ_TX_FIFO", "group__group__hal__uart.html#gga43a7a5f71f84d21cfb7d01525ef73624a4bb28f206d6810858308c819a60fd6ff", null ],
       [ "MTB_HAL_UART_IRQ_RX_FIFO", "group__group__hal__uart.html#gga43a7a5f71f84d21cfb7d01525ef73624a5221cc455d6c2dddc89820588f6b4598", null ]
     ] ],
+    [ "mtb_hal_uart_enable", "group__group__hal__uart.html#ga0426883e4f4e18a96f10e48d2b044c2d", null ],
     [ "mtb_hal_uart_set_baud", "group__group__hal__uart.html#ga85bed7153936d5ab91f5672496f2a03e", null ],
     [ "mtb_hal_uart_get", "group__group__hal__uart.html#ga4f5f549b5109783a570862a3d92f1b4f", null ],
     [ "mtb_hal_uart_put", "group__group__hal__uart.html#gabe0ddbacc05c603d0b04d9c8df6af3e9", null ],
@@ -30,5 +31,6 @@ var group__group__hal__uart =
     [ "mtb_hal_uart_is_rx_active", "group__group__hal__uart.html#gaeaa3b7065039e8c0a979656d76276b47", null ],
     [ "mtb_hal_uart_register_callback", "group__group__hal__uart.html#ga487dd43d7c3ff9aa3796befc88cb5201", null ],
     [ "mtb_hal_uart_enable_event", "group__group__hal__uart.html#ga4174a8b56f39e4855daa81c833cd3388", null ],
-    [ "mtb_hal_uart_process_interrupt", "group__group__hal__uart.html#ga610e83a5a1614589dd4c436605b7f8f1", null ]
+    [ "mtb_hal_uart_process_interrupt", "group__group__hal__uart.html#ga610e83a5a1614589dd4c436605b7f8f1", null ],
+    [ "mtb_hal_uart_write_string", "group__group__hal__uart.html#gac39e5980b7840909a21b5a1d8fa3c5c0", null ]
 ];

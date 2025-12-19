@@ -2,12 +2,14 @@
 * \file cy_smif.h
 * \version 2.130
 *
+* \brief
 * Provides an API declaration of the Cypress SMIF driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2025 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_smif
@@ -493,7 +496,7 @@ extern "C" {
 
 #define CY_SMIF_CMD_MMIO_FIFO_WR_RWDS_REFRESH_Msk      (0x00100000UL)   /* DATA[20]     RWDS Refresh indicator   */
 #define CY_SMIF_CMD_MMIO_FIFO_WR_RWDS_REFRESH_Pos      (20UL)            /* [20]        RWDS Refresh indicator   */
- 
+
 
 /** \endcond */
 /** \} group_smif_macros */
@@ -656,7 +659,7 @@ typedef enum
 #define CY_SMIF_CLKOUT_NON_ZERO_MDL_TAP_MAX_SDR  (CY_SMIF_MDL_13_TAP_DELAY)  /* In SDR mode, when CLKOUT is not divide by two, this is the maximum acceptable MDL tap */
 #define CY_SMIF_CLKOUT_NON_ZERO_MDL_TAP_MIN_DDR  (CY_SMIF_MDL_3_TAP_DELAY)   /* In DDR mode, when CLKOUT is not divide by two, this is the minimum acceptable MDL tap */
 #define CY_SMIF_CLKOUT_NON_ZERO_MDL_TAP_MAX_DDR  (CY_SMIF_MDL_14_TAP_DELAY)  /* In DDR mode, when CLKOUT is not divide by two, this is the maximum acceptable MDL tap */
- 
+
 typedef enum
 {
     CY_SMIF_DELAY_TAP_DISABLE = 0,    /**< The SMIF Delay tap disable */
@@ -751,8 +754,8 @@ typedef enum
    CY_SMIF_SEL_INVERTED_SPHB_RWDS_CLK = 6U,  /**< The SMIF internal inverted clock */
    CY_SMIF_SEL_SPHB_RWDS_CLK = 7U,  /**< The SMIF internal inverted clock */
 } cy_en_smif_clk_select_t;
- 
- 
+
+
 /** Specifies enabled type of SMIF cache. */
 typedef enum
 {
@@ -885,7 +888,7 @@ typedef struct
     uint32_t                              phyAddr0;        /**< This specifies remapped address on PORT0 */
     uint32_t                              phyAddr1;        /**< This specifies remapped address on PORT1 */
 } cy_stc_smif_bridge_interleave_remap_t;
- 
+
 /** Specifies the data line index. */
 typedef enum
 {
@@ -1164,7 +1167,7 @@ void Cy_SMIF_DeviceTransfer_ClearMergeTimeout(SMIF_Type *base, cy_en_smif_slave_
 cy_en_smif_status_t Cy_SMIF_Set_DelayTapSel(SMIF_Type *base, uint8_t tapSel);
 uint8_t Cy_SMIF_Get_DelayTapSel(SMIF_Type *base);
 cy_en_smif_status_t Cy_SMIF_Set_Sdl_DelayTapSel(SMIF_CORE_DEVICE_Type *smif_device_base, uint8_t tapSel);
- 
+
 __STATIC_INLINE bool Cy_SMIF_IsEnabled(SMIF_Type *base);
 __STATIC_INLINE void Cy_SMIF_Disable(SMIF_Type *base);
 __STATIC_INLINE void  Cy_SMIF_SetInterruptMask(SMIF_Type *base, uint32_t interrupt);
@@ -1216,7 +1219,7 @@ uint8_t Cy_SMIF_GetMasterDLPSize(SMIF_Type *base);
 uint8_t Cy_SMIF_GetTapNumCapturedCorrectDLP(SMIF_Type *base, uint8_t bit);
 uint32_t CY_SMIF_GetDelayTapsNumber(volatile void *base);
 #endif /* DLP_PRESENT */
- 
+
 cy_en_smif_status_t Cy_SMIF_InitCache(SMIF_CACHE_BLOCK_Type *base, const cy_stc_smif_cache_config_t *cache_config);
 
 cy_en_smif_status_t Cy_SMIF_Clean_All_Cache(SMIF_CACHE_BLOCK_Type *base);

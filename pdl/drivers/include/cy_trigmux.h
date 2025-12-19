@@ -1,13 +1,16 @@
-/*******************************************************************************
+/***************************************************************************//**
 * \file cy_trigmux.h
 * \version 1.70
 *
-*  This file provides constants and parameter values for the Trigger multiplexer driver.
+* \brief
+* This file provides constants and parameter values for the Trigger multiplexer driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
+* SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_trigmux
@@ -165,7 +169,7 @@ extern "C" {
                                                  (CY_TRIGGER_TWO_CYCLES == (cycles)) || \
                                                  (CY_TRIGGER_INFINITE   == (cycles)))
 #define CY_TRIGMUX_IS_CYCLES_VALID(cycles)      (CY_TRIGMUX_V2_IS_CYCLES_VALID(cycles))
- 
+
 
 # if defined (CY_IP_MXSPERI) && (CY_IP_MXSPERI_INSTANCES == 2)
 #define CY_TRIGMUX_INTRIG_MASK                  (PERI_TR_CMD_GROUP_SEL_Msk | PERI_TR_GR_TR_OUT_CTL_TR_SEL_Msk | PERI_INSTANCE_1_IDENT_Msk)
@@ -191,7 +195,7 @@ extern "C" {
                                                  (0UL != ((oneTrg) & PERI_V2_TR_CMD_OUT_SEL_Msk)) && \
                                                  (0UL != (_FLD2VAL(PERI_V2_TR_CMD_GROUP_SEL, oneTrg) & (uint32_t)CY_TRIGMUX_ONETRIG_GR_START)))
 #endif
- 
+
 # if defined (CY_IP_MXSPERI) && (CY_IP_MXSPERI_INSTANCES == 2U)
 #define CY_TRIGMUX_TRIGLINE_MASK                (PERI_TR_CMD_OUT_SEL_Msk | CY_PERI_TR_CMD_GROUP_SEL_Msk | CY_PERI_TR_CTL_SEL_Msk | PERI_INSTANCE_1_IDENT_Msk)
 #else

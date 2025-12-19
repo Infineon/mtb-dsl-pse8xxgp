@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__syslib__functions.html',
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -446,9 +446,9 @@ This function also resets the WCO trimming value - use the Cy_SysLib_GetWcoTrim 
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">    Cy_SysLib_SetWcoTrim(wcoTrim); <span class="comment">/* Restore the WCO trim value */</span></div>
-<div class="ttc" id="agroup__group__syslib__enumerated__types_html_gga97d0b049220b931606e2ae2e144994e1a7d26e21cf3c67f4202b35c3c6bcde534"><div class="ttname"><a href="group__group__syslib__enumerated__types.html#gga97d0b049220b931606e2ae2e144994e1a7d26e21cf3c67f4202b35c3c6bcde534">CY_SYSLIB_SUCCESS</a></div><div class="ttdeci">@ CY_SYSLIB_SUCCESS</div><div class="ttdoc">The success status code.</div><div class="ttdef"><b>Definition:</b> cy_syslib.h:236</div></div>
+<div class="ttc" id="agroup__group__syslib__enumerated__types_html_gga97d0b049220b931606e2ae2e144994e1a7d26e21cf3c67f4202b35c3c6bcde534"><div class="ttname"><a href="group__group__syslib__enumerated__types.html#gga97d0b049220b931606e2ae2e144994e1a7d26e21cf3c67f4202b35c3c6bcde534">CY_SYSLIB_SUCCESS</a></div><div class="ttdeci">@ CY_SYSLIB_SUCCESS</div><div class="ttdoc">The success status code.</div><div class="ttdef"><b>Definition:</b> cy_syslib.h:239</div></div>
 <div class="ttc" id="agroup__group__syslib__functions_html_ga9d2ffe4829c636ad78eaae5043fd6ae6"><div class="ttname"><a href="group__group__syslib__functions.html#ga9d2ffe4829c636ad78eaae5043fd6ae6">Cy_SysLib_DelayUs</a></div><div class="ttdeci">void Cy_SysLib_DelayUs(uint16_t microseconds)</div><div class="ttdoc">The function delays by the specified number of microseconds.</div><div class="ttdef"><b>Definition:</b> cy_syslib.c:119</div></div>
-<div class="ttc" id="agroup__group__syslib__functions_html_gaaea5b87a95001a0b3b2cf128957c58ea"><div class="ttname"><a href="group__group__syslib__functions.html#gaaea5b87a95001a0b3b2cf128957c58ea">Cy_SysLib_GetResetStatus</a></div><div class="ttdeci">CY_SECTION_INIT_CODECOPY_BEGIN __STATIC_INLINE cy_en_syslib_status_t Cy_SysLib_GetResetStatus(void)</div><div class="ttdoc">This function returns the BACKUP-&gt;RESET bit value.</div><div class="ttdef"><b>Definition:</b> cy_syslib.h:1154</div></div>
+<div class="ttc" id="agroup__group__syslib__functions_html_gaaea5b87a95001a0b3b2cf128957c58ea"><div class="ttname"><a href="group__group__syslib__functions.html#gaaea5b87a95001a0b3b2cf128957c58ea">Cy_SysLib_GetResetStatus</a></div><div class="ttdeci">CY_SECTION_INIT_CODECOPY_BEGIN __STATIC_INLINE cy_en_syslib_status_t Cy_SysLib_GetResetStatus(void)</div><div class="ttdoc">This function returns the BACKUP-&gt;RESET bit value.</div><div class="ttdef"><b>Definition:</b> cy_syslib.h:1157</div></div>
 <div class="ttc" id="agroup__group__syslib__functions_html_gadb2c8e123ba3a0376a14871e58230321"><div class="ttname"><a href="group__group__syslib__functions.html#gadb2c8e123ba3a0376a14871e58230321">Cy_SysLib_ResetBackupDomain</a></div><div class="ttdeci">cy_en_syslib_status_t Cy_SysLib_ResetBackupDomain(void)</div><div class="ttdoc">This function resets the backup domain power to avoid the ILO glitch.</div><div class="ttdef"><b>Definition:</b> cy_syslib.c:181</div></div>
 </div><!-- fragment --> </dd></dl>
 
@@ -843,7 +843,7 @@ The CY_ARM_FAULT_DEBUG macro defines if the Fault Handler is enabled. By default
 </div><div class="memdoc">
 
 <p>This function will set Warm boot entry point address to a location read by BootROM. </p>
-<p >This function is used only before entering DeepSleep-RAM and not effective in any other sleep mode. Before entering CY_SYSPM_MODE_DEEPSLEEP_RAM, user needs to set entry point to a function located in RAM Image using <a class="el" href="group__group__syslib__functions.html#gabc2fac2da2d735bedac2a57d45d53fac" title="This function will set Warm boot entry point address to a location read by BootROM.">Cy_Syslib_SetWarmBootEntryPoint()</a>, refer Cy_SysPm_SetDeepSleepMode().</p>
+<p >This function is used only before entering DeepSleep-RAM and not effective in any other sleep mode. Before entering CY_SYSPM_MODE_DEEPSLEEP_RAM, user needs to set entry point to a function located in RAM Image using <a class="el" href="group__group__syslib__functions.html#gabc2fac2da2d735bedac2a57d45d53fac" title="This function will set Warm boot entry point address to a location read by BootROM.">Cy_Syslib_SetWarmBootEntryPoint()</a>, refer <a class="el" href="group__group__syspm__functions__power.html#gaaff87adb57f74191a344e996517bd74b" title="Allow users to implement any context store required before entering deep sleep in RTOS based builds,...">Cy_SysPm_SetDeepSleepMode()</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">entryPoint</td><td>Address of the function that needs to be entered after WARM boot.</td></tr>

@@ -179,7 +179,7 @@ proc calculate_sau_regions {} {
             set attrs [dict get $::param_dict "mem_reg_attr$idx"]
             set phys_start [dict get $::param_dict "mem_reg_phys_offset$idx"]
             set phys_size [dict get $::param_dict "mem_reg_phys_size$idx"]
-            set phys_end [expr {$phys_start + $phys_size}]   
+            set phys_end [expr {$phys_start + $phys_size}]
 
             lappend filteredAttrs $attrs
             lappend filteredStarts [format "%#08X" $phys_start]
@@ -214,14 +214,14 @@ proc remove_nsc_from_sau {sauAttrs sauStarts sauEnds} {
     for {set idx 0} {$idx < $idauCnt} {incr idx} {
         set start [dict get $::param_dict "IDAUstart$idx"]
         set size [dict get $::param_dict "IDAUsize$idx"]
-        set end [expr {$start + $size - 1}]   
+        set end [expr {$start + $size - 1}]
         set attrs [dict get $::param_dict "IDAUattribute$idx"]
 
         lappend idauAttrsList $attrs
         lappend idauStartsList [format "%#08X" $start]
         lappend idauEndsList [format "%#08X" $end]
     }
-    
+
     # Build a set of NSC regions from IDAU
     set nscStartsSet {}
     set nscEndsSet {}
@@ -231,7 +231,7 @@ proc remove_nsc_from_sau {sauAttrs sauStarts sauEnds} {
             lappend nscEndsSet [string trim [lindex $idauEndsList $i]]
         }
     }
-    
+
     # Adapt SAU regions to exclude NSC regions from IDAU only if SAU attr is NON_SECURE
     set newSauAttrs {}
     set newSauStarts {}
@@ -288,7 +288,7 @@ proc remove_nsc_from_sau {sauAttrs sauStarts sauEnds} {
             lappend newSauEnds $sauEnd
         }
     }
-    
+
     return [dict create attrs [join $newSauAttrs ","] starts [join $newSauStarts ","] ends [join $newSauEnds ","]]
 }
 

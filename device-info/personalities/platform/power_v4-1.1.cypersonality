@@ -31,7 +31,7 @@
     <Const id='BACKUPSRC' value='VDDD'/>
     <Const id='MIN_CURR_REGULATOR' value='CY_SYSPM_LDO_MODE_NORMAL'/>
   </Constants>
-  
+
   <FittingRules>
     <MappingRules>
       <IpBlock name='mxs22srss' />
@@ -53,9 +53,11 @@
     <!-- Documentation -->
     <ParamDoc id='pdlDoc' name='SysPm API Reference' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__syspm.html' linkText='Open SysPm Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
+    <ParamBool id='is_mxs22srssv1' name='is_mxs22srssv1' group="" default='`${(getVersion() eq 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v1' />
+    <ParamBool id='is_mxs22srssv2_1' name='is_mxs22srssv2_1' group="" default='`${(getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v2.1' />
     <ParamChoice id='actPwrMode' name='System Active Power Profile' group='General' default='POWER_PROFILE_LP' visible='true'
       desc='Selects the system operating power mode.'>
-      <Entry name='Power Profile - ULP   (Ultra Low Power Profile  - vccd = 0.7V, vccsram = 0.8V )' value='POWER_PROFILE_ULP' visible='true' />
+      <Entry name='Power Profile - ULP   (Ultra Low Power Profile  - vccd = 0.7V, vccsram = 0.8V )' value='POWER_PROFILE_ULP' visible='`${is_mxs22srssv1}`' />
       <Entry name='Power Profile - LP    (Low Power Profile - vccd = 0.8V, vccsram = 0.8V )' value='POWER_PROFILE_LP' visible='true' />
       <Entry name='Power Profile - HP    (High Performance Profile - vccd = 0.9V, vccsram = 0.9V )' value='POWER_PROFILE_HP' visible='true' />
     </ParamChoice>
@@ -69,7 +71,7 @@
     <ParamBool id='pmicEnable' default='false' visible='false' />
 
     <!-- Power domains -->
-    <ParamBool id='pd1Enable' name='PD1 power domain' group='Power domains' default='true' visible='true'
+    <ParamBool id='pd1Enable' name='PD1 power domain' group='Power domains' default='`${is_mxs22srssv1}`' visible='`${is_mxs22srssv1}`'
       desc='Enables or disables PD1 power domain. It is required for peripherals like SMIF, SOCMEM, TCM, CM55, U55.' />
 
     <!-- Idle Power modes -->
@@ -80,6 +82,7 @@
       <Entry name='System Deep Sleep' value='CY_CFG_PWR_MODE_DEEPSLEEP' visible='true' />
       <Entry name='System Deep Sleep RAM' value='CY_CFG_PWR_MODE_DEEPSLEEP_RAM' visible='true' />
       <Entry name='System Deep Sleep OFF' value='CY_CFG_PWR_MODE_DEEPSLEEP_OFF' visible='true' />
+      <Entry name="System Hibernate RAM" value="CY_CFG_PWR_MODE_HIBERNATE_RAM" visible="`${is_mxs22srssv2_1}`" />
     </ParamChoice>
 
     <ParamRange id='deepsleepLatency' name='Deep Sleep Latency (ms)' group='System Idle Parameters' default='0' min='0' max='1000' resolution='1' visible='true'
@@ -239,6 +242,7 @@
     <ConfigDefine name='CY_CFG_PWR_MODE_DEEPSLEEP'      public='true' value='0x10UL' />
     <ConfigDefine name='CY_CFG_PWR_MODE_DEEPSLEEP_RAM'  public='true' value='0x11UL' />
     <ConfigDefine name='CY_CFG_PWR_MODE_DEEPSLEEP_OFF'  public='true' value='0x12UL' />
+    <ConfigDefine name="CY_CFG_PWR_MODE_HIBERNATE_RAM"  public="true" value="0x13UL" include="`${is_mxs22srssv2_1}`" />
     <ConfigDefine name='CY_CFG_PWR_SYS_IDLE_MODE'       public='true' value='`${idlePwrMode}`'/>
     <ConfigDefine name='CY_CFG_PWR_DEEPSLEEP_LATENCY'   public='true' value='`${deepsleepLatency}`UL' include='true' />
     <ConfigDefine name='CY_CFG_PWR_SYS_ACTIVE_MODE'     public='true' value='CY_CFG_PWR_MODE_`${activePowerMode}`'/>
@@ -272,7 +276,7 @@
     <!-- The U55 is explicitly turned either on or off. It never goes into DeepSleep -->
     <ConfigDefine name='CY_CFG_PWR_PPU_U55'      public='true' value='PPU_V1_MODE_ON' />
 
-    <ConfigFunction signature='void init_cycfg_ns_power(void)' public='true' replicateForAliases='false'>
+    <ConfigFunction signature='void init_cycfg_ns_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv1}`'>
       <Line value='/* Update global variables used by DeepSleep functions */' />
       <Line value='#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)' />
       <Line value='    Cy_SysPm_DeepSleepSetup(CY_SYSPM_MODE_DEEPSLEEP);' />
@@ -284,7 +288,19 @@
       <Line value='' />
     </ConfigFunction>
 
-    <ConfigFunction signature='void init_cycfg_power(void)' public='true' replicateForAliases='false'>
+    <ConfigFunction signature='void init_cycfg_ns_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv2_1}`'>
+      <Line value='/* Update global variables used by DeepSleep functions */' />
+      <Line value='#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)' />
+      <Line value='    Cy_SysPm_SetDeepSleepMode(CY_SYSPM_MODE_DEEPSLEEP);' />
+      <Line value='#elif (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP_RAM)' />
+      <Line value='    Cy_SysPm_SetDeepSleepMode(CY_SYSPM_MODE_DEEPSLEEP_RAM);' />
+      <Line value='#elif (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP_OFF)' />
+      <Line value='    Cy_SysPm_SetDeepSleepMode(CY_SYSPM_MODE_DEEPSLEEP_OFF);' />
+      <Line value='#endif /* CY_CFG_PWR_SYS_IDLE_MODE */' />
+      <Line value='' />
+    </ConfigFunction>
+
+    <ConfigFunction signature='void init_cycfg_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv1}`'>
       <Line value='   Cy_SysPm_Init();' />
       <Line value='' />
       <Line value='   /* **System Active Power Mode Profile Configuration** */' />
@@ -326,6 +342,33 @@
       <Line value='' />
       <Line value='       #endif /* defined(CORE_NAME_CM33_0) &amp;&amp; defined(CY_PDL_TZ_ENABLED) */' />
       <Line value='   #endif /* (CY_CFG_PWR_PD1_DOMAIN) */' />
+    </ConfigFunction>
+
+    <ConfigFunction signature='void init_cycfg_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv2_1}`'>
+      <Line value='   Cy_SysPm_Init();' />
+      <Line value='' />
+      <Line value='   /* **System Active Power Mode Profile Configuration** */' />
+      <Line value='   #if (CY_CFG_PWR_SYS_ACTIVE_PROFILE == CY_CFG_PWR_MODE_HP)' />
+      <Line value='       Cy_SysPm_SystemEnterHp();' />
+      <Line value='   #elif (CY_CFG_PWR_SYS_ACTIVE_PROFILE == CY_CFG_PWR_MODE_ULP)' />
+      <Line value='       Cy_SysPm_SystemEnterUlp();' />
+      <Line value='   #elif (CY_CFG_PWR_SYS_ACTIVE_PROFILE == CY_CFG_PWR_MODE_LP)' />
+      <Line value='       Cy_SysPm_SystemEnterLp();' />
+      <Line value='   #endif /* CY_CFG_PWR_SYS_IDLE_MODE */' />
+      <Line value='' />
+      <Line value='   /* **System Domain Idle Power Mode Configuration** */' />
+      <Line value='   #if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)' />
+      <Line value='       Cy_SysPm_SetDeepSleepMode(CY_SYSPM_MODE_DEEPSLEEP);' />
+      <Line value='   #elif (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP_RAM)' />
+      <Line value='       Cy_SysPm_SetDeepSleepMode(CY_SYSPM_MODE_DEEPSLEEP_RAM);' />
+      <Line value='   #elif (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP_OFF)' />
+      <Line value='       Cy_SysPm_SetDeepSleepMode(CY_SYSPM_MODE_DEEPSLEEP_OFF);' />
+      <Line value='   #elif (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_HIBERNATE_RAM)' />
+      <Line value='       Cy_SysPm_SetHibernateRamMode();' />
+      <Line value='   #endif /* CY_CFG_PWR_SYS_IDLE_MODE */' />
+      <Line value='' />
+      <Line value='   /* **Wakeup pin `${$idx}` Configuration** */&#xA;        Cy_SysPm_SetHibernateWakeupSource(`${hibernate_wakeup_polarity_$idx}`);' include='`${hasConnection("hibernate_wakeup", $idx)}`' repeatCount='4'/>
+      <Line value='' />
     </ConfigFunction>
     <ConfigInstruction purpose='INITIALIZE' value='init_cycfg_power();' include='true' guard='defined (CY_CFG_PWR_ENABLED) &amp;&amp; defined (CY_CFG_PWR_INIT)' />
   </ConfigFirmware>

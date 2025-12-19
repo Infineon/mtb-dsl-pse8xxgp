@@ -11,7 +11,8 @@ var group__group__hal__availability =
       [ "clock", "group__group__hal__availability.html#aae2c5fb7a78d1aea84e105c46d45618c", null ]
     ] ],
     [ "mtb_hal_pwm_t", "group__group__hal__availability.html#structmtb__hal__pwm__t", [
-      [ "tcpwm", "group__group__hal__availability.html#a45662a39385f17a88ad19752bfd4a5a2", null ]
+      [ "tcpwm", "group__group__hal__availability.html#a45662a39385f17a88ad19752bfd4a5a2", null ],
+      [ "callback_event", "group__group__hal__availability.html#aa3401d76aa08a117f1b27cdf506e0e40", null ]
     ] ],
     [ "mtb_hal_sdhc_t", "group__group__hal__availability.html#structmtb__hal__sdhc__t", [
       [ "sdxx", "group__group__hal__availability.html#a8c2ac4d6edbd7ca7003fd3172c43d237", null ],

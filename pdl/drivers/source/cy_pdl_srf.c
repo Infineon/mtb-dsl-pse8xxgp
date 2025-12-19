@@ -31,7 +31,7 @@
 
 /* If the user marks every Secure Aware PPC region as NS but leaves CY_PDL_ENABLE_SECURE_AWARE enabled,
  * swap module registration to a NOP */
-#if defined(CY_PDL_RTC_ENABLE_SRF_INTEG) || defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) || defined(CY_PDL_SYSCLK_ENABLE_SRF_INTEG) || defined(CY_PDL_SMIF_ENABLE_SRF_INTEG) 
+#if defined(CY_PDL_RTC_ENABLE_SRF_INTEG) || defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) || defined(CY_PDL_SYSCLK_ENABLE_SRF_INTEG) || defined(CY_PDL_SMIF_ENABLE_SRF_INTEG)
 #define CY_PDL_ENABLE_SRF_INTEG (1)
 #endif
 

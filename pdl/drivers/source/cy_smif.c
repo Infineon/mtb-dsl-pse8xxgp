@@ -126,7 +126,7 @@ cy_en_smif_status_t Cy_SMIF_Init(SMIF_Type *base,
         tmp_ctl = _CLR_SET_FLD32U(tmp_ctl, SMIF_CTL_XIP_MODE, config->mode);
         tmp_ctl = _CLR_SET_FLD32U(tmp_ctl, SMIF_CTL_BLOCK, config->blockEvent);
         tmp_ctl = _CLR_SET_FLD32U(tmp_ctl, SMIF_CTL_DESELECT_DELAY, config->deselectDelay);
- 
+
         /* Enable the DLL, if enabled and input frequency is above minimum threshold.
            Otherwise, enable the bypass for SMIFv5 or greater. */
         result = Cy_SMIF_DllConfig(base, config, context);
@@ -171,7 +171,7 @@ cy_en_smif_status_t Cy_SMIF_Init(SMIF_Type *base,
             tmp_ctl |= _VAL2FLD(SMIF_CORE_CTL_SELECT_SETUP_DELAY, 1);
             tmp_ctl |= _VAL2FLD(SMIF_CORE_CTL_SELECT_HOLD_DELAY, 1);
         }
- 
+
         SMIF_CTL(base) = tmp_ctl;
     }
 
@@ -282,7 +282,7 @@ cy_en_smif_status_t Cy_SMIF_DllConfig(volatile SMIF_Type *base,
         tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_DLL_OPENLOOP_ENABLE, 1U);
         SMIF_IDAC(base) = 0U; /* Set max delay for accuracy */
     }
- 
+
     tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_CLKOUT_DIV, config->dll_divider_value);
     tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_MDL_TAP_SEL, config->mdl_tap);
     tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_RX_CAPTURE_MODE, config->rx_capture_mode);
@@ -294,7 +294,7 @@ cy_en_smif_status_t Cy_SMIF_DllConfig(volatile SMIF_Type *base,
 
     return CY_SMIF_SUCCESS;
 }
- 
+
 
 /*******************************************************************************
 * Function Name: Cy_SMIF_DeInit
@@ -486,7 +486,7 @@ uint32_t CY_SMIF_GetDelayTapsNumber(volatile void *base)
     return SMIF_DELAY_TAPS_NR;
 }
 
- 
+
 
 /*******************************************************************************
 * Function Name: Cy_SMIF_TransmitCommand()
@@ -1723,7 +1723,7 @@ cy_en_smif_status_t Cy_SMIF_SendDummyCycles_With_RWDS(SMIF_Type *base,
 
     return (result);
 }
- 
+
 
 /*******************************************************************************
 * Function Name: Cy_SMIF_SetCryptoKey
@@ -1787,6 +1787,15 @@ cy_en_smif_status_t Cy_SMIF_ConvertSlaveSlotToIndex(cy_en_smif_slave_select_t ss
 {
     cy_en_smif_status_t ret = CY_SMIF_BAD_PARAM;
 
+    #if defined(__clang__) && !defined(__ARMCC_VERSION) /* For LLVM Clang */
+        uint32_t v = (uint32_t)ss;
+        if ((v == 0U) || (v > 8U) || ((v & (v - 1U)) != 0U))
+        {
+            return ret;
+        }
+        *device_idx = (uint32_t)__builtin_ctz(v);
+        ret = CY_SMIF_SUCCESS;
+    #else
     switch (ss)
     {
         case CY_SMIF_SLAVE_SELECT_0:
@@ -1810,6 +1819,7 @@ cy_en_smif_status_t Cy_SMIF_ConvertSlaveSlotToIndex(cy_en_smif_slave_select_t ss
             ret = CY_SMIF_BAD_PARAM;
             break;
     }
+    #endif
     return ret;
 }
 
@@ -2606,7 +2616,7 @@ uint8_t Cy_SMIF_GetTapNumCapturedCorrectDLP(SMIF_Type *base, uint8_t bit)
 #endif  /* ((defined (SMIF_DLP_PRESENT) && (SMIF_DLP_PRESENT > 0)) ||
       (defined (SMIF0_DLP_PRESENT) && (SMIF0_DLP_PRESENT > 0)) ||
       (defined (SMIF1_DLP_PRESENT) && (SMIF1_DLP_PRESENT > 0)) */
- 
+
 /*******************************************************************************
 * Function Name: Cy_SMIF_DeviceTransfer_SetMergeTimeout
 ****************************************************************************//**
@@ -2631,11 +2641,14 @@ uint8_t Cy_SMIF_GetTapNumCapturedCorrectDLP(SMIF_Type *base, uint8_t bit)
 void Cy_SMIF_DeviceTransfer_SetMergeTimeout(SMIF_Type *base, cy_en_smif_slave_select_t slave, cy_en_smif_merge_timeout_t timeout)
 {
     SMIF_DEVICE_Type volatile * device = Cy_SMIF_GetDeviceBySlot(base, slave);
-    uint32_t temp;
-    temp = SMIF_DEVICE_CTL(device);
-    temp &= ~(SMIF_DEVICE_CTL_MERGE_TIMEOUT_Msk);
-    SMIF_DEVICE_CTL(device) = temp | _VAL2FLD(SMIF_DEVICE_CTL_MERGE_EN,  1U)  |
-                          _VAL2FLD(SMIF_DEVICE_CTL_MERGE_TIMEOUT,  (uint32_t)timeout);
+    if (NULL != device)
+    {
+        uint32_t temp;
+        temp = SMIF_DEVICE_CTL(device);
+        temp &= ~(SMIF_DEVICE_CTL_MERGE_TIMEOUT_Msk);
+        SMIF_DEVICE_CTL(device) = temp | _VAL2FLD(SMIF_DEVICE_CTL_MERGE_EN,  1U)  |
+                              _VAL2FLD(SMIF_DEVICE_CTL_MERGE_TIMEOUT,  (uint32_t)timeout);
+    }
 }
 
 /*******************************************************************************
@@ -2657,12 +2670,15 @@ void Cy_SMIF_DeviceTransfer_SetMergeTimeout(SMIF_Type *base, cy_en_smif_slave_se
 void Cy_SMIF_DeviceTransfer_ClearMergeTimeout(SMIF_Type *base, cy_en_smif_slave_select_t slave)
 {
     SMIF_DEVICE_Type volatile * device = Cy_SMIF_GetDeviceBySlot(base, slave);
-    uint32_t temp;
-    temp = SMIF_DEVICE_CTL(device);
-    temp &= ~(SMIF_DEVICE_CTL_MERGE_EN_Msk | SMIF_DEVICE_CTL_MERGE_TIMEOUT_Msk);
-    SMIF_DEVICE_CTL(device) = temp;
+    if (NULL != device)
+    {
+        uint32_t temp;
+        temp = SMIF_DEVICE_CTL(device);
+        temp &= ~(SMIF_DEVICE_CTL_MERGE_EN_Msk | SMIF_DEVICE_CTL_MERGE_TIMEOUT_Msk);
+        SMIF_DEVICE_CTL(device) = temp;
+    }
 }
- 
+
 #if defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
 /*******************************************************************************
 * Function Name: Cy_SMIF_DeepSleepCallback
@@ -2938,7 +2954,7 @@ uint8_t Cy_SMIF_Get_DelayTapSel(SMIF_Type *base)
 {
     return (uint8_t)(_FLD2VAL(SMIF_CORE_CTL2_MDL_TAP_SEL, SMIF_CTL2(base)));
 }
-  
+
 /*******************************************************************************
 * Function Name: Cy_SMIF_InitCache
 ****************************************************************************//**
@@ -3473,7 +3489,7 @@ cy_en_smif_status_t Cy_SMIF_IsCacheEnabled(SMIF_CACHE_BLOCK_Type *base, bool *ca
 #endif
 }
 
- 
+
 #endif /* defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) */
 
 #if defined(__cplusplus)

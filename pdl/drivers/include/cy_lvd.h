@@ -2,12 +2,14 @@
 * \file cy_lvd.h
 * \version 1.80
 *
+* \brief
 * The header file of the LVD driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2017-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2017-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_lvd
@@ -97,8 +100,8 @@ extern "C" {
 /** The LVD driver identifier */
 #define CY_LVD_ID                      (CY_PDL_DRV_ID(0x39U))
 
- 
- 
+
+
 #if defined (CY_IP_MXS22SRSS)
 /** Interrupt mask for \ref Cy_LVD_GetInterruptStatus(),
                        \ref Cy_LVD_ClearInterrupt() */
@@ -118,7 +121,7 @@ extern "C" {
 /** Enable mask for \ref Cy_LVD_Enable() and /ref Cy_LVD_Disable() */
 #define CY_LVD_SRSS_PWR_LVD_CTL_HVLVD_EN_Msk   (SRSS_PWR_LVD_CTL_HVLVD_EN_Msk)
 #endif
- 
+
 
 /** \} group_lvd_macros */
 
@@ -223,7 +226,7 @@ __STATIC_INLINE void Cy_LVD_SetInterruptMask(void);
 __STATIC_INLINE void Cy_LVD_ClearInterruptMask(void);
 __STATIC_INLINE uint32_t Cy_LVD_GetInterruptStatusMasked(void);
 __STATIC_INLINE void Cy_LVD_SetInterruptConfig(cy_en_lvd_intr_config_t lvdInterruptConfig);
- 
+
 /** \addtogroup group_lvd_functions_syspm_callback
 * The driver supports SysPm callback for Deep Sleep transition.
 * \{
@@ -418,12 +421,12 @@ __STATIC_INLINE void Cy_LVD_SetInterruptConfig(cy_en_lvd_intr_config_t lvdInterr
 {
     CY_ASSERT_L3(CY_LVD_CHECK_INTR_CFG(lvdInterruptConfig));
 
- 
- 
+
+
 #if defined (CY_IP_MXS22SRSS)
         SRSS_PWR_LVD_CTL = _CLR_SET_FLD32U(SRSS_PWR_LVD_CTL, SRSS_PWR_LVD_CTL_HVLVD_EDGE_SEL, lvdInterruptConfig);
 #endif
- 
+
     /* This dummy reading is necessary here. It provides a guarantee that interrupt is cleared at returning from this function. */
     (void) lvdInterruptConfig;
 }
@@ -459,8 +462,8 @@ __STATIC_INLINE cy_en_lvd_action_config_t Cy_LVD_GetActionConfig(void)
     return (((SRSS_PWR_LVD_CTL & SRSS_PWR_LVD_CTL_HVLVD_ACTION_Msk) != 0UL) ? CY_LVD_ACTION_FAULT : CY_LVD_ACTION_INTERRUPT);
 }
 #endif
- 
- 
+
+
 /** \} group_lvd_functions */
 
 #ifdef __cplusplus

@@ -393,13 +393,13 @@ vg_lite_error_t check_compress(
         if (format != VG_LITE_BGRA8888 && format != VG_LITE_BGRX8888 && format != VG_LITE_BGR888) {
             printf("Invalid compression format!\n");
             return VG_LITE_INVALID_ARGUMENT;
-        }       
+        }
 #else
-        if ( format != VG_LITE_BGRX8888 && format != VG_LITE_RGBX8888 && format != VG_LITE_BGRA8888 
+        if ( format != VG_LITE_BGRX8888 && format != VG_LITE_RGBX8888 && format != VG_LITE_BGRA8888
             && format != VG_LITE_RGBA8888 && format != VG_LITE_RGB888 && format != VG_LITE_BGR888) {
             printf("Invalid compression format!\n");
             return VG_LITE_INVALID_ARGUMENT;
-        }    
+        }
 #endif
     }
 
@@ -596,12 +596,12 @@ static void dump_img(void * memory, int32_t width, int32_t height, vg_lite_buffe
     int32_t i;
 
     sprintf(imgname, "img_pid%d_%d.txt", getpid(), num++);
-    
+
     fp = fopen(imgname, "w");
-    
+
     if (fp == NULL)
         printf("error!\n");
-    
+
 
     switch (format) {
         case VG_LITE_INDEX_1:
@@ -610,21 +610,21 @@ static void dump_img(void * memory, int32_t width, int32_t height, vg_lite_buffe
                 fprintf(fp, "0x%08x\n",pt[i]);
             }
             break;
-            
+
         case VG_LITE_INDEX_2:
             for(i = 0; i < width * height / 16; ++i)
             {
                 fprintf(fp, "0x%08x\n",pt[i]);
             }
             break;
-            
+
         case VG_LITE_INDEX_4:
             for(i = 0; i < width * height / 8; ++i)
             {
                 fprintf(fp, "0x%08x\n",pt[i]);
             }
             break;
-            
+
         case VG_LITE_INDEX_8:
             for(i = 0; i < width * height / 4; ++i)
             {
@@ -648,7 +648,7 @@ static void dump_img(void * memory, int32_t width, int32_t height, vg_lite_buffe
                 fprintf(fp, "0x%08x\n",pt[i]);
             }
             break;
-            
+
         case VG_LITE_RGBA8888:
         case VG_LITE_BGRA8888:
         case VG_LITE_RGBX8888:
@@ -658,7 +658,7 @@ static void dump_img(void * memory, int32_t width, int32_t height, vg_lite_buffe
                 fprintf(fp, "0x%08x\n",pt[i]);
             }
             break;
-            
+
         default:
             break;
     }
@@ -1463,7 +1463,7 @@ vg_lite_error_t srcbuf_align_check(vg_lite_buffer_t* source)
 #endif
 
 #if gcFEATURE_VG_SRC_BUF_ALINGED
-#if gcFEATURE_VG_SRC_ADDRESS_16BYTES_ALIGNED 
+#if gcFEATURE_VG_SRC_ADDRESS_16BYTES_ALIGNED
     if (source->format == VG_LITE_ARGB8888 ||
         source->format == VG_LITE_BGRA8888 ||
         source->format == VG_LITE_ABGR8888 ||
@@ -1636,7 +1636,7 @@ vg_lite_error_t dstbuf_align_check(vg_lite_buffer_t* target)
         return VG_LITE_NOT_SUPPORT;
     }
 #endif
-    
+
 #if gcFEATURE_VG_DST_TILE_4PIXELS_ALIGNED
     if (target->tiled == VG_LITE_TILED) {
         if ((target->stride % (4 * mul / div) != 0) || (target->height % 4 != 0)) {
@@ -1737,7 +1737,7 @@ vg_lite_error_t dstbuf_align_check(vg_lite_buffer_t* target)
             }
         }
 #else
-        if (target->format == VG_LITE_BGRX8888 || target->format == VG_LITE_RGBX8888 
+        if (target->format == VG_LITE_BGRX8888 || target->format == VG_LITE_RGBX8888
             || target->format == VG_LITE_BGRA8888 || target->format == VG_LITE_RGBA8888) {
             if ((target->stride * target->height) % 64 != 0) {
                 return VG_LITE_INVALID_ARGUMENT;
@@ -2235,10 +2235,10 @@ uint32_t convert_uv_swizzle(vg_lite_swizzle_t swizzle)
         case VG_LITE_SWIZZLE_UV:
             return 0x00000040;
             break;
-            
+
         case VG_LITE_SWIZZLE_VU:
             return 0x00000050;
-            
+
         default:
             return 0;
             break;
@@ -2252,10 +2252,10 @@ uint32_t convert_yuv2rgb(vg_lite_yuv2rgb_t yuv)
         case VG_LITE_YUV601:
             return 0;
             break;
-            
+
         case VG_LITE_YUV709:
             return 0x00008000;
-            
+
         default:
             return 0;
             break;
@@ -2902,7 +2902,7 @@ static vg_lite_error_t stall(vg_lite_context_t * context, uint32_t time_ms, uint
     vg_lite_kernel_wait_t wait;
 
 #if !DUMP_COMMAND_BY_USER
-#if !DUMP_COMMAND_CAPTURE    
+#if !DUMP_COMMAND_CAPTURE
     vglitemDUMP("@[stall]");
 #endif
 #endif
@@ -2960,7 +2960,7 @@ uint32_t inverse(vg_lite_matrix_t * result, vg_lite_matrix_t * matrix)
     det00 = (matrix->m[1][1] * matrix->m[2][2]) - (matrix->m[2][1] * matrix->m[1][2]);
     det01 = (matrix->m[2][0] * matrix->m[1][2]) - (matrix->m[1][0] * matrix->m[2][2]);
     det02 = (matrix->m[1][0] * matrix->m[2][1]) - (matrix->m[2][0] * matrix->m[1][1]);
-    
+
     /* Compute determinant. */
     d = (matrix->m[0][0] * det00) + (matrix->m[0][1] * det01) + (matrix->m[0][2] * det02);
 
@@ -2994,12 +2994,12 @@ uint32_t transform(vg_lite_point_t * result, vg_lite_float_t x, vg_lite_float_t 
     vg_lite_float_t pt_x;
     vg_lite_float_t pt_y;
     vg_lite_float_t pt_w;
-    
+
     /* Test for identity matrix. */
     if (matrix == NULL) {
         result->x = (int)x;
         result->y = (int)y;
-        
+
         /* Success. */
         return 1;
     }
@@ -3014,15 +3014,15 @@ uint32_t transform(vg_lite_point_t * result, vg_lite_float_t x, vg_lite_float_t 
             y = y + 0.5f;
         }
     }
-    
+
     /* Transform x, y, and w. */
     pt_x = (x * matrix->m[0][0]) + (y * matrix->m[0][1]) + matrix->m[0][2];
     pt_y = (x * matrix->m[1][0]) + (y * matrix->m[1][1]) + matrix->m[1][2];
     pt_w = (x * matrix->m[2][0]) + (y * matrix->m[2][1]) + matrix->m[2][2];
-    
+
     if (pt_w <= 0.0f)
         return 0;
-    
+
     /* Compute projected x and y. */
     if (pt_x < 0)
     {
@@ -3040,7 +3040,7 @@ uint32_t transform(vg_lite_point_t * result, vg_lite_float_t x, vg_lite_float_t 
     {
         result->y = (int)((pt_y / pt_w) + 0.5f);
     }
-    
+
     /* Success. */
     return 1;
 }
@@ -3053,12 +3053,12 @@ static vg_lite_error_t flush_target(void)
     #endif
     vg_lite_error_t error = VG_LITE_SUCCESS;
     vg_lite_context_t *context = GET_CONTEXT();
-    
+
     do {
         VG_LITE_BREAK_ERROR(push_state(context, 0x0A1B, 0x00000011));
         VG_LITE_BREAK_ERROR(push_stall(context, 7));
     } while (0);
-    
+
     return error;
 }
 
@@ -3581,9 +3581,9 @@ vg_lite_error_t vg_lite_blit2(vg_lite_buffer_t* target,
     }
 #endif
 #if !gcFEATURE_VG_YUV_TILED_INPUT
-    if ((source0->format >= VG_LITE_YUY2_TILED && source0->format <= VG_LITE_AYUY2_TILED) || (source1->format >= VG_LITE_YUY2_TILED && source1->format <= VG_LITE_AYUY2_TILED) || 
+    if ((source0->format >= VG_LITE_YUY2_TILED && source0->format <= VG_LITE_AYUY2_TILED) || (source1->format >= VG_LITE_YUY2_TILED && source1->format <= VG_LITE_AYUY2_TILED) ||
        (source0->format == VG_LITE_NV24_TILED) || (source1->format == VG_LITE_NV24_TILED)) {
-        return VG_LITE_NOT_SUPPORT; 
+        return VG_LITE_NOT_SUPPORT;
     }
 #endif
 #if !gcFEATURE_VG_NEW_BLEND_MODE
@@ -3850,7 +3850,7 @@ vg_lite_error_t vg_lite_blit2(vg_lite_buffer_t* target,
     }
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A2C, 0));
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A2E, source1->width | (source1->height << 16)));
-    VG_LITE_RETURN_ERROR(push_rectangle(&s_context, point_min1.x, point_min1.y, 
+    VG_LITE_RETURN_ERROR(push_rectangle(&s_context, point_min1.x, point_min1.y,
                                          point_max1.x - point_min1.x, point_max1.y - point_min1.y));
     VG_LITE_RETURN_ERROR(flush_target());
 
@@ -4111,7 +4111,7 @@ vg_lite_error_t vg_lite_blit(vg_lite_buffer_t* target,
     /* Transform image (0,0) to screen. */
     if (!transform(&temp, 0.0f, 0.0f, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Set initial point. */
     point_min = temp;
     point_max = temp;
@@ -4122,27 +4122,27 @@ vg_lite_error_t vg_lite_blit(vg_lite_buffer_t* target,
     /* Transform image (0,height) to screen. */
     if (!transform(&temp, 0.0f, (vg_lite_float_t)source->height, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Determine min/max. */
     if (temp.x < point_min.x) point_min.x = temp.x;
     if (temp.y < point_min.y) point_min.y = temp.y;
     if (temp.x > point_max.x) point_max.x = temp.x;
     if (temp.y > point_max.y) point_max.y = temp.y;
-    
+
     /* Transform image (width,height) to screen. */
     if (!transform(&temp, (vg_lite_float_t)source->width, (vg_lite_float_t)source->height, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Determine min/max. */
     if (temp.x < point_min.x) point_min.x = temp.x;
     if (temp.y < point_min.y) point_min.y = temp.y;
     if (temp.x > point_max.x) point_max.x = temp.x;
     if (temp.y > point_max.y) point_max.y = temp.y;
-    
+
     /* Transform image (width,0) to screen. */
     if (!transform(&temp, (vg_lite_float_t)source->width, 0.0f, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Determine min/max. */
     if (temp.x < point_min.x) point_min.x = temp.x;
     if (temp.y < point_min.y) point_min.y = temp.y;
@@ -4766,7 +4766,7 @@ vg_lite_error_t vg_lite_blit_rect(vg_lite_buffer_t* target,
     /* Transform image (0,0) to screen. */
     if (!transform(&temp, 0.0f, 0.0f, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Set initial point. */
     point_min = temp;
     point_max = temp;
@@ -4777,27 +4777,27 @@ vg_lite_error_t vg_lite_blit_rect(vg_lite_buffer_t* target,
     /* Transform image (0,height) to screen. */
     if (!transform(&temp, 0.0f, (vg_lite_float_t)rect_h, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Determine min/max. */
     if (temp.x < point_min.x) point_min.x = temp.x;
     if (temp.y < point_min.y) point_min.y = temp.y;
     if (temp.x > point_max.x) point_max.x = temp.x;
     if (temp.y > point_max.y) point_max.y = temp.y;
-    
+
     /* Transform image (width,height) to screen. */
     if (!transform(&temp, (vg_lite_float_t)rect_w, (vg_lite_float_t)rect_h, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Determine min/max. */
     if (temp.x < point_min.x) point_min.x = temp.x;
     if (temp.y < point_min.y) point_min.y = temp.y;
     if (temp.x > point_max.x) point_max.x = temp.x;
     if (temp.y > point_max.y) point_max.y = temp.y;
-    
+
     /* Transform image (width,0) to screen. */
     if (!transform(&temp, (vg_lite_float_t)rect_w, 0.0f, matrix))
         return VG_LITE_INVALID_ARGUMENT;
-    
+
     /* Determine min/max. */
     if (temp.x < point_min.x) point_min.x = temp.x;
     if (temp.y < point_min.y) point_min.y = temp.y;
@@ -5112,7 +5112,7 @@ vg_lite_error_t vg_lite_blit_rect(vg_lite_buffer_t* target,
 
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A2D, rect_x | (rect_y << 16)));
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A2F, rect_w | (rect_h << 16)));
-    
+
 #if VG_SW_BLIT_PRECISION_OPT
     if (enableSwPreOpt) {
         VG_LITE_RETURN_ERROR(push_rectangle(&s_context, point_min.x + matrixOffsetX, point_min.y, point_max.x - point_min.x, point_max.y - point_min.y));
@@ -5310,7 +5310,7 @@ vg_lite_error_t vg_lite_init(vg_lite_uint32_t tess_width, vg_lite_uint32_t tess_
 
     s_context.mirror_orient = VG_LITE_ORIENTATION_TOP_BOTTOM;
 
-#if DUMP_INIT_COMMAND   
+#if DUMP_INIT_COMMAND
     physical_address = (size_t)CMDBUF_BUFFER(s_context);
     uint32_t * ptr = (uint32_t*) s_context.context.command_buffer_logical[CMDBUF_INDEX(s_context)];
     ptr += 1;
@@ -5417,7 +5417,7 @@ vg_lite_error_t vg_lite_set_command_buffer(vg_lite_uint32_t physical, vg_lite_ui
 
     if (s_context.command_buffer[0])
     {
-        
+
         if (submit_flag)
             VG_LITE_RETURN_ERROR(stall(&s_context, 0, (uint32_t)~0));
 
@@ -5435,7 +5435,7 @@ vg_lite_error_t vg_lite_set_command_buffer(vg_lite_uint32_t physical, vg_lite_ui
         else
         {
             vg_lite_kernel_unmap_memory_t unmap = { 0 };
-            
+
             unmap.bytes = s_context.command_buffer_size + 8;
             unmap.logical = s_context.command_buffer[0];
             VG_LITE_RETURN_ERROR(vg_lite_kernel(VG_LITE_UNMAP_MEMORY, &unmap));
@@ -5494,7 +5494,7 @@ vg_lite_error_t vg_lite_set_tess_buffer(vg_lite_uint32_t physical, vg_lite_uint3
         else
         {
             vg_lite_kernel_unmap_memory_t unmap = { 0 };
-        
+
             unmap.bytes = s_context.tessbuf.tessbuf_size + s_context.tessbuf.countbuf_size;
             unmap.logical = s_context.tessbuf.logical_addr;
             VG_LITE_RETURN_ERROR(vg_lite_kernel(VG_LITE_UNMAP_MEMORY, &unmap));
@@ -5515,7 +5515,7 @@ vg_lite_error_t vg_lite_set_tess_buffer(vg_lite_uint32_t physical, vg_lite_uint3
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0ACC, s_context.tessbuf.countbuf_size));
 
     s_context.custom_tessbuf = 1;
-    
+
     return error;
 }
 
@@ -5541,14 +5541,14 @@ static  vg_lite_error_t _allocate_tiled_yuv_planar(vg_lite_buffer_t *buffer)
     vg_lite_error_t error = VG_LITE_SUCCESS;
     uint32_t    yplane_size = 0;
     vg_lite_kernel_allocate_t allocate, uv_allocate, v_allocate;
-    
+
     if (((buffer->format < VG_LITE_NV12) || (buffer->format > VG_LITE_ANV12_TILED)
         || (buffer->format == VG_LITE_AYUY2) || (buffer->format == VG_LITE_YUY2_TILED))
         && ((buffer->format != VG_LITE_NV24) && (buffer->format != VG_LITE_NV24_TILED)))
     {
         return error;
     }
-    
+
     /* For NV12, there are 2 planes (Y, UV);
      For ANV12, there are 3 planes (Y, UV, Alpha).
      Each plane must be aligned by (4, 8).
@@ -5561,7 +5561,7 @@ static  vg_lite_error_t _allocate_tiled_yuv_planar(vg_lite_buffer_t *buffer)
     buffer->width = VG_LITE_ALIGN(buffer->width, 8);
     buffer->height = VG_LITE_ALIGN(buffer->height, 8);
     buffer->stride = VG_LITE_ALIGN(buffer->width, 64);
-    
+
     switch (buffer->format) {
         case VG_LITE_NV12:
         case VG_LITE_ANV12:
@@ -5571,7 +5571,7 @@ static  vg_lite_error_t _allocate_tiled_yuv_planar(vg_lite_buffer_t *buffer)
             buffer->yuv.alpha_stride = buffer->stride;
             buffer->yuv.uv_height = buffer->height / 2;
             break;
-            
+
         case VG_LITE_NV16:
             buffer->yuv.uv_stride = buffer->stride;
             buffer->yuv.uv_height = buffer->height;
@@ -5582,44 +5582,44 @@ static  vg_lite_error_t _allocate_tiled_yuv_planar(vg_lite_buffer_t *buffer)
             buffer->yuv.uv_stride = buffer->stride * 2;
             buffer->yuv.uv_height = buffer->height;
             break;
-            
+
         case VG_LITE_YV12:
             buffer->yuv.uv_stride =
             buffer->yuv.v_stride = buffer->stride / 2;
             buffer->yuv.uv_height =
             buffer->yuv.v_height = buffer->height / 2;
             break;
-            
+
         case VG_LITE_YV16:
             buffer->yuv.uv_stride =
             buffer->yuv.v_stride = buffer->stride;
             buffer->yuv.uv_height =
             buffer->yuv.v_height = buffer->height / 2;
             break;
-            
+
         case VG_LITE_YV24:
             buffer->yuv.uv_stride =
             buffer->yuv.v_stride = buffer->stride;
             buffer->yuv.uv_height =
             buffer->yuv.v_height = buffer->height;
             break;
-            
+
         default:
             return error;
     }
-    
+
     yplane_size = buffer->stride * buffer->height;
-    
+
     /* Allocate buffer memory: Y. */
     allocate.bytes = yplane_size;
     allocate.contiguous = 1;
     VG_LITE_RETURN_ERROR(vg_lite_kernel(VG_LITE_ALLOCATE, &allocate));
-    
+
     /* Save the allocation. */
     buffer->handle  = allocate.memory_handle;
     buffer->memory  = allocate.memory;
     buffer->address = allocate.memory_gpu;
-    
+
     if ((buffer->format == VG_LITE_NV12) || (buffer->format == VG_LITE_ANV12)
         || (buffer->format == VG_LITE_NV16) || (buffer->format == VG_LITE_NV24)
         || (buffer->format == VG_LITE_NV12_TILED) || (buffer->format == VG_LITE_ANV12_TILED)) {
@@ -5629,7 +5629,7 @@ static  vg_lite_error_t _allocate_tiled_yuv_planar(vg_lite_buffer_t *buffer)
         buffer->yuv.uv_handle = uv_allocate.memory_handle;
         buffer->yuv.uv_memory = uv_allocate.memory;
         buffer->yuv.uv_planar = uv_allocate.memory_gpu;
-        
+
         if ((buffer->format == VG_LITE_ANV12) || (buffer->format == VG_LITE_ANV12_TILED)) {
             uv_allocate.bytes = yplane_size;
             VG_LITE_RETURN_ERROR(vg_lite_kernel(VG_LITE_ALLOCATE, &uv_allocate));
@@ -5642,14 +5642,14 @@ static  vg_lite_error_t _allocate_tiled_yuv_planar(vg_lite_buffer_t *buffer)
         buffer->yuv.uv_handle = uv_allocate.memory_handle;
         buffer->yuv.uv_memory = uv_allocate.memory;
         buffer->yuv.uv_planar = uv_allocate.memory_gpu;
-        
+
         v_allocate.bytes = buffer->yuv.v_stride * buffer->yuv.v_height;
         VG_LITE_RETURN_ERROR(vg_lite_kernel(VG_LITE_ALLOCATE, &v_allocate));
         buffer->yuv.v_handle = v_allocate.memory_handle;
         buffer->yuv.v_memory = v_allocate.memory;
         buffer->yuv.v_planar = v_allocate.memory_gpu;
     }
-    
+
     return error;
 }
 
@@ -5725,7 +5725,7 @@ vg_lite_error_t vg_lite_allocate_with_align(vg_lite_buffer_t * buffer, uint32_t 
     }
 
     if ((buffer->format >= VG_LITE_NV12 && buffer->format <= VG_LITE_ANV12_TILED
-         && buffer->format != VG_LITE_AYUY2 && buffer->format != VG_LITE_YUY2_TILED) 
+         && buffer->format != VG_LITE_AYUY2 && buffer->format != VG_LITE_YUY2_TILED)
         || (buffer->format >= VG_LITE_NV24 && buffer->format <= VG_LITE_NV24_TILED)) {
         _allocate_tiled_yuv_planar(buffer);
     }
@@ -5780,7 +5780,7 @@ vg_lite_error_t vg_lite_allocate_with_align(vg_lite_buffer_t * buffer, uint32_t 
     }
 
 #if gcFEATURE_VG_TRACE_API
-    VGLITE_LOG("=>buffer: width=%d, height=%d, stride=%d, bytes=%d, format=%d\n", 
+    VGLITE_LOG("=>buffer: width=%d, height=%d, stride=%d, bytes=%d, format=%d\n",
         buffer->width, buffer->height, buffer->stride, allocate.bytes, buffer->format);
 #endif
 
@@ -5883,7 +5883,7 @@ vg_lite_error_t vg_lite_free(vg_lite_buffer_t * buffer)
 #endif
         _free_fc_buffer(&buffer->fc_buffer[0]);
     }
-#endif 
+#endif
 
     /* Make sure we have a valid memory handle. */
     if (buffer->handle == NULL) {
@@ -5968,14 +5968,14 @@ vg_lite_error_t vg_lite_unmap(vg_lite_buffer_t * buffer)
     if (buffer->handle == NULL) {
         return VG_LITE_INVALID_ARGUMENT;
     }
-    
+
     /* Unmap the buffer. */
     unmap.memory_handle = buffer->handle;
     VG_LITE_RETURN_ERROR(vg_lite_kernel(VG_LITE_UNMAP, &unmap));
-    
+
     /* Mark the buffer as freed. */
     buffer->handle = NULL;
-    
+
     return VG_LITE_SUCCESS;
 }
 
@@ -6069,12 +6069,12 @@ vg_lite_uint32_t vg_lite_get_product_info(vg_lite_char* name, vg_lite_uint32_t* 
     {
         memcpy(name, product_name, name_len);
     }
-    
+
     if (chip_id != NULL)
     {
         *chip_id = id;
     }
-    
+
     if (chip_rev != NULL)
     {
         *chip_rev = rev;
@@ -6239,7 +6239,7 @@ vg_lite_error_t vg_lite_init_grad(vg_lite_linear_gradient_t *grad)
     grad->image.height = 1;
     grad->image.stride = 0;
     grad->image.format = VG_LITE_BGRA8888;
-    
+
     /* Allocate the image for gradient. */
     VG_LITE_RETURN_ERROR(vg_lite_allocate(&grad->image));
 
@@ -6989,7 +6989,7 @@ vg_lite_error_t vg_lite_clear_grad(vg_lite_linear_gradient_t *grad)
     {
         error = vg_lite_free(&grad->image);
     }
-    
+
     return error;
 }
 

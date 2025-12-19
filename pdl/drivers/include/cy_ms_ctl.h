@@ -7,7 +7,9 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2025 Cypress Semiconductor Corporation
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +25,7 @@
 * limitations under the License.
 *******************************************************************************/
 
+
 /**
 * \addtogroup group_ms_ctl
 * \{
@@ -31,7 +34,7 @@
 *
 * MSC is instantiated on non-CPU paths to provide security extension attributes
 * and to add TrustZone-M capability. MSC Driver provides APIs to configure
-* access rights to the given master (a core, DMA, etc) for each Protection Context 
+* access rights to the given master (a core, DMA, etc) for each Protection Context
 * (provides a more precise way of applying memory restrictions).
 * Maximum of 32 masters are supported. It also provides API to set the active PC.
 *
@@ -41,10 +44,10 @@
 *
 * You can use this driver to protect the transactions initiated on the bus.
 *
-* Devices support multiple CPU subsystems, viz. SYSCPUSS (Power Domain 0 powered by a 
-* low-power 32-bit Arm® Cortex-M33 (CM33) CPU, which handles security, control, communication) 
-* and APPCPUSS (Power Domain 1 powered by an Arm Cortex-M55 (CM55) processor, 
-* which supports M-profile vector extension (MVE), Digital Signal Processing (DSP), 
+* Devices support multiple CPU subsystems, viz. SYSCPUSS (Power Domain 0 powered by a
+* low-power 32-bit Arm® Cortex-M33 (CM33) CPU, which handles security, control, communication)
+* and APPCPUSS (Power Domain 1 powered by an Arm Cortex-M55 (CM55) processor,
+* which supports M-profile vector extension (MVE), Digital Signal Processing (DSP),
 * and Machine Learning (ML) capabilities).
 *
 * The default MSC configuration is pre-defined and can be found in the architecture TRM.
@@ -191,7 +194,7 @@ typedef enum
     APP_EXP_MS3_MSC  = 11,
 } en_ms_ctl_master_sc_acg_v1_t;
 #endif
- 
+
 /** Response type when ACG blocks incoming transfers */
 typedef enum
 {
@@ -391,7 +394,7 @@ __STATIC_INLINE uint32_t Cy_Ms_Ctl_GetActivePCV1(en_ms_ctl_master_t busMaster)
 #endif
 
 #endif /* #if defined (CY_IP_M55APPCPUSS) */
- 
+
 #endif /* #if defined (CY_IP_M33SYSCPUSS) */
 
 /** \} group_ms_ctl */

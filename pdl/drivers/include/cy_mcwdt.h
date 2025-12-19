@@ -2,12 +2,14 @@
 * \file cy_mcwdt.h
 * \version 1.90
 *
-* Provides an API declaration of the Cypress PDL 3.0 MCWDT driver
+* \brief
+* Provides an API declaration of the MCWDT driver
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_mcwdt
@@ -232,7 +235,7 @@ typedef enum
     CY_MCWDT_LOWER_LIMIT_MODE_RESET,         /**< Assert WDT Reset. */
 } cy_en_mcwdtlowerlimitmode_t;
 #endif /* CY_IP_MXS28SRSS, CY_IP_MXS40SSRSS, CY_IP_MXS22SRSS*/
- 
+
 /** The MCWDT error codes. */
 typedef enum
 {
@@ -240,7 +243,7 @@ typedef enum
     CY_MCWDT_BAD_PARAM = CY_MCWDT_ID | CY_PDL_STATUS_ERROR | 0x01u,     /**< One or more invalid parameters */
 } cy_en_mcwdt_status_t;
 
- 
+
 /** \} group_mcwdt_enums */
 
 /**
@@ -248,7 +251,7 @@ typedef enum
 * \{
 */
 
- 
+
 
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || defined (CY_IP_MXS22SRSS)
 /** The MCWDT component configuration structure. */
@@ -297,7 +300,7 @@ typedef struct
                                       false: Match based on counter 1 alone, true: Match based on counter 2 and 1 simultaneously.
                                     */
 #endif /* CY_IP_MXS40SSRSS, CY_IP_MXS22SRSS */
- 
+
     bool     c0ClearOnMatch; /**< The sub-counter#0 Clear On Match parameter enabled/disabled. */
     bool     c1ClearOnMatch; /**< The sub-counter#1 Clear On Match parameter enabled/disabled. */
     bool     c0c1Cascade;    /**< The sub-counter#1 is clocked by LFCLK or from sub-counter#0 cascade. */

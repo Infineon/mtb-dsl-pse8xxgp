@@ -59,7 +59,7 @@
 #include "vg_lite_option.h"
 
 #if gcdVG_ENABLE_COMMAND_BUFFER_CACHE
-#define CACHE_COMMAND_BUFFER_SIZE            1 << 20 
+#define CACHE_COMMAND_BUFFER_SIZE            1 << 20
 #endif
 
 /* Interrupt IDs from GPU. */
@@ -241,7 +241,7 @@ typedef enum vg_lite_cache_op {
     VG_LITE_CACHE_CLEAN,
     VG_LITE_CACHE_INVALIDATE,
     VG_LITE_CACHE_FLUSH,
-} 
+}
 vg_lite_cache_op_t;
 
 typedef enum vg_lite_vidmem_pool {
@@ -264,7 +264,7 @@ typedef struct vg_lite_kernel_context {
     void                     *command_buffer_klogical[CMDBUF_COUNT];
     uint32_t                  command_buffer_physical[CMDBUF_COUNT];
     uint32_t                  end_of_frame;
-    
+
     /* Tessellation buffer. */
     void                     *tess_buffer;
     void                     *tessbuf_logical;
@@ -297,7 +297,7 @@ typedef struct capabilities
     uint32_t l2_cache : 1;
 }
 capabilities_t;
-    
+
 typedef union vg_lite_capabilities
 {
     capabilities_t cap;
@@ -337,13 +337,13 @@ typedef struct vg_lite_kernel_initialize
 
     /* GPU address for command buffer. */
     uint32_t command_buffer_gpu[CMDBUF_COUNT];
-    
+
     /* GPU addresses for tesselation buffers. */
     uint32_t physical_addr;
-    
+
     /* Logic addresses for tessellation buffers: used by SW Tessellator. */
     uint8_t *logical_addr;
-    
+
     /* Size of each level of the tesselation buffer. */
     uint32_t tessbuf_size;
 
@@ -442,7 +442,7 @@ typedef struct vg_lite_kernel_wait
 
     /* Timeout in milliseconds. */
     uint32_t timeout_ms;
-    
+
     /* The event to wait. */
     uint32_t event_mask;
 
@@ -494,7 +494,7 @@ vg_lite_kernel_debug_t;
 
 typedef struct vg_lite_kernel_map
 {
-    /* INPUT */  
+    /* INPUT */
     uint32_t flags;
 
     /* user memory */
@@ -529,7 +529,7 @@ vg_lite_kernel_unmap_t;
 
 typedef struct vg_lite_kernel_cache
 {
-    vg_lite_cache_op_t cache_op;    
+    vg_lite_cache_op_t cache_op;
 
     /* Memory handle to operation. */
     void * memory_handle;

@@ -2,12 +2,15 @@
 * \file cy_i3c.h
 * \version 1.00
 *
+* \brief
 * Provides I3C API declarations for the I3C Controller.
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2020-2025), Cypress Semiconductor Corporation (an Infineon company)
-* or an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2020-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
+* SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_cy_i3c

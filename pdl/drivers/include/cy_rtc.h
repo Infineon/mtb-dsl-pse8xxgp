@@ -2,13 +2,14 @@
 * \file cy_rtc.h
 * \version 2.100
 *
-* This file provides constants and parameter values for the APIs for the
-* Real-Time Clock (RTC).
+* \brief
+* This file provides constants and parameter values for the APIs for the Real-Time Clock (RTC).
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +23,8 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_rtc
@@ -514,7 +515,7 @@ typedef struct {
     cy_en_rtc_hours_format_t hrs_format;
 } cy_pdl_rtc_srf_get_hr_format_out_t;
 #endif
-/** \endcode */
+/** \endcond */
 
 /** \} group_rtc_data_structures */
 
@@ -1349,7 +1350,7 @@ __STATIC_INLINE void Cy_RTC_SyncToRtcAhbAlarm(uint32_t alarmTimeBcd, uint32_t al
 /*******************************************************************************
 *      Internal Functions
 *******************************************************************************/
- 
+
 #if defined(__cplusplus)
 }
 #endif

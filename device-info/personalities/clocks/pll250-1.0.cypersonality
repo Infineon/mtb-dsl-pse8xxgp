@@ -43,6 +43,7 @@
   <Parameters>
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__pll.html' linkText='Open PLL Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamBool id='is_mxs22srssv2_1' name='is_mxs22srssv2_1' group="" default='`${ "mxs22srss" eq getIpBlockName() &amp;&amp; (getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v2.1' />
 
     <!-- PLL source clock and max device frequency -->
     <ParamString id='clockInst' default='`${"mxs22srss" eq getIpBlockName() ? getInstNumber("pll250m") : getInstNumber("dpll250") +1}`' />
@@ -53,7 +54,7 @@
 
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFrequency,accuracy)}`' visible='true' editable='false' desc='Source clock frequency' />
     <!-- For ULP mode, Fpll_max = 100 MHz, for LP mode Fpll_max = 350 MHz, for HP mode Fpll_max = 500 MHz -->
-    <ParamString id='maxFrequency' default='`${"mxs22srss" eq getIpBlockName() ? 500 : 240}`' />
+    <ParamString id='maxFrequency' default='`${"mxs22srss" eq getIpBlockName() ? (is_mxs22srssv2_1 ? 192 : 500) : 240}`' />
 
     <ParamBool id='lowFrequencyMode' name='Low Frequency Mode' group='General' default='false' visible='true' editable='false' desc='VCO frequency range selection' />
     <ParamChoice id='configuration' name='Configuration' group='General' default='auto' visible='true' desc='Choose the automatic or manual PLL tuning'>
@@ -154,7 +155,7 @@
       <Member name='kiAccSscg' value='0x16U' />
       <Member name='kpAccSscg' value='0x14U' />
     </ConfigStruct>
-    <ConfigStruct name='`${INST_NAME . "_lp_pllConfig"}`' type='cy_stc_dpll_lp_config_t' const='false' public='false' include='`${"mxs22srss" eq getIpBlockName()}`'>
+    <ConfigStruct name='`${INST_NAME . "_lp_pllConfig"}`' type='cy_stc_dpll_lp_config_t' const='false' public='false' include='`${"mxs22srss" eq getIpBlockName() &amp;&amp; (getVersion() eq 1)}`'>
       <Member name='feedbackDiv' value='`${feedback}`' />
       <Member name='referenceDiv' value='`${reference}`' />
       <Member name='outputDiv' value='`${output}`' />
@@ -170,6 +171,39 @@
       <Member name='kpInt' value='0x8U' />
       <Member name='kpFrac' value='0x9U' />
       <Member name='kpSscg' value='0x7U' />
+    </ConfigStruct>
+    <ConfigStruct name='`${INST_NAME . "_lp_pllConfig"}`' type='cy_stc_dpll_lp_config_t' const='false' public='false' include='`${is_mxs22srssv2_1}`'>
+      <Member name='feedbackDiv' value='`${feedback}`' />
+      <Member name='referenceDiv' value='`${reference}`' />
+      <Member name='outputDiv' value='`${output}`' />
+      <Member name='pllDcoMode' value='`${dcoMode}`' />
+      <Member name='outputMode' value='CY_SYSCLK_FLLPLL_OUTPUT_AUTO' />
+      <Member name='fracDiv' value='`${frac}`' />
+      <Member name='fracDitherEn' value='`${fracDitherEn}`' />
+      <Member name='fracEn' value='`${fracEn}`' />
+      <Member name='sscgDepth' value='0x0U' />
+      <Member name='sscgRate' value='0x0U' />
+      <Member name='sscgDitherEn' value='0x0U' />
+      <Member name='sscgMode' value='0x0U' />
+      <Member name='sscgEn' value='0x0U' />
+      <Member name='dcoCode' value='0xFU' />
+      <Member name='disableBias' value='0x0U' />
+      <Member name='pllTg' value='0x0U' />
+      <Member name='kiInt' value='0x28U' />
+      <Member name='kpInt' value='0x20U' />
+      <Member name='kiAccInt' value='0x27U' />
+      <Member name='kpAccInt' value='0x23U' />
+      <Member name='pwrupAccInt' value='0U' />
+      <Member name='kiFrac' value='0x2CU' />
+      <Member name='kpFrac' value='0x24U' />
+      <Member name='kiAccFrac' value='0x27U' />
+      <Member name='kpAccFrac' value='0x1CU' />
+      <Member name='pwrupAccFrac' value='0U' />
+      <Member name='kiSscg' value='0x1CU' />
+      <Member name='kpSscg' value='0x1CU' />
+      <Member name='kiAccSscg' value='0x27U' />
+      <Member name='kpAccSscg' value='0x23U' />
+      <Member name='pwrupAccSscg' value='0x0U' />
     </ConfigStruct>
 
     <ConfigStruct name='`${INST_NAME . "_pllConfig"}`' type='cy_stc_pll_manual_config_t' const='false' public='false'>

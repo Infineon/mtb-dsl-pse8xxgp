@@ -16,6 +16,10 @@ This release of the PSOC™ Edge GNU make build recipe includes complete support
     * LLVM Embedded Toolchain for Arm
 
 ### What Changed?
+#### v2.3.2
+* Removed obsolete interface_version_3 support.
+* Added support for the memory report tool.
+
 #### v2.3.1
 * Improved missing toolchains handling.
 * Improved FreeRTOS component flag handling for IAR toolchain.

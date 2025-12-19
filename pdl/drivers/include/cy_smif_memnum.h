@@ -3,15 +3,13 @@
 * \version 1.0
 *
 * \brief
-*  This file provides the constants and parameter values for the memory-level
-*  APIs of the SMIF driver.
-*
-* Note:
+* This file provides the constants and parameter values for the memory-level APIs of the SMIF driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2025 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +24,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
+
 /**
 * \addtogroup group_smif_memnum
 * \{
@@ -69,13 +69,16 @@ extern "C" {
 
 
 #if !defined(CY_SMIF_MAX_HYBRID_REGION)
+/** Maximum number of hybrid regions in the supported external memories*/
 #define CY_SMIF_MAX_HYBRID_REGION      (5U)
 #endif
-
+/** SMIF sub-block 0 */
 #define CY_SMIF_SUB_BLOCK_0             (0UL)
+/** SMIF sub-block 1 */
 #define CY_SMIF_SUB_BLOCK_1             (1UL)
-
+/** SMIF flag to identify regular SPI devices */
 #define CY_SMIF_FLAG_SPI_DEVICE          (1UL)
+/** SMIF flag to identify HyperBus devices */
 #define CY_SMIF_FLAG_HYPERBUS_DEVICE     (2UL)
 
 
@@ -112,7 +115,7 @@ typedef struct
 * \ref Cy_SMIF_MemGetInfo. */
 typedef struct
 {
-    uint32_t flags;                                           /** Determines if the device is SPI/HyperBus */
+    uint32_t flags;                                           /**< Determines if the device is SPI/HyperBus */
     uint32_t memSize;                                         /**< The memory size: For densities of 2 gigabits or less - the size in bytes;
                                                               * For densities 4 gigabits and above - bit-31 is set to 1b to define that
                                                               * this memory is 4 gigabits and above; and other 30:0 bits define N where
@@ -151,7 +154,7 @@ typedef struct {
     uint32_t size;
 } cy_pdl_smif_srf_cl_inv_cache_in_t;
 #endif
-/** \endcode */
+/** \endcond */
 
 /*******************************************************************************
 * Function Name: Cy_SMIF_MemNumInit

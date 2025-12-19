@@ -2,12 +2,14 @@
 * \file cy_sysclk.h
 * \version 3.150
 *
+* \brief
 * Provides an API declaration of the sysclk driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_sysclk
@@ -48,7 +51,7 @@
 * devices/include/pse84_config.h).
 *
 * As an illustration of the clocking system, the following diagram shows the
-* PSOC EDGE E8 clock tree. 
+* PSOC EDGE E8 clock tree.
 * The actual tree may vary depending on the device series.
 * Consult the Technical Reference Manual for your device for details.
 *
@@ -2365,6 +2368,7 @@ typedef enum
 } cy_en_wco_bypass_modes_t;
 
 
+/** \cond BWC */
 
 
 /**
@@ -2396,8 +2400,21 @@ typedef enum
 } cy_en_csv_error_actions_t;
 
 
+/** \endcond BWC */
+
+/** \} group_sysclk_wco_enums */
+
+/** \cond BWC */
+
+/**
+* \addtogroup group_sysclk_wco_structs
+* \{
+*/
+
 /** \} group_sysclk_wco_structs */
 
+
+/** \endcond BWC */
 
 /**
 * \addtogroup group_sysclk_wco_funcs

@@ -31,7 +31,7 @@
     <Const id='BACKUPSRC' value='VDDD'/>
     <Const id='MIN_CURR_REGULATOR' value='CY_SYSPM_LDO_MODE_NORMAL'/>
   </Constants>
-  
+
   <FittingRules>
     <MappingRules>
       <IpBlock name='mxs22srss' />

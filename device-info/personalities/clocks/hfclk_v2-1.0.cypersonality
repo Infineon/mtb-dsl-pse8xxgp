@@ -31,8 +31,12 @@
     <Const id='CLK_FREQUENCIES_EXPLORER_LP'  value=' 80;140;110;200;200;104;104; 50; 50; 50; 40; 80; 50; 60' />
     <Const id='CLK_FREQUENCIES_EXPLORER_HP'  value='200;400;300;400;400;208;208;100; 50;100;100;200; 64;125' />
 
+    <Const id='CLK_FREQUENCIES_PSB3_LP'      value='  96;96;96;96;96' />
+    <Const id='CLK_FREQUENCIES_PSB3_HP'      value=' 192;96;96;96;96' />
+
   <!-- Constants used throughout the personality-->
     <Const id='MAX_SOURCE_FREQUENCY_EXPLORER'  value='500000000' />
+    <Const id='MAX_SOURCE_FREQUENCY_PSB3'      value='192000000' />
     <Const id='MHZ_CONVERSION'                 value='1000000' />
   </Constants>
 
@@ -57,8 +61,11 @@
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__hf.html' linkText='Open High-Frequency Clocks Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamBool id='is22srssAvailable' default='`${("mxs22srss" eq getIpBlockName())}`' />
+    <ParamBool id='is_mxs22srssv1' name='is_mxs22srssv1' group="" default='`${ is22srssAvailable &amp;&amp; (getVersion() eq 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v1' />
+    <ParamBool id='is_mxs22srssv2_1' name='is_mxs22srssv2_1' group="" default='`${ is22srssAvailable &amp;&amp; (getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v2.1' />
 
     <ParamString id='clockInst' default='`${getInstNumber("hfclk")}`' />
+    <ParamString id='maxFrequency' default='`${is_mxs22srssv2_1 ? $MAX_SOURCE_FREQUENCY_PSB3: $MAX_SOURCE_FREQUENCY_EXPLORER}`' />
     <ParamChoice id='sourceClockNumber' name='Source Clock' group='General' default='0' visible='true' desc='The clock source for CLK_HF`${clockInst}`'>
       <Entry name='CLK_PATH$idx'  value='$idx'  visible='`${NUM_CLKPATH &gt; $idx}`' repeatCount='16' />
     </ParamChoice>
@@ -87,14 +94,14 @@
     <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' />
     <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`' />
 
-    <ParamRange id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' min='0' max='$MAX_SOURCE_FREQUENCY_EXPLORER' resolution='0.001' />
+    <ParamRange id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' min='0' max='`${maxFrequency}`' resolution='0.001' />
     <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFreq,accuracy)}`' visible='true' editable='false' desc='Source clock frequency' />
 
     <ParamChoice id='divider' name='Divider' group='General' default='1' visible='true' desc='The source clock frequency divider'>
       <Entry name='$idx' value='$idx' repeatCount='17' visible='`${$idx &gt; 0}`' />
     </ParamChoice>
-    <ParamRange id='frequency' default='`${sourceFreq / divider}`' min='0' max='$MAX_SOURCE_FREQUENCY_EXPLORER' resolution='1' />
+    <ParamRange id='frequency' default='`${sourceFreq / divider}`' min='0' max='`${maxFrequency}`' resolution='1' />
     <!-- If the frequency is less than one MHz, display its value in kHz -->
     <ParamString id='frequencyInfo' name='Frequency' group='General' default='`${formatFrequency(frequency,accuracy)}`' visible='true' editable='false' desc='The resulting CLK_HF`${clockInst}` output clock frequency' />
     <ParamSignal port='root_clk[0]' name='Clock Output' group='General' visible='`${hasVisibleOption("root_clk[0]")}`' desc='A high-frequency clock output driving specific peripherals' canBeEmpty='true' >
@@ -132,7 +139,11 @@
     <DRC type='ERROR' text='CLK_HF0 is slower than legal min 200 kHz.' condition='`${(clockInst == 0) &amp;&amp; (sourceFreq &lt; 200000)}`' />
     <!-- Max frequencies are determined by power mode -->
     <DRC type='ERROR' text='CLK_HF`${clockInst}` is greater than legal max `${splitAt(getExposedMember("srss[0].power[0]", "usingUlp") ? "$CLK_FREQUENCIES_EXPLORER_ULP" : (getExposedMember("srss[0].power[0]", "usingLp") ? "$CLK_FREQUENCIES_EXPLORER_LP" : "$CLK_FREQUENCIES_EXPLORER_HP"), clockInst)}` MHz.'
-         condition='`${is22srssAvailable &amp;&amp; (frequency &gt; ("$MHZ_CONVERSION" * splitAt(getExposedMember("srss[0].power[0]", "usingUlp") ? "$CLK_FREQUENCIES_EXPLORER_ULP" : (getExposedMember("srss[0].power[0]", "usingLp") ? "$CLK_FREQUENCIES_EXPLORER_LP" : "$CLK_FREQUENCIES_EXPLORER_HP"), clockInst)))}`' />
+         condition='`${is_mxs22srssv1 &amp;&amp; (frequency &gt; ("$MHZ_CONVERSION" * splitAt(getExposedMember("srss[0].power[0]", "usingUlp") ? "$CLK_FREQUENCIES_EXPLORER_ULP" : (getExposedMember("srss[0].power[0]", "usingLp") ? "$CLK_FREQUENCIES_EXPLORER_LP" : "$CLK_FREQUENCIES_EXPLORER_HP"), clockInst)))}`' />
+
+    <DRC type='ERROR' text='CLK_HF`${clockInst}` is greater than legal max `${splitAt((getExposedMember("srss[0].power[0]", "usingLp") ? "$CLK_FREQUENCIES_PSB3_LP" : "$CLK_FREQUENCIES_PSB3_HP"), clockInst)}` MHz.'
+         condition='`${is_mxs22srssv2_1 &amp;&amp; (frequency &gt; ("$MHZ_CONVERSION" * splitAt((getExposedMember("srss[0].power[0]", "usingLp") ? "$CLK_FREQUENCIES_PSB3_LP" : "$CLK_FREQUENCIES_PSB3_HP"), clockInst)))}`' />
+
     <!--DRC type='ERROR' text='Only one connection between the clock system and GPIO pins is possible, either EXTCLK or CLK_HF4.' condition='`${hasConnection("root_clk", 0) &amp;&amp; isBlockUsed("srss[0].clock[0].ext[0]")}`' /-->
   </DRCs>
 

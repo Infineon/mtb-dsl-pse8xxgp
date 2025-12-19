@@ -240,7 +240,7 @@ endif
 endif
 
 # Command line flags for c-files
-MTB_TOOLCHAIN_IAR__CFLAGS:=\
+MTB_TOOLCHAIN_IAR__CFLAGS=\
 	-c\
 	$(_MTB_TOOLCHAIN_IAR__FLAGS_CORE)\
 	$(_MTB_TOOLCHAIN_IAR__OPTIMIZATION)\
@@ -257,14 +257,14 @@ MTB_TOOLCHAIN_IAR__CFLAGS+=--debug
 endif
 
 # Command line flags for cpp-files
-MTB_TOOLCHAIN_IAR__CXXFLAGS:=\
+MTB_TOOLCHAIN_IAR__CXXFLAGS=\
 	$(MTB_TOOLCHAIN_IAR__CFLAGS)\
 	--c++\
 	--no_rtti\
 	--no_exceptions
 
 # Command line flags for s-files
-MTB_TOOLCHAIN_IAR__ASFLAGS:=\
+MTB_TOOLCHAIN_IAR__ASFLAGS=\
 	-c\
 	$(_MTB_TOOLCHAIN_IAR__FLAGS_CORE)\
 	$(_MTB_TOOLCHAIN_IAR__VFP_FLAGS)\
@@ -274,22 +274,20 @@ MTB_TOOLCHAIN_IAR__ASFLAGS:=\
 	-r
 
 # Command line flags for linking
-TB_TOOLCHAIN_IAR__LDFLAGS:=\
+MTB_TOOLCHAIN_IAR__LDFLAGS=\
 	$(_MTB_TOOLCHAIN_IAR__FLAGS_CORE)\
 	$(_MTB_TOOLCHAIN_IAR__VFP_FLAGS)\
 	$(_MTB_TOOLCHAIN_IAR__SILENT_CFLAGS)\
 	--manual_dynamic_initialization
 
 # Command line flags for archiving
-MTB_TOOLCHAIN_IAR__ARFLAGS:=--create
+MTB_TOOLCHAIN_IAR__ARFLAGS=--create
 
 # Enable Multi-Threaded build arguments
 # Note: If these RTOS-specific flags are modified, the instructions in ide.mk should be updated to reflect the changes.
-ifneq (,$(filter MW_ABSTRACTION_RTOS,$(filter-out $(DISABLE_COMPONENTS),$(MTB_CORE__FULL_COMPONENT_LIST))))
-MTB_TOOLCHAIN_IAR__CFLAGS  +=--dlib_config=full
-MTB_TOOLCHAIN_IAR__CXXFLAGS+=--dlib_config=full
-MTB_TOOLCHAIN_IAR__LDFLAGS +=--threaded_lib
-endif
+MTB_TOOLCHAIN_IAR__CFLAGS+=$(if $(filter MW_ABSTRACTION_RTOS,$(filter-out $(DISABLE_COMPONENTS),$(MTB_CORE__FULL_COMPONENT_LIST))),--dlib_config=full,)
+MTB_TOOLCHAIN_IAR__CXXFLAGS+=$(if $(filter MW_ABSTRACTION_RTOS,$(filter-out $(DISABLE_COMPONENTS),$(MTB_CORE__FULL_COMPONENT_LIST))),--dlib_config=full,)
+MTB_TOOLCHAIN_IAR__LDFLAGS+=$(if $(filter MW_ABSTRACTION_RTOS,$(filter-out $(DISABLE_COMPONENTS),$(MTB_CORE__FULL_COMPONENT_LIST))),--threaded_lib,)
 
 # Toolchain-specific suffixes
 MTB_TOOLCHAIN_IAR__SUFFIX_S  :=S

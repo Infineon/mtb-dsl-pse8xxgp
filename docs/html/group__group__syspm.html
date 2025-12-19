@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,16 +77,14 @@ $(document).ready(function(){initNavTree('group__group__syspm.html',''); initRes
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
 
 <div class="header">
   <div class="summary">
-<a href="#groups">API Reference</a> &#124;
-<a href="#enumval-members">Enumerator</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#groups">API Reference</a>  </div>
   <div class="headertitle"><div class="title">SysPm (System Power Management)<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -116,12 +114,20 @@ $(document).ready(function(){initNavTree('group__group__syspm.html',''); initRes
 <li><a class="el" href="group__group__syspm.html#group_syspm_wakingup_from_hibernate">Waking Up from Hibernate</a></li>
 </ul>
 </li>
+<li><a class="el" href="group__group__syspm.html#group_syspm_system_active_state_transitions">System Active state Transitions</a><ul>
+<li><a class="el" href="group__group__syspm.html#group_syspm_system_ulp_to_lp_transition">System ULP to LP Transition</a></li>
+<li><a class="el" href="group__group__syspm.html#group_syspm_system_lp_to_hp_transition">System LP to HP Transition</a></li>
+<li><a class="el" href="group__group__syspm.html#group_syspm_system_hp_to_lp_transition">System HP to LP Transition</a></li>
+<li><a class="el" href="group__group__syspm.html#group_syspm_system_lp_to_ulp_transition">System LP to ULP Transition</a></li>
+</ul>
+</li>
+</ul>
+<p ><a class="el" href="group__group__syspm.html#group_syspm_system_transition_abs_levels">System Transitions</a></p><ul>
 <li><a class="el" href="group__group__syspm.html#group_syspm_system_reg_curr_mode">System Regulator Current Mode</a><ul>
 <li><a class="el" href="group__group__syspm.html#group_syspm_system_set_min_reg_curr_mode">Setting Minimum System Regulator Current Mode</a></li>
 <li><a class="el" href="group__group__syspm.html#group_syspm_system_set_normal_reg_curr_mode">Setting Normal System Regulator Current Mode</a></li>
 </ul>
 </li>
-<li>group_syspm_migration_guide_for_syspm_4_0</li>
 <li><a class="el" href="group__group__syspm.html#group_syspm_cb">SysPm Callbacks</a><ul>
 <li><a class="el" href="group__group__syspm.html#group_syspm_cb_example">SysPm Callbacks Example</a></li>
 <li><a class="el" href="group__group__syspm.html#group_syspm_cb_config_consideration">Callback Configuration Considerations</a><ul>
@@ -170,10 +176,10 @@ System Power Modes</h2>
 Switching the System into Low Power</h3>
 <p >To set system LP mode you need to set LP voltage for the active core regulator:</p><ul>
 <li>If active core regulator is the LDO, call: <div class="fragment"><div class="line">Cy_SysPm_LdoSetVoltage(<a class="code hl_enumvalue" href="group__group__syspm__data__enumerates.html#ggaef8ba4a0ee827abcaaf62f950e69496eaed1d9d509568249e009c801328e8d7a3">CY_SYSPM_LDO_VOLTAGE_LP</a>);</div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggaef8ba4a0ee827abcaaf62f950e69496eaed1d9d509568249e009c801328e8d7a3"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggaef8ba4a0ee827abcaaf62f950e69496eaed1d9d509568249e009c801328e8d7a3">CY_SYSPM_LDO_VOLTAGE_LP</a></div><div class="ttdeci">@ CY_SYSPM_LDO_VOLTAGE_LP</div><div class="ttdoc">System LP nominal LDO voltage.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1288</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggaef8ba4a0ee827abcaaf62f950e69496eaed1d9d509568249e009c801328e8d7a3"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggaef8ba4a0ee827abcaaf62f950e69496eaed1d9d509568249e009c801328e8d7a3">CY_SYSPM_LDO_VOLTAGE_LP</a></div><div class="ttdeci">@ CY_SYSPM_LDO_VOLTAGE_LP</div><div class="ttdoc">System LP nominal LDO voltage.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1417</div></div>
 </div><!-- fragment --></li>
 <li>If active core regulator is the Buck, call: <div class="fragment"><div class="line">Cy_SysPm_BuckSetVoltage1(<a class="code hl_enumvalue" href="group__group__syspm__data__enumerates.html#gga3917bcfb5a7b4151ec1b0fcd95c37d5aa0b8ad38048816d6a7fd0dd3ac6e0e2aa">CY_SYSPM_BUCK_OUT1_VOLTAGE_LP</a>)</div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga3917bcfb5a7b4151ec1b0fcd95c37d5aa0b8ad38048816d6a7fd0dd3ac6e0e2aa"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga3917bcfb5a7b4151ec1b0fcd95c37d5aa0b8ad38048816d6a7fd0dd3ac6e0e2aa">CY_SYSPM_BUCK_OUT1_VOLTAGE_LP</a></div><div class="ttdeci">@ CY_SYSPM_BUCK_OUT1_VOLTAGE_LP</div><div class="ttdoc">LP nominal Buck voltage.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1312</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga3917bcfb5a7b4151ec1b0fcd95c37d5aa0b8ad38048816d6a7fd0dd3ac6e0e2aa"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga3917bcfb5a7b4151ec1b0fcd95c37d5aa0b8ad38048816d6a7fd0dd3ac6e0e2aa">CY_SYSPM_BUCK_OUT1_VOLTAGE_LP</a></div><div class="ttdeci">@ CY_SYSPM_BUCK_OUT1_VOLTAGE_LP</div><div class="ttdoc">LP nominal Buck voltage.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1441</div></div>
 </div><!-- fragment --></li>
 </ul>
 <p >After switching into system LP mode, the operating frequency and current consumption may now be increased up to <a class="el" href="group__group__syspm.html#group_syspm_lp_limitations">LP Limitations</a>. The wait states for flash may be changed to increase device performance by calling SysLib function Cy_SysLib_SetWaitStates(true, hfClkFreqMz), where hfClkFreqMz is the frequency of HfClk0 in MHz.</p>
@@ -206,28 +212,28 @@ Switching the System into LPACTIVE/LPSLEEP</h3>
 <p >Call Cy_SysPm_SystemLpActiveEnter() to enter LPACTIVE/LPSLEEP mode and Cy_SysPm_SystemLpActiveExit() to exit.</p>
 <h3><a class="anchor" id="group_syspm_switching_into_sleep"></a>
 Switching CPU into Sleep</h3>
-<p >For multi-CPU devices, the Cy_SysPm_CpuEnterSleep() switches only the CPU that calls the function into the CPU Sleep power mode.</p>
+<p >For multi-CPU devices, the <a class="el" href="group__group__syspm__functions__power.html#gab09936e85606de476a0c379f9548603f" title="Sets executing CPU to Sleep mode.">Cy_SysPm_CpuEnterSleep()</a> switches only the CPU that calls the function into the CPU Sleep power mode.</p>
 <p >All pending interrupts must be cleared before the CPU is put into a Sleep mode, even if they are masked.</p>
 <p >The CPU event register can be set in the past, for example, as a result of internal system calls. So an old event can cause the CPU to not enter Sleep mode upon WFE(). Therefore usually the WFE() is used in an idle loop or polling loop as it might or might not cause entering of CPU Sleep mode. If the idle loop or polling loop is not used, then it is recommended to use WFI() instruction.</p>
 <h3><a class="anchor" id="group_syspm_switching_into_deepsleep"></a>
 Switching the System or CPU into Deep Sleep</h3>
-<p >For multi-CPU devices, the Cy_SysPm_CpuEnterDeepSleep() function switches only the CPU that calls the function into the CPU Deep Sleep power mode. To set the whole system into Deep Sleep power mode, ensure that all CPUs call the Cy_SysPm_CpuEnterDeepSleep() function.</p>
+<p >For multi-CPU devices, the <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a> function switches only the CPU that calls the function into the CPU Deep Sleep power mode. To set the whole system into Deep Sleep power mode, ensure that all CPUs call the <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a> function.</p>
 <h3><a class="anchor" id="group_syspm_switching_into_deepsleep-ram"></a>
 Switching the System or CPU into Deep Sleep-RAM</h3>
-<p >For multi-CPU devices, the Cy_SysPm_CpuEnterDeepSleep() function switches only the CPU that calls the function into the CPU DEEPSLEEP-RAM power mode. To set the whole system into Deep Sleep power mode, ensure that all CPUs call the Cy_SysPm_CpuEnterDeepSleep() function.</p>
+<p >For multi-CPU devices, the <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a> function switches only the CPU that calls the function into the CPU DEEPSLEEP-RAM power mode. To set the whole system into Deep Sleep power mode, ensure that all CPUs call the <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a> function.</p>
 <h3><a class="anchor" id="group_syspm_switching_into_deepsleep-off"></a>
 Switching the System or CPU into Deep Sleep-OFF</h3>
-<p >For multi-CPU devices, the Cy_SysPm_CpuEnterDeepSleep() function switches only the CPU that calls the function into the CPU DEEPSLEEP-OFF power mode. To set the whole system into Deep Sleep power mode, ensure that all CPUs call the Cy_SysPm_CpuEnterDeepSleep() function.</p>
-<p >There are situations when the system does not switch into the Deep Sleep power mode immediately after the last CPU calls Cy_SysPm_CpuEnterDeepSleep(). The system will switch into Deep Sleep mode automatically a short time later, after the low power circuits are ready to switch into Deep Sleep. Refer to the Cy_SysPm_CpuEnterDeepSleep() description for more detail.</p>
+<p >For multi-CPU devices, the <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a> function switches only the CPU that calls the function into the CPU DEEPSLEEP-OFF power mode. To set the whole system into Deep Sleep power mode, ensure that all CPUs call the <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a> function.</p>
+<p >There are situations when the system does not switch into the Deep Sleep power mode immediately after the last CPU calls <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a>. The system will switch into Deep Sleep mode automatically a short time later, after the low power circuits are ready to switch into Deep Sleep. Refer to the <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca" title="Sets executing CPU to the Deep Sleep mode.">Cy_SysPm_CpuEnterDeepSleep()</a> description for more detail.</p>
 <p >All pending interrupts must be cleared before the system is put into a Deep Sleep mode, even if they are masked.</p>
 <p >The CPU event register can be set in the past, for example, as a result of internal system calls. So an old event can cause the CPU to not enter Deep Sleep mode upon WFE(). Therefore usually the WFE() is used in an idle loop or polling loop as it might or might not cause entering of CPU Deep Sleep mode. If the idle loop or polling loop is not used, then it is recommended to use WFI() instruction.</p>
 <p >For single-CPU devices, SysPm functions that return the status of the unsupported CPU always return CY_SYSPM_STATUS_&lt;CPU&gt;_DEEPSLEEP.</p>
 <h3><a class="anchor" id="group_syspm_wakingup_from_sleep_deepsleep"></a>
 Waking Up from Sleep or Deep Sleep</h3>
-<p >For Arm-based devices, an interrupt is required for the CPU to wake up. For multi-CPU devices, one CPU can wake up the other CPU by sending the event instruction. Use the Cy_SysPm_CpuSendWakeupEvent() function.</p>
+<p >For Arm-based devices, an interrupt is required for the CPU to wake up. For multi-CPU devices, one CPU can wake up the other CPU by sending the event instruction. Use the <a class="el" href="group__group__syspm__functions__power.html#ga177941ebfd3c4e3f6e391d303c407534" title="Sends the SEV (Send Event) ARM instruction to the system.">Cy_SysPm_CpuSendWakeupEvent()</a> function.</p>
 <h3><a class="anchor" id="group_syspm_switching_into_hibernate"></a>
 Switching System to Hibernate</h3>
-<p >If you call Cy_SysPm_SystemEnterHibernate() from either CPU, the system will be switched into the Hibernate power mode directly, because there is no handshake between CPUs.</p>
+<p >If you call <a class="el" href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51" title="Sets the device into system Hibernate mode.">Cy_SysPm_SystemEnterHibernate()</a> from either CPU, the system will be switched into the Hibernate power mode directly, because there is no handshake between CPUs.</p>
 <h3><a class="anchor" id="group_syspm_wakingup_from_hibernate"></a>
 Waking Up from Hibernate</h3>
 <p >The system can wake up from Hibernate mode by configuring the following wakeup sources:</p><ul>
@@ -236,7 +242,142 @@ Waking Up from Hibernate</h3>
 <li>RTC alarm</li>
 <li>WDT interrupt</li>
 </ul>
-<p >Wakeup is supported from device specific pin(s) with programmable polarity. Additionally, unregulated peripherals can wake the system under some conditions. For example, a low power comparator can wake the system by comparing two external voltages, but does not support comparison to an internally-generated voltage. The backup power domain remains functional, and if present it can schedule an alarm to wake the system from Hibernate using the RTC. Alternatively, the Watchdog Timer (WDT) can be configured to wake-up the system by WDT interrupt. Refer to Cy_SysPm_SetHibernateWakeupSource() for more detail.</p>
+<p >Wakeup is supported from device specific pin(s) with programmable polarity. Additionally, unregulated peripherals can wake the system under some conditions. For example, a low power comparator can wake the system by comparing two external voltages, but does not support comparison to an internally-generated voltage. The backup power domain remains functional, and if present it can schedule an alarm to wake the system from Hibernate using the RTC. Alternatively, the Watchdog Timer (WDT) can be configured to wake-up the system by WDT interrupt. Refer to <a class="el" href="group__group__syspm__functions__power.html#ga2540970e6c27efa25752efc43da0d622">Cy_SysPm_SetHibernateWakeupSource()</a> for more detail.</p>
+<h2><a class="anchor" id="group_syspm_system_active_state_transitions"></a>
+System Active state Transitions</h2>
+<p >The system operates in three defined active modes, each tailored for specific performance and power requirements:</p><ul>
+<li>ULP (Ultra Low Power)</li>
+<li>LP (Low Power)</li>
+<li>HP (High Performance)</li>
+</ul>
+<p >Transitioning between these operational modes requires meticulous adherence to defined sequences to prevent timing-related issues. The application is responsible for managing system frequency during these transitions, ensuring it stays within the valid range for both current and target modes. The driver assumes all frequency requirements are met before mode transition APIs are called.</p>
+<dl class="section attention"><dt>Attention</dt><dd>Transitions from ULP to HP modes (or vice versa) are only allowed in steps. These transitions must proceed via the intermediate LP mode (ULP -&gt; LP -&gt; HP or the reverse). This staged approach ensures system stability and reliable operations. These steps are handled internally by the driver when using one of the APIs: <a class="el" href="group__group__syspm__functions__power.html#ga279c81bf2b2b3c2b6c4a36c75355a294">Cy_SysPm_SystemEnterHp()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga72531fcca015df727a163b510639a334">Cy_SysPm_SystemEnterLp()</a>, or <a class="el" href="group__group__syspm__functions__power.html#gaca7c8f1ab6d555530a68978269198836">Cy_SysPm_SystemEnterUlp()</a>.</dd></dl>
+<p>The driver provides dedicated APIs for transitions:</p><ul>
+<li><a class="el" href="group__group__syspm__functions__power.html#gae6ed0adb1f421c810417901559911ccb">Cy_SysPm_SystemTransitionUlpToLp()</a> - Transition from ULP to LP</li>
+<li><a class="el" href="group__group__syspm__functions__power.html#gaca3e9f841b550485e76b55276d19ce0d">Cy_SysPm_SystemTransitionLpToHp()</a> - Transition from LP to HP</li>
+<li><a class="el" href="group__group__syspm__functions__power.html#ga506bcbbc3ee5e18bd4899c077df5c7ef">Cy_SysPm_SystemTransitionHpToLp()</a> - Transition from HP to LP</li>
+<li><a class="el" href="group__group__syspm__functions__power.html#ga38ebefebefc8a078cabd9acb24e9ce62">Cy_SysPm_SystemTransitionLpToUlp()</a> - Transition from LP to ULP</li>
+</ul>
+<p >The following sections outline the required conditions and sequence of operations for each supported transition.</p>
+<h2><a class="anchor" id="group_syspm_system_ulp_to_lp_transition"></a>
+System ULP to LP Transition</h2>
+<p >To transition the system from Ultra Low Power (ULP) to Low Power (LP) mode, follow these steps in the secure processing environment:</p><ol type="1">
+<li>Suspend Operations:<ol type="a">
+<li>Initiate M0SECCPUSS suspension with ifx_se_disable().</li>
+</ol>
+</li>
+<li>Reduce Operating Frequency:<ol type="a">
+<li>Lower the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency by at least 18%.</li>
+</ol>
+</li>
+<li>Initiate Transition:<ol type="a">
+<li>Call <a class="el" href="group__group__syspm__functions__power.html#gae6ed0adb1f421c810417901559911ccb">Cy_SysPm_SystemTransitionUlpToLp()</a> to perform the mode change.</li>
+</ol>
+</li>
+<li>Restore Frequency:<ol type="a">
+<li>After the transition, the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency can be increased up to the new mode's maximum.</li>
+</ol>
+</li>
+<li>Resume Operations:<ol type="a">
+<li>Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().</li>
+</ol>
+</li>
+</ol>
+<h2><a class="anchor" id="group_syspm_system_lp_to_hp_transition"></a>
+System LP to HP Transition</h2>
+<p >To transition the system from Low Power (LP) to High Power (HP) mode, follow these steps in the secure processing environment:</p><ol type="1">
+<li>Suspend Operations:<ol type="a">
+<li>Initiate M0SECCPUSS suspension with ifx_se_disable().</li>
+</ol>
+</li>
+<li>Reduce Operating Frequency:<ol type="a">
+<li>Lower the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency by at least 38%.</li>
+</ol>
+</li>
+<li>Initiate Transition:<ol type="a">
+<li>Call <a class="el" href="group__group__syspm__functions__power.html#gaca3e9f841b550485e76b55276d19ce0d">Cy_SysPm_SystemTransitionLpToHp()</a> to perform the mode change.</li>
+</ol>
+</li>
+<li>Restore Frequency:<ol type="a">
+<li>After the transition, the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency can be increased up to the new mode's maximum.</li>
+</ol>
+</li>
+<li>Resume Operations:<ol type="a">
+<li>Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().</li>
+</ol>
+</li>
+</ol>
+<h2><a class="anchor" id="group_syspm_system_hp_to_lp_transition"></a>
+System HP to LP Transition</h2>
+<p >To transition the system from High Power (HP) to Low Power (LP) mode, follow these steps in the secure processing environment:</p><ol type="1">
+<li>Suspend Operations:<ol type="a">
+<li>Initiate M0SECCPUSS suspension with ifx_se_disable().</li>
+</ol>
+</li>
+<li>Reduce Operating Frequency:<ol type="a">
+<li>Lower the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency by at least 82%.</li>
+</ol>
+</li>
+<li>Initiate Transition:<ol type="a">
+<li>Call <a class="el" href="group__group__syspm__functions__power.html#ga506bcbbc3ee5e18bd4899c077df5c7ef">Cy_SysPm_SystemTransitionHpToLp()</a> to perform the mode change.</li>
+</ol>
+</li>
+<li>Restore Frequency:<ol type="a">
+<li>After the transition, the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency can be increased up to the new mode's maximum.</li>
+</ol>
+</li>
+<li>Resume Operations:<ol type="a">
+<li>Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().</li>
+</ol>
+</li>
+</ol>
+<h2><a class="anchor" id="group_syspm_system_lp_to_ulp_transition"></a>
+System LP to ULP Transition</h2>
+<p >To transition the system from Low Power (LP) to Ultra Low Power (ULP) mode, follow these steps in the secure processing environment:</p><ol type="1">
+<li>Suspend Operations:<ol type="a">
+<li>Initiate M0SECCPUSS suspension with ifx_se_disable().</li>
+</ol>
+</li>
+<li>Reduce Operating Frequency:<ol type="a">
+<li>Lower the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency by at least 66%.</li>
+</ol>
+</li>
+<li>Initiate Transition:<ol type="a">
+<li>Call <a class="el" href="group__group__syspm__functions__power.html#ga38ebefebefc8a078cabd9acb24e9ce62">Cy_SysPm_SystemTransitionLpToUlp()</a> to perform the mode change.</li>
+</ol>
+</li>
+<li>Restore Frequency:<ol type="a">
+<li>After the transition, the <a class="el" href="group__group__syspm.html#group_syspm_sram_transition_clock">SRAM Clock</a> frequency can be increased up to the new mode's maximum.</li>
+</ol>
+</li>
+<li>Resume Operations:<ol type="a">
+<li>Instruct M0SECCPUSS to resume operations by calling ifx_se_enable().</li>
+</ol>
+</li>
+</ol>
+<h2><a class="anchor" id="group_syspm_system_transition_abs_levels"></a>
+System Transitions</h2>
+<p >(Levels of Abstraction)</p>
+<p >The driver supports two operational abstraction levels for system transitions:</p><ol type="1">
+<li>High Level - The application invokes a single API that manages the entire transition workflow internally. This method simplifies development, requiring minimum user intervention, but offers limited opportunity for customization or speed optimization.</li>
+<li>Low Level - The application remains responsible for all prerequisite checks and initiates each step of the transition sequence. This grants granular control, allowing adjustments for specialized use cases or the fastest possible transitions.</li>
+</ol>
+<dl class="section attention"><dt>Attention</dt><dd>The application is responsible for invoking the correct steps at the appropriate stage of transition:<ul>
+<li>High Level Approach:<ul>
+<li>Reduce operating frequency within the CY_SYSPM_BEFORE_TRANSITION callback.</li>
+<li>Use the relevant transition function: <a class="el" href="group__group__syspm__functions__power.html#ga279c81bf2b2b3c2b6c4a36c75355a294">Cy_SysPm_SystemEnterHp()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga72531fcca015df727a163b510639a334">Cy_SysPm_SystemEnterLp()</a>, or <a class="el" href="group__group__syspm__functions__power.html#gaca7c8f1ab6d555530a68978269198836">Cy_SysPm_SystemEnterUlp()</a>.</li>
+<li>Restore operating frequency in the CY_SYSPM_AFTER_TRANSITION callback.</li>
+</ul>
+</li>
+<li>Low Level Approach:<ul>
+<li>The application must carefully follow the outlined sequences described in <a class="el" href="group__group__syspm.html#group_syspm_system_active_state_transitions">System Active state Transitions</a> for the desired transition.</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+<h3><a class="anchor" id="group_syspm_sram_transition_clock"></a>
+SRAM Clock</h3>
+<p >When the system is performing a power transition all the clocks used to access the SRAM must be adapted to the new power mode. The SRAM clock frequency must be reduced before the transition and can be increased after the transition is completed. </p>
 <h2><a class="anchor" id="group_syspm_system_reg_curr_mode"></a>
 System Regulator Current Mode</h2>
 <p >In addition to system ULP and LP modes, the five different resource power settings can be configured to reduce current consumption:</p><ol type="1">
@@ -250,10 +391,10 @@ System Regulator Current Mode</h2>
 <p >When all five sub features are set to their normal mode, the system operates in regulator normal current mode. When regulator normal current mode is set, the system may operate at device maximum current.</p>
 <h2><a class="anchor" id="group_syspm_system_set_min_reg_curr_mode"></a>
 Setting Minimum System Regulator Current Mode</h2>
-<p >Before setting the regulator minimum current mode ensure that current limits are be met. After current limits are met, call the Cy_SysPm_SystemSetMinRegulatorCurrent() function.</p>
+<p >Before setting the regulator minimum current mode ensure that current limits are be met. After current limits are met, call the <a class="el" href="group__group__syspm__functions__power.html#ga3bde7056544d0ada3da80a0f58fefab9" title="Sets the system into minimum core regulator current mode.">Cy_SysPm_SystemSetMinRegulatorCurrent()</a> function.</p>
 <h2><a class="anchor" id="group_syspm_system_set_normal_reg_curr_mode"></a>
 Setting Normal System Regulator Current Mode</h2>
-<p >To set regulator normal current mode, call the Cy_SysPm_SystemSetNormalRegulatorCurrent() function. After the function call, the current limits can be increased to a maximum current, depending on what system power mode is set: LP or ULP.</p>
+<p >To set regulator normal current mode, call the <a class="el" href="group__group__syspm__functions__power.html#ga54112d6ea4d40ad241923ee7068f5363" title="Sets the system to normal regulator current mode.">Cy_SysPm_SystemSetNormalRegulatorCurrent()</a> function. After the function call, the current limits can be increased to a maximum current, depending on what system power mode is set: LP or ULP.</p>
 <h2><a class="anchor" id="group_syspm_cb"></a>
 SysPm Callbacks</h2>
 <p >The SysPm driver handles low power callbacks declared in the application.</p>
@@ -264,7 +405,7 @@ SysPm Callbacks</h2>
 <p >The callback structures after registration: </p><div class="image">
 <img src="syspm_register_eq.png" alt=""/>
 </div>
-<p >Your application must register each callback, so that SysPm can execute it. Upon registration, the linked list is built by the SysPm driver. Notice the &amp;myDeepSleep1 address in the myDeepSleep1 <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a> structure. This is filled in by the SysPm driver, when you register myDeepSleep1. The <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> element defines the order of their execution by the SysPm driver. Call Cy_SysPm_RegisterCallback() to register each callback function.</p>
+<p >Your application must register each callback, so that SysPm can execute it. Upon registration, the linked list is built by the SysPm driver. Notice the &amp;myDeepSleep1 address in the myDeepSleep1 <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a> structure. This is filled in by the SysPm driver, when you register myDeepSleep1. The <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> element defines the order of their execution by the SysPm driver. Call <a class="el" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback()</a> to register each callback function.</p>
 <p >A callback function is typically associated with a particular driver that handles the peripheral. So the callback mechanism enables a peripheral to prepare for a low power mode (for instance, shutting down the analog part); or to perform tasks while exiting a low power mode (like enabling the analog part again).</p>
 <p >With the callback mechanism you can prevent switching into a low power mode if a peripheral is not ready. For example, driver X is in the process of receiving a message. In the callback function implementation simply return CY_SYSPM_FAIL in a response to CY_SYSPM_CHECK_READY.</p>
 <p >If success is returned while executing a callback, the SysPm driver calls the next callback and so on to the end of the list. If at some point a callback returns CY_SYSPM_FAIL in response to the CY_SYSPM_CHECK_READY step, all the callbacks that have already executed are executed in reverse order, with the CY_SYSPM_CHECK_FAIL mode parameter. This allows each callback to know that entering the low power mode has failed. The callback can then undo whatever it did to prepare for low power mode, if required. For example, if the driver X callback shut down the analog part, it can re-enable the analog part.</p>
@@ -292,9 +433,9 @@ SysPm Callbacks Example</h2>
 <div class="line"><a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> DeepSleepFunc1(<a class="code hl_struct" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> *callbackParams, <a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a> mode);</div>
 <div class="line"><a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> DeepSleepFunc2(<a class="code hl_struct" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> *callbackParams, <a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a> mode);</div>
 <div class="line"><a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> DeepSleepFunc3(<a class="code hl_struct" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> *callbackParams, <a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a> mode);</div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ga601b1cb722cb091133caf33d8ab235ca"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a></div><div class="ttdeci">cy_en_syspm_status_t</div><div class="ttdoc">The SysPm function return value status definitions.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1221</div></div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gae06cd8869fe61d709ad6145ca9f3cd63"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a></div><div class="ttdeci">cy_en_syspm_callback_mode_t</div><div class="ttdoc">This enumeration specifies the associated callback mode.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1828</div></div>
-<div class="ttc" id="agroup__group__syspm__data__structures_html_structcy__stc__syspm__callback__params__t"><div class="ttname"><a href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a></div><div class="ttdoc">The structure contains syspm callback parameters.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1923</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ga601b1cb722cb091133caf33d8ab235ca"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a></div><div class="ttdeci">cy_en_syspm_status_t</div><div class="ttdoc">The SysPm function return value status definitions.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1350</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gae06cd8869fe61d709ad6145ca9f3cd63"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a></div><div class="ttdeci">cy_en_syspm_callback_mode_t</div><div class="ttdoc">This enumeration specifies the associated callback mode.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1957</div></div>
+<div class="ttc" id="agroup__group__syspm__data__structures_html_structcy__stc__syspm__callback__params__t"><div class="ttname"><a href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a></div><div class="ttdoc">The structure contains syspm callback parameters.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:2052</div></div>
 </div><!-- fragment --><p >Now we setup the <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> structures that we will pass to the callback functions. Note that for the myDeepSleep2 and myDeepSleep3 callbacks we also pass pointers to the peripherals related to that callback (see <a href="..\..\pdl_user_guide.pdf">PDL Design</a> section to learn about base hardware addresses). The configuration considerations related to this structure are described in <a class="el" href="group__group__syspm.html#group_syspm_cb_parameters">Callback Function Parameters</a> in <a class="el" href="group__group__syspm.html#group_syspm_cb_config_consideration">Callback Configuration Considerations</a>.</p>
 <div class="fragment"><div class="line"><span class="comment">/******************************************************************************</span></div>
 <div class="line"><span class="comment">*  Parameter structures for callback functions</span></div>
@@ -353,9 +494,9 @@ SysPm Callbacks Example</h2>
 <div class="line">    0</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d">CY_SYSPM_DEEPSLEEP</a></div><div class="ttdeci">@ CY_SYSPM_DEEPSLEEP</div><div class="ttdoc">The Deep Sleep enum callback type.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1388</div></div>
-<div class="ttc" id="agroup__group__syspm__data__structures_html_structcy__stc__syspm__callback__t"><div class="ttname"><a href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a></div><div class="ttdoc">Structure with syspm callback configuration elements.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1937</div></div>
-<div class="ttc" id="agroup__group__syspm__skip__callback__modes_html_ga77a2dc7326bb7e6cf893dc7b258b3a42"><div class="ttname"><a href="group__group__syspm__skip__callback__modes.html#ga77a2dc7326bb7e6cf893dc7b258b3a42">CY_SYSPM_SKIP_BEFORE_TRANSITION</a></div><div class="ttdeci">#define CY_SYSPM_SKIP_BEFORE_TRANSITION</div><div class="ttdoc">Define to skip before transition mode in the syspm callback.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1911</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0abc51d74deff0ceea4304b01b2d57bd9d">CY_SYSPM_DEEPSLEEP</a></div><div class="ttdeci">@ CY_SYSPM_DEEPSLEEP</div><div class="ttdoc">The Deep Sleep enum callback type.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1517</div></div>
+<div class="ttc" id="agroup__group__syspm__data__structures_html_structcy__stc__syspm__callback__t"><div class="ttname"><a href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a></div><div class="ttdoc">Structure with syspm callback configuration elements.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:2066</div></div>
+<div class="ttc" id="agroup__group__syspm__skip__callback__modes_html_ga77a2dc7326bb7e6cf893dc7b258b3a42"><div class="ttname"><a href="group__group__syspm__skip__callback__modes.html#ga77a2dc7326bb7e6cf893dc7b258b3a42">CY_SYSPM_SKIP_BEFORE_TRANSITION</a></div><div class="ttdeci">#define CY_SYSPM_SKIP_BEFORE_TRANSITION</div><div class="ttdoc">Define to skip before transition mode in the syspm callback.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:2040</div></div>
 </div><!-- fragment --><p >Note that in each case the last two fields are NULL. These are fields used by the SysPm driver to set up the linked list of callback functions.</p>
 <p >The callback structures are now defined and allocated in the user's memory space: </p><div class="image">
 <img src="syspm_before_registration.png" alt=""/>
@@ -426,8 +567,8 @@ SysPm Callbacks Example</h2>
 <div class="line"><span class="comment">******************************************************************************/</span></div>
 <div class="line"><a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> DeepSleepFunc2(<a class="code hl_struct" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> *callbackParams, <a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a> mode)</div>
 <div class="line">{</div>
-<div class="line">    <a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *hwBase = (<a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *) callbackParams-&gt;<a class="code hl_variable" href="group__group__syspm.html#ga56076e99358e2b7c99681312108b09af">base</a>;</div>
-<div class="line">    <a class="code hl_struct" href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a> *context = (<a class="code hl_struct" href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a> *) callbackParams-&gt;<a class="code hl_variable" href="group__group__syspm.html#gabac771f244791efe23d4964a40bbf8c8">context</a>;</div>
+<div class="line">    <a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *hwBase = (<a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *) callbackParams-&gt;<a class="code hl_variable" href="group__group__syspm__data__structures.html#a56076e99358e2b7c99681312108b09af">base</a>;</div>
+<div class="line">    <a class="code hl_struct" href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a> *spiContext = (<a class="code hl_struct" href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a> *) callbackParams-&gt;<a class="code hl_variable" href="group__group__syspm__data__structures.html#abac771f244791efe23d4964a40bbf8c8">context</a>;</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> retVal = <a class="code hl_enumvalue" href="group__group__syspm__data__enumerates.html#gga601b1cb722cb091133caf33d8ab235caa5e406c6cb40fdf6663df0208737d4f11">CY_SYSPM_FAIL</a>;</div>
 <div class="line"> </div>
@@ -437,7 +578,7 @@ SysPm Callbacks Example</h2>
 <div class="line">        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63ab7ec706d80b347433d0063f2a8115784">CY_SYSPM_CHECK_READY</a>:</div>
 <div class="line">        {</div>
 <div class="line">            <span class="comment">/* ... */</span></div>
-<div class="line">            <span class="keywordflow">if</span> (0UL == (<a class="code hl_define" href="group__group__scb__spi__macros__xfer__status.html#gab024f7d6ed7cbaa36c80c904a6179de7">CY_SCB_SPI_TRANSFER_ACTIVE</a> &amp; <a class="code hl_function" href="group__group__scb__spi__high__level__functions.html#ga95069817e25be749ae989e5d7131f8d0">Cy_SCB_SPI_GetTransferStatus</a>(hwBase, context)))</div>
+<div class="line">            <span class="keywordflow">if</span> (0UL == (<a class="code hl_define" href="group__group__scb__spi__macros__xfer__status.html#gab024f7d6ed7cbaa36c80c904a6179de7">CY_SCB_SPI_TRANSFER_ACTIVE</a> &amp; <a class="code hl_function" href="group__group__scb__spi__high__level__functions.html#ga95069817e25be749ae989e5d7131f8d0">Cy_SCB_SPI_GetTransferStatus</a>(hwBase, spiContext)))</div>
 <div class="line">            {</div>
 <div class="line">                <span class="comment">/* There are no active actions so we can enter CPU Deep Sleep */</span></div>
 <div class="line">                retVal = <a class="code hl_enumvalue" href="group__group__syspm__data__enumerates.html#gga601b1cb722cb091133caf33d8ab235caaf00d22f1ee891a8a56f8bbf58132e775">CY_SYSPM_SUCCESS</a>;</div>
@@ -459,7 +600,7 @@ SysPm Callbacks Example</h2>
 <div class="line"><span class="comment">******************************************************************************/</span></div>
 <div class="line"><a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> DeepSleepFunc3(<a class="code hl_struct" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> *callbackParams, <a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a> mode)</div>
 <div class="line">{</div>
-<div class="line">    <a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *hwBase = (<a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *) callbackParams-&gt;<a class="code hl_variable" href="group__group__syspm.html#ga56076e99358e2b7c99681312108b09af">base</a>;</div>
+<div class="line">    <a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *hwBase = (<a class="code hl_struct" href="structCySCB__Type.html">CySCB_Type</a> *) callbackParams-&gt;<a class="code hl_variable" href="group__group__syspm__data__structures.html#a56076e99358e2b7c99681312108b09af">base</a>;</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_enumeration" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> retVal = <a class="code hl_enumvalue" href="group__group__syspm__data__enumerates.html#gga601b1cb722cb091133caf33d8ab235caa5e406c6cb40fdf6663df0208737d4f11">CY_SYSPM_FAIL</a>;</div>
 <div class="line"> </div>
@@ -504,39 +645,40 @@ SysPm Callbacks Example</h2>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> (retVal);</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__group__scb__spi__data__structures_html_structcy__stc__scb__spi__context__t"><div class="ttname"><a href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a></div><div class="ttdoc">SPI context structure.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:604</div></div>
-<div class="ttc" id="agroup__group__scb__spi__general__functions_html_ga4241f6166816159f7365220834a5e0d0"><div class="ttname"><a href="group__group__scb__spi__general__functions.html#ga4241f6166816159f7365220834a5e0d0">Cy_SCB_SPI_IsBusBusy</a></div><div class="ttdeci">__STATIC_INLINE bool Cy_SCB_SPI_IsBusBusy(CySCB_Type const *base)</div><div class="ttdoc">Returns whether the SPI bus is busy or not.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:979</div></div>
+<div class="ttc" id="agroup__group__scb__spi__data__structures_html_structcy__stc__scb__spi__context__t"><div class="ttname"><a href="group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__context__t">cy_stc_scb_spi_context_t</a></div><div class="ttdoc">SPI context structure.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:608</div></div>
+<div class="ttc" id="agroup__group__scb__spi__general__functions_html_ga4241f6166816159f7365220834a5e0d0"><div class="ttname"><a href="group__group__scb__spi__general__functions.html#ga4241f6166816159f7365220834a5e0d0">Cy_SCB_SPI_IsBusBusy</a></div><div class="ttdeci">__STATIC_INLINE bool Cy_SCB_SPI_IsBusBusy(CySCB_Type const *base)</div><div class="ttdoc">Returns whether the SPI bus is busy or not.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:983</div></div>
 <div class="ttc" id="agroup__group__scb__spi__high__level__functions_html_ga95069817e25be749ae989e5d7131f8d0"><div class="ttname"><a href="group__group__scb__spi__high__level__functions.html#ga95069817e25be749ae989e5d7131f8d0">Cy_SCB_SPI_GetTransferStatus</a></div><div class="ttdeci">uint32_t Cy_SCB_SPI_GetTransferStatus(CySCB_Type const *base, cy_stc_scb_spi_context_t const *context)</div><div class="ttdoc">Returns the status of the transfer operation started by Cy_SCB_SPI_Transfer.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.c:1007</div></div>
-<div class="ttc" id="agroup__group__scb__spi__macros__xfer__status_html_gab024f7d6ed7cbaa36c80c904a6179de7"><div class="ttname"><a href="group__group__scb__spi__macros__xfer__status.html#gab024f7d6ed7cbaa36c80c904a6179de7">CY_SCB_SPI_TRANSFER_ACTIVE</a></div><div class="ttdeci">#define CY_SCB_SPI_TRANSFER_ACTIVE</div><div class="ttdoc">Transfer operation started by Cy_SCB_SPI_Transfer is in progress.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:816</div></div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga601b1cb722cb091133caf33d8ab235caa5e406c6cb40fdf6663df0208737d4f11"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga601b1cb722cb091133caf33d8ab235caa5e406c6cb40fdf6663df0208737d4f11">CY_SYSPM_FAIL</a></div><div class="ttdeci">@ CY_SYSPM_FAIL</div><div class="ttdoc">Unknown failure.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1229</div></div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga601b1cb722cb091133caf33d8ab235caaf00d22f1ee891a8a56f8bbf58132e775"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga601b1cb722cb091133caf33d8ab235caaf00d22f1ee891a8a56f8bbf58132e775">CY_SYSPM_SUCCESS</a></div><div class="ttdeci">@ CY_SYSPM_SUCCESS</div><div class="ttdoc">Successful.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1222</div></div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63a7d302375276b3b5f250a8208c999b558"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63a7d302375276b3b5f250a8208c999b558">CY_SYSPM_BEFORE_TRANSITION</a></div><div class="ttdeci">@ CY_SYSPM_BEFORE_TRANSITION</div><div class="ttdoc">Callbacks with this mode are executed after the CY_SYSPM_CHECK_READY callbacks execution returns CY_S...</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1837</div></div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63a96acf2d0ae5537798228d5fba0fecd17"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63a96acf2d0ae5537798228d5fba0fecd17">CY_SYSPM_CHECK_FAIL</a></div><div class="ttdeci">@ CY_SYSPM_CHECK_FAIL</div><div class="ttdoc">Callbacks with this mode are executed after the CY_SYSPM_CHECK_READY callbacks execution returns CY_S...</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1832</div></div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63aafd1db1f7f86ac7bbd18d59b78af5693"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63aafd1db1f7f86ac7bbd18d59b78af5693">CY_SYSPM_AFTER_TRANSITION</a></div><div class="ttdeci">@ CY_SYSPM_AFTER_TRANSITION</div><div class="ttdoc">Performs the actions to be done after exiting the low power mode if entered.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1841</div></div>
-<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63ab7ec706d80b347433d0063f2a8115784"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63ab7ec706d80b347433d0063f2a8115784">CY_SYSPM_CHECK_READY</a></div><div class="ttdeci">@ CY_SYSPM_CHECK_READY</div><div class="ttdoc">Callbacks with this mode are executed before entering into the low power mode.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1829</div></div>
-<div class="ttc" id="agroup__group__syspm_html_ga56076e99358e2b7c99681312108b09af"><div class="ttname"><a href="group__group__syspm.html#ga56076e99358e2b7c99681312108b09af">cy_stc_syspm_callback_params_t::base</a></div><div class="ttdeci">void * base</div><div class="ttdoc">Base address of a HW instance, matches name of the driver in the API for the base address.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1924</div></div>
-<div class="ttc" id="agroup__group__syspm_html_gabac771f244791efe23d4964a40bbf8c8"><div class="ttname"><a href="group__group__syspm.html#gabac771f244791efe23d4964a40bbf8c8">cy_stc_syspm_callback_params_t::context</a></div><div class="ttdeci">void * context</div><div class="ttdoc">Context for the handler function.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1927</div></div>
-<div class="ttc" id="astructCySCB__Type_html"><div class="ttname"><a href="structCySCB__Type.html">CySCB_Type</a></div><div class="ttdoc">Serial Communications Block (SPI/UART/I2C) (CySCB)</div><div class="ttdef"><b>Definition:</b> cyip_scb.h:41</div></div>
+<div class="ttc" id="agroup__group__scb__spi__macros__xfer__status_html_gab024f7d6ed7cbaa36c80c904a6179de7"><div class="ttname"><a href="group__group__scb__spi__macros__xfer__status.html#gab024f7d6ed7cbaa36c80c904a6179de7">CY_SCB_SPI_TRANSFER_ACTIVE</a></div><div class="ttdeci">#define CY_SCB_SPI_TRANSFER_ACTIVE</div><div class="ttdoc">Transfer operation started by Cy_SCB_SPI_Transfer is in progress.</div><div class="ttdef"><b>Definition:</b> cy_scb_spi.h:820</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga601b1cb722cb091133caf33d8ab235caa5e406c6cb40fdf6663df0208737d4f11"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga601b1cb722cb091133caf33d8ab235caa5e406c6cb40fdf6663df0208737d4f11">CY_SYSPM_FAIL</a></div><div class="ttdeci">@ CY_SYSPM_FAIL</div><div class="ttdoc">Unknown failure.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1358</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_gga601b1cb722cb091133caf33d8ab235caaf00d22f1ee891a8a56f8bbf58132e775"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#gga601b1cb722cb091133caf33d8ab235caaf00d22f1ee891a8a56f8bbf58132e775">CY_SYSPM_SUCCESS</a></div><div class="ttdeci">@ CY_SYSPM_SUCCESS</div><div class="ttdoc">Successful.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1351</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63a7d302375276b3b5f250a8208c999b558"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63a7d302375276b3b5f250a8208c999b558">CY_SYSPM_BEFORE_TRANSITION</a></div><div class="ttdeci">@ CY_SYSPM_BEFORE_TRANSITION</div><div class="ttdoc">Callbacks with this mode are executed after the CY_SYSPM_CHECK_READY callbacks execution returns CY_S...</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1966</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63a96acf2d0ae5537798228d5fba0fecd17"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63a96acf2d0ae5537798228d5fba0fecd17">CY_SYSPM_CHECK_FAIL</a></div><div class="ttdeci">@ CY_SYSPM_CHECK_FAIL</div><div class="ttdoc">Callbacks with this mode are executed after the CY_SYSPM_CHECK_READY callbacks execution returns CY_S...</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1961</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63aafd1db1f7f86ac7bbd18d59b78af5693"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63aafd1db1f7f86ac7bbd18d59b78af5693">CY_SYSPM_AFTER_TRANSITION</a></div><div class="ttdeci">@ CY_SYSPM_AFTER_TRANSITION</div><div class="ttdoc">Performs the actions to be done after exiting the low power mode if entered.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1970</div></div>
+<div class="ttc" id="agroup__group__syspm__data__enumerates_html_ggae06cd8869fe61d709ad6145ca9f3cd63ab7ec706d80b347433d0063f2a8115784"><div class="ttname"><a href="group__group__syspm__data__enumerates.html#ggae06cd8869fe61d709ad6145ca9f3cd63ab7ec706d80b347433d0063f2a8115784">CY_SYSPM_CHECK_READY</a></div><div class="ttdeci">@ CY_SYSPM_CHECK_READY</div><div class="ttdoc">Callbacks with this mode are executed before entering into the low power mode.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:1958</div></div>
+<div class="ttc" id="agroup__group__syspm__data__structures_html_a56076e99358e2b7c99681312108b09af"><div class="ttname"><a href="group__group__syspm__data__structures.html#a56076e99358e2b7c99681312108b09af">cy_stc_syspm_callback_params_t::base</a></div><div class="ttdeci">void * base</div><div class="ttdoc">Base address of a HW instance, matches name of the driver in the API for the base address.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:2053</div></div>
+<div class="ttc" id="agroup__group__syspm__data__structures_html_abac771f244791efe23d4964a40bbf8c8"><div class="ttname"><a href="group__group__syspm__data__structures.html#abac771f244791efe23d4964a40bbf8c8">cy_stc_syspm_callback_params_t::context</a></div><div class="ttdeci">void * context</div><div class="ttdoc">Context for the handler function.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:2056</div></div>
+<div class="ttc" id="astructCySCB__Type_html"><div class="ttname"><a href="structCySCB__Type.html">CySCB_Type</a></div><div class="ttdoc">Serial Communications Block (SPI/UART/I2C) (CySCB)</div><div class="ttdef"><b>Definition:</b> cyip_scb.h:38</div></div>
 </div><!-- fragment --><p >Finally, we register the callbacks so that the SysPm driver knows about them. The order in which the callbacks will be called depends upon the order in which the callbacks are registered. If there are no callbacks registered, the device just executes the power mode transition.</p>
 <p >Callbacks that reconfigure global resources, such as clock frequencies, should be registered last. They then modify global resources as the final step before entering the low power mode, and restore those resources first, as the system returns from low power mode.</p>
 <div class="fragment"><div class="line">    <span class="comment">/* Register myDeepSleep1 */</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != Cy_SysPm_RegisterCallback(&amp;myDeepSleep1))</div>
+<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;myDeepSleep1))</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Register myDeepSleep2 */</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != Cy_SysPm_RegisterCallback(&amp;myDeepSleep2))</div>
+<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;myDeepSleep2))</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Register myDeepSleep3 */</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != Cy_SysPm_RegisterCallback(&amp;myDeepSleep3))</div>
+<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;myDeepSleep3))</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
-</div><!-- fragment --><p >We are done configuring three callbacks. Now the SysPm driver will execute the callbacks appropriately whenever there is a call to a power mode transition function: Cy_SysPm_CpuEnterSleep(), Cy_SysPm_CpuEnterDeepSleep(), Cy_SysPm_SystemEnterUlp(), Cy_SysPm_SystemEnterLp(), and Cy_SysPm_SystemEnterHibernate(). </p><dl class="section note"><dt>Note</dt><dd>On a wakeup from hibernate the device goes through a reset, so the callbacks with CY_SYSPM_AFTER_TRANSITION are not executed. Refer to Cy_SysPm_SystemEnterHibernate() for more detail.</dd></dl>
+<div class="ttc" id="agroup__group__syspm__functions__callback_html_ga0d58b00c8dc764a6371590f70e2f73c7"><div class="ttname"><a href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a></div><div class="ttdeci">bool Cy_SysPm_RegisterCallback(cy_stc_syspm_callback_t *handler)</div><div class="ttdoc">Registers a new syspm callback.</div><div class="ttdef"><b>Definition:</b> cy_syspm_v4.c:1992</div></div>
+</div><!-- fragment --><p >We are done configuring three callbacks. Now the SysPm driver will execute the callbacks appropriately whenever there is a call to a power mode transition function: <a class="el" href="group__group__syspm__functions__power.html#gab09936e85606de476a0c379f9548603f">Cy_SysPm_CpuEnterSleep()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca">Cy_SysPm_CpuEnterDeepSleep()</a>, <a class="el" href="group__group__syspm__functions__power.html#gaca7c8f1ab6d555530a68978269198836">Cy_SysPm_SystemEnterUlp()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga72531fcca015df727a163b510639a334">Cy_SysPm_SystemEnterLp()</a>, and <a class="el" href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate()</a>. </p><dl class="section note"><dt>Note</dt><dd>On a wakeup from hibernate the device goes through a reset, so the callbacks with CY_SYSPM_AFTER_TRANSITION are not executed. Refer to <a class="el" href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate()</a> for more detail.</dd></dl>
 <p>Refer to <a class="el" href="group__group__syspm.html#group_syspm_cb_unregistering">Callback Unregistering</a> in <a class="el" href="group__group__syspm.html#group_syspm_cb_config_consideration">Callback Configuration Considerations</a> to learn what to do if you need to remove the callback from the linked list. You might want to unregister the callback for debug purposes.</p>
 <p >Refer to <a class="el" href="group__group__syspm.html#group_syspm_cb_flow">Callbacks Execution Flow</a> in <a class="el" href="group__group__syspm.html#group_syspm_cb_config_consideration">Callback Configuration Considerations</a> to learn about how the SysPm processes the callbacks.</p>
 <h2><a class="anchor" id="group_syspm_cb_config_consideration"></a>
@@ -546,8 +688,8 @@ Callback Function Parameters</h3>
 <p >The <b>callbackParams</b> parameter of the callback function is a <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> structure. The second parameter (<b>mode</b>) is for internal use. In the example code we used a dummy value CY_SYSPM_CHECK_READY to eliminate compilation errors associated with the enumeration. The driver sets the <b>mode</b> field to the correct value when calling the callback functions (the mode is referred to as step in the <a class="el" href="group__group__syspm.html#group_syspm_cb_function_implementation">Callback Function Implementation</a>). The callback function reads the value and executes code based on the mode set by the SysPm driver. The <b>base</b> and <b>context</b> fields are optional and can be NULL. Some drivers require a base hardware address and context to store information about the mode transition. If your callback routine requires access to the driver registers or context, provide those values (see <a href="..\..\pdl_user_guide.pdf">PDL Design</a> section to learn about Base Hardware Address). Be aware of MISRA warnings if these parameters are NULL.</p>
 <h3><a class="anchor" id="group_syspm_cb_structures"></a>
 Callback Function Structure</h3>
-<p >For each callback, provide a <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a> structure. Some fields in this structure are maintained by the driver. Use NULL for <a class="el" href="group__group__syspm.html#gac4dd0cc8f5d4e92eefae3d10df920a56" title="The previous list item.">cy_stc_syspm_callback_t.prevItm</a> and <a class="el" href="group__group__syspm.html#ga491e913ae8b54d0a61f2ac6959abf8ab" title="The next list item.">cy_stc_syspm_callback_t.nextItm</a>. Driver uses these fields to build a linked list of callback functions. The value of <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> element is used to define the order how the callbacks are put into linked list, and sequentially, how the callbacks are executed. See <a class="el" href="group__group__syspm.html#group_syspm_cb_registering">Callback Registering</a> section.</p>
-<dl class="section warning"><dt>Warning</dt><dd>The Cy_SysPm_RegisterCallback() function stores a pointer to the <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t" title="Structure with syspm callback configuration elements.">cy_stc_syspm_callback_t</a> structure. Do not modify elements of the <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t" title="Structure with syspm callback configuration elements.">cy_stc_syspm_callback_t</a> structure after the callback is registered. You are responsible for ensuring that the structure remains in scope. Typically the structure is declared as a global or static variable, or as a local variable in the main() function.</dd></dl>
+<p >For each callback, provide a <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t">cy_stc_syspm_callback_t</a> structure. Some fields in this structure are maintained by the driver. Use NULL for <a class="el" href="group__group__syspm__data__structures.html#ac4dd0cc8f5d4e92eefae3d10df920a56" title="The previous list item.">cy_stc_syspm_callback_t.prevItm</a> and <a class="el" href="group__group__syspm__data__structures.html#a491e913ae8b54d0a61f2ac6959abf8ab" title="The next list item.">cy_stc_syspm_callback_t.nextItm</a>. Driver uses these fields to build a linked list of callback functions. The value of <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> element is used to define the order how the callbacks are put into linked list, and sequentially, how the callbacks are executed. See <a class="el" href="group__group__syspm.html#group_syspm_cb_registering">Callback Registering</a> section.</p>
+<dl class="section warning"><dt>Warning</dt><dd>The <a class="el" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7" title="Registers a new syspm callback.">Cy_SysPm_RegisterCallback()</a> function stores a pointer to the <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t" title="Structure with syspm callback configuration elements.">cy_stc_syspm_callback_t</a> structure. Do not modify elements of the <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t" title="Structure with syspm callback configuration elements.">cy_stc_syspm_callback_t</a> structure after the callback is registered. You are responsible for ensuring that the structure remains in scope. Typically the structure is declared as a global or static variable, or as a local variable in the main() function.</dd></dl>
 <h3><a class="anchor" id="group_syspm_cb_function_implementation"></a>
 Callback Function Implementation</h3>
 <p >Every callback function should handle four possible steps (referred to as "mode") defined in <a class="el" href="group__group__syspm__data__enumerates.html#gae06cd8869fe61d709ad6145ca9f3cd63">cy_en_syspm_callback_mode_t</a> :</p><ul>
@@ -564,44 +706,44 @@ Callbacks Execution Flow</h3>
 <li>All <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__t" title="Structure with syspm callback configuration elements.">cy_stc_syspm_callback_t</a> structures are filled with required values</li>
 <li>All callbacks are successfully registered</li>
 </ul>
-<p >User calls one of the power mode transition functions: Cy_SysPm_CpuEnterSleep(), Cy_SysPm_CpuEnterDeepSleep(), Cy_SysPm_SystemEnterUlp(), Cy_SysPm_SystemEnterLp(), or Cy_SysPm_SystemEnterHibernate(). It calls each callback with the mode set to CY_SYSPM_CHECK_READY. This triggers execution of the code for that mode inside of each user callback.</p>
+<p >User calls one of the power mode transition functions: <a class="el" href="group__group__syspm__functions__power.html#gab09936e85606de476a0c379f9548603f">Cy_SysPm_CpuEnterSleep()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca">Cy_SysPm_CpuEnterDeepSleep()</a>, <a class="el" href="group__group__syspm__functions__power.html#gaca7c8f1ab6d555530a68978269198836">Cy_SysPm_SystemEnterUlp()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga72531fcca015df727a163b510639a334">Cy_SysPm_SystemEnterLp()</a>, or <a class="el" href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate()</a>. It calls each callback with the mode set to CY_SYSPM_CHECK_READY. This triggers execution of the code for that mode inside of each user callback.</p>
 <p >The intent of CY_SYSPM_CHECK_READY is to only signal if the resources is ready to transition. Ideally, no transition changes should be made at this time. In some cases a small change may be required. For example a communication resource callback may set a flag telling firmware not to start any new transition.</p>
-<p >If that process is successful for all callbacks, then Cy_SysPm_ExecuteCallback() calls each callback with the mode set to CY_SYSPM_BEFORE_TRANSITION. This triggers execution of the code for that mode inside each user callback. We then enter the low power mode after all callback are executed.</p>
-<p >When exiting the low power mode, the SysPm driver executes Cy_SysPm_ExecuteCallback() again. This time it calls each callback in reverse order, with the mode set to CY_SYSPM_AFTER_TRANSITION. This triggers execution of the code for that mode inside each user callback. The final execution of callbacks depends on the low power mode in which callbacks were called:</p><ul>
+<p >If that process is successful for all callbacks, then <a class="el" href="group__group__syspm__functions__callback.html#ga95462119281ba8dec6b313f85dd752b0">Cy_SysPm_ExecuteCallback()</a> calls each callback with the mode set to CY_SYSPM_BEFORE_TRANSITION. This triggers execution of the code for that mode inside each user callback. We then enter the low power mode after all callback are executed.</p>
+<p >When exiting the low power mode, the SysPm driver executes <a class="el" href="group__group__syspm__functions__callback.html#ga95462119281ba8dec6b313f85dd752b0">Cy_SysPm_ExecuteCallback()</a> again. This time it calls each callback in reverse order, with the mode set to CY_SYSPM_AFTER_TRANSITION. This triggers execution of the code for that mode inside each user callback. The final execution of callbacks depends on the low power mode in which callbacks were called:</p><ul>
 <li>For CPU Sleep or Deep Sleep power modes, the CY_SYSPM_AFTER_TRANSITION mode is called after the CPU wakes from Sleep or Deep Sleep.</li>
 <li>For system Hibernate, the CY_SYSPM_AFTER_TRANSITION mode is not executed because the device reboots after the wakeup from the Hibernate.</li>
 <li>For system LP and ULP modes, after the CY_SYSPM_AFTER_TRANSITION mode was called the system remains in the new power mode: LP or ULP.</li>
 </ul>
-<p >A callback can return CY_SYSPM_FAIL only while executing the CY_SYSPM_CHECK_READY mode. If that happens, then the remaining callbacks are not executed. Any callbacks that have already executed are called again, in reverse order, with CY_SYSPM_CHECK_FAIL. This allows the system to return to the previous state. If a callback returns a fail then any of the functions (Cy_SysPm_CpuEnterSleep(), Cy_SysPm_CpuEnterDeepSleep(), Cy_SysPm_SystemEnterUlp(), Cy_SysPm_SystemEnterLp(), or Cy_SysPm_SystemEnterHibernate()) that attempt to switch the device into a low power mode will also return CY_SYSPM_FAIL.</p>
+<p >A callback can return CY_SYSPM_FAIL only while executing the CY_SYSPM_CHECK_READY mode. If that happens, then the remaining callbacks are not executed. Any callbacks that have already executed are called again, in reverse order, with CY_SYSPM_CHECK_FAIL. This allows the system to return to the previous state. If a callback returns a fail then any of the functions (<a class="el" href="group__group__syspm__functions__power.html#gab09936e85606de476a0c379f9548603f">Cy_SysPm_CpuEnterSleep()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga5150c28fe4d2626720c1fbf74b3111ca">Cy_SysPm_CpuEnterDeepSleep()</a>, <a class="el" href="group__group__syspm__functions__power.html#gaca7c8f1ab6d555530a68978269198836">Cy_SysPm_SystemEnterUlp()</a>, <a class="el" href="group__group__syspm__functions__power.html#ga72531fcca015df727a163b510639a334">Cy_SysPm_SystemEnterLp()</a>, or <a class="el" href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate()</a>) that attempt to switch the device into a low power mode will also return CY_SYSPM_FAIL.</p>
 <p >Callbacks that reconfigure global resources, such as clock frequencies, should be registered last. They then modify global resources as the final step before entering the low power mode, and restore those resources first, as the system returns from low power mode.</p>
 <h3><a class="anchor" id="group_syspm_cb_registering"></a>
 Callback Registering</h3>
-<p >While registration the callback is put into the linked list. The place where the callback structure is put into the linked list is based on <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a>. The callback with the lowest <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value will be placed at the beginning of linked list. The callback with the highest <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value will be placed at the end of the linked list. If there is already a callback structure in the linked list with the same <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value as you attend to register, then your callback will be placed right after such a callback.</p>
+<p >While registration the callback is put into the linked list. The place where the callback structure is put into the linked list is based on <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a>. The callback with the lowest <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value will be placed at the beginning of linked list. The callback with the highest <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value will be placed at the end of the linked list. If there is already a callback structure in the linked list with the same <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value as you attend to register, then your callback will be placed right after such a callback.</p>
 <p >Such a registration order defines how the callbacks are executed:</p><ul>
-<li>Callbacks with the lower <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> are executed first when entering into low power and last when exiting from low power.</li>
-<li>Callbacks with the higher <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> are executed last when entering into low power and first when exiting from low power.</li>
+<li>Callbacks with the lower <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> are executed first when entering into low power and last when exiting from low power.</li>
+<li>Callbacks with the higher <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> are executed last when entering into low power and first when exiting from low power.</li>
 </ul>
 <div class="fragment"><div class="line">    <span class="comment">/* Register myDeepSleep1 */</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != Cy_SysPm_RegisterCallback(&amp;myDeepSleep1))</div>
+<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;myDeepSleep1))</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Register myDeepSleep2 */</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != Cy_SysPm_RegisterCallback(&amp;myDeepSleep2))</div>
+<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;myDeepSleep2))</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* Register myDeepSleep3 */</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != Cy_SysPm_RegisterCallback(&amp;myDeepSleep3))</div>
+<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != <a class="code hl_function" href="group__group__syspm__functions__callback.html#ga0d58b00c8dc764a6371590f70e2f73c7">Cy_SysPm_RegisterCallback</a>(&amp;myDeepSleep3))</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handling */</span></div>
 <div class="line">    }</div>
-</div><!-- fragment --><p >Callbacks with equal <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> values are registered in the same order as they are registered: </p><div class="image">
+</div><!-- fragment --><p >Callbacks with equal <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> values are registered in the same order as they are registered: </p><div class="image">
 <img src="syspm_register_eq.png" alt=""/>
 </div>
-<p >Callbacks with a different <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value will be stored based on the <a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value, with no matter when they when registered:</p>
+<p >Callbacks with a different <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value will be stored based on the <a class="el" href="group__group__syspm__data__structures.html#a13e6dfd81747d61783aac9ca28931fe4" title="Holds the callback execution order value.">cy_stc_syspm_callback_t.order</a> value, with no matter when they when registered:</p>
 <div class="image">
 <img src="syspm_register_dif.png" alt=""/>
 </div>
@@ -610,10 +752,11 @@ Callback Registering</h3>
 Callback Unregistering</h3>
 <p >Unregistering the callback might be useful when you need to dynamically manage the callbacks.</p>
 <div class="fragment"><div class="line">    <span class="comment">/* Scenario: There is a need to unregister a previously registered callback */</span></div>
-<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != Cy_SysPm_UnregisterCallback(&amp;myDeepSleep2))</div>
+<div class="line">    <span class="keywordflow">if</span> (<span class="keyword">true</span> != <a class="code hl_function" href="group__group__syspm__functions__callback.html#gab7b9b923fceff2f37a6b8288253b0e82">Cy_SysPm_UnregisterCallback</a>(&amp;myDeepSleep2))</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">/* Insert error handler */</span></div>
 <div class="line">    }</div>
+<div class="ttc" id="agroup__group__syspm__functions__callback_html_gab7b9b923fceff2f37a6b8288253b0e82"><div class="ttname"><a href="group__group__syspm__functions__callback.html#gab7b9b923fceff2f37a6b8288253b0e82">Cy_SysPm_UnregisterCallback</a></div><div class="ttdeci">bool Cy_SysPm_UnregisterCallback(cy_stc_syspm_callback_t const *handler)</div><div class="ttdoc">This function unregisters a callback.</div><div class="ttdef"><b>Definition:</b> cy_syspm_v4.c:2059</div></div>
 </div><!-- fragment --><p> The callback structures after myDeepSleep2 callback is unregistered: </p><div class="image">
 <img src="syspm_unregistration.png" alt=""/>
 </div>
@@ -672,891 +815,7 @@ API Reference</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__syspm__data__enumerates"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__enumerates.html">Enumerated Types</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga56076e99358e2b7c99681312108b09af"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm.html#ga56076e99358e2b7c99681312108b09af">cy_stc_syspm_callback_params_t::base</a></td></tr>
-<tr class="memdesc:ga56076e99358e2b7c99681312108b09af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base address of a HW instance, matches name of the driver in the API for the base address.  <a href="group__group__syspm.html#ga56076e99358e2b7c99681312108b09af">More...</a><br /></td></tr>
-<tr class="separator:ga56076e99358e2b7c99681312108b09af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabac771f244791efe23d4964a40bbf8c8"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm.html#gabac771f244791efe23d4964a40bbf8c8">cy_stc_syspm_callback_params_t::context</a></td></tr>
-<tr class="memdesc:gabac771f244791efe23d4964a40bbf8c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context for the handler function.  <a href="group__group__syspm.html#gabac771f244791efe23d4964a40bbf8c8">More...</a><br /></td></tr>
-<tr class="separator:gabac771f244791efe23d4964a40bbf8c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafc2210e66cc5a0513e42761df9a2021a"><td class="memItemLeft" align="right" valign="top"><a id="gafc2210e66cc5a0513e42761df9a2021a" name="gafc2210e66cc5a0513e42761df9a2021a"></a>
-<a class="el" href="group__group__syspm__data__structures.html#ga0b54e47bca8fb045d86884a9b3d12067">Cy_SysPmCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_callback_t::callback</b></td></tr>
-<tr class="memdesc:gafc2210e66cc5a0513e42761df9a2021a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback handler function. <br /></td></tr>
-<tr class="separator:gafc2210e66cc5a0513e42761df9a2021a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga566582fa98bed63f19108164d62e6c8f"><td class="memItemLeft" align="right" valign="top"><a id="ga566582fa98bed63f19108164d62e6c8f" name="ga566582fa98bed63f19108164d62e6c8f"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#ga8c2960c0164ead1cfa86e7d6846b6ff0">cy_en_syspm_callback_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_callback_t::type</b></td></tr>
-<tr class="memdesc:ga566582fa98bed63f19108164d62e6c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback type, see <a class="el" href="group__group__syspm__data__enumerates.html#ga8c2960c0164ead1cfa86e7d6846b6ff0">cy_en_syspm_callback_type_t</a>. <br /></td></tr>
-<tr class="separator:ga566582fa98bed63f19108164d62e6c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1b49c2454ac29e52261e28eb9071413b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm.html#ga1b49c2454ac29e52261e28eb9071413b">cy_stc_syspm_callback_t::skipMode</a></td></tr>
-<tr class="memdesc:ga1b49c2454ac29e52261e28eb9071413b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mask of modes to be skipped during callback execution, see <a class="el" href="group__group__syspm__skip__callback__modes.html">Defines to skip the callbacks modes</a>.  <a href="group__group__syspm.html#ga1b49c2454ac29e52261e28eb9071413b">More...</a><br /></td></tr>
-<tr class="separator:ga1b49c2454ac29e52261e28eb9071413b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga497711725618616da0b168743702dc03"><td class="memItemLeft" align="right" valign="top"><a id="ga497711725618616da0b168743702dc03" name="ga497711725618616da0b168743702dc03"></a>
-<a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_callback_t::callbackParams</b></td></tr>
-<tr class="memdesc:ga497711725618616da0b168743702dc03"><td class="mdescLeft">&#160;</td><td class="mdescRight">The address of a <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t" title="The structure contains syspm callback parameters.">cy_stc_syspm_callback_params_t</a>, the callback is executed with these parameters. <br /></td></tr>
-<tr class="separator:ga497711725618616da0b168743702dc03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac4dd0cc8f5d4e92eefae3d10df920a56"><td class="memItemLeft" align="right" valign="top">struct cy_stc_syspm_callback *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm.html#gac4dd0cc8f5d4e92eefae3d10df920a56">cy_stc_syspm_callback_t::prevItm</a></td></tr>
-<tr class="memdesc:gac4dd0cc8f5d4e92eefae3d10df920a56"><td class="mdescLeft">&#160;</td><td class="mdescRight">The previous list item.  <a href="group__group__syspm.html#gac4dd0cc8f5d4e92eefae3d10df920a56">More...</a><br /></td></tr>
-<tr class="separator:gac4dd0cc8f5d4e92eefae3d10df920a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga491e913ae8b54d0a61f2ac6959abf8ab"><td class="memItemLeft" align="right" valign="top">struct cy_stc_syspm_callback *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm.html#ga491e913ae8b54d0a61f2ac6959abf8ab">cy_stc_syspm_callback_t::nextItm</a></td></tr>
-<tr class="memdesc:ga491e913ae8b54d0a61f2ac6959abf8ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next list item.  <a href="group__group__syspm.html#ga491e913ae8b54d0a61f2ac6959abf8ab">More...</a><br /></td></tr>
-<tr class="separator:ga491e913ae8b54d0a61f2ac6959abf8ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga13e6dfd81747d61783aac9ca28931fe4"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4">cy_stc_syspm_callback_t::order</a></td></tr>
-<tr class="memdesc:ga13e6dfd81747d61783aac9ca28931fe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds the callback execution order value.  <a href="group__group__syspm.html#ga13e6dfd81747d61783aac9ca28931fe4">More...</a><br /></td></tr>
-<tr class="separator:ga13e6dfd81747d61783aac9ca28931fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4b14408d3890bf298288a0d5fbdb2066"><td class="memItemLeft" align="right" valign="top"><a id="ga4b14408d3890bf298288a0d5fbdb2066" name="ga4b14408d3890bf298288a0d5fbdb2066"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_retldo_params_t::activeVoltSel</b></td></tr>
-<tr class="memdesc:ga4b14408d3890bf298288a0d5fbdb2066"><td class="mdescLeft">&#160;</td><td class="mdescRight">RETLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga4b14408d3890bf298288a0d5fbdb2066"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa9a66a25e8ca50871ddc7fef23c52742"><td class="memItemLeft" align="right" valign="top"><a id="gaa9a66a25e8ca50871ddc7fef23c52742" name="gaa9a66a25e8ca50871ddc7fef23c52742"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#ga91aa7be5f9de8e9fa32c1229b2db05a7">cy_en_syspm_retldo_gain_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_retldo_params_t::activeGain</b></td></tr>
-<tr class="memdesc:gaa9a66a25e8ca50871ddc7fef23c52742"><td class="mdescLeft">&#160;</td><td class="mdescRight">RETLDO Gain Select Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. <br /></td></tr>
-<tr class="separator:gaa9a66a25e8ca50871ddc7fef23c52742"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga40a27028a1199fde1c3823cc3451e530"><td class="memItemLeft" align="right" valign="top"><a id="ga40a27028a1199fde1c3823cc3451e530" name="ga40a27028a1199fde1c3823cc3451e530"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_retldo_params_t::deepsleepVoltSel</b></td></tr>
-<tr class="memdesc:ga40a27028a1199fde1c3823cc3451e530"><td class="mdescLeft">&#160;</td><td class="mdescRight">RETLDO Deepsleep Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga40a27028a1199fde1c3823cc3451e530"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa7c6a983726bdb8bca4a5d4bbfa0bbc"><td class="memItemLeft" align="right" valign="top"><a id="gafa7c6a983726bdb8bca4a5d4bbfa0bbc" name="gafa7c6a983726bdb8bca4a5d4bbfa0bbc"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#ga91aa7be5f9de8e9fa32c1229b2db05a7">cy_en_syspm_retldo_gain_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_retldo_params_t::deepsleepGain</b></td></tr>
-<tr class="memdesc:gafa7c6a983726bdb8bca4a5d4bbfa0bbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">RETLDO Deepsleep Gain Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. <br /></td></tr>
-<tr class="separator:gafa7c6a983726bdb8bca4a5d4bbfa0bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga61f0b7001c868113a1979f3be68b9a5f"><td class="memItemLeft" align="right" valign="top"><a id="ga61f0b7001c868113a1979f3be68b9a5f" name="ga61f0b7001c868113a1979f3be68b9a5f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sramldo_params_t::sramLdoEnable</b></td></tr>
-<tr class="memdesc:ga61f0b7001c868113a1979f3be68b9a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">SRAMLDO Enable/Disable. <br /></td></tr>
-<tr class="separator:ga61f0b7001c868113a1979f3be68b9a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4b83333e4bef3e4b4bb35c4e93816b98"><td class="memItemLeft" align="right" valign="top"><a id="ga4b83333e4bef3e4b4bb35c4e93816b98" name="ga4b83333e4bef3e4b4bb35c4e93816b98"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sramldo_params_t::deepsleepSramLdoEnable</b></td></tr>
-<tr class="memdesc:ga4b83333e4bef3e4b4bb35c4e93816b98"><td class="mdescLeft">&#160;</td><td class="mdescRight">SRAMLDO Enable/Disable during deepsleep. <br /></td></tr>
-<tr class="separator:ga4b83333e4bef3e4b4bb35c4e93816b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga162d2acc61df6ad48d92a99b39862cc0"><td class="memItemLeft" align="right" valign="top"><a id="ga162d2acc61df6ad48d92a99b39862cc0" name="ga162d2acc61df6ad48d92a99b39862cc0"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sramldo_params_t::sramLdoVoltSel</b></td></tr>
-<tr class="memdesc:ga162d2acc61df6ad48d92a99b39862cc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">SRAMLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga162d2acc61df6ad48d92a99b39862cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8b89396277c25c507a2d33de955d775d"><td class="memItemLeft" align="right" valign="top"><a id="ga8b89396277c25c507a2d33de955d775d" name="ga8b89396277c25c507a2d33de955d775d"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_miscldo_params_t::miscLdoEnable</b></td></tr>
-<tr class="memdesc:ga8b89396277c25c507a2d33de955d775d"><td class="mdescLeft">&#160;</td><td class="mdescRight">MISCLDO Enable/Disable. <br /></td></tr>
-<tr class="separator:ga8b89396277c25c507a2d33de955d775d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1dbdee482d59c112b2f8561e8e9d9825"><td class="memItemLeft" align="right" valign="top"><a id="ga1dbdee482d59c112b2f8561e8e9d9825" name="ga1dbdee482d59c112b2f8561e8e9d9825"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#gaa6cefd648d76445ce14d47427b63582d">cy_en_syspm_miscldo_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_miscldo_params_t::miscLdoMode</b></td></tr>
-<tr class="memdesc:ga1dbdee482d59c112b2f8561e8e9d9825"><td class="mdescLeft">&#160;</td><td class="mdescRight">MISCLDO mode select , VCCACT or VOUT. <br /></td></tr>
-<tr class="separator:ga1dbdee482d59c112b2f8561e8e9d9825"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga000d6c49a438f6a02d7e674be8812ab4"><td class="memItemLeft" align="right" valign="top"><a id="ga000d6c49a438f6a02d7e674be8812ab4" name="ga000d6c49a438f6a02d7e674be8812ab4"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#ga6d83aee1e2e9f941f41ef76499f5aa23">cy_en_syspm_miscldo_voltage_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_miscldo_params_t::miscLdoVoltSel</b></td></tr>
-<tr class="memdesc:ga000d6c49a438f6a02d7e674be8812ab4"><td class="mdescLeft">&#160;</td><td class="mdescRight">MISCLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga6d83aee1e2e9f941f41ef76499f5aa23">cy_en_syspm_miscldo_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga000d6c49a438f6a02d7e674be8812ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6a5fcbe49c5998c7eb1618be54ab8a09"><td class="memItemLeft" align="right" valign="top"><a id="ga6a5fcbe49c5998c7eb1618be54ab8a09" name="ga6a5fcbe49c5998c7eb1618be54ab8a09"></a>
-<a class="el" href="group__group__syspm__data__enumerates.html#ga5f420c331cd3ce9028e9bf77057aa40d">cy_en_syspm_miscldo_vccact_trim_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_miscldo_params_t::miscLdoVaccActTrimSel</b></td></tr>
-<tr class="memdesc:ga6a5fcbe49c5998c7eb1618be54ab8a09"><td class="mdescLeft">&#160;</td><td class="mdescRight">MISCLDO VCCACT Voltage Trim Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5f420c331cd3ce9028e9bf77057aa40d">cy_en_syspm_miscldo_vccact_trim_t</a>. <br /></td></tr>
-<tr class="separator:ga6a5fcbe49c5998c7eb1618be54ab8a09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf94c827b080dbbb1b820a80689ef24eb"><td class="memItemLeft" align="right" valign="top"><a id="gaf94c827b080dbbb1b820a80689ef24eb" name="gaf94c827b080dbbb1b820a80689ef24eb"></a>
-uint32_t *&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_warmboot_entrypoint_t::stack_pointer</b></td></tr>
-<tr class="memdesc:gaf94c827b080dbbb1b820a80689ef24eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stack Pointer. <br /></td></tr>
-<tr class="separator:gaf94c827b080dbbb1b820a80689ef24eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga35789621c867f503c8c20d180c183bfa"><td class="memItemLeft" align="right" valign="top"><a id="ga35789621c867f503c8c20d180c183bfa" name="ga35789621c867f503c8c20d180c183bfa"></a>
-uint32_t *&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_warmboot_entrypoint_t::entry_pointer</b></td></tr>
-<tr class="memdesc:ga35789621c867f503c8c20d180c183bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Entry Function Address. <br /></td></tr>
-<tr class="separator:ga35789621c867f503c8c20d180c183bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7a2f940cbdb0dc1940fe25a801302946"><td class="memItemLeft" align="right" valign="top"><a id="ga7a2f940cbdb0dc1940fe25a801302946" name="ga7a2f940cbdb0dc1940fe25a801302946"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_core_buck_params_t::voltageSel</b></td></tr>
-<tr class="memdesc:ga7a2f940cbdb0dc1940fe25a801302946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga7a2f940cbdb0dc1940fe25a801302946"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga67564267794c895105556ff3bb6ed6dd"><td class="memItemLeft" align="right" valign="top"><a id="ga67564267794c895105556ff3bb6ed6dd" name="ga67564267794c895105556ff3bb6ed6dd"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_core_buck_params_t::mode</b></td></tr>
-<tr class="memdesc:ga67564267794c895105556ff3bb6ed6dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Mode : 0x01 - Low Power Mode, 0x11 - High Power Mode(Low Ripple Mode) <br /></td></tr>
-<tr class="separator:ga67564267794c895105556ff3bb6ed6dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gace2f0f2f88f0e8960ece515e28cef9b4"><td class="memItemLeft" align="right" valign="top"><a id="gace2f0f2f88f0e8960ece515e28cef9b4" name="gace2f0f2f88f0e8960ece515e28cef9b4"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_core_buck_params_t::override</b></td></tr>
-<tr class="memdesc:gace2f0f2f88f0e8960ece515e28cef9b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Override : Forces Corebuck to use the setting in the PWR_CBUCK_CTL register. <br /></td></tr>
-<tr class="separator:gace2f0f2f88f0e8960ece515e28cef9b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3855fbcd9e14258860a6ffc9a81ddf57"><td class="memItemLeft" align="right" valign="top"><a id="ga3855fbcd9e14258860a6ffc9a81ddf57" name="ga3855fbcd9e14258860a6ffc9a81ddf57"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_core_buck_params_t::copySettings</b></td></tr>
-<tr class="memdesc:ga3855fbcd9e14258860a6ffc9a81ddf57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Copy Settings : Copies the current CBUCK composite state to PWR_CBUCK_CTL register. <br /></td></tr>
-<tr class="separator:ga3855fbcd9e14258860a6ffc9a81ddf57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga68cfa6f254255b10415af63b15253991"><td class="memItemLeft" align="right" valign="top"><a id="ga68cfa6f254255b10415af63b15253991" name="ga68cfa6f254255b10415af63b15253991"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_core_buck_params_t::useSettings</b></td></tr>
-<tr class="memdesc:ga68cfa6f254255b10415af63b15253991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck use Settings : Causes the settings in PWR_CBUCK_CTL to be used in CBUCK settings decision. <br /></td></tr>
-<tr class="separator:ga68cfa6f254255b10415af63b15253991"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2a891f6788a30fc82117f0bf0343a928"><td class="memItemLeft" align="right" valign="top"><a id="ga2a891f6788a30fc82117f0bf0343a928" name="ga2a891f6788a30fc82117f0bf0343a928"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_core_buck_params_t::inRushLimitSel</b></td></tr>
-<tr class="memdesc:ga2a891f6788a30fc82117f0bf0343a928"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck In Rush Limit Selection 0: 10mA limit 1: 100mA limit. <br /></td></tr>
-<tr class="separator:ga2a891f6788a30fc82117f0bf0343a928"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad0737deda13ef32f2cec591206537d43"><td class="memItemLeft" align="right" valign="top"><a id="gad0737deda13ef32f2cec591206537d43" name="gad0737deda13ef32f2cec591206537d43"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::coreBuckVoltSel</b></td></tr>
-<tr class="memdesc:gad0737deda13ef32f2cec591206537d43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. <br /></td></tr>
-<tr class="separator:gad0737deda13ef32f2cec591206537d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3507a2da6d66b6adcc843fb11f41f11e"><td class="memItemLeft" align="right" valign="top"><a id="ga3507a2da6d66b6adcc843fb11f41f11e" name="ga3507a2da6d66b6adcc843fb11f41f11e"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::coreBuckMode</b></td></tr>
-<tr class="memdesc:ga3507a2da6d66b6adcc843fb11f41f11e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Mode : 0x01 - Low Power Mode, 0x11 - High Power Mode(Low Ripple Mode) <br /></td></tr>
-<tr class="separator:ga3507a2da6d66b6adcc843fb11f41f11e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga19d1c7053b085f162eecb6f14f957746"><td class="memItemLeft" align="right" valign="top"><a id="ga19d1c7053b085f162eecb6f14f957746" name="ga19d1c7053b085f162eecb6f14f957746"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::coreBuckDpSlpVoltSel</b></td></tr>
-<tr class="memdesc:ga19d1c7053b085f162eecb6f14f957746"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deep Sleep Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga19d1c7053b085f162eecb6f14f957746"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9a711c22c727e9003a7a6c32c08f1626"><td class="memItemLeft" align="right" valign="top"><a id="ga9a711c22c727e9003a7a6c32c08f1626" name="ga9a711c22c727e9003a7a6c32c08f1626"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::coreBuckDpSlpMode</b></td></tr>
-<tr class="memdesc:ga9a711c22c727e9003a7a6c32c08f1626"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deep sleep Core Buck Mode : 0x01 - Low Power Mode, 0x11 - High Power Mode(Low Ripple Mode) <br /></td></tr>
-<tr class="separator:ga9a711c22c727e9003a7a6c32c08f1626"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga88af45975bc8add297fb862df836009b"><td class="memItemLeft" align="right" valign="top"><a id="ga88af45975bc8add297fb862df836009b" name="ga88af45975bc8add297fb862df836009b"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::sdrVoltSel</b></td></tr>
-<tr class="memdesc:ga88af45975bc8add297fb862df836009b"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDR Regulator Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga88af45975bc8add297fb862df836009b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeaa701586a259d33a4abbbe9abb1a5e0"><td class="memItemLeft" align="right" valign="top"><a id="gaeaa701586a259d33a4abbbe9abb1a5e0" name="gaeaa701586a259d33a4abbbe9abb1a5e0"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::sdr0DpSlpVoltSel</b></td></tr>
-<tr class="memdesc:gaeaa701586a259d33a4abbbe9abb1a5e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDR Regulator Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a>. <br /></td></tr>
-<tr class="separator:gaeaa701586a259d33a4abbbe9abb1a5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab1a2dfa3b068f1ad0b975068502cdbaa"><td class="memItemLeft" align="right" valign="top"><a id="gab1a2dfa3b068f1ad0b975068502cdbaa" name="gab1a2dfa3b068f1ad0b975068502cdbaa"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::sdr0Allowbypass</b></td></tr>
-<tr class="memdesc:gab1a2dfa3b068f1ad0b975068502cdbaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow SDR bypass : true - Allow SDR to bypass false - SDR is not bypassed and will regulate. <br /></td></tr>
-<tr class="separator:gab1a2dfa3b068f1ad0b975068502cdbaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa3d81c0cc4a011ac5474ab0bab722d88"><td class="memItemLeft" align="right" valign="top"><a id="gaa3d81c0cc4a011ac5474ab0bab722d88" name="gaa3d81c0cc4a011ac5474ab0bab722d88"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::sdr1HwControl</b></td></tr>
-<tr class="memdesc:gaa3d81c0cc4a011ac5474ab0bab722d88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow SDR1 HW Control : true - sdr1Enable(bit: SDR1_ENABLE) is ignored, HW will control false - sdr1Enable(bit: SDR1_ENABLE) will control, HW control is ignored. <br /></td></tr>
-<tr class="separator:gaa3d81c0cc4a011ac5474ab0bab722d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga05be2f266996ceaef6574e50fc38968a"><td class="memItemLeft" align="right" valign="top"><a id="ga05be2f266996ceaef6574e50fc38968a" name="ga05be2f266996ceaef6574e50fc38968a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_sdr_params_t::sdr1Enable</b></td></tr>
-<tr class="memdesc:ga05be2f266996ceaef6574e50fc38968a"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDR1 Enable/Disable: true - SDR1 is enabled false - SDR1 is disabled. <br /></td></tr>
-<tr class="separator:ga05be2f266996ceaef6574e50fc38968a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4455db3635c31858fd68e5bcbe56fdb0"><td class="memItemLeft" align="right" valign="top"><a id="ga4455db3635c31858fd68e5bcbe56fdb0" name="ga4455db3635c31858fd68e5bcbe56fdb0"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_hvldo_params_t::voltageSel</b></td></tr>
-<tr class="memdesc:ga4455db3635c31858fd68e5bcbe56fdb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">HVLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga64b1d9370a07008a83b14bcbee4f731c">cy_en_syspm_hvldo_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga4455db3635c31858fd68e5bcbe56fdb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga72b33486e1eb44af178c9ae841f70620"><td class="memItemLeft" align="right" valign="top"><a id="ga72b33486e1eb44af178c9ae841f70620" name="ga72b33486e1eb44af178c9ae841f70620"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_hvldo_params_t::hwSel</b></td></tr>
-<tr class="memdesc:ga72b33486e1eb44af178c9ae841f70620"><td class="mdescLeft">&#160;</td><td class="mdescRight">HVLDO HW Select : 0 - HVLDO0_ENABLE controls SDR1,HW controls are ignored 1 - HVLDO0_ENABLE is ignored and HW signal is used instead. <br /></td></tr>
-<tr class="separator:ga72b33486e1eb44af178c9ae841f70620"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0c84704fb9a29975bf54d73d9c648026"><td class="memItemLeft" align="right" valign="top"><a id="ga0c84704fb9a29975bf54d73d9c648026" name="ga0c84704fb9a29975bf54d73d9c648026"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_hvldo_params_t::hvldoEnable</b></td></tr>
-<tr class="memdesc:ga0c84704fb9a29975bf54d73d9c648026"><td class="mdescLeft">&#160;</td><td class="mdescRight">HVLDO Enable/Disable: true - HVLDO is enabled false - HVLDO is disabled. <br /></td></tr>
-<tr class="separator:ga0c84704fb9a29975bf54d73d9c648026"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga762c50a0e764aad01319704de3b7994c"><td class="memItemLeft" align="right" valign="top"><a id="ga762c50a0e764aad01319704de3b7994c" name="ga762c50a0e764aad01319704de3b7994c"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_extraReq_params_t::coreBuckVoltSel</b></td></tr>
-<tr class="memdesc:ga762c50a0e764aad01319704de3b7994c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. <br /></td></tr>
-<tr class="separator:ga762c50a0e764aad01319704de3b7994c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf7a59efe463e18cd046b97f4d76c0445"><td class="memItemLeft" align="right" valign="top"><a id="gaf7a59efe463e18cd046b97f4d76c0445" name="gaf7a59efe463e18cd046b97f4d76c0445"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_extraReq_params_t::coreBuckMode</b></td></tr>
-<tr class="memdesc:gaf7a59efe463e18cd046b97f4d76c0445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core Buck Mode : 0x00 - Low Power Mode, 0x10 - Low Ripple(high power) <br /></td></tr>
-<tr class="separator:gaf7a59efe463e18cd046b97f4d76c0445"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga05ac4a6306b23069f7ed03e261e8d18d"><td class="memItemLeft" align="right" valign="top"><a id="ga05ac4a6306b23069f7ed03e261e8d18d" name="ga05ac4a6306b23069f7ed03e261e8d18d"></a>
-<a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_extraReq_params_t::sdr0Config</b></td></tr>
-<tr class="memdesc:ga05ac4a6306b23069f7ed03e261e8d18d"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDR-0 Parameters <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a>. <br /></td></tr>
-<tr class="separator:ga05ac4a6306b23069f7ed03e261e8d18d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2f7398f1ab57a061904664bb75551297"><td class="memItemLeft" align="right" valign="top"><a id="ga2f7398f1ab57a061904664bb75551297" name="ga2f7398f1ab57a061904664bb75551297"></a>
-<a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>cy_stc_syspm_extraReq_params_t::sdr1Config</b></td></tr>
-<tr class="memdesc:ga2f7398f1ab57a061904664bb75551297"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDR-1 Parameters <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a>. <br /></td></tr>
-<tr class="separator:ga2f7398f1ab57a061904664bb75551297"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="ga56076e99358e2b7c99681312108b09af" name="ga56076e99358e2b7c99681312108b09af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga56076e99358e2b7c99681312108b09af">&#9670;&nbsp;</a></span>base</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* cy_stc_syspm_callback_params_t::base</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Base address of a HW instance, matches name of the driver in the API for the base address. </p>
-<p >Can be undefined if not required. Base address is not required for the SysPm driver as the device has only one set of power modes </p>
-
-</div>
-</div>
-<a id="gabac771f244791efe23d4964a40bbf8c8" name="gabac771f244791efe23d4964a40bbf8c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabac771f244791efe23d4964a40bbf8c8">&#9670;&nbsp;</a></span>context</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void* cy_stc_syspm_callback_params_t::context</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Context for the handler function. </p>
-<p >This item can be skipped if not required. Can be undefined if not required. </p>
-
-</div>
-</div>
-<a id="gafc2210e66cc5a0513e42761df9a2021a" name="gafc2210e66cc5a0513e42761df9a2021a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafc2210e66cc5a0513e42761df9a2021a">&#9670;&nbsp;</a></span>callback</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__structures.html#ga0b54e47bca8fb045d86884a9b3d12067">Cy_SysPmCallback</a> cy_stc_syspm_callback_t::callback</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The callback handler function. </p>
-
-</div>
-</div>
-<a id="ga566582fa98bed63f19108164d62e6c8f" name="ga566582fa98bed63f19108164d62e6c8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga566582fa98bed63f19108164d62e6c8f">&#9670;&nbsp;</a></span>type</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga8c2960c0164ead1cfa86e7d6846b6ff0">cy_en_syspm_callback_type_t</a> cy_stc_syspm_callback_t::type</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The callback type, see <a class="el" href="group__group__syspm__data__enumerates.html#ga8c2960c0164ead1cfa86e7d6846b6ff0">cy_en_syspm_callback_type_t</a>. </p>
-
-</div>
-</div>
-<a id="ga1b49c2454ac29e52261e28eb9071413b" name="ga1b49c2454ac29e52261e28eb9071413b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1b49c2454ac29e52261e28eb9071413b">&#9670;&nbsp;</a></span>skipMode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t cy_stc_syspm_callback_t::skipMode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The mask of modes to be skipped during callback execution, see <a class="el" href="group__group__syspm__skip__callback__modes.html">Defines to skip the callbacks modes</a>. </p>
-<p >The corresponding callback mode won't execute if the appropriate define is set. These values can be ORed. If all modes are required to be executed this element should be equal to zero. Skipping unneeded callback modes speeds up power mode transitions by skipping unneeded operations. </p>
-
-</div>
-</div>
-<a id="ga497711725618616da0b168743702dc03" name="ga497711725618616da0b168743702dc03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga497711725618616da0b168743702dc03">&#9670;&nbsp;</a></span>callbackParams</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t">cy_stc_syspm_callback_params_t</a>* cy_stc_syspm_callback_t::callbackParams</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The address of a <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__callback__params__t" title="The structure contains syspm callback parameters.">cy_stc_syspm_callback_params_t</a>, the callback is executed with these parameters. </p>
-
-</div>
-</div>
-<a id="gac4dd0cc8f5d4e92eefae3d10df920a56" name="gac4dd0cc8f5d4e92eefae3d10df920a56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac4dd0cc8f5d4e92eefae3d10df920a56">&#9670;&nbsp;</a></span>prevItm</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct cy_stc_syspm_callback* cy_stc_syspm_callback_t::prevItm</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The previous list item. </p>
-<p >This element should not be defined, or defined as NULL. It is for internal usage to link this structure to the next registered structure. It will be updated during callback registration. Do not modify this element at run-time. </p>
-
-</div>
-</div>
-<a id="ga491e913ae8b54d0a61f2ac6959abf8ab" name="ga491e913ae8b54d0a61f2ac6959abf8ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga491e913ae8b54d0a61f2ac6959abf8ab">&#9670;&nbsp;</a></span>nextItm</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct cy_stc_syspm_callback* cy_stc_syspm_callback_t::nextItm</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The next list item. </p>
-<p >This element should not be defined, or defined as NULL. It is for internal usage to link this structure to the previous registered structure. It will be updated during callback registration. Do not modify this element at run-time. </p>
-
-</div>
-</div>
-<a id="ga13e6dfd81747d61783aac9ca28931fe4" name="ga13e6dfd81747d61783aac9ca28931fe4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga13e6dfd81747d61783aac9ca28931fe4">&#9670;&nbsp;</a></span>order</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_callback_t::order</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Holds the callback execution order value. </p>
-<p >Range: 0-255. While entering low power mode, callbacks with lower order values are executed first. While exiting low power mode, the callbacks are executed in the opposite order. Callbacks with the same order value are executed in the order they are registered in the application. </p>
-
-</div>
-</div>
-<a id="ga4b14408d3890bf298288a0d5fbdb2066" name="ga4b14408d3890bf298288a0d5fbdb2066"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4b14408d3890bf298288a0d5fbdb2066">&#9670;&nbsp;</a></span>activeVoltSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a> cy_stc_syspm_retldo_params_t::activeVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>RETLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="gaa9a66a25e8ca50871ddc7fef23c52742" name="gaa9a66a25e8ca50871ddc7fef23c52742"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa9a66a25e8ca50871ddc7fef23c52742">&#9670;&nbsp;</a></span>activeGain</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga91aa7be5f9de8e9fa32c1229b2db05a7">cy_en_syspm_retldo_gain_t</a> cy_stc_syspm_retldo_params_t::activeGain</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>RETLDO Gain Select Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga40a27028a1199fde1c3823cc3451e530" name="ga40a27028a1199fde1c3823cc3451e530"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga40a27028a1199fde1c3823cc3451e530">&#9670;&nbsp;</a></span>deepsleepVoltSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a> cy_stc_syspm_retldo_params_t::deepsleepVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>RETLDO Deepsleep Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="gafa7c6a983726bdb8bca4a5d4bbfa0bbc" name="gafa7c6a983726bdb8bca4a5d4bbfa0bbc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafa7c6a983726bdb8bca4a5d4bbfa0bbc">&#9670;&nbsp;</a></span>deepsleepGain</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga91aa7be5f9de8e9fa32c1229b2db05a7">cy_en_syspm_retldo_gain_t</a> cy_stc_syspm_retldo_params_t::deepsleepGain</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>RETLDO Deepsleep Gain Select <a class="el" href="group__group__syspm__data__enumerates.html#ga2084c81253cfc8f91661ea81ca4e0142">cy_en_syspm_retldo_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga61f0b7001c868113a1979f3be68b9a5f" name="ga61f0b7001c868113a1979f3be68b9a5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga61f0b7001c868113a1979f3be68b9a5f">&#9670;&nbsp;</a></span>sramLdoEnable</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_sramldo_params_t::sramLdoEnable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SRAMLDO Enable/Disable. </p>
-
-</div>
-</div>
-<a id="ga4b83333e4bef3e4b4bb35c4e93816b98" name="ga4b83333e4bef3e4b4bb35c4e93816b98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4b83333e4bef3e4b4bb35c4e93816b98">&#9670;&nbsp;</a></span>deepsleepSramLdoEnable</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_sramldo_params_t::deepsleepSramLdoEnable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SRAMLDO Enable/Disable during deepsleep. </p>
-
-</div>
-</div>
-<a id="ga162d2acc61df6ad48d92a99b39862cc0" name="ga162d2acc61df6ad48d92a99b39862cc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga162d2acc61df6ad48d92a99b39862cc0">&#9670;&nbsp;</a></span>sramLdoVoltSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a> cy_stc_syspm_sramldo_params_t::sramLdoVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SRAMLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga8b89396277c25c507a2d33de955d775d" name="ga8b89396277c25c507a2d33de955d775d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8b89396277c25c507a2d33de955d775d">&#9670;&nbsp;</a></span>miscLdoEnable</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_miscldo_params_t::miscLdoEnable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>MISCLDO Enable/Disable. </p>
-
-</div>
-</div>
-<a id="ga1dbdee482d59c112b2f8561e8e9d9825" name="ga1dbdee482d59c112b2f8561e8e9d9825"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1dbdee482d59c112b2f8561e8e9d9825">&#9670;&nbsp;</a></span>miscLdoMode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#gaa6cefd648d76445ce14d47427b63582d">cy_en_syspm_miscldo_mode_t</a> cy_stc_syspm_miscldo_params_t::miscLdoMode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>MISCLDO mode select , VCCACT or VOUT. </p>
-
-</div>
-</div>
-<a id="ga000d6c49a438f6a02d7e674be8812ab4" name="ga000d6c49a438f6a02d7e674be8812ab4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga000d6c49a438f6a02d7e674be8812ab4">&#9670;&nbsp;</a></span>miscLdoVoltSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga6d83aee1e2e9f941f41ef76499f5aa23">cy_en_syspm_miscldo_voltage_t</a> cy_stc_syspm_miscldo_params_t::miscLdoVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>MISCLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga6d83aee1e2e9f941f41ef76499f5aa23">cy_en_syspm_miscldo_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga6a5fcbe49c5998c7eb1618be54ab8a09" name="ga6a5fcbe49c5998c7eb1618be54ab8a09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6a5fcbe49c5998c7eb1618be54ab8a09">&#9670;&nbsp;</a></span>miscLdoVaccActTrimSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga5f420c331cd3ce9028e9bf77057aa40d">cy_en_syspm_miscldo_vccact_trim_t</a> cy_stc_syspm_miscldo_params_t::miscLdoVaccActTrimSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>MISCLDO VCCACT Voltage Trim Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5f420c331cd3ce9028e9bf77057aa40d">cy_en_syspm_miscldo_vccact_trim_t</a>. </p>
-
-</div>
-</div>
-<a id="gaf94c827b080dbbb1b820a80689ef24eb" name="gaf94c827b080dbbb1b820a80689ef24eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf94c827b080dbbb1b820a80689ef24eb">&#9670;&nbsp;</a></span>stack_pointer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t* cy_stc_syspm_warmboot_entrypoint_t::stack_pointer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Stack Pointer. </p>
-
-</div>
-</div>
-<a id="ga35789621c867f503c8c20d180c183bfa" name="ga35789621c867f503c8c20d180c183bfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga35789621c867f503c8c20d180c183bfa">&#9670;&nbsp;</a></span>entry_pointer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t* cy_stc_syspm_warmboot_entrypoint_t::entry_pointer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Entry Function Address. </p>
-
-</div>
-</div>
-<a id="ga7a2f940cbdb0dc1940fe25a801302946" name="ga7a2f940cbdb0dc1940fe25a801302946"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7a2f940cbdb0dc1940fe25a801302946">&#9670;&nbsp;</a></span>voltageSel <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_core_buck_params_t::voltageSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga67564267794c895105556ff3bb6ed6dd" name="ga67564267794c895105556ff3bb6ed6dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga67564267794c895105556ff3bb6ed6dd">&#9670;&nbsp;</a></span>mode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_core_buck_params_t::mode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Mode : 0x01 - Low Power Mode, 0x11 - High Power Mode(Low Ripple Mode) </p>
-
-</div>
-</div>
-<a id="gace2f0f2f88f0e8960ece515e28cef9b4" name="gace2f0f2f88f0e8960ece515e28cef9b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gace2f0f2f88f0e8960ece515e28cef9b4">&#9670;&nbsp;</a></span>override</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_core_buck_params_t::override</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Override : Forces Corebuck to use the setting in the PWR_CBUCK_CTL register. </p>
-
-</div>
-</div>
-<a id="ga3855fbcd9e14258860a6ffc9a81ddf57" name="ga3855fbcd9e14258860a6ffc9a81ddf57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3855fbcd9e14258860a6ffc9a81ddf57">&#9670;&nbsp;</a></span>copySettings</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_core_buck_params_t::copySettings</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Copy Settings : Copies the current CBUCK composite state to PWR_CBUCK_CTL register. </p>
-
-</div>
-</div>
-<a id="ga68cfa6f254255b10415af63b15253991" name="ga68cfa6f254255b10415af63b15253991"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga68cfa6f254255b10415af63b15253991">&#9670;&nbsp;</a></span>useSettings</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_core_buck_params_t::useSettings</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck use Settings : Causes the settings in PWR_CBUCK_CTL to be used in CBUCK settings decision. </p>
-
-</div>
-</div>
-<a id="ga2a891f6788a30fc82117f0bf0343a928" name="ga2a891f6788a30fc82117f0bf0343a928"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2a891f6788a30fc82117f0bf0343a928">&#9670;&nbsp;</a></span>inRushLimitSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_core_buck_params_t::inRushLimitSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck In Rush Limit Selection 0: 10mA limit 1: 100mA limit. </p>
-
-</div>
-</div>
-<a id="gad0737deda13ef32f2cec591206537d43" name="gad0737deda13ef32f2cec591206537d43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad0737deda13ef32f2cec591206537d43">&#9670;&nbsp;</a></span>coreBuckVoltSel <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_sdr_params_t::coreBuckVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga3507a2da6d66b6adcc843fb11f41f11e" name="ga3507a2da6d66b6adcc843fb11f41f11e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3507a2da6d66b6adcc843fb11f41f11e">&#9670;&nbsp;</a></span>coreBuckMode <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_sdr_params_t::coreBuckMode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Mode : 0x01 - Low Power Mode, 0x11 - High Power Mode(Low Ripple Mode) </p>
-
-</div>
-</div>
-<a id="ga19d1c7053b085f162eecb6f14f957746" name="ga19d1c7053b085f162eecb6f14f957746"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga19d1c7053b085f162eecb6f14f957746">&#9670;&nbsp;</a></span>coreBuckDpSlpVoltSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_sdr_params_t::coreBuckDpSlpVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Deep Sleep Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga9a711c22c727e9003a7a6c32c08f1626" name="ga9a711c22c727e9003a7a6c32c08f1626"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9a711c22c727e9003a7a6c32c08f1626">&#9670;&nbsp;</a></span>coreBuckDpSlpMode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_sdr_params_t::coreBuckDpSlpMode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Deep sleep Core Buck Mode : 0x01 - Low Power Mode, 0x11 - High Power Mode(Low Ripple Mode) </p>
-
-</div>
-</div>
-<a id="ga88af45975bc8add297fb862df836009b" name="ga88af45975bc8add297fb862df836009b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga88af45975bc8add297fb862df836009b">&#9670;&nbsp;</a></span>sdrVoltSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_sdr_params_t::sdrVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SDR Regulator Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="gaeaa701586a259d33a4abbbe9abb1a5e0" name="gaeaa701586a259d33a4abbbe9abb1a5e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaeaa701586a259d33a4abbbe9abb1a5e0">&#9670;&nbsp;</a></span>sdr0DpSlpVoltSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_sdr_params_t::sdr0DpSlpVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SDR Regulator Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="gab1a2dfa3b068f1ad0b975068502cdbaa" name="gab1a2dfa3b068f1ad0b975068502cdbaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab1a2dfa3b068f1ad0b975068502cdbaa">&#9670;&nbsp;</a></span>sdr0Allowbypass</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_sdr_params_t::sdr0Allowbypass</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Allow SDR bypass : true - Allow SDR to bypass false - SDR is not bypassed and will regulate. </p>
-
-</div>
-</div>
-<a id="gaa3d81c0cc4a011ac5474ab0bab722d88" name="gaa3d81c0cc4a011ac5474ab0bab722d88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa3d81c0cc4a011ac5474ab0bab722d88">&#9670;&nbsp;</a></span>sdr1HwControl</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_sdr_params_t::sdr1HwControl</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Allow SDR1 HW Control : true - sdr1Enable(bit: SDR1_ENABLE) is ignored, HW will control false - sdr1Enable(bit: SDR1_ENABLE) will control, HW control is ignored. </p>
-
-</div>
-</div>
-<a id="ga05be2f266996ceaef6574e50fc38968a" name="ga05be2f266996ceaef6574e50fc38968a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga05be2f266996ceaef6574e50fc38968a">&#9670;&nbsp;</a></span>sdr1Enable</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_sdr_params_t::sdr1Enable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SDR1 Enable/Disable: true - SDR1 is enabled false - SDR1 is disabled. </p>
-
-</div>
-</div>
-<a id="ga4455db3635c31858fd68e5bcbe56fdb0" name="ga4455db3635c31858fd68e5bcbe56fdb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4455db3635c31858fd68e5bcbe56fdb0">&#9670;&nbsp;</a></span>voltageSel <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_hvldo_params_t::voltageSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>HVLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga64b1d9370a07008a83b14bcbee4f731c">cy_en_syspm_hvldo_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="ga72b33486e1eb44af178c9ae841f70620" name="ga72b33486e1eb44af178c9ae841f70620"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga72b33486e1eb44af178c9ae841f70620">&#9670;&nbsp;</a></span>hwSel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_hvldo_params_t::hwSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>HVLDO HW Select : 0 - HVLDO0_ENABLE controls SDR1,HW controls are ignored 1 - HVLDO0_ENABLE is ignored and HW signal is used instead. </p>
-
-</div>
-</div>
-<a id="ga0c84704fb9a29975bf54d73d9c648026" name="ga0c84704fb9a29975bf54d73d9c648026"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0c84704fb9a29975bf54d73d9c648026">&#9670;&nbsp;</a></span>hvldoEnable</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool cy_stc_syspm_hvldo_params_t::hvldoEnable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>HVLDO Enable/Disable: true - HVLDO is enabled false - HVLDO is disabled. </p>
-
-</div>
-</div>
-<a id="ga762c50a0e764aad01319704de3b7994c" name="ga762c50a0e764aad01319704de3b7994c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga762c50a0e764aad01319704de3b7994c">&#9670;&nbsp;</a></span>coreBuckVoltSel <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_extraReq_params_t::coreBuckVoltSel</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga1357884913ef3af3985fc47a82f56a03">cy_en_syspm_core_buck_voltage_t</a>. </p>
-
-</div>
-</div>
-<a id="gaf7a59efe463e18cd046b97f4d76c0445" name="gaf7a59efe463e18cd046b97f4d76c0445"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf7a59efe463e18cd046b97f4d76c0445">&#9670;&nbsp;</a></span>coreBuckMode <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t cy_stc_syspm_extraReq_params_t::coreBuckMode</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core Buck Mode : 0x00 - Low Power Mode, 0x10 - Low Ripple(high power) </p>
-
-</div>
-</div>
-<a id="ga05ac4a6306b23069f7ed03e261e8d18d" name="ga05ac4a6306b23069f7ed03e261e8d18d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga05ac4a6306b23069f7ed03e261e8d18d">&#9670;&nbsp;</a></span>sdr0Config</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a>* cy_stc_syspm_extraReq_params_t::sdr0Config</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SDR-0 Parameters <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a>. </p>
-
-</div>
-</div>
-<a id="ga2f7398f1ab57a061904664bb75551297" name="ga2f7398f1ab57a061904664bb75551297"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2f7398f1ab57a061904664bb75551297">&#9670;&nbsp;</a></span>sdr1Config</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a>* cy_stc_syspm_extraReq_params_t::sdr1Config</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SDR-1 Parameters <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__sdr__params__t">cy_stc_syspm_sdr_params_t</a>. </p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part

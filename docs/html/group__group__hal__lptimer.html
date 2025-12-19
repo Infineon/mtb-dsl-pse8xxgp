@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__hal__lptimer.html',''); 
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -110,33 +110,50 @@ Code snippets</h1>
 <h2><a class="anchor" id="subsection_lptimer_snippet_1"></a>
 Snippet 1: LPTimer initialization with Default configuration</h2>
 <p >The following snippet initializes a LPTimer in free running mode. </p><div class="fragment"><div class="line">    <a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>           rslt;</div>
-<div class="line">    mtb_hal_lptimer_t   lptimer;</div>
 <div class="line">    uint32_t            lptimer_value;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Initialize the LPTIMER with configurator-generated structures</span></div>
-<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__lptimer.html#gad0cebf12730426771a515e92cece0a5e">mtb_hal_lptimer_setup</a>(&amp;lptimer, &amp;lptimer_hal_config);</div>
+<div class="line">    rslt = <a class="code hl_function" href="group__group__hal__lptimer.html#gad0cebf12730426771a515e92cece0a5e">mtb_hal_lptimer_setup</a>(&amp;lptimer_obj, &amp;lptimer_hal_config);</div>
 <div class="line">    <span class="keywordflow">if</span> (<a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a> == rslt)</div>
 <div class="line">    {</div>
-<div class="line">        rslt = (<a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>)<a class="code hl_function" href="group__group__mcwdt__functions.html#gab8bd6fb7ec48ef294287c01e179c41df">Cy_MCWDT_Init</a>(lptimer_obj.base, &amp;lptimer_config);</div>
-<div class="line">        <span class="comment">// Initialize hardware via PDL call (abstracted out)</span></div>
-<div class="line">        _Cy_MCWDT_Enable_IP_Specifc(lptimer_obj.base);</div>
+<div class="line">        <span class="comment">// Init and enable functions calls are for illustration purpose only</span></div>
+<div class="line">        <span class="comment">// and the user needs to set up the hardware according to the low power</span></div>
+<div class="line">        <span class="comment">// timer hadware block that is actually used.</span></div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Initialize hardware via PDL call</span></div>
+<div class="line">        rslt = (<a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>)_LPTimer_Init_IP_Specific(lptimer_obj.base, &amp;lptimer_config);</div>
+<div class="line">        <span class="comment">// Enable hardware via PDL call</span></div>
+<div class="line">        _LPTimer_Enable_IP_Specific(lptimer_obj.base);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Read the LPTIMER count value</span></div>
-<div class="line">    lptimer_value = <a class="code hl_function" href="group__group__hal__lptimer.html#ga1f8046f569659ae64d022d38e0a0ede8">mtb_hal_lptimer_read</a>(&amp;lptimer);</div>
+<div class="line">    lptimer_value = <a class="code hl_function" href="group__group__hal__lptimer.html#ga1f8046f569659ae64d022d38e0a0ede8">mtb_hal_lptimer_read</a>(&amp;lptimer_obj);</div>
 <div class="ttc" id="agroup__group__hal__lptimer_html_ga1f8046f569659ae64d022d38e0a0ede8"><div class="ttname"><a href="group__group__hal__lptimer.html#ga1f8046f569659ae64d022d38e0a0ede8">mtb_hal_lptimer_read</a></div><div class="ttdeci">uint32_t mtb_hal_lptimer_read(const mtb_hal_lptimer_t *obj)</div><div class="ttdoc">Read the current tick.</div><div class="ttdef"><b>Definition:</b> mtb_hal_lptimer.c:119</div></div>
 <div class="ttc" id="agroup__group__hal__lptimer_html_gad0cebf12730426771a515e92cece0a5e"><div class="ttname"><a href="group__group__hal__lptimer.html#gad0cebf12730426771a515e92cece0a5e">mtb_hal_lptimer_setup</a></div><div class="ttdeci">cy_rslt_t mtb_hal_lptimer_setup(mtb_hal_lptimer_t *obj, const mtb_hal_lptimer_configurator_t *config)</div><div class="ttdoc">Sets up a HAL instance to use the specified hardware resource.</div><div class="ttdef"><b>Definition:</b> mtb_hal_lptimer.c:45</div></div>
-<div class="ttc" id="agroup__group__mcwdt__functions_html_gab8bd6fb7ec48ef294287c01e179c41df"><div class="ttname"><a href="group__group__mcwdt__functions.html#gab8bd6fb7ec48ef294287c01e179c41df">Cy_MCWDT_Init</a></div><div class="ttdeci">cy_en_mcwdt_status_t Cy_MCWDT_Init(MCWDT_STRUCT_Type *base, cy_stc_mcwdt_config_t const *config)</div><div class="ttdoc">Initializes the MCWDT block.</div><div class="ttdef"><b>Definition:</b> cy_mcwdt.c:56</div></div>
 <div class="ttc" id="agroup__group__result_html_gaca79700fcc701534ce61778a9bcf57d1"><div class="ttname"><a href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a></div><div class="ttdeci">uint32_t cy_rslt_t</div><div class="ttdoc">Provides the result of an operation as a structured bitfield.</div><div class="ttdef"><b>Definition:</b> cy_result.h:459</div></div>
 <div class="ttc" id="agroup__group__result_html_gaf58fac450d9fff4472f03ad68f6e546e"><div class="ttname"><a href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a></div><div class="ttdeci">#define CY_RSLT_SUCCESS</div><div class="ttdoc">cy_rslt_t return value indicating success</div><div class="ttdef"><b>Definition:</b> cy_result.h:486</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_lptimer_snippet_2"></a>
 Snippet 2: LPTimer interrupts</h2>
 <p >The following snippet initializes a LPTimer and uses <a class="el" href="group__group__hal__lptimer.html#gadfb5216043ac157236d9d5db47c104f4">mtb_hal_lptimer_set_delay()</a> to trigger an interrupt on match. Subsequent interrupts can be triggered at required times using <a class="el" href="group__group__hal__lptimer.html#gadfb5216043ac157236d9d5db47c104f4">mtb_hal_lptimer_set_delay()</a> called from the ISR. </p><div class="fragment"><div class="line"> </div>
 <div class="line"><span class="preprocessor">#define LPTIMER_MATCH_VALUE    (8192u)</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">//Only MCWDT_B still defines this value so in case we don&#39;t have it defined we use the old presets</span></div>
+<div class="line"><span class="preprocessor">#if !defined _MTB_HAL_LPTIMER_RESET_TIME_US</span></div>
+<div class="line"><span class="preprocessor">#if defined (CY_IP_M0S8WCO)</span></div>
+<div class="line"><span class="preprocessor">#define _MTB_HAL_LPTIMER_RESET_TIME_US      (180)</span></div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line"><span class="preprocessor">#define _MTB_HAL_LPTIMER_RESET_TIME_US       (62)</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"> </div>
 <div class="line">mtb_hal_lptimer_t lptimer_obj;</div>
 <div class="line"><span class="comment">// Structures generated by configurator:</span></div>
 <div class="line"><span class="keyword">const</span> mtb_hal_lptimer_configurator_t lptimer_hal_config;</div>
+<div class="line"><span class="preprocessor">#if defined(CY_IP_MXS22SRSS) &amp;&amp; (CY_IP_MXS22SRSS_VERSION &gt;= 2) &amp;&amp; defined(SRSS_NUM_WDT_A) &amp;&amp; (SRSS_NUM_WDT_A &gt; 1)</span></div>
+<div class="line"><span class="keyword">const</span> cy_stc_wdt_config_t lptimer_config;</div>
+<div class="line"><span class="preprocessor">#else</span></div>
 <div class="line"><span class="keyword">const</span> <a class="code hl_struct" href="group__group__mcwdt__data__structures.html#structcy__stc__mcwdt__config__t">cy_stc_mcwdt_config_t</a> lptimer_config;</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> snippet_lptimer_init(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
@@ -146,9 +163,14 @@ Snippet 2: LPTimer interrupts</h2>
 <div class="line">    rslt = <a class="code hl_function" href="group__group__hal__lptimer.html#gad0cebf12730426771a515e92cece0a5e">mtb_hal_lptimer_setup</a>(&amp;lptimer_obj, &amp;lptimer_hal_config);</div>
 <div class="line">    <span class="keywordflow">if</span> (<a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a> == rslt)</div>
 <div class="line">    {</div>
-<div class="line">        rslt = (<a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>)<a class="code hl_function" href="group__group__mcwdt__functions.html#gab8bd6fb7ec48ef294287c01e179c41df">Cy_MCWDT_Init</a>(lptimer_obj.base, &amp;lptimer_config);</div>
-<div class="line">        <span class="comment">// Initialize hardware via PDL call (abstracted out)</span></div>
-<div class="line">        _Cy_MCWDT_Enable_IP_Specifc(lptimer_obj.base);</div>
+<div class="line">        <span class="comment">// Init and enable functions calls are for illustration purpose only</span></div>
+<div class="line">        <span class="comment">// and the user needs to set up the hardware according to the low power</span></div>
+<div class="line">        <span class="comment">// timer hadware block that is actually used.</span></div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Initialize hardware via PDL call</span></div>
+<div class="line">        rslt = (<a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>)_LPTimer_Init_IP_Specific(lptimer_obj.base, &amp;lptimer_config);</div>
+<div class="line">        <span class="comment">// Enable hardware via PDL call</span></div>
+<div class="line">        _LPTimer_Enable_IP_Specific(lptimer_obj.base);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">if</span> (<a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a> == rslt)</div>
@@ -179,7 +201,7 @@ Snippet 2: LPTimer interrupts</h2>
 <div class="ttc" id="agroup__group__hal__lptimer_html_ga929dd9065d3ee2c101d359a3529bebcb"><div class="ttname"><a href="group__group__hal__lptimer.html#ga929dd9065d3ee2c101d359a3529bebcb">mtb_hal_lptimer_process_interrupt</a></div><div class="ttdeci">cy_rslt_t mtb_hal_lptimer_process_interrupt(mtb_hal_lptimer_t *obj)</div><div class="ttdoc">Process interrupts related related to an LPTimer instance.</div><div class="ttdef"><b>Definition:</b> mtb_hal_lptimer_mcwdt.c:63</div></div>
 <div class="ttc" id="agroup__group__hal__lptimer_html_gabf1a9fbd97bf945ddfb6b75e1fd5b5e0"><div class="ttname"><a href="group__group__hal__lptimer.html#gabf1a9fbd97bf945ddfb6b75e1fd5b5e0">mtb_hal_lptimer_register_callback</a></div><div class="ttdeci">void mtb_hal_lptimer_register_callback(mtb_hal_lptimer_t *obj, mtb_hal_lptimer_event_callback_t callback, void *callback_arg)</div><div class="ttdoc">Register a LPTimer match event handler.</div><div class="ttdef"><b>Definition:</b> mtb_hal_lptimer.c:68</div></div>
 <div class="ttc" id="agroup__group__hal__lptimer_html_gadfb5216043ac157236d9d5db47c104f4"><div class="ttname"><a href="group__group__hal__lptimer.html#gadfb5216043ac157236d9d5db47c104f4">mtb_hal_lptimer_set_delay</a></div><div class="ttdeci">cy_rslt_t mtb_hal_lptimer_set_delay(mtb_hal_lptimer_t *obj, uint32_t delay)</div><div class="ttdoc">Update the match/compare value.</div><div class="ttdef"><b>Definition:</b> mtb_hal_lptimer_common.c:50</div></div>
-<div class="ttc" id="agroup__group__mcwdt__data__structures_html_structcy__stc__mcwdt__config__t"><div class="ttname"><a href="group__group__mcwdt__data__structures.html#structcy__stc__mcwdt__config__t">cy_stc_mcwdt_config_t</a></div><div class="ttdoc">The MCWDT component configuration structure.</div><div class="ttdef"><b>Definition:</b> cy_mcwdt.h:256</div></div>
+<div class="ttc" id="agroup__group__mcwdt__data__structures_html_structcy__stc__mcwdt__config__t"><div class="ttname"><a href="group__group__mcwdt__data__structures.html#structcy__stc__mcwdt__config__t">cy_stc_mcwdt_config_t</a></div><div class="ttdoc">The MCWDT component configuration structure.</div><div class="ttdef"><b>Definition:</b> cy_mcwdt.h:259</div></div>
 </div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>

@@ -359,7 +359,7 @@ cy_rslt_t cy_pdl_syspm_srf_islpmready_impl_s(mtb_srf_input_ns_t* inputs_ns,
     return status;
 }
 
-cy_rslt_t cy_pdl_syspm_srf_sysenablecm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
+cy_rslt_t cy_pdl_syspm_srf_syscm55enable_impl_s(mtb_srf_input_ns_t* inputs_ns,
                                             mtb_srf_output_ns_t* outputs_ns,
                                             mtb_srf_invec_ns_t* inputs_ptr_ns,
                                             uint8_t inputs_ptr_cnt_ns,
@@ -373,23 +373,25 @@ cy_rslt_t cy_pdl_syspm_srf_sysenablecm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
 
     cy_rslt_t status;
-    cy_pdl_syspm_srf_sysenablecm55_in_t input;
+    cy_pdl_syspm_srf_syscm55enable_in_t input;
     status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
     if (status != CY_RSLT_SUCCESS)
         return status;
-    Cy_SysEnableCM55(
+    Cy_SysCM55Enable(
         #if defined(_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55) && (_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55)
         (MXCM55_Type *)((inputs_ns->request).base),
         #else
         (MXCM55_Type *)GET_NSALIAS_ADDRESS((inputs_ns->request).base),
         #endif
         input.vectorTableOffset,
+        input.dbgMode,
         input.waitus);
 
     return status;
 }
 
-cy_rslt_t cy_pdl_syspm_srf_sysresetcm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
+
+cy_rslt_t cy_pdl_syspm_srf_syscm55reset_impl_s(mtb_srf_input_ns_t* inputs_ns,
                                             mtb_srf_output_ns_t* outputs_ns,
                                             mtb_srf_invec_ns_t* inputs_ptr_ns,
                                             uint8_t inputs_ptr_cnt_ns,
@@ -403,11 +405,11 @@ cy_rslt_t cy_pdl_syspm_srf_sysresetcm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
 
     cy_rslt_t status;
-    cy_pdl_syspm_srf_sysresetcm55_in_t input;
+    cy_pdl_syspm_srf_syscm55reset_in_t input;
     status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
     if (status != CY_RSLT_SUCCESS)
         return status;
-    Cy_SysResetCM55(
+    Cy_SysCM55Reset(
         #if defined(_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55) && (_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55)
         (MXCM55_Type *)((inputs_ns->request).base),
         #else
@@ -418,7 +420,7 @@ cy_rslt_t cy_pdl_syspm_srf_sysresetcm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
     return status;
 }
 
-cy_rslt_t cy_pdl_syspm_srf_sysdisablecm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
+cy_rslt_t cy_pdl_syspm_srf_syscm55disable_impl_s(mtb_srf_input_ns_t* inputs_ns,
                                             mtb_srf_output_ns_t* outputs_ns,
                                             mtb_srf_invec_ns_t* inputs_ptr_ns,
                                             uint8_t inputs_ptr_cnt_ns,
@@ -432,7 +434,7 @@ cy_rslt_t cy_pdl_syspm_srf_sysdisablecm55_impl_s(mtb_srf_input_ns_t* inputs_ns,
     CY_UNUSED_PARAMETER(outputs_ptr_ns);
     CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
 
-    Cy_SysDisableCM55();
+    Cy_SysCM55Disable();
     return (cy_rslt_t)CY_RSLT_SUCCESS;
 }
 
@@ -526,10 +528,10 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
     {
         .module_id = MTB_SRF_MODULE_PDL,
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
-        .op_id = CY_PDL_SYSPM_OP_SYSENABLECM55,
+        .op_id = CY_PDL_SYSPM_OP_SYSCM55ENABLE,
         .write_required = true,
-        .impl = cy_pdl_syspm_srf_sysenablecm55_impl_s,
-        .input_values_len = sizeof(cy_pdl_syspm_srf_sysenablecm55_in_t),
+        .impl = cy_pdl_syspm_srf_syscm55enable_impl_s,
+        .input_values_len = sizeof(cy_pdl_syspm_srf_syscm55enable_in_t),
         .output_values_len = 0UL,
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
@@ -540,10 +542,10 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
     {
         .module_id = MTB_SRF_MODULE_PDL,
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
-        .op_id = CY_PDL_SYSPM_OP_SYSRESETCM55,
+        .op_id = CY_PDL_SYSPM_OP_SYSCM55RESET,
         .write_required = true,
-        .impl = cy_pdl_syspm_srf_sysresetcm55_impl_s,
-        .input_values_len = sizeof(cy_pdl_syspm_srf_sysresetcm55_in_t),
+        .impl = cy_pdl_syspm_srf_syscm55reset_impl_s,
+        .input_values_len = sizeof(cy_pdl_syspm_srf_syscm55reset_in_t),
         .output_values_len = 0UL,
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
@@ -554,9 +556,9 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
     {
         .module_id = MTB_SRF_MODULE_PDL,
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
-        .op_id = CY_PDL_SYSPM_OP_SYSDISABLECM55,
+        .op_id = CY_PDL_SYSPM_OP_SYSCM55DISABLE,
         .write_required = true,
-        .impl = cy_pdl_syspm_srf_sysdisablecm55_impl_s,
+        .impl = cy_pdl_syspm_srf_syscm55disable_impl_s,
         .input_values_len = 0UL,
         .output_values_len = 0UL,
         .input_len ={ 0UL, 0UL, 0UL },
@@ -2758,7 +2760,7 @@ void Cy_SysPm_SetRamTrimsPostDs(void)
     (void)Cy_IPC_Sema_Clear(CY_SYSPM_SEMA_NUM_MULTI_CORE, false);
 }
 
-static cy_en_syspm_status_t Cy_SysPm_SystemEnterHpToLp(void)
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionHpToLp(void)
 {
     cy_en_syspm_status_t retVal = CY_SYSPM_SUCCESS;
 
@@ -2842,7 +2844,7 @@ static cy_en_syspm_status_t Cy_SysPm_SystemEnterHpToLp(void)
     return retVal;
 }
 
-static cy_en_syspm_status_t Cy_SysPm_SystemEnterLpToHp(void)
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToHp(void)
 {
     cy_en_syspm_status_t retVal = CY_SYSPM_SUCCESS;
 
@@ -2929,7 +2931,7 @@ static cy_en_syspm_status_t Cy_SysPm_SystemEnterLpToHp(void)
     return retVal;
 }
 
-static cy_en_syspm_status_t Cy_SysPm_SystemEnterUlpToLp(void)
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionUlpToLp(void)
 {
     cy_en_syspm_status_t retVal = CY_SYSPM_SUCCESS;
 
@@ -3011,7 +3013,7 @@ static cy_en_syspm_status_t Cy_SysPm_SystemEnterUlpToLp(void)
     return retVal;
 }
 
-static cy_en_syspm_status_t Cy_SysPm_SystemEnterLpToUlp(void)
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToUlp(void)
 {
     cy_en_syspm_status_t retVal = CY_SYSPM_SUCCESS;
 
@@ -3128,12 +3130,12 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterHp(void)
 
         if(Cy_SysPm_IsSystemLp())
         {
-           (void) Cy_SysPm_SystemEnterLpToHp();
+           (void) Cy_SysPm_SystemTransitionLpToHp();
         }
         else if(Cy_SysPm_IsSystemUlp())
         {
-            (void) Cy_SysPm_SystemEnterUlpToLp();
-            (void) Cy_SysPm_SystemEnterLpToHp();
+            (void) Cy_SysPm_SystemTransitionUlpToLp();
+            (void) Cy_SysPm_SystemTransitionLpToHp();
         }
         else
         {
@@ -3195,12 +3197,12 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterUlp(void)
 
         if(Cy_SysPm_IsSystemLp())
         {
-           (void) Cy_SysPm_SystemEnterLpToUlp();
+           (void) Cy_SysPm_SystemTransitionLpToUlp();
         }
         else if(Cy_SysPm_IsSystemHp())
         {
-           (void) Cy_SysPm_SystemEnterHpToLp();
-           (void) Cy_SysPm_SystemEnterLpToUlp();
+           (void) Cy_SysPm_SystemTransitionHpToLp();
+           (void) Cy_SysPm_SystemTransitionLpToUlp();
         }
         else
         {
@@ -3262,11 +3264,11 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void)
 
         if(Cy_SysPm_IsSystemHp())
         {
-           (void) Cy_SysPm_SystemEnterHpToLp();
+           (void) Cy_SysPm_SystemTransitionHpToLp();
         }
         else if(Cy_SysPm_IsSystemUlp())
         {
-           (void) Cy_SysPm_SystemEnterUlpToLp();
+           (void) Cy_SysPm_SystemTransitionUlpToLp();
         }
         else
         {

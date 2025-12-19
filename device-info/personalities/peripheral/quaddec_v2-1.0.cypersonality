@@ -263,7 +263,6 @@
     <ParamBool id='inFlash' name='Store Config in Flash' group='Advanced' default='true' visible='true' editable='true' desc='Controls whether the configuration structure is stored in flash (const, true) or SRAM (not const, false).' />
 
     <!-- Peripheral clock divider connection -->
-    <ParamRange id='cntInst' name='CNT Number' group='Internal' default='`${getInstNumber("cnt")}`' min='0' max='31' resolution='1' visible='false' editable='false' desc='' />
     <ParamString id='definePrefix' name='Define prefix' group='Internal' default='`${"TCPWM" . tcpwmInst . "_GRP" . pCntGroup . "_CNT" . getInstNumber("cnt")}`' visible='false' editable='false' desc='' />
     <ParamString id='defineInputDisabled' name='Define input disabled' group='Internal' default='`${INST_NAME . "_INPUT_DISABLED &amp; 0x3U"}`' visible='false' editable='false' desc='' />
     <ParamString id='pclk' name='PCLK' group='Internal' default='`${hasVisibleOption("clock_counter_en[0]") ? getBlockFromSignal("clock_counter_en[0]"):getBlockFromSignal("clock[0]")}`' visible='false' editable='false' desc='Connected peripheral clock divider (PCLK)' />

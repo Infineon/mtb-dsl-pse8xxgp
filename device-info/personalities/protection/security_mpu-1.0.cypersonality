@@ -34,6 +34,7 @@
       <ParamBool id='privileged$idx' name='Privileged Access Only' group='`${shortname$idx}`' default='false' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Are these memory locations only accessible to privileged callers?' />
       <ParamBool id='writable$idx' name='Writable' group='`${shortname$idx}`' default='true' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Are these memory locations writable?' />
       <ParamBool id='executable$idx' name='Executable' group='`${shortname$idx}`' default='false' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Are these memory locations executable?' />
+      <ParamBool id='shareable$idx' name='Shareable' group='`${shortname$idx}`' default='false' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Are these memory locations shareable?' />
       <ParamBool id='device$idx' name='Device Memory' group='`${shortname$idx}`' default='false' visible='`${enable$idx &amp;&amp; (!(getBlockType(1) eq "cm33"))}`' editable='true' desc='Is this memory used for peripheral control registers?' />
       <ParamChoice id='cacheable$idx' name='Cacheable' group='`${shortname$idx}`' default='4' visible='`${(enable$idx &amp;&amp; !device$idx) &amp;&amp; (!(getBlockType(1) eq "cm33"))}`' editable='true' desc='Can these memory locations be cached? Applies to both inner and outer.'>
         <Entry name='Non-Cacheable' value='4' visible='true' />
@@ -116,7 +117,7 @@
           <Member name='end_addr'            value='`${end_addr$idx}`' />
           <Member name='writable'            value='`${writable$idx}`' />
           <Member name='require_privileged'  value='`${privileged$idx}`' />
-          <Member name='shareable'           value='false' /> <!-- Not exposed through the personality -->
+          <Member name='shareable'           value='`${shareable$idx}`' />
           <Member name='executable'          value='`${executable$idx}`' />
           <Member name='cacheable'           value='`${cacheable$idx}`' />
           <Member name='is_device'           value='`${device$idx}`' />

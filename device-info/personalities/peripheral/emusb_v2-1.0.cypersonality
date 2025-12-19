@@ -86,8 +86,12 @@
     <ParamRange  id="phyPllRealAccuracyLower" name="phyPllRealAccuracyLower" group="Internal" default="`${phyPllHz - (phyPllHz * phyPllRealAccuracy)}`" min="0" max="1000000000" resolution="0.000001" visible="false" editable="false" desc="Find the maximum frequency deviation (lower limit)" />
 
     <ParamRange id="phyPllAccuracy" name="phyPllAccuracy" group="Internal" default="0.0005" min="0" max="100" resolution="0.000001" visible="`${debug}`" editable="false" desc="Expected clock accuracy in percent" />
-    <ParamRange id="phyPllAccuracyUp" name="phyPllAccuracyUp" group="Internal" default="`${50000000 + (50000000 * phyPllAccuracy)}`" min="0" max="1000000000" resolution="1" visible="false" editable="false" desc="Find the maximum possible frequency deviation (upper limit)" />
-    <ParamRange id="phyPllAccuracyLower" name="phyPllAccuracyLower" group="Internal" default="`${50000000 - (50000000 * phyPllAccuracy)}`" min="0" max="1000000000" resolution="1" visible="false" editable="false" desc="Find the maximum possible frequency deviation (lower limit)" />
+    <ParamRange id="phyPllAccuracy1Up" name="phyPllAccuracy1Up" group="Internal" default="`${50000000 + (50000000 * phyPllAccuracy)}`" min="0" max="1000000000" resolution="1" visible="false" editable="false" desc="Find the maximum possible frequency deviation (upper limit)" />
+    <ParamRange id="phyPllAccuracy1Lower" name="phyPllAccuracy1Lower" group="Internal" default="`${50000000 - (50000000 * phyPllAccuracy)}`" min="0" max="1000000000" resolution="1" visible="false" editable="false" desc="Find the maximum possible frequency deviation (lower limit)" />
+    <ParamRange id="phyPllAccuracy2Up" name="phyPllAccuracy2Up" group="Internal" default="`${24000000 + (24000000 * phyPllAccuracy)}`" min="0" max="1000000000" resolution="1" visible="false" editable="false" desc="Find the maximum possible frequency deviation (upper limit)" />
+    <ParamRange id="phyPllAccuracy2Lower" name="phyPllAccuracy2Lower" group="Internal" default="`${24000000 - (24000000 * phyPllAccuracy)}`" min="0" max="1000000000" resolution="1" visible="false" editable="false" desc="Find the maximum possible frequency deviation (lower limit)" />
+    <ParamBool  id="phyPllRange1" default="`${(phyPllRealAccuracyUp &lt; phyPllAccuracy1Up) &amp;&amp; (phyPllRealAccuracyLower &gt; phyPllAccuracy1Lower)}`" name="phyPllRange1" group="" visible="false" editable="false" desc=""/>
+    <ParamBool  id="phyPllRange2" default="`${(phyPllRealAccuracyUp &lt; phyPllAccuracy2Up) &amp;&amp; (phyPllRealAccuracyLower &gt; phyPllAccuracy2Lower)}`" name="phyPllRange2" group="" visible="false" editable="false" desc=""/>
 
     <ParamString id="phyPllFreq" name="Clock real frequency" group="Connections" default="`${phyPllHz . &quot;Hz +/-&quot; . phyPllRealAccuracy * 100 . &quot;%&quot;}`" visible="`${debug}`" editable="false" desc="Real frequency of the connected clock" />
 
@@ -100,8 +104,8 @@
   </Parameters>
 
   <DRCs>
-    <DRC type="WARNING" text="`${&quot;CLK_HF8 does not meet the requirements. The frequency must be in the range 50 MHz +/- &quot; . phyPllAccuracy * 100 . &quot; % or the maximum deviation in the range [&quot; . phyPllAccuracyLower . &quot;-&quot; . phyPllAccuracyUp . &quot;] Hz&quot;}`"
-        condition="`${(phyPllRealAccuracyUp &gt; phyPllAccuracyUp) || (phyPllRealAccuracyLower &lt; phyPllAccuracyLower)}`"
+    <DRC type="WARNING" text="`${&quot;CLK_HF8 does not meet the requirements. The frequency must be in the range 50 MHz +/- &quot; . phyPllAccuracy * 100 . &quot; % or 24 MHz +/- &quot; . phyPllAccuracy * 100 . &quot; % or the maximum deviation in the range [&quot; . phyPllAccuracy1Lower . &quot;-&quot; . phyPllAccuracy1Up . &quot;] / [&quot; . phyPllAccuracy2Lower . &quot;-&quot; . phyPllAccuracy2Up . &quot;] Hz&quot;}`"
+        condition="`${!((phyPllRange1) || (phyPllRange2))}`"
         location="`${phyPll}`" paramId="frequencyInfo"/>
 
     <DRC type="ERROR" text="`${&quot;For USB operation, set CLK_HF1 to &quot; . mmioExpClkHfHz / 1000000 . &quot; MHz.&quot;}`"

@@ -40,37 +40,37 @@ proc generate_shift_array_entries {memViewAddresses memViewCapabilities memViewS
   # Split the semicolon-separated strings into lists
   set addressList [split $memViewAddresses ";"]
   set capabilityList [split $memViewCapabilities ";"]
-    
+
   # Verify we have the same number of addresses and capabilities
   if {[llength $addressList] != [llength $capabilityList]} {
       error "Error: Address and capability lists must have the same length"
       return $::ERROR_ARG_VALUE
   }
-    
+
   # Create maps to find addresses by capability
   array set capabilityToAddress {}
-    
+
   # Build the mapping from capability to address
   for {set i 0} {$i < [llength $addressList]} {incr i} {
       set address [lindex $addressList $i]
       set capability [lindex $capabilityList $i]
       set capabilityToAddress($capability) $address
   }
-    
+
   # Initialize output variables
   set nonSecureOutput ""
   set secureOutput ""
-    
+
   # Generate non-secure shift (ICACHE -> NONE: capability 1 -> 0)
-  if {[info exists capabilityToAddress($::CAPABILITES_ICACHE)] && 
+  if {[info exists capabilityToAddress($::CAPABILITES_ICACHE)] &&
       [info exists capabilityToAddress($::CAPABILITES_NONE)]} {
       set startAddr $capabilityToAddress($::CAPABILITES_ICACHE)
       set destAddr $capabilityToAddress($::CAPABILITES_NONE)
       set nonSecureOutput "start = $startAddr, size = $memViewSize, dest = $destAddr"
   }
-    
+
   # Generate secure shift (BOTH -> SECURE: capability 3 -> 2)
-  if {[info exists capabilityToAddress($::CAPABILITES_BOTH)] && 
+  if {[info exists capabilityToAddress($::CAPABILITES_BOTH)] &&
       [info exists capabilityToAddress($::CAPABILITES_SECURE)]} {
       set startAddr $capabilityToAddress($::CAPABILITES_BOTH)
       set destAddr $capabilityToAddress($::CAPABILITES_SECURE)
@@ -83,7 +83,7 @@ proc generate_shift_array_entries {memViewAddresses memViewCapabilities memViewS
 proc trim_shift_array_entries {untrimmedEntries} {
   # Split the semicolon-separated string into a list
   set entryList [split $untrimmedEntries ";"]
-    
+
   # Convert each entry to JSON format
   set convertedList {}
   foreach entry $entryList {
@@ -104,7 +104,7 @@ proc trim_shift_array_entries {untrimmedEntries} {
 
   # Remove duplicates using lsort -unique
   set uniqueList [lsort -unique $convertedList]
-    
+
   # Join the unique entries back with semicolons
   set trimmedEntries [join $uniqueList ";"]
 
@@ -119,26 +119,75 @@ proc process_memory_data {} {
 #   set key_coreShortName "coreShortName$coreIdx"
 #   set coreShortName [dict get $::param_dict $key_coreShortName]
 # }
-    
+
   set usedPysMemIds [dict create]
+
+  # Build mapping of physical memory IDs to their start addresses
+  # This is used later to create entries for the memReport JSON
+  set physMemStartAddresses [dict create]
+  set numMemories [dict get $::param_dict "numMemories"]
+  for {set memIdx 0} {$memIdx < $numMemories} {incr memIdx} {
+    set memoryId [dict get $::param_dict "memoryId$memIdx"]
+    set uniqueAddresses {}
+    for {set coreIdx 0} {$coreIdx < $numCores} {incr coreIdx} {
+      set numViewMaps [dict get $::param_dict [format "numMemoryViewMaps%d_%d" $memIdx $coreIdx]]
+      for {set viewIdx 0} {$viewIdx < $numViewMaps} {incr viewIdx} {
+        set address [dict get $::param_dict [format "memoryViewAddress%d_%d_%d" $memIdx $coreIdx $viewIdx]]
+        if {[lsearch -exact $uniqueAddresses $address] == -1} {
+          lappend uniqueAddresses $address
+        }
+      }
+    }
+    dict set physMemStartAddresses $memoryId $uniqueAddresses
+  }
+
   set numRegionsDefined [dict get $::param_dict "numRegionsDefined"]
+  set reservedDomain [dict get $::param_dict "domain_reserved"]
+  set memReportRegionEntries 0
   for {set regIdx 0} {$regIdx < $numRegionsDefined} {incr regIdx} {
     set key_regionPhysMemId "regionPhysMemId_$regIdx"
     set regionPhysMemId [dict get $::param_dict $key_regionPhysMemId]
-#   set key_regionOffset "regionOffset_$regIdx"
-#   set regionOffset [dict get $::param_dict $key_regionOffset]
-#   set key_regionSize "regionSize_$regIdx"
-#   set regionSize [dict get $::param_dict $key_regionSize]
+    set key_regionOffset "regionOffset_$regIdx"
+    set regionOffset [dict get $::param_dict $key_regionOffset]
+    set key_regionSize "regionSize_$regIdx"
+    set regionSize [dict get $::param_dict $key_regionSize]
     set key_regionId "regionId_$regIdx"
     set regionId [dict get $::param_dict $key_regionId]
-#   set key_regionDomain "regionDomain_$regIdx"
-#   set regionDomain [dict get $::param_dict $key_regionDomain]
+    set key_regionDomain "regionDomain_$regIdx"
+    set regionDomain [dict get $::param_dict $key_regionDomain]
 #   set key_regionEndOffset "regionEndOffset_$regIdx"
 #   set regionEndOffset [dict get $::param_dict $key_regionEndOffset]
 
+    # Calculate region start addresses by adding offset to physical memory base addresses
+    set regionStartAddresses {}
+    if {[dict exists $physMemStartAddresses $regionPhysMemId]} {
+      set physMemAddresses [dict get $physMemStartAddresses $regionPhysMemId]
+      foreach baseAddr $physMemAddresses {
+        # Convert hex strings to integers, add offset, convert back to hex
+        set baseInt [expr $baseAddr]
+        set offsetInt [expr $regionOffset]
+        set regionAddr [format "0x%08X" [expr $baseInt + $offsetInt]]
+        lappend regionStartAddresses $regionAddr
+      }
+    }
+
+    # Create JSON entry for memory report relating to the regions
+    set jsonAddresses [join [lmap addr $regionStartAddresses {format "\"%s\"" $addr}] ", "]
+
+    # Filter out reserved domain regions
+    if {$regionDomain ne $reservedDomain} {
+      set jsonRegionEntry "\{ \"name\" : \"$regionId\", \"size\" : \"$regionSize\", \"start\" : \[ $jsonAddresses \] \}"
+    } else {
+      set jsonRegionEntry "\{ \"name\" : \"$regionId\", \"size\" : \"$regionSize\", \"start\" : \[ $jsonAddresses \], \"reserved\" : true \}"
+    }
+    puts $::channelName [format "param:memReportRegionEntry%d=%s" $regIdx $jsonRegionEntry]
+
+    # Increment counter for valid memory report entries
+    incr memReportRegionEntries
+
     # The value doesn't matter here (so 1 is used). Just need the keys.
     dict set usedPysMemIds $regionPhysMemId 1
-     
+
     for {set coreIdx 0} {$coreIdx < $numCores} {incr coreIdx} {
       set key_regionCoreIsAccessible [format "regionCoreIsAccessible%d_%d" $coreIdx $regIdx]
       set regionCoreIsAccessible [dict get $::param_dict $key_regionCoreIsAccessible]
@@ -183,7 +232,7 @@ proc process_memory_data {} {
             set regionHasCacheSecureCapability $viewIdx
           }
 
-        }   
+        }
 
         puts $::channelName [format "param:regionHasEmptyCapability%d_%d=%s" $coreIdx $regIdx $regionHasEmptyCapability]
         puts $::channelName [format "param:regionHasCacheCapability%d_%d=%s" $coreIdx $regIdx $regionHasCacheCapability]
@@ -224,6 +273,8 @@ proc process_memory_data {} {
       }
     }
   }
+  # Report the number of valid memory regions (i.e. not associated with reserved domain)
+  puts $::channelName [format "param:memReportRegionCount=%d" $memReportRegionEntries]
 
   set memNonSecureOutputs {}
   set memSecureOutputs {}
@@ -231,13 +282,17 @@ proc process_memory_data {} {
   set validMemoryIds [dict create]
   set numMemories [dict get $::param_dict "numMemories"]
   for {set memIdx 0} {$memIdx < $numMemories} {incr memIdx} {
-    set key_memoryId "memoryId$memIdx"
-    set memoryId [dict get $::param_dict $key_memoryId]
-    set key_memorySize "memorySize$memIdx"
-    set memorySize [dict get $::param_dict $key_memorySize]
+    set memoryId [dict get $::param_dict "memoryId$memIdx"]
+    set memorySize [dict get $::param_dict "memorySize$memIdx"]
 
     # The value doesn't matter here (so 1 is used). Just need the keys.
     dict set validMemoryIds $memoryId 1
+
+    # Generate JSON physical memory entry using pre-computed addresses
+    set uniqueAddresses [dict get $physMemStartAddresses $memoryId]
+    set jsonAddresses [join [lmap addr $uniqueAddresses {format "\"%s\"" $addr}] ", "]
+    set jsonPhysEntry "\{ \"name\" : \"$memoryId\", \"size\" : \"$memorySize\", \"start\" : \[ $jsonAddresses \] \}"
+    puts $::channelName [format "param:memReportPhysEntry%d=%s" $memIdx $jsonPhysEntry]
 
     for {set coreIdx 0} {$coreIdx < $numCores} {incr coreIdx} {
 #     set key_memoryViewMaps [format "memoryViewMaps%d_%d" $memIdx $coreIdx]
@@ -250,7 +305,7 @@ proc process_memory_data {} {
 
       for {set viewIdx 0} {$viewIdx < $numMemoryViewMaps} {incr viewIdx} {
 #       set key_memoryViewMap [format "memoryViewMap%d_%d_%d" $memIdx $coreIdx $viewIdx]
-#       set memoryViewMap [dict get $::param_dict $key_memoryViewMap] 
+#       set memoryViewMap [dict get $::param_dict $key_memoryViewMap]
         set key_memoryViewAddress [format "memoryViewAddress%d_%d_%d" $memIdx $coreIdx $viewIdx]
         set memoryViewAddress [dict get $::param_dict $key_memoryViewAddress]
         set key_memoryViewMapIsICache [format "memoryViewMapIsICache%d_%d_%d" $memIdx $coreIdx $viewIdx]

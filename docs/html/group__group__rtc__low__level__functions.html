@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__rtc__low__level__functio
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -157,7 +157,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns a day of the week for a year, month, and day of month that are passed through parameters. </p>
-<p >Zeller's congruence is used to calculate the day of the week. RTC HW block does not provide the converting function for day of week. This function should be called before Cy_RTC_SetDateAndTime() to get the day of week.</p>
+<p >Zeller's congruence is used to calculate the day of the week. RTC HW block does not provide the converting function for day of week. This function should be called before <a class="el" href="group__group__rtc__general__functions.html#ga47268d3ac315e0d41b4795362bc444a8" title="Sets the time and date values into the RTC_TIME and RTC_DATE registers.">Cy_RTC_SetDateAndTime()</a> to get the day of week.</p>
 <p >For the Georgian calendar, Zeller's congruence is: h = (q + [13 * (m + 1)] + K + [K/4] + [J/4] - 2J) mod 7</p>
 <p >h - The day of the week (0 = Saturday, 1 = Sunday, 2 = Monday, ., 6 = Friday). q - The day of the month. m - The month (3 = March, 4 = April, 5 = May, ..., 14 = February) K - The year of the century (year mod 100). J - The zero-based century (actually [year/100]) For example, the zero-based centuries for 1995 and 2000 are 19 and 20 respectively (not to be confused with the common ordinal century enumeration which indicates 20th for both cases).</p>
 <dl class="section note"><dt>Note</dt><dd>In this algorithm January and February are counted as months 13 and 14 of the previous year.</dd>
@@ -166,12 +166,12 @@ For devices with ARM TrustZone enabled, this API is safe to call from both the s
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">day</td><td>The day of the month, Valid range 1..31.</td></tr>
-    <tr><td class="paramname">month</td><td>The month of the year, see group_rtc_month.</td></tr>
+    <tr><td class="paramname">month</td><td>The month of the year, see <a class="el" href="group__group__rtc__month.html">Month definitions</a>.</td></tr>
     <tr><td class="paramname">year</td><td>The year value. Valid range non-zero value.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns a day of the week, see group_rtc_day_of_the_week. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns a day of the week, see <a class="el" href="group__group__rtc__day__of__the__week.html">Day of the week definitions</a>. </dd></dl>
 
 </div>
 </div>
@@ -235,7 +235,7 @@ For devices with ARM TrustZone enabled, this API is safe to call from both the s
 <dl class="section note"><dt>Note</dt><dd>For devices with ARM TrustZone enabled, this API is safe to call from both the secure and non-secure CPU state. See <a class="el" href="group__group__rtc.html#group_rtc_section_secure_aware">Secure Aware RTC</a> for further details.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">month</td><td>The month of the year, see group_rtc_month.</td></tr>
+    <tr><td class="paramname">month</td><td>The month of the year, see <a class="el" href="group__group__rtc__month.html">Month definitions</a>.</td></tr>
     <tr><td class="paramname">year</td><td>A year value. Valid range non-zero value.</td></tr>
   </table>
   </dd>
@@ -313,7 +313,7 @@ For devices with ARM TrustZone enabled, this API is safe to call from both the s
 
 <p>Return current status of CY_RTC_BUSY. </p>
 <p >The status indicates synchronization between the RTC user register and the actual RTC register. CY_RTC_BUSY bit is set if it is synchronizing. It is not possible to set the Read or Write bit until CY_RTC_BUSY clears.</p>
-<dl class="section return"><dt>Returns</dt><dd>The status of RTC user register synchronization. See group_rtc_busy_status </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of RTC user register synchronization. See <a class="el" href="group__group__rtc__busy__status.html">RTC Status definitions</a> </dd></dl>
 
 </div>
 </div>
@@ -359,7 +359,7 @@ This API is Secure Aware. On devices with ARM TrustZone enabled, it is safe to c
 
 <p>The function checks the reset cause and returns the Boolean result. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the reset reason is the power cycle and the XRES (external reset). False if the reset reason is other than power cycle and the XRES.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Based on a return value the RTC time and date can be updated or skipped after the device reset. For example, you should skip the Cy_RTC_SetAlarmDateAndTime() call function if internal WDT reset occurs. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Based on a return value the RTC time and date can be updated or skipped after the device reset. For example, you should skip the <a class="el" href="group__group__rtc__alarm__functions.html#ga92807dc709c679c70c07d44cf0331a94" title="Sets alarm time and date values into the ALMx_TIME and ALMx_DATE registers.">Cy_RTC_SetAlarmDateAndTime()</a> call function if internal WDT reset occurs. </dd></dl>
 
 </div>
 </div>

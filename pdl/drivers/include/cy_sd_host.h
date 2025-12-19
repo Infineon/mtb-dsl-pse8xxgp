@@ -2,13 +2,14 @@
 * \file cy_sd_host.h
 * \version 2.40
 *
-*  This file provides constants and parameter values for
-*  the SD Host Controller driver.
+* \brief
+* This file provides constants and parameter values for the SD Host Controller driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2018-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_sd_host

@@ -12,6 +12,7 @@ var group__group__hal__spi =
       [ "MTB_HAL_SPI_FIFO_RX", "group__group__hal__spi.html#gga5518960186b11f881c436e4706ccef08aeb9b0dc2335f5ce442d1a5cc730306e4", null ],
       [ "MTB_HAL_SPI_FIFO_TX", "group__group__hal__spi.html#gga5518960186b11f881c436e4706ccef08a4aa8f18a35a7df76ba911f0777fcfbab", null ]
     ] ],
+    [ "mtb_hal_spi_enable", "group__group__hal__spi.html#ga4958fc08f71f7281e4bede14ebd3095e", null ],
     [ "mtb_hal_spi_set_frequency", "group__group__hal__spi.html#ga0f3e46217b46ed98ea29ca0a9fa9340a", null ],
     [ "mtb_hal_spi_set_fifo_level", "group__group__hal__spi.html#ga8ea4bcdd12cb51967fd838f1e8df92ff", null ],
     [ "mtb_hal_spi_get", "group__group__hal__spi.html#ga5cc0a0f76ffba41ed77d6e3c9751757c", null ],

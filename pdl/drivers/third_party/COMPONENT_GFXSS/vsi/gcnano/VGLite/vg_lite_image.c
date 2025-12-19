@@ -38,7 +38,7 @@ static uint32_t get_buffer_planes(vg_lite_buffer_t *buffer,
                               uint32_t *strides)
 {
     uint32_t count = 1;
-    
+
     switch (buffer->format) {
         case VG_LITE_RGBA8888:
         case VG_LITE_BGRA8888:
@@ -78,7 +78,7 @@ static uint32_t get_buffer_planes(vg_lite_buffer_t *buffer,
             strides[1] = buffer->yuv.uv_stride;
             strides[2] = 0;
             break;
-            
+
         case VG_LITE_AYUY2:
             count = 2;
             memory[0] = (uint8_t *)buffer->memory;
@@ -98,7 +98,7 @@ static uint32_t get_buffer_planes(vg_lite_buffer_t *buffer,
             strides[1] = buffer->yuv.uv_stride;
             strides[2] = buffer->yuv.alpha_stride;
             break;
-            
+
         case VG_LITE_YV12:
         case VG_LITE_YV24:
         case VG_LITE_YV16:
@@ -110,14 +110,14 @@ static uint32_t get_buffer_planes(vg_lite_buffer_t *buffer,
             strides[1] = buffer->yuv.uv_stride;
             strides[2] = buffer->yuv.v_stride;
             break;
-            
+
         case VG_LITE_YUY2_TILED:
         case VG_LITE_NV12_TILED:
         case VG_LITE_ANV12_TILED:
         case VG_LITE_AYUY2_TILED:
         default:
             count = 0;
-            
+
             break;
     }
     return count;
@@ -1050,7 +1050,7 @@ vg_lite_void set_gamma_dest_only(vg_lite_buffer_t *target, vg_lite_int32_t stenc
         (target->format >= OPENVG_lRGBX_8888_PRE && target->format <= OPENVG_lRGBA_4444_PRE))
     {
         s_context.gamma_dst = 0;
-    } 
+    }
     else
     {
         s_context.gamma_dst = 1;

@@ -1,12 +1,15 @@
 /***************************************************************************//**
 * \file cy_ipc_drv.h
 * \version 1.140
-* Provides an API declaration of the IPC driver.
+*
+* \brief
+* Provides API declarations for the IPC driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2020-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2020-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 #ifndef CY_IPC_DRV_H
 #define CY_IPC_DRV_H
@@ -90,7 +94,7 @@
 * These transactions are handled transparently by the DRV-level API. Use the
 * PIPE, SEMA  layers of the API
 * to implement communication in your application.
-* The data transferred is limited to a single 32-bit value in case of PIPE and SEMA 
+* The data transferred is limited to a single 32-bit value in case of PIPE and SEMA
 * As implemented by the PIPE API, that value is a pointer to a data structure of arbitrary size
 * and complexity.
 *

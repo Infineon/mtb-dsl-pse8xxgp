@@ -21,7 +21,7 @@ var searchData=
   ['ldo_18',['LDO',['../group__group__syspm__functions__ldo.html',1,'']]],
   ['len_19',['len',['../group__group__i3c__data__structures.html#a6b40ab40ab65617d81ce38921bacc323',1,'cy_stc_i3c_ccc_mrwl_t::len()'],['../group__group__i3c__data__structures.html#a9535b0aa8012b2f6d25c3a2249beda0f',1,'cy_stc_i3c_ccc_payload_t::len()'],['../group__group__i3c__data__structures.html#ab4b4a59f6af4bdcf62fae2d5c18eb409',1,'cy_stc_i3c_target_ccc_resp_t::len()']]],
   ['level_20',['level',['../group__group__autanalog__fifo__data__structures.html#a9afbf375b9ebc910340ddf08d001f8ea',1,'cy_stc_autanalog_fifo_cfg_t']]],
-  ['level_21',['LEVEL',['../structLPPASS__MMIO__STA__Type.html#ae85b4150ab8463a81115ecd78babdf2f',1,'LPPASS_MMIO_STA_Type']]],
+  ['level_21',['LEVEL',['../structLPPASS__MMIO__STA__Type.html#a5c97e9255e5edf23f58319cd36d2d5ca',1,'LPPASS_MMIO_STA_Type']]],
   ['lfen_22',['lfEn',['../group__group__sysclk__pll__structs.html#a15121419c601cb438eb055b0ad983043',1,'cy_stc_dpll_hp_config_t']]],
   ['lfmode_23',['lfMode',['../group__group__sysclk__pll__structs.html#a3dc5e0d1ec6da25c55deaf10fccad2ef',1,'cy_stc_pll_config_t']]],
   ['lfsrinitval_24',['lfsrInitVal',['../group__group__dma__data__structures.html#ad8cc4baa069f067285c9773ecc5102bc',1,'cy_stc_dma_crc_config_t']]],

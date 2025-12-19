@@ -3,12 +3,13 @@
 * \version 1.130
 *
 * \brief
-* Provides an API declaration of the SysInt driver
+* Provides an API declaration of the SysInt driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
+*
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +24,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 
 /**
 * \addtogroup group_sysint
@@ -152,7 +154,7 @@ extern "C" {
 *       Global Variable
 ***************************************/
 
- 
+
 
 /***************************************
 *       Global Interrupt
@@ -176,7 +178,7 @@ extern "C" {
 #define CY_SYSINT_INTRSRC_MASK           (0x0FFFUL)  /**< Bit 0-11 indicate system interrupt and bit 12-15 will indicate the CPU IRQ */
 #define CY_SYSINT_INTRSRC_MUXIRQ_SHIFT   (12UL)      /**< Bit 0-11 indicate system interrupt and bit 12-15 will indicate the CPU IRQ */
 #endif /* defined (CY_IP_M7CPUSS) */
- 
+
 /** \} group_sysint_macros */
 
 
@@ -245,7 +247,7 @@ typedef struct {
     #define CY_SYSINT_ENABLE           (1UL)    /**< Enable interrupt */
     #define CY_SYSINT_INT_STATUS_MSK   (0x7UL)
 
- 
+
     /* Parameter validation macros */
     #define CY_SYSINT_IS_PRIORITY_VALID(intrPriority)     ((uint32_t)(1UL << __NVIC_PRIO_BITS) > (intrPriority))
     #define CY_SYSINT_IS_VECTOR_VALID(userIsr)            (NULL != (userIsr))
@@ -391,9 +393,9 @@ cy_israddress Cy_SysInt_SetVector(IRQn_Type IRQn, cy_israddress userIsr);
 cy_israddress Cy_SysInt_GetVector(IRQn_Type IRQn);
 
 
- 
- 
- 
+
+
+
 /***************************************
 *           Functions
 ***************************************/

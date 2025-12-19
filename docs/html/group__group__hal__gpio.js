@@ -39,5 +39,6 @@ var group__group__hal__gpio =
     [ "mtb_hal_gpio_port_read", "group__group__hal__gpio.html#gae76c753813568ff0972d77d33b368e58", null ],
     [ "mtb_hal_gpio_register_callback", "group__group__hal__gpio.html#gafb3d2f608c15ab01ed8830870943ac25", null ],
     [ "mtb_hal_gpio_enable_event", "group__group__hal__gpio.html#ga9e7b025a81a3cdd4ab0c93147c9ac1c9", null ],
-    [ "mtb_hal_gpio_process_interrupt", "group__group__hal__gpio.html#ga8397d02b803c68b6c4171786f04a3adb", null ]
+    [ "mtb_hal_gpio_process_interrupt", "group__group__hal__gpio.html#ga8397d02b803c68b6c4171786f04a3adb", null ],
+    [ "mtb_hal_gpio_read_out", "group__group__hal__gpio.html#gaba8865dd225c56fb2a9a1a21d85d2b4f", null ]
 ];

@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
+  <div id="splitbar" style="-moz-user-select:none;"
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__hal__comp.html',''); ini
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -85,6 +85,8 @@ $(document).ready(function(){initNavTree('group__group__hal__comp.html',''); ini
 <div class="header">
   <div class="summary">
 <a href="#groups">API Reference</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">COMP (Analog Comparator)<div class="ingroups"><a class="el" href="group__group__hal__top.html">HAL API Reference</a> &raquo; <a class="el" href="group__group__hal.html">HAL Drivers</a></div></div></div>
 </div><!--header-->
@@ -127,6 +129,28 @@ API Reference</h2></td></tr>
 <tr class="memdesc:group__group__hal__results__comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comparator specific return codes. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gaaf9950cb3d273545b2d5dd5720938222"><td class="memItemLeft" align="right" valign="top"><a id="gaaf9950cb3d273545b2d5dd5720938222" name="gaaf9950cb3d273545b2d5dd5720938222"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>mtb_hal_comp_event_callback_t</b>) (void *callback_arg, <a class="el" href="group__group__hal__comp.html#ga464ddc67a524cbb2792aa287ba9ec319">mtb_hal_comp_event_t</a> event)</td></tr>
+<tr class="memdesc:gaaf9950cb3d273545b2d5dd5720938222"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler for Comparator events. <br /></td></tr>
+<tr class="separator:gaaf9950cb3d273545b2d5dd5720938222"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga464ddc67a524cbb2792aa287ba9ec319"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga464ddc67a524cbb2792aa287ba9ec319">mtb_hal_comp_event_t</a> { <br />
+&#160;&#160;<a class="el" href="group__group__hal__comp.html#gga464ddc67a524cbb2792aa287ba9ec319ab4bc383bd62abab904790f34f5f892d5">MTB_HAL_COMP_EDGE_NONE</a> = 0
+, <br />
+&#160;&#160;<a class="el" href="group__group__hal__comp.html#gga464ddc67a524cbb2792aa287ba9ec319aa9cb7de30fb531ca29d06d480b404909">MTB_HAL_COMP_RISING_EDGE</a> = 1
+, <br />
+&#160;&#160;<a class="el" href="group__group__hal__comp.html#gga464ddc67a524cbb2792aa287ba9ec319aa90b6a9925d3a89d41c9d7d660616454">MTB_HAL_COMP_FALLING_EDGE</a> = 2
+, <br />
+&#160;&#160;<a class="el" href="group__group__hal__comp.html#gga464ddc67a524cbb2792aa287ba9ec319ad70ddcc842570777d2e2a3789d567b9b">MTB_HAL_COMP_BOTH_EDGE</a> = 3
+<br />
+ }</td></tr>
+<tr class="memdesc:ga464ddc67a524cbb2792aa287ba9ec319"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comparator event types.  <a href="group__group__hal__comp.html#ga464ddc67a524cbb2792aa287ba9ec319">More...</a><br /></td></tr>
+<tr class="separator:ga464ddc67a524cbb2792aa287ba9ec319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga8b24f5bd3100a06d488ac1402b6fc841"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga8b24f5bd3100a06d488ac1402b6fc841">mtb_hal_comp_setup</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, const <a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__configurator__t">mtb_hal_comp_configurator_t</a> *config)</td></tr>
@@ -138,7 +162,58 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8d57b63d5e000246e19923501b50d98f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga8d57b63d5e000246e19923501b50d98f">mtb_hal_comp_set_ref</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, uint16_t ref_mv)</td></tr>
 <tr class="memdesc:ga8d57b63d5e000246e19923501b50d98f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the reference voltage value.  <a href="group__group__hal__comp.html#ga8d57b63d5e000246e19923501b50d98f">More...</a><br /></td></tr>
 <tr class="separator:ga8d57b63d5e000246e19923501b50d98f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2bf7bb1730b9624e8236521622105662"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga2bf7bb1730b9624e8236521622105662">mtb_hal_comp_enable</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, bool enable)</td></tr>
+<tr class="memdesc:ga2bf7bb1730b9624e8236521622105662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable the comparator.  <a href="group__group__hal__comp.html#ga2bf7bb1730b9624e8236521622105662">More...</a><br /></td></tr>
+<tr class="separator:ga2bf7bb1730b9624e8236521622105662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64b64963d2f4752378998d1e9bc62893"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga64b64963d2f4752378998d1e9bc62893">mtb_hal_comp_slice_enable</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, bool enable)</td></tr>
+<tr class="memdesc:ga64b64963d2f4752378998d1e9bc62893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable the slope generator slice.  <a href="group__group__hal__comp.html#ga64b64963d2f4752378998d1e9bc62893">More...</a><br /></td></tr>
+<tr class="separator:ga64b64963d2f4752378998d1e9bc62893"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga63f6b29ea2cdc17d9a7a653119ca3484"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga63f6b29ea2cdc17d9a7a653119ca3484">mtb_hal_comp_slice_read</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj)</td></tr>
+<tr class="memdesc:ga63f6b29ea2cdc17d9a7a653119ca3484"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the output state of the slope generator slice.  <a href="group__group__hal__comp.html#ga63f6b29ea2cdc17d9a7a653119ca3484">More...</a><br /></td></tr>
+<tr class="separator:ga63f6b29ea2cdc17d9a7a653119ca3484"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7a5d7f683dc82d8aff004d1af6c6e09"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#gae7a5d7f683dc82d8aff004d1af6c6e09">mtb_hal_comp_slice_set_ref_count</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, uint32_t count)</td></tr>
+<tr class="memdesc:gae7a5d7f683dc82d8aff004d1af6c6e09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the reference count of the slope generator slice.  <a href="group__group__hal__comp.html#gae7a5d7f683dc82d8aff004d1af6c6e09">More...</a><br /></td></tr>
+<tr class="separator:gae7a5d7f683dc82d8aff004d1af6c6e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80c75c75e83c201e9d8b7a9021b4b30e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga80c75c75e83c201e9d8b7a9021b4b30e">mtb_hal_comp_slice_set_ref_mv</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, uint32_t ref_mv)</td></tr>
+<tr class="memdesc:ga80c75c75e83c201e9d8b7a9021b4b30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the reference voltage of the slope generator slice.  <a href="group__group__hal__comp.html#ga80c75c75e83c201e9d8b7a9021b4b30e">More...</a><br /></td></tr>
+<tr class="separator:ga80c75c75e83c201e9d8b7a9021b4b30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga03d0c079088621120a6dfe45ff1602e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga03d0c079088621120a6dfe45ff1602e4">mtb_hal_comp_register_callback</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, <a class="el" href="group__group__hal__comp.html#gaaf9950cb3d273545b2d5dd5720938222">mtb_hal_comp_event_callback_t</a> callback, void *callback_arg)</td></tr>
+<tr class="memdesc:ga03d0c079088621120a6dfe45ff1602e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register/clear a callback handler for Comp events.  <a href="group__group__hal__comp.html#ga03d0c079088621120a6dfe45ff1602e4">More...</a><br /></td></tr>
+<tr class="separator:ga03d0c079088621120a6dfe45ff1602e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bbb2f51342effd260d993aa70ba42e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#ga1bbb2f51342effd260d993aa70ba42e0">mtb_hal_comp_enable_event</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj, <a class="el" href="group__group__hal__comp.html#ga464ddc67a524cbb2792aa287ba9ec319">mtb_hal_comp_event_t</a> event, bool enable)</td></tr>
+<tr class="memdesc:ga1bbb2f51342effd260d993aa70ba42e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or Disable the specified Comp event.  <a href="group__group__hal__comp.html#ga1bbb2f51342effd260d993aa70ba42e0">More...</a><br /></td></tr>
+<tr class="separator:ga1bbb2f51342effd260d993aa70ba42e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac64102951ec2af7b717f36f6d201fa74"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__comp.html#gac64102951ec2af7b717f36f6d201fa74">mtb_hal_comp_process_interrupt</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *obj)</td></tr>
+<tr class="memdesc:gac64102951ec2af7b717f36f6d201fa74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process interrupts related related to a Comp instance.  <a href="group__group__hal__comp.html#gac64102951ec2af7b717f36f6d201fa74">More...</a><br /></td></tr>
+<tr class="separator:gac64102951ec2af7b717f36f6d201fa74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga464ddc67a524cbb2792aa287ba9ec319" name="ga464ddc67a524cbb2792aa287ba9ec319"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga464ddc67a524cbb2792aa287ba9ec319">&#9670;&nbsp;</a></span>mtb_hal_comp_event_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__group__hal__comp.html#ga464ddc67a524cbb2792aa287ba9ec319">mtb_hal_comp_event_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Comparator event types. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga464ddc67a524cbb2792aa287ba9ec319ab4bc383bd62abab904790f34f5f892d5" name="gga464ddc67a524cbb2792aa287ba9ec319ab4bc383bd62abab904790f34f5f892d5"></a>MTB_HAL_COMP_EDGE_NONE&#160;</td><td class="fielddoc"><p >No trigger on either edge. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga464ddc67a524cbb2792aa287ba9ec319aa9cb7de30fb531ca29d06d480b404909" name="gga464ddc67a524cbb2792aa287ba9ec319aa9cb7de30fb531ca29d06d480b404909"></a>MTB_HAL_COMP_RISING_EDGE&#160;</td><td class="fielddoc"><p >Rising edge on comparator output. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga464ddc67a524cbb2792aa287ba9ec319aa90b6a9925d3a89d41c9d7d660616454" name="gga464ddc67a524cbb2792aa287ba9ec319aa90b6a9925d3a89d41c9d7d660616454"></a>MTB_HAL_COMP_FALLING_EDGE&#160;</td><td class="fielddoc"><p >Falling edge on comparator output. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga464ddc67a524cbb2792aa287ba9ec319ad70ddcc842570777d2e2a3789d567b9b" name="gga464ddc67a524cbb2792aa287ba9ec319ad70ddcc842570777d2e2a3789d567b9b"></a>MTB_HAL_COMP_BOTH_EDGE&#160;</td><td class="fielddoc"><p >Falling edge on comparator output. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga8b24f5bd3100a06d488ac1402b6fc841" name="ga8b24f5bd3100a06d488ac1402b6fc841"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8b24f5bd3100a06d488ac1402b6fc841">&#9670;&nbsp;</a></span>mtb_hal_comp_setup()</h2>
@@ -241,6 +316,302 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The status of the set reference request </dd></dl>
+
+</div>
+</div>
+<a id="ga2bf7bb1730b9624e8236521622105662" name="ga2bf7bb1730b9624e8236521622105662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2bf7bb1730b9624e8236521622105662">&#9670;&nbsp;</a></span>mtb_hal_comp_enable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_comp_enable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable/disable the comparator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The Comp object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>Enable/disable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the enable request </dd></dl>
+
+</div>
+</div>
+<a id="ga64b64963d2f4752378998d1e9bc62893" name="ga64b64963d2f4752378998d1e9bc62893"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga64b64963d2f4752378998d1e9bc62893">&#9670;&nbsp;</a></span>mtb_hal_comp_slice_enable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_comp_slice_enable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable/disable the slope generator slice. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The Comp object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>Enable/disable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the enable request </dd></dl>
+
+</div>
+</div>
+<a id="ga63f6b29ea2cdc17d9a7a653119ca3484" name="ga63f6b29ea2cdc17d9a7a653119ca3484"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga63f6b29ea2cdc17d9a7a653119ca3484">&#9670;&nbsp;</a></span>mtb_hal_comp_slice_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mtb_hal_comp_slice_read </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read the output state of the slope generator slice. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The Comp object </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The Comparator state. True if the non-inverting pin voltage is greater than the inverting pin voltage, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="gae7a5d7f683dc82d8aff004d1af6c6e09" name="gae7a5d7f683dc82d8aff004d1af6c6e09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae7a5d7f683dc82d8aff004d1af6c6e09">&#9670;&nbsp;</a></span>mtb_hal_comp_slice_set_ref_count()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_comp_slice_set_ref_count </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the reference count of the slope generator slice. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The Comp object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>Reference count </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the set reference request </dd></dl>
+
+</div>
+</div>
+<a id="ga80c75c75e83c201e9d8b7a9021b4b30e" name="ga80c75c75e83c201e9d8b7a9021b4b30e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga80c75c75e83c201e9d8b7a9021b4b30e">&#9670;&nbsp;</a></span>mtb_hal_comp_slice_set_ref_mv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_comp_slice_set_ref_mv </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>ref_mv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the reference voltage of the slope generator slice. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The Comp object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ref_mv</td><td>Reference voltage in millivolts </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the set reference request </dd></dl>
+
+</div>
+</div>
+<a id="ga03d0c079088621120a6dfe45ff1602e4" name="ga03d0c079088621120a6dfe45ff1602e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga03d0c079088621120a6dfe45ff1602e4">&#9670;&nbsp;</a></span>mtb_hal_comp_register_callback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mtb_hal_comp_register_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__hal__comp.html#gaaf9950cb3d273545b2d5dd5720938222">mtb_hal_comp_event_callback_t</a>&#160;</td>
+          <td class="paramname"><em>callback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>callback_arg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Register/clear a callback handler for Comp events. </p>
+<p >The referenced function will be called when one of the events enabled by by mtb_hal_comp_enable_event occurs.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The Comp object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">callback</td><td>The callback handler which will be invoked when the event occurs </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">callback_arg</td><td>Generic argument that will be provided to the callback when called </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga1bbb2f51342effd260d993aa70ba42e0" name="ga1bbb2f51342effd260d993aa70ba42e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1bbb2f51342effd260d993aa70ba42e0">&#9670;&nbsp;</a></span>mtb_hal_comp_enable_event()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mtb_hal_comp_enable_event </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__hal__comp.html#ga464ddc67a524cbb2792aa287ba9ec319">mtb_hal_comp_event_t</a>&#160;</td>
+          <td class="paramname"><em>event</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable or Disable the specified Comp event. </p>
+<p >When an enabled event occurs, the function specified by mtb_hal_comp_register_callback will be called.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The Comp object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">event</td><td>The Comp event </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">enable</td><td>True to turn on interrupts, False to turn off </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gac64102951ec2af7b717f36f6d201fa74" name="gac64102951ec2af7b717f36f6d201fa74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac64102951ec2af7b717f36f6d201fa74">&#9670;&nbsp;</a></span>mtb_hal_comp_process_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_comp_process_interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__comp__t">mtb_hal_comp_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Process interrupts related related to a Comp instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">obj</td><td>HAL object for which the interrupt should be processed </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>CY_RSLT_SUCCESS if the interrupt was processed successfully; otherwise an error </dd></dl>
 
 </div>
 </div>

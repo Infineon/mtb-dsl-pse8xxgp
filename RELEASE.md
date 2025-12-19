@@ -1,9 +1,19 @@
-# ModusToolbox™ PSE8xxGP Device Support Library 1.1.0
+# ModusToolbox™ PSE8xxGP Device Support Library 1.2.0
 ## What's Included?
 
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
-## Defect Fixes
+## Change log
+### v1.2.0
+* PDL ethif driver update with the new API Cy_ETHIF_GetPrivateData
+* Graphics updates
+* HAL update on mtb_hal_i2c_setup signature
+* Fixed SMIF slave index calculation for LLVM compiler
+* Improved SRF error message handling
+* Added system Power Transition APIs with enhanced documentation
+* Improved and cleaned up recipe-make scripts
+* Documentation updates
+* Personality updates
 ### v1.1.1
 * Bug fix on secure aware implementation of Cy_SysPm_CpuEnterDeepSleep
 ### v1.1.0
@@ -14,9 +24,10 @@ Refer to the [README.md](./README.md) for a complete description of the ModusToo
 
 ## Supported Software and Tools
 
-This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.1.0 was validated for the compatibility with the following Software and Tools:
+This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.2.0 was validated for the compatibility with the following Software and Tools:
 
-| Software and Tools                                      | Version |
+| Software and Tools                                                            | Version      |
+| :---                                                                          | :----        |
 | [Infineon Core Library](https://github.com/Infineon/core-lib)                 | 1.5.0        |
 | CMSIS                                                                         | 6.1.0        |
 | GCC Compiler                                                                  | 14.2.1       |

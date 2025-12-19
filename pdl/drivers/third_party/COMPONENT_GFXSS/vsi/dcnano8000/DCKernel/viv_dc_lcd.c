@@ -144,4 +144,3 @@ gctVOID viv_init_lcd(viv_dc_core *core)
 
     viv_os_print("end init LCD\n");
 }
-

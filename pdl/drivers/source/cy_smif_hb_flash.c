@@ -256,7 +256,7 @@ static void Cy_SMIF_HB_SetDummyCycles(volatile SMIF_DEVICE_Type *dev, cy_en_smif
 * center tap of the longest sequence of matches and applies this tap.
 *
 * \note Function assumes that any SMIF has the same number of delay taps
-* \note This API is deprecated, instead please use \ref Cy_SMIF_MemCalibrateSDL
+* \note This API is deprecated, instead please use \ref Cy_SMIF_MemCalibrateSDL 
 *
 *******************************************************************************/
 cy_en_smif_status_t Cy_SMIF_HyperBus_CalibrateDelay(SMIF_Type *base, cy_stc_smif_mem_config_t *memConfig, uint8_t dummyCycles, uint32_t calibrationDataOffsetAddress, cy_stc_smif_context_t *context)
@@ -1007,3 +1007,4 @@ cy_en_smif_status_t Cy_SMIF_HyperBus_MMIO_Write(SMIF_Type *base,
 #if defined(__cplusplus)
 }
 #endif
+

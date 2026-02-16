@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2024-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2024-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -47,6 +47,7 @@
 #include "cy_lpcomp.h"
 #include "cy_lvd.h"
 #include "cy_mcwdt.h"
+#include "cy_mipidsi.h"
 #include "cy_nnlite.h"
 #include "cy_pdm_pcm_v2.h"
 #include "cy_rram.h"
@@ -74,3 +75,4 @@
 #include "cy_tdm.h"
 #include "cy_trigmux.h"
 #include "cy_wdt.h"
+

@@ -33,6 +33,7 @@
   <Parameters>
     <ParamString id='domain_unprotected' default='`${getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_unprotected"), "")}`' />
     <ParamString id='domain_reserved' name='domain_reserved' default='`${getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")}`' />
+    <ParamBool id='enableSecureEnclave' default='`${getOrDefault(getExposedMember("$PROTECTION_LOC", "enableSecureEnclave"), false)}`' />
 
     <ParamChoice id='response' name='Invalid Access Response' group='' default='CY_PPC_BUS_ERR' visible='true' desc='What happens if a peripheral is accessed from a context that does not have access?'>
       <Entry name='Read Zero and Write Ignore' value='CY_PPC_RZWI' />
@@ -44,7 +45,7 @@
     <ParamBool   id="isCustom" default='`${isBlockUsed("$PROTECTION_LOC") &amp;&amp; (protection_mode eq "SECURE_CUSTOM")}`'/>
     <ParamString id='peri' default='`${getInstNumber("peri")}`' />
     <ParamString id='note' group='Overview' name='Note' default='The current &apos;Protection Level&apos; disables peripheral configuration and yet PPC configuration is enabled.' visible='`${!isSupported}`' editable='false' />
-    <ParamString id='notice' group='' name='Notice' default='Some security aware PDL drivers require that multiple PPC regions are configured with the same security state. See the PDL driver documentation for details.' visible='`${isSupported}`' editable='false' />
+    <ParamString id='notice' group='' name='Notice' default='Some security aware PDL drivers require that multiple PPC regions are configured with the same security state. See the PDL driver documentation for details.&#10;&#10;PPC regions having &lt;PPC region&gt; (pre-configured) are pre-configured to M33S (Domain 0).' visible='`${isSupported}`' editable='false' />
 
     <!--The Repeat count needs to be >= the value of locationCnt for all supported dies.-->
     <ParamString id='locationCnt' default='`${getOrDefault(getCustomDataCount("/PPC_LOCATION"), 0)}`'/>
@@ -54,9 +55,15 @@
       <ParamString id='associated_$idx' default='`${getOrDefault(getCustomData("/PPC_LOCATION[@key=\"" . location_$idx . "\"]/@associated"), "")}`'/>
       <ParamString id='peri_$idx'     default='`${getOrDefault(getCustomData("/PPC_LOCATION[@key=\"" . location_$idx . "\"]/@peri"), -1)}`'/>
       <ParamBool   id='valid_$idx'    default='`${hasBlock(location_$idx) &amp;&amp; peri == peri_$idx}`' />
+      <ParamBool   id='secure_locations_ss_pp_$idx' default='`${(protection_mode eq "SECURE_PERIPHERALS") &amp;&amp; (((location_display_$idx eq "Peri 0") || (location_display_$idx eq "Peri 0 Memory Mapped IO") || ((location_display_$idx eq "SRAM 0 MPC") &amp;&amp; enableSecureEnclave) || (location_display_$idx eq "Power") || (location_display_$idx eq "Peri 1") || (location_display_$idx eq "Peri 1 Memory Mapped IO")))}`' />
+      <!-- PPC Location Default Domain Assignment Logic:
+           - If protection_mode is SECURE SERVICES + PERIPHERALS and all the regions under this location are used by Secure Services + Peripherals):
+             Assign to Domain 0 (secure domain)
+           - Otherwise: Assign to domain_unprotected
+      -->
       <ParamPersonality id='parent_$idx'
                      name='`${location_display_$idx}`'
-                     default='`${domain_unprotected}`'
+                     default='`${secure_locations_ss_pp_$idx ? getInstanceFromBlock("vres[0].protection[0].domain[0]") : domain_unprotected}`'
                      visible='`${isSupported &amp;&amp; !isCustom &amp;&amp; valid_$idx}`'
                      editable='`${valid_$idx}`' blockType='vres\.protection\.domain' canBeEmpty='false' multiSelect='false' displayMemberKey='displayName'>
         <GotoLocation gotoLocationId='`${associated_$idx{parent}}`' reciprocalLinkDisplay='Peripheral PPC' />
@@ -78,12 +85,22 @@
       <ParamString id='reg$idx_associated' default='`${getOrDefault(getParamValue("associated_" . reg$idx_locationIdx), "")}`'/>
       <ParamString id='reg$idx_valid' default='`${getOrDefault(getParamValue("valid_" . reg$idx_locationIdx), false)}`'/>
       <ParamString id='reg$idx_pcMask' default='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . regKey$idx . "\"]/@pcMask"), "")}`'/>
+      <ParamBool id='reg$idx_used_by_se_rt' default='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . regKey$idx . "\"]/@used_by_se_rt"), false)}`'/>
+      <ParamBool id='reg$idx_used_by_ss_pp' default='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . regKey$idx . "\"]/@used_by_ss_pp"), false)}`'/>
+      <ParamBool id='reg$idx_preconfigured' default='`${(enableSecureEnclave &amp;&amp; reg$idx_used_by_se_rt) || (protection_mode eq "SECURE_PERIPHERALS" &amp;&amp; reg$idx_used_by_ss_pp)}`'/>
+      <!-- PPC Region Default Domain Assignment Logic:
+           Assign to Domain 0 (secure domain) if any of the following is true:
+           1. If enableSecureEnclave checkbox is checked and region is required by Secure Enclave Runtime
+           2. If protection_mode is "SECURE PERIPHERALS" AND region is required by Secure Services + Peripherals
+           Otherwise: Inherit from parent location domain, fallback to domain_unprotected
+      -->
+      <!-- Set visibility to user if PPC region is not used/accessed by PC0. Also restricting visibility for configuring PPC block assuming user does all the PPC configurations from secure world by default -->
       <ParamPersonality id='reg$idx'
-                        name='`${regKey$idx}`'
-                        default='`${getOrDefault(getParamValue("parent_" . reg$idx_locationIdx), domain_unprotected)}`'
-                        desc='`${"Address Range: " . reg$idx_start_address . "-" . toHex(reg$idx_start_address + reg$idx_size - 1, 8)"}`)'
+                        name='`${regKey$idx . (reg$idx_preconfigured ? " (pre-configured)" : "")}`'
+                        default='`${reg$idx_preconfigured ? getInstanceFromBlock("vres[0].protection[0].domain[0]") : getOrDefault(getParamValue("parent_" . reg$idx_locationIdx), domain_unprotected)}`'
+                        desc='`${"Address Range: " . reg$idx_start_address . "-" . toHex(reg$idx_start_address + reg$idx_size - 1, 8) . (reg$idx_preconfigured ? ("&#10;&#10;This region is pre-configured and assigned to Domain 0 (M33S) because it is " . ((enableSecureEnclave &amp;&amp; reg$idx_used_by_se_rt) ? "required by Secure Enclave Runtime." : "required by Secure Services + Peripherals.")) : "")}`'
                         group='`${splitJoin(reg$idx_location_display, "//", "/")}`'
-                        visible='`${isSupported &amp;&amp; reg$idx_valid}`'
+                        visible='`${(isSupported &amp;&amp; reg$idx_valid) &amp;&amp; !(((reg$idx_pcMask &amp; 1) ne 0) || ((reg$idx_enum_name eq "PROT_PERI1_PPC1_PPC_PPC_SECURE") || (reg$idx_enum_name eq "PROT_PERI1_PPC1_PPC_PPC_NONSECURE")))}`'
                         editable='`${isSupported &amp;&amp; isCustom &amp;&amp; reg$idx_valid}`' blockType='vres\.protection\.domain' canBeEmpty='false' multiSelect='false' displayMemberKey='displayName'>
         <GotoLocation gotoLocationId='`${reg$idx{reg}_associated}`' reciprocalLinkDisplay='Peripheral PPC' />
       </ParamPersonality>
@@ -94,6 +111,7 @@
     <ParamString id='ppc_tcl_arg' default='`${createTclArgData()}`' />
     <ParamString id='ppc_drc_tcl' default='`${runTcl("protection_ppc-1.0.tcl", ppc_tcl_arg)}`' />
     <ParamString id='ppc_drc' default='`${(ppc_drc_tcl eq "" || (protection_mode ne "SECURE_PERIPHERALS")) ? "" : getTclVar("json", ppc_drc_tcl)}`' />
+
   </Parameters>
 
   <Variables>
@@ -112,6 +130,18 @@
   </Variables>
 
   <DRCs>
+    <DRC type='ERROR' condition='`${!isSupported &amp;&amp; ((hasBlock("peri[0]") &amp;&amp; isBlockUsed("peri[0]")) || (hasBlock("peri[1]") &amp;&amp; isBlockUsed("peri[1]")))}`' text='PPC configuration is enabled for Peri 0 or Peri 1 but the current Protection Level does not support peripheral protection. Please enable a supported protection level.' >
+      <FixItBatch description='Enable Protection with a protection level of &apos;Secure Services+Peripherals&apos;'>
+        <FixIt action='ENABLE_BLOCK' target='$PROTECTION_LOC' valid='`${!isBlockUsed("$PROTECTION_LOC")}`' />
+        <FixIt action='SET_PARAM' target='$PROTECTION_LOC.type' value='SECURE_PERIPHERALS' valid='true' />
+      </FixItBatch>
+      <FixItBatch description='Disable Peri 0 PPC configuration'>
+        <FixIt action='DISABLE_BLOCK' target='peri[0]' valid='`${hasBlock("peri[0]") &amp;&amp; isBlockUsed("peri[0]")}`' />
+      </FixItBatch>
+      <FixItBatch description='Disable Peri 1 PPC configuration'>
+        <FixIt action='DISABLE_BLOCK' target='peri[1]' valid='`${hasBlock("peri[1]") &amp;&amp; isBlockUsed("peri[1]")}`' />
+      </FixItBatch>
+    </DRC>
     <DRC type='INFO' condition='`${!isSupported}`' text='The current &apos;Protection Level&apos; disables peripheral configuration and yet PPC configuration is enabled.' >
       <FixItBatch description='Enable Protection with a protection level of &apos;Secure Services+Peripherals&apos;'>
         <FixIt action='ENABLE_BLOCK' target='$PROTECTION_LOC' valid='`${!isBlockUsed("$PROTECTION_LOC")}`' />

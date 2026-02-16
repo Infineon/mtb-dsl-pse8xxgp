@@ -614,7 +614,6 @@ void   Cy_RTC_GetAlarmDateAndTime(cy_stc_rtc_alarm_t *alarmDateTime, cy_en_rtc_a
     }
 }
 
-
 /*******************************************************************************
 * Function Name: Cy_RTC_SetDateAndTimeDirect
 ****************************************************************************//**
@@ -1005,17 +1004,24 @@ void Cy_RTC_SelectFrequencyPrescaler(cy_en_rtc_clock_freq_t clkSel)
 #endif
 }
 #endif /* CY_IP_MXS40SRSS_RTC, CY_IP_MXS40SSRSS, CY_IP_MXS22SRSS*/
+
 /*******************************************************************************
 * Function Name: Cy_RTC_SelectClockSource()
 ****************************************************************************//**
 * \param clkSel Source clock, see \ref cy_en_rtc_clk_select_sources_t
 * Selects the source clock  for RTC.
 *
+* Changing clock selection is not guaranteed to be glitch free, thus alarms
+* should be deactivated before changing the selected clock. Afterwards the
+* RTC time should also be reconfigured.
+*
+* \return
+* Result of RTC clock source update. See \ref cy_en_rtc_status_t.
+*
 *******************************************************************************/
 void Cy_RTC_SelectClockSource(cy_en_rtc_clk_select_sources_t clkSel)
 {
     CY_ASSERT_L3(CY_RTC_IS_SRC_CLK_SELECT_VALID(clkSel));
-
 #if defined (CY_IP_MXS22SRSS)
     BACKUP_CTL = (_CLR_SET_FLD32U(BACKUP_CTL, SRSS_CLK_WCO_CONFIG_CLK_RTC_SEL, (uint32_t) clkSel));
 #else

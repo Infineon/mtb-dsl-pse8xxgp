@@ -6,7 +6,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2025-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0

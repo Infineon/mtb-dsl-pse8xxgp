@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2018-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2018-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -182,8 +182,8 @@
 
 #include "cy_device.h"
 
-#if (defined (CY_IP_MXS40IOSS) || defined(CY_IP_MXS40SIOSS) || defined(CY_IP_MXS22IOSS))
-#if (defined(IOSS_SMARTIO_SMARTIO_MASK) && (IOSS_SMARTIO_SMARTIO_MASK != 0))
+#if (defined (CY_IP_MXS40IOSS) || defined(CY_IP_MXS40SIOSS) || defined(CY_IP_MXS22IOSS) || defined(CY_DOXYGEN))
+#if ((defined(IOSS_SMARTIO_SMARTIO_MASK) && (IOSS_SMARTIO_SMARTIO_MASK != 0)) || defined(CY_DOXYGEN))
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -845,8 +845,8 @@ CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8')
 }
 #endif
 
-#endif /* (defined(IOSS_SMARTIO_SMARTIO_MASK) && (IOSS_SMARTIO_SMARTIO_MASK != 0)) */
-#endif /* (defined (CY_IP_MXS40IOSS) || defined(CY_IP_MXS40SIOSS) || defined(CY_IP_MXS22IOSS)) */
+#endif /* (defined(IOSS_SMARTIO_SMARTIO_MASK) && (IOSS_SMARTIO_SMARTIO_MASK != 0)) || defined(CY_DOXYGEN) */
+#endif /* (defined (CY_IP_MXS40IOSS) || defined(CY_IP_MXS40SIOSS) || defined(CY_IP_MXS22IOSS) || defined(CY_DOXYGEN)) */
 
 #endif /* CY_SMARTIO_H */
 

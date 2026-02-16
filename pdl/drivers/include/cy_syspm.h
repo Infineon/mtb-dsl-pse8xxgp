@@ -337,7 +337,7 @@
 * \attention Transitions from ULP to HP modes (or vice versa) are only allowed in steps.
 * These transitions must proceed via the intermediate LP mode
 * (ULP -> LP -> HP or the reverse). This staged approach ensures system stability
-* and reliable operations. These steps are handled internally by the driver
+* and reliable operations. These steps are handled internally by the driver 
 * when using one of the APIs: \ref Cy_SysPm_SystemEnterHp(),
 * \ref Cy_SysPm_SystemEnterLp(), or \ref Cy_SysPm_SystemEnterUlp().
 *
@@ -1175,6 +1175,7 @@ extern "C" {
 */
 #define CY_SYSPM_HIB_WAKEUP_LPCOMP1_POS             (8UL)
 
+
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
 
 /**
@@ -1228,7 +1229,7 @@ extern "C" {
 * used in the Cy_SysPm_SetHibernateWakeupSource() function
 */
 #define CY_SYSPM_HIB_WAKEUP_RTC_MASK    SRSS_PWR_HIB_WAKE_CTL_HIB_WAKE_RTC_Msk
-#endif
+#endif /*(CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)*/
 
 /* Internal macro of all possible wakeup sources from hibernate power mode */
 #define CY_SYSPM_HIB_WAKEUP_SOURCE_MASK    (CY_SYSPM_HIBERNATE_LPCOMP0_LOW | CY_SYSPM_HIBERNATE_LPCOMP0_HIGH |\
@@ -1236,6 +1237,7 @@ extern "C" {
                                             CY_SYSPM_HIBERNATE_RTC_ALARM   | CY_SYSPM_HIBERNATE_WDT |\
                                             CY_SYSPM_HIBERNATE_PIN0_LOW    | CY_SYSPM_HIBERNATE_PIN0_HIGH |\
                                             CY_SYSPM_HIBERNATE_PIN1_LOW    | CY_SYSPM_HIBERNATE_PIN1_HIGH)
+
 
 
 /* The mask for low power modes the power circuits (POR/BOD, Bandgap
@@ -2955,7 +2957,6 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToUlp(void);
 *******************************************************************************/
 cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetDeepSleepMode(void);
 
-
 /*******************************************************************************
 * Function Name: Cy_SysPm_GetBootMode
 ****************************************************************************//**
@@ -4570,6 +4571,7 @@ cy_en_syspm_status_t Cy_SysPm_MiscLdoConfigure(cy_stc_syspm_miscldo_params_t *mi
 
 
 
+
 /**
 * \addtogroup group_syspm_functions_iofreeze
 * \{
@@ -4655,6 +4657,68 @@ bool Cy_SysPm_DeepSleepIoIsFrozen(void);
 *
 *******************************************************************************/
 void Cy_SysPm_DeepSleepIoUnfreeze(void);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_SystemTransitionInitiate
+****************************************************************************//**
+*
+* Initiates a system power mode transition by disabling the Secure Enclave (SE).
+*
+* This function is called at the beginning of system power transitions to prepare
+* the system by disabling security-sensitive components like the Secure Enclave.
+* It must be paired with Cy_SysPm_SystemTransitionFinalize() to complete the
+* transition process.
+*
+* The function handles the operation differently based on the system configuration:
+* - In secure enclave enabled device configurations :
+*   if called from secure core, it directly disables the SE
+*   else if SRF-integrated configurations, it uses the Secure Runtime Framework
+*   else returns fail
+* - In secure enclave disabled device configurations
+*   it returns success as SE is disbaled at boot up time
+*
+* \return
+* - CY_SYSPM_SUCCESS - SE disabled successfully or operation not required
+* - CY_SYSPM_FAIL - Failed to disable SE or resource allocation failed
+*
+* \note
+* This function is typically called by the power management framework and
+* should be used with caution in application code. Ensure proper pairing
+* with Cy_SysPm_SystemTransitionFinalize().
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionInitiate(void);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_SystemTransitionFinalize
+****************************************************************************//**
+*
+* Finalizes a system power mode transition by re-enabling the Secure Enclave (SE).
+*
+* This function is called at the end of system power transitions to restore
+* security-sensitive components like the Secure Enclave after the transition
+* is complete. It must be paired with Cy_SysPm_SystemTransitionInitiate() for
+* proper system transition handling.
+*
+* The function handles the operation differently based on the system configuration:
+* - In secure enclave enabled device configurations :
+*   if called from secure core, it directly enables the SE
+*   else if SRF-integrated configurations, it uses the Secure Runtime Framework
+*   else returns fail
+* - In secure enclave disabled device configurations
+*   it returns success as disbaling SE is not applicable
+*
+* \return
+* - CY_SYSPM_SUCCESS - SE enabled successfully or operation not required
+* - CY_SYSPM_FAIL - Failed to enable SE or resource allocation failed
+*
+* \note
+* This function is typically called by the power management framework and
+* should be used with caution in application code. Must be paired with
+* Cy_SysPm_SystemTransitionInitiate() for proper operation.
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionFinalize(void);
 
 #endif  /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN) */
 

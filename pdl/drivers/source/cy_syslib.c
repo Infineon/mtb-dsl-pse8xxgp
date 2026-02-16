@@ -232,16 +232,14 @@ uint32_t Cy_SysLib_GetResetReason(void)
     {
         retVal |= CY_SYSLIB_RESET_SWWDT3;
     }
-
-    if(CY_SYSLIB_HIBERNATE_TOKEN == _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
-    {
-        retVal |= CY_SYSLIB_RESET_HIB_WAKEUP;
-    }
     if (CY_SYSLIB_DEEP_SLEEP_OFF_TOKEN == _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
     {
         retVal |= CY_SYSLIB_RESET_DS_OFF_WAKEUP;
     }
-
+	if(CY_SYSLIB_HIBERNATE_TOKEN == _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+	{
+        retVal |= CY_SYSLIB_RESET_HIB_WAKEUP;
+    }
 
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS40SRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) ||  defined(CY_IP_MXS22SRSS)
     if(0U != _FLD2VAL(CY_SRSS_RES_CAUSE2_CSV_LOSS, SRSS_RES_CAUSE2))
@@ -304,17 +302,17 @@ void Cy_SysLib_ClearResetReason(void)
     /* RES_CAUSE_EXTEND register bits are RW1C (every bit is cleared upon writing 1),
      * so write all ones to clear all the reset reasons.
      */
-#if defined(CY_IP_MXS22SRSS) && (SRSS_POR_PRESENT)
+#if defined(CY_IP_MXS22SRSS)  && (SRSS_POR_PRESENT)
     SRSS_RES_CAUSE_EXTEND = 0xFFFFFFFFU;
 #endif /* defined(CY_IP_MXS22SRSS) && (SRSS_POR_PRESENT) */
 
-    if(0U != _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+	if(0U != _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
     {
         /* Clears PWR_HIBERNATE token */
 #if CY_CPU_CORTEX_M4 && defined (CY_DEVICE_SECURE)
         CY_PRA_REG32_CLR_SET(CY_PRA_INDX_SRSS_PWR_HIBERNATE, SRSS_PWR_HIBERNATE_TOKEN, 0UL);
 #else
-        SRSS_PWR_HIBERNATE &= ~SRSS_PWR_HIBERNATE_TOKEN_Msk;
+    SRSS_PWR_HIBERNATE &= ~SRSS_PWR_HIBERNATE_TOKEN_Msk;
 #endif /* CY_CPU_CORTEX_M4 && defined (CY_DEVICE_SECURE) */
     }
 }

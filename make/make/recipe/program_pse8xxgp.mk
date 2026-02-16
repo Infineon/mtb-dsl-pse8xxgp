@@ -3,7 +3,7 @@
 #
 # \brief
 # This make file is called recursively and is used to build the
-# resources file system. It is expected to be run from the example directory.
+# resoures file system. It is expected to be run from the example directory.
 #
 ################################################################################
 # \copyright

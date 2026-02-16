@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2016-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -104,7 +104,7 @@
 * \section group_dma_more_information More Information.
 * See: the DMA chapter of the device technical reference manual (TRM);
 *      the DMA Component datasheet;
-
+ 
 *
 * \defgroup group_dma_macros Macros
 * \defgroup group_dma_functions Functions

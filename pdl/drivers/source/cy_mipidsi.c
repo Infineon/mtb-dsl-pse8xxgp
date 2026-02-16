@@ -17,8 +17,8 @@
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+* See the License for the specific language governing permissions and 
 * limitations under the License.
 *******************************************************************************/
 
@@ -412,9 +412,9 @@ static void cy_mipi_dsi_long_data_wr(GFXSS_MIPIDSI_Type *mipi_dsi, const uint8_t
     for (word_cnt = 0; word_cnt < no_of_words; word_cnt++)
     {
         data_cnt = word_cnt * 4U;
-        payload  = (uint32_t)data0[data_cnt] |
+        payload  = (uint32_t)data0[data_cnt] | 
                    ((uint32_t)data0[data_cnt + 1U] << 8) |
-                   ((uint32_t)data0[data_cnt + 2U] << 16) |
+                   ((uint32_t)data0[data_cnt + 2U] << 16) | 
                    ((uint32_t)data0[data_cnt + 3U] << 24);
 
         cy_mipi_dsi_wr_tx_data(mipi_dsi, payload);

@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;"
+  <div id="splitbar" style="-moz-user-select:none;" 
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,15 +77,148 @@ $(document).ready(function(){initNavTree('group__group__smartio__functions__lut.
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0"
+<iframe src="javascript:void(0)" frameborder="0" 
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">LUT Functions<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a> &raquo; <a class="el" href="group__group__smartio.html">SmartIO      (Smart I/O)</a> &raquo; <a class="el" href="group__group__smartio__functions.html">Functions</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+<a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga749724addbcf0a2ccd7f624e4c1dbddf"><td class="memItemLeft" align="right" valign="top"><a id="ga749724addbcf0a2ccd7f624e4c1dbddf" name="ga749724addbcf0a2ccd7f624e4c1dbddf"></a>
+<a class="el" href="group__group__smartio__enums.html#ga057185e00625a60b6ee8f788b55f6413">cy_en_smartio_luttr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_GetLutTr</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a> lutNum, <a class="el" href="group__group__smartio__enums.html#gada9635df8a567b5f23ff07ada7f11e52">cy_en_smartio_trnum_t</a> trNum)</td></tr>
+<tr class="separator:ga749724addbcf0a2ccd7f624e4c1dbddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabd8fdb46c96035239fb3ff891eda27b9"><td class="memItemLeft" align="right" valign="top"><a id="gabd8fdb46c96035239fb3ff891eda27b9" name="gabd8fdb46c96035239fb3ff891eda27b9"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetLutTr</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a> lutNum, <a class="el" href="group__group__smartio__enums.html#gada9635df8a567b5f23ff07ada7f11e52">cy_en_smartio_trnum_t</a> trNum, <a class="el" href="group__group__smartio__enums.html#ga057185e00625a60b6ee8f788b55f6413">cy_en_smartio_luttr_t</a> trSrc)</td></tr>
+<tr class="separator:gabd8fdb46c96035239fb3ff891eda27b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga09f666d900222795aa57766a7d9f1981"><td class="memItemLeft" align="right" valign="top"><a id="ga09f666d900222795aa57766a7d9f1981" name="ga09f666d900222795aa57766a7d9f1981"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetLutTrAll</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a> lutNum, <a class="el" href="group__group__smartio__enums.html#ga057185e00625a60b6ee8f788b55f6413">cy_en_smartio_luttr_t</a> trSrc)</td></tr>
+<tr class="separator:ga09f666d900222795aa57766a7d9f1981"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga35b4f9ca54372a36243577c4b0929b8e"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#ga572df357a226e52ebe5c79b4684662a7">cy_en_smartio_lutopc_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio__functions__lut.html#ga35b4f9ca54372a36243577c4b0929b8e">Cy_SmartIO_GetLutOpcode</a> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a> lutNum)</td></tr>
+<tr class="memdesc:ga35b4f9ca54372a36243577c4b0929b8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the opcode of the specified LUT.  <a href="group__group__smartio__functions__lut.html#ga35b4f9ca54372a36243577c4b0929b8e">More...</a><br /></td></tr>
+<tr class="separator:ga35b4f9ca54372a36243577c4b0929b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga786472ea116cf9219772781e3af54428"><td class="memItemLeft" align="right" valign="top"><a id="ga786472ea116cf9219772781e3af54428" name="ga786472ea116cf9219772781e3af54428"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetLutOpcode</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a> lutNum, <a class="el" href="group__group__smartio__enums.html#ga572df357a226e52ebe5c79b4684662a7">cy_en_smartio_lutopc_t</a> opcode)</td></tr>
+<tr class="separator:ga786472ea116cf9219772781e3af54428"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabc227ab40c290d6f7f1de7632a590bac"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio__functions__lut.html#gabc227ab40c290d6f7f1de7632a590bac">Cy_SmartIO_GetLutMap</a> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a> lutNum)</td></tr>
+<tr class="memdesc:gabc227ab40c290d6f7f1de7632a590bac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the 3:1 truth table of the specified LUT.  <a href="group__group__smartio__functions__lut.html#gabc227ab40c290d6f7f1de7632a590bac">More...</a><br /></td></tr>
+<tr class="separator:gabc227ab40c290d6f7f1de7632a590bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8053cf7a6c0ab9d98a6e0c90d4c9ef83"><td class="memItemLeft" align="right" valign="top"><a id="ga8053cf7a6c0ab9d98a6e0c90d4c9ef83" name="ga8053cf7a6c0ab9d98a6e0c90d4c9ef83"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetLutMap</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a> lutNum, uint8_t lutMap)</td></tr>
+<tr class="separator:ga8053cf7a6c0ab9d98a6e0c90d4c9ef83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga35b4f9ca54372a36243577c4b0929b8e" name="ga35b4f9ca54372a36243577c4b0929b8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga35b4f9ca54372a36243577c4b0929b8e">&#9670;&nbsp;</a></span>Cy_SmartIO_GetLutOpcode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#ga572df357a226e52ebe5c79b4684662a7">cy_en_smartio_lutopc_t</a> Cy_SmartIO_GetLutOpcode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a>&#160;</td>
+          <td class="paramname"><em>lutNum</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the opcode of the specified LUT. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the Smart I/O base address</td></tr>
+    <tr><td class="paramname">lutNum</td><td>LUT index number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>LUT opcode</dd></dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Refer to the Cy_SmartIO_SetLutOpcode function usage example */</span></div>
+<div class="line"> </div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gabc227ab40c290d6f7f1de7632a590bac" name="gabc227ab40c290d6f7f1de7632a590bac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabc227ab40c290d6f7f1de7632a590bac">&#9670;&nbsp;</a></span>Cy_SmartIO_GetLutMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE uint8_t Cy_SmartIO_GetLutMap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__smartio__enums.html#ga93e2244ac0b5f930de93937ee83314cb">cy_en_smartio_lutnum_t</a>&#160;</td>
+          <td class="paramname"><em>lutNum</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the 3:1 truth table of the specified LUT. </p>
+<table class="doxtable">
+<tr>
+<th>tr2</th><th>tr1</th><th>tr0</th><th>lutNum </th></tr>
+<tr>
+<td>0 </td><td>0 </td><td>0 </td><td>bit 0  </td></tr>
+<tr>
+<td>0 </td><td>0 </td><td>1 </td><td>bit 1  </td></tr>
+<tr>
+<td>0 </td><td>1 </td><td>0 </td><td>bit 2  </td></tr>
+<tr>
+<td>0 </td><td>1 </td><td>1 </td><td>bit 3  </td></tr>
+<tr>
+<td>1 </td><td>0 </td><td>0 </td><td>bit 4  </td></tr>
+<tr>
+<td>1 </td><td>0 </td><td>1 </td><td>bit 5  </td></tr>
+<tr>
+<td>1 </td><td>1 </td><td>0 </td><td>bit 6  </td></tr>
+<tr>
+<td>1 </td><td>1 </td><td>1 </td><td>bit 7  </td></tr>
+</table>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the Smart I/O base address</td></tr>
+    <tr><td class="paramname">lutNum</td><td>LUT index number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Bitfield [7:0] mapping of the 3:1 LUT</dd></dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Refer to the Cy_SmartIO_SetLutMap function usage example */</span></div>
+<div class="line"> </div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part

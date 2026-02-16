@@ -39,7 +39,7 @@
     <ParamString id='CYBUILTIN_LOCK_REASON' default='`${regionId ne "" ? "Reserved by Memory tab" : ""}`' />
   </Parameters>
   <DRCs>
-    <DRC type='WARNING' condition='`${!isBlockUsed("vres[0].memory[0]")}`' text='The Memory resource has been disabled. The memory region data associated with it can also be disabled.' >
+    <DRC type='WARNING' condition='`${!isBlockUsed("vres[0].memory[0]")}`' text='The Memory resource has been disabled. The memory region data associated with it can also be disabled.' >       
       <FixIt action='ENABLE_BLOCK' target='vres[0].memory[0]' valid='true' />
       <FixIt action='DISABLE_BLOCK' target='`${INST_LOC}`' valid='true' />
     </DRC>

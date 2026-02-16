@@ -46,7 +46,7 @@
 
     <!-- eth version number -->
     <ParamString id="version" name="version number" group="Internal" default="`${getVersion()}`" visible="false" editable="false" desc="" />
-
+    
     <!-- Network Interface Settings -->
     <ParamChoice id="PHYInterconnect" name="PHY Interconnect" group="Network Interface Settings" default="`${(InstNumber) ? 3u : 0u}`" visible="true" editable="true" desc="Select the interconnect mode needed for communication. MII:0 RMII:1 GMII:2 RGMII:3 ">
       <Entry name="MII" value="0u" visible="`${!InstNumber}`" />
@@ -143,14 +143,14 @@
     <ParamSignal port="eth_tsu_timer_cmp_val[0]" name="eth_tsu_timer_cmp_val" group="Connections" visible="`${hasVisibleOption(&quot;eth_tsu_timer_cmp_val[0]&quot;)}`" desc="" canBeEmpty="true" />
     <ParamSignal port="mdc[0]" name="mdc" group="Connections" visible="`${hasVisibleOption(&quot;mdc[0]&quot;)}`" desc="" canBeEmpty="true" />
     <ParamSignal port="mdio[0]" name="mdio" group="Connections" visible="`${hasVisibleOption(&quot;mdio[0]&quot;)}`" desc="" canBeEmpty="true" />
-
+    
     <ParamSignal port="tx_clk[0]" name="tx_clk" group="Connections" visible="`${hasVisibleOption(&quot;tx_clk[0]&quot;)}`" desc="" canBeEmpty="true" />
     <ParamSignal port="tx_ctl[0]" name="tx_ctl" group="Connections" visible="`${hasVisibleOption(&quot;tx_ctl[0]&quot;)}`" desc="" canBeEmpty="true" />
     <ParamSignal port="tx_er[0]" name="tx_er" group="Connections" visible="`${hasVisibleOption(&quot;tx_er[0]&quot;)}`" desc="" canBeEmpty="true" />
     <Repeat count="8">
       <ParamSignal port="txd[$idx]" name="txd[$idx]" group="Connections" visible="`${(hasVisibleOption(&quot;txd[$idx]&quot;)) &amp;&amp; (((PHYInterconnect eq 1u) &amp;&amp; ($idx &gt; 1)) ? false : ((((PHYInterconnect eq 0u) || (PHYInterconnect eq 3u)) &amp;&amp; ($idx &gt; 3)) ? false : true))}`" desc="" canBeEmpty="true" />
     </Repeat>
-
+    
     <ParamSignal port="rx_clk[0]" name="rx_clk" group="Connections" visible="`${hasVisibleOption(&quot;rx_clk[0]&quot;)}`" desc="" canBeEmpty="true" />
     <ParamSignal port="rx_ctl[0]" name="rx_ctl" group="Connections" visible="`${hasVisibleOption(&quot;rx_ctl[0]&quot;)}`" desc="" canBeEmpty="true" />
     <ParamSignal port="rx_er[0]" name="rx_er" group="Connections" visible="`${hasVisibleOption(&quot;rx_er[0]&quot;)}`" desc="" canBeEmpty="true"  />
@@ -159,12 +159,12 @@
     </Repeat>
 
   </Parameters>
-
+  
   <DRCs>
     <DRC type="ERROR" text="Unable to parse the MAC address, because it does not match the hexadecimal format MM:MM:MM:SS:SS:SS." condition="`${!hasMatch(eth_mac_address, &quot;^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$&quot;)}`" paramId="eth_mac_address" />
   </DRCs>
-
-  <ConfigFirmware>
+  
+  <ConfigFirmware>    
     <!-- PHY Configuration -->
     <ConfigDefine name="`${eth_phy_device}`" value="" public="true" include="true" />
     <ConfigDefine name="`${INST_NAME}`_PHY_ADDR" value="`${eth_phy_address}`" public="true" include="true" />

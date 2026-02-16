@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;"
+  <div id="splitbar" style="-moz-user-select:none;" 
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group__syspm__functions__iofree
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0"
+<iframe src="javascript:void(0)" frameborder="0" 
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -104,6 +104,12 @@ Functions</h2></td></tr>
 <tr class="memitem:gab725010772eda4fcfc2412fef03ef3d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__iofreeze.html#gab725010772eda4fcfc2412fef03ef3d0">Cy_SysPm_DeepSleepIoUnfreeze</a> (void)</td></tr>
 <tr class="memdesc:gab725010772eda4fcfc2412fef03ef3d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function unfreezes the I/O cells that are automatically frozen when DEEPSLEEP-RAM/OFF is entered.  <a href="group__group__syspm__functions__iofreeze.html#gab725010772eda4fcfc2412fef03ef3d0">More...</a><br /></td></tr>
 <tr class="separator:gab725010772eda4fcfc2412fef03ef3d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80df9b8ea9ebd3e4db205cb78e642426"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__iofreeze.html#ga80df9b8ea9ebd3e4db205cb78e642426">Cy_SysPm_SystemTransitionInitiate</a> (void)</td></tr>
+<tr class="memdesc:ga80df9b8ea9ebd3e4db205cb78e642426"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initiates a system power mode transition by disabling the Secure Enclave (SE).  <a href="group__group__syspm__functions__iofreeze.html#ga80df9b8ea9ebd3e4db205cb78e642426">More...</a><br /></td></tr>
+<tr class="separator:ga80df9b8ea9ebd3e4db205cb78e642426"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6f58b54db56ac1c10b72e6099336ffbf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__iofreeze.html#ga6f58b54db56ac1c10b72e6099336ffbf">Cy_SysPm_SystemTransitionFinalize</a> (void)</td></tr>
+<tr class="memdesc:ga6f58b54db56ac1c10b72e6099336ffbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalizes a system power mode transition by re-enabling the Secure Enclave (SE).  <a href="group__group__syspm__functions__iofreeze.html#ga6f58b54db56ac1c10b72e6099336ffbf">More...</a><br /></td></tr>
+<tr class="separator:ga6f58b54db56ac1c10b72e6099336ffbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga42fc45913557d7aecd0bfb868c74e645" name="ga42fc45913557d7aecd0bfb868c74e645"></a>
@@ -155,9 +161,9 @@ Functions</h2></td></tr>
 <div class="line">    <span class="comment">/* Enter Hibernate mode */</span></div>
 <div class="line">    <a class="code hl_function" href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate</a>();</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__syspm__functions__iofreeze_html_ga42fc45913557d7aecd0bfb868c74e645"><div class="ttname"><a href="group__group__syspm__functions__iofreeze.html#ga42fc45913557d7aecd0bfb868c74e645">Cy_SysPm_IoIsFrozen</a></div><div class="ttdeci">__STATIC_INLINE bool Cy_SysPm_IoIsFrozen(void)</div><div class="ttdoc">Checks whether IOs are frozen.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:4591</div></div>
-<div class="ttc" id="agroup__group__syspm__functions__iofreeze_html_ga5df20917d995755606672fac961e8e9b"><div class="ttname"><a href="group__group__syspm__functions__iofreeze.html#ga5df20917d995755606672fac961e8e9b">Cy_SysPm_IoUnfreeze</a></div><div class="ttdeci">void Cy_SysPm_IoUnfreeze(void)</div><div class="ttdoc">This function unfreezes the I/O cells that are automatically frozen when Hibernate is entered with th...</div><div class="ttdef"><b>Definition:</b> cy_syspm_v4.c:2222</div></div>
-<div class="ttc" id="agroup__group__syspm__functions__power_html_gae97647a28c370674ba57d451d21d1c51"><div class="ttname"><a href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate</a></div><div class="ttdeci">cy_en_syspm_status_t Cy_SysPm_SystemEnterHibernate(void)</div><div class="ttdoc">Sets the device into system Hibernate mode.</div><div class="ttdef"><b>Definition:</b> cy_syspm_v4.c:1437</div></div>
+<div class="ttc" id="agroup__group__syspm__functions__iofreeze_html_ga42fc45913557d7aecd0bfb868c74e645"><div class="ttname"><a href="group__group__syspm__functions__iofreeze.html#ga42fc45913557d7aecd0bfb868c74e645">Cy_SysPm_IoIsFrozen</a></div><div class="ttdeci">__STATIC_INLINE bool Cy_SysPm_IoIsFrozen(void)</div><div class="ttdoc">Checks whether IOs are frozen.</div><div class="ttdef"><b>Definition:</b> cy_syspm.h:4593</div></div>
+<div class="ttc" id="agroup__group__syspm__functions__iofreeze_html_ga5df20917d995755606672fac961e8e9b"><div class="ttname"><a href="group__group__syspm__functions__iofreeze.html#ga5df20917d995755606672fac961e8e9b">Cy_SysPm_IoUnfreeze</a></div><div class="ttdeci">void Cy_SysPm_IoUnfreeze(void)</div><div class="ttdoc">This function unfreezes the I/O cells that are automatically frozen when Hibernate is entered with th...</div><div class="ttdef"><b>Definition:</b> cy_syspm_v4.c:2293</div></div>
+<div class="ttc" id="agroup__group__syspm__functions__power_html_gae97647a28c370674ba57d451d21d1c51"><div class="ttname"><a href="group__group__syspm__functions__power.html#gae97647a28c370674ba57d451d21d1c51">Cy_SysPm_SystemEnterHibernate</a></div><div class="ttdeci">cy_en_syspm_status_t Cy_SysPm_SystemEnterHibernate(void)</div><div class="ttdoc">Sets the device into system Hibernate mode.</div><div class="ttdef"><b>Definition:</b> cy_syspm_v4.c:1508</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -258,6 +264,68 @@ Functions</h2></td></tr>
 <p >I/O cells remain frozen after a wakeup from DEEPSLEEP_RAM/OFF mode until the firmware unfreezes them by calling this function.</p>
 <p >If the firmware must retain the data value on the pin, then the value must be read and re-written to the pin's port data register before calling this function. Furthermore, the drive mode must be re-programmed before the pins are unfrozen. If this is not done, the pin will change to the default state the moment the freeze is removed.</p>
 <p >Note that I/O cell configuration can be changed while frozen. The new configuration becomes effective only after the pins are unfrozen. </p>
+
+</div>
+</div>
+<a id="ga80df9b8ea9ebd3e4db205cb78e642426" name="ga80df9b8ea9ebd3e4db205cb78e642426"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga80df9b8ea9ebd3e4db205cb78e642426">&#9670;&nbsp;</a></span>Cy_SysPm_SystemTransitionInitiate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> Cy_SysPm_SystemTransitionInitiate </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initiates a system power mode transition by disabling the Secure Enclave (SE). </p>
+<p >This function is called at the beginning of system power transitions to prepare the system by disabling security-sensitive components like the Secure Enclave. It must be paired with <a class="el" href="group__group__syspm__functions__iofreeze.html#ga6f58b54db56ac1c10b72e6099336ffbf" title="Finalizes a system power mode transition by re-enabling the Secure Enclave (SE).">Cy_SysPm_SystemTransitionFinalize()</a> to complete the transition process.</p>
+<p >The function handles the operation differently based on the system configuration:</p><ul>
+<li>In secure enclave enabled device configurations : if called from secure core, it directly disables the SE else if SRF-integrated configurations, it uses the Secure Runtime Framework else returns fail</li>
+<li>In secure enclave disabled device configurations it returns success as SE is disbaled at boot up time</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>CY_SYSPM_SUCCESS - SE disabled successfully or operation not required</li>
+<li>CY_SYSPM_FAIL - Failed to disable SE or resource allocation failed</li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function is typically called by the power management framework and should be used with caution in application code. Ensure proper pairing with <a class="el" href="group__group__syspm__functions__iofreeze.html#ga6f58b54db56ac1c10b72e6099336ffbf" title="Finalizes a system power mode transition by re-enabling the Secure Enclave (SE).">Cy_SysPm_SystemTransitionFinalize()</a>. </dd></dl>
+
+</div>
+</div>
+<a id="ga6f58b54db56ac1c10b72e6099336ffbf" name="ga6f58b54db56ac1c10b72e6099336ffbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6f58b54db56ac1c10b72e6099336ffbf">&#9670;&nbsp;</a></span>Cy_SysPm_SystemTransitionFinalize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> Cy_SysPm_SystemTransitionFinalize </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalizes a system power mode transition by re-enabling the Secure Enclave (SE). </p>
+<p >This function is called at the end of system power transitions to restore security-sensitive components like the Secure Enclave after the transition is complete. It must be paired with <a class="el" href="group__group__syspm__functions__iofreeze.html#ga80df9b8ea9ebd3e4db205cb78e642426" title="Initiates a system power mode transition by disabling the Secure Enclave (SE).">Cy_SysPm_SystemTransitionInitiate()</a> for proper system transition handling.</p>
+<p >The function handles the operation differently based on the system configuration:</p><ul>
+<li>In secure enclave enabled device configurations : if called from secure core, it directly enables the SE else if SRF-integrated configurations, it uses the Secure Runtime Framework else returns fail</li>
+<li>In secure enclave disabled device configurations it returns success as disbaling SE is not applicable</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>CY_SYSPM_SUCCESS - SE enabled successfully or operation not required</li>
+<li>CY_SYSPM_FAIL - Failed to enable SE or resource allocation failed</li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function is typically called by the power management framework and should be used with caution in application code. Must be paired with <a class="el" href="group__group__syspm__functions__iofreeze.html#ga80df9b8ea9ebd3e4db205cb78e642426" title="Initiates a system power mode transition by disabling the Secure Enclave (SE).">Cy_SysPm_SystemTransitionInitiate()</a> for proper operation. </dd></dl>
 
 </div>
 </div>

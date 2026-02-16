@@ -36,7 +36,6 @@
 extern "C" {
 #endif
 
-
 /* Define for AMUX A splitters */
 #define GPIO_AMUXA_SPLITTER_MASK     (uint32_t)(HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SL_Msk \
                                               | HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SR_Msk \
@@ -108,7 +107,7 @@ cy_en_gpio_status_t Cy_GPIO_Pin_Init(GPIO_PRT_Type *base, uint32_t pinNum, const
 
 #if defined (CY_IP_MXS22IOSS)
         CY_ASSERT_L2(CY_GPIO_IS_PULLUP_RES_VALID(config->pullUpRes));
-#endif /* CY_IP_MXS22IOSS */
+#endif /* CY_IP_MXS22IOSS, */
 
         /* Slew rate and Driver strength */
 #if defined (CY_IP_MXS40IOSS)
@@ -206,7 +205,7 @@ cy_en_gpio_status_t Cy_GPIO_Pin_Init(GPIO_PRT_Type *base, uint32_t pinNum, const
 
 #if defined (CY_IP_MXS22IOSS)
         Cy_GPIO_SetPullupResistance(base, pinNum, config->pullUpRes);
-#endif /* CY_IP_MXS22IOSS */
+#endif /* CY_IP_MXS22IOSS*/
 
         Cy_GPIO_Write(base, pinNum, config->outVal);
 
@@ -260,7 +259,7 @@ cy_en_gpio_status_t Cy_GPIO_Port_Init(GPIO_PRT_Type* base, const cy_stc_gpio_prt
     {
         uint32_t portNum;
         HSIOM_PRT_V1_Type* baseHSIOM;
-#if (defined (CY_IP_MXS40SIOSS) &&  ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || ( defined (CY_IP_MXS40SIOSS) && (CPUSS_CM33_0_SECEXT_PRESENT != 0)) ))  || defined (CY_IP_MXS22IOSS)
+#if (defined (CY_IP_MXS40SIOSS) &&  ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || ( defined (CY_IP_MXS40SIOSS) && (CPUSS_CM33_0_SECEXT_PRESENT != 0)) )) || defined (CY_IP_MXS22IOSS)
         HSIOM_SECURE_PRT_Type *baseSecHSIOM;
 #else
 #if (CY_CPU_CORTEX_M4) && defined(CY_DEVICE_SECURE)
@@ -500,7 +499,7 @@ void Cy_GPIO_Pin_FastInit(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t driveMo
 CY_SECTION_ITCM_END
 #else
 CY_SECTION_RAMFUNC_END
-#endif
+#endif /* CY_IP_MXS22IOSS */
 #if (defined (CY_IP_MXS40SIOSS) &&  ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || (CPUSS_CM33_0_SECEXT_PRESENT != 0))) || defined (CY_IP_MXS22IOSS)
 /*******************************************************************************
 * Function Name: Cy_GPIO_Pin_SecFastInit
@@ -632,7 +631,7 @@ void Cy_GPIO_Port_Deinit(GPIO_PRT_Type* base)
     GPIO_PRT_SLEW_EXT(base)                 = CY_GPIO_PRT_DEINIT;
     GPIO_PRT_DRIVE_EXT0(base)               = CY_GPIO_PRT_DEINIT;
     GPIO_PRT_DRIVE_EXT1(base)               = CY_GPIO_PRT_DEINIT;
-#endif /* CY_IP_MXS40SIOSS */
+#endif /* CY_IP_MXS40SIOSS, CY_IP_MXS22IOSS */
 
 #if (CY_CPU_CORTEX_M4) && defined(CY_DEVICE_SECURE)
     secPort = CY_PRA_IS_PORT_SECURE(base);
@@ -731,6 +730,7 @@ void Cy_GPIO_SetAmuxSplit(cy_en_amux_split_t switchCtrl, cy_en_gpio_amuxconnect_
         tmpReg = HSIOM_AMUX_SPLIT_CTL(switchCtrl) & GPIO_AMUXA_SPLITTER_MASK;
         HSIOM_AMUX_SPLIT_CTL(switchCtrl) =
         tmpReg | (((uint32_t) amuxConnect << HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_Pos) & GPIO_AMUXB_SPLITTER_MASK);
+
     }
 }
 

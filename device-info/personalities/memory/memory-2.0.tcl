@@ -40,37 +40,37 @@ proc generate_shift_array_entries {memViewAddresses memViewCapabilities memViewS
   # Split the semicolon-separated strings into lists
   set addressList [split $memViewAddresses ";"]
   set capabilityList [split $memViewCapabilities ";"]
-
+    
   # Verify we have the same number of addresses and capabilities
   if {[llength $addressList] != [llength $capabilityList]} {
       error "Error: Address and capability lists must have the same length"
       return $::ERROR_ARG_VALUE
   }
-
+    
   # Create maps to find addresses by capability
   array set capabilityToAddress {}
-
+    
   # Build the mapping from capability to address
   for {set i 0} {$i < [llength $addressList]} {incr i} {
       set address [lindex $addressList $i]
       set capability [lindex $capabilityList $i]
       set capabilityToAddress($capability) $address
   }
-
+    
   # Initialize output variables
   set nonSecureOutput ""
   set secureOutput ""
-
+    
   # Generate non-secure shift (ICACHE -> NONE: capability 1 -> 0)
-  if {[info exists capabilityToAddress($::CAPABILITES_ICACHE)] &&
+  if {[info exists capabilityToAddress($::CAPABILITES_ICACHE)] && 
       [info exists capabilityToAddress($::CAPABILITES_NONE)]} {
       set startAddr $capabilityToAddress($::CAPABILITES_ICACHE)
       set destAddr $capabilityToAddress($::CAPABILITES_NONE)
       set nonSecureOutput "start = $startAddr, size = $memViewSize, dest = $destAddr"
   }
-
+    
   # Generate secure shift (BOTH -> SECURE: capability 3 -> 2)
-  if {[info exists capabilityToAddress($::CAPABILITES_BOTH)] &&
+  if {[info exists capabilityToAddress($::CAPABILITES_BOTH)] && 
       [info exists capabilityToAddress($::CAPABILITES_SECURE)]} {
       set startAddr $capabilityToAddress($::CAPABILITES_BOTH)
       set destAddr $capabilityToAddress($::CAPABILITES_SECURE)
@@ -83,7 +83,7 @@ proc generate_shift_array_entries {memViewAddresses memViewCapabilities memViewS
 proc trim_shift_array_entries {untrimmedEntries} {
   # Split the semicolon-separated string into a list
   set entryList [split $untrimmedEntries ";"]
-
+    
   # Convert each entry to JSON format
   set convertedList {}
   foreach entry $entryList {
@@ -104,7 +104,7 @@ proc trim_shift_array_entries {untrimmedEntries} {
 
   # Remove duplicates using lsort -unique
   set uniqueList [lsort -unique $convertedList]
-
+    
   # Join the unique entries back with semicolons
   set trimmedEntries [join $uniqueList ";"]
 
@@ -119,9 +119,9 @@ proc process_memory_data {} {
 #   set key_coreShortName "coreShortName$coreIdx"
 #   set coreShortName [dict get $::param_dict $key_coreShortName]
 # }
-
+    
   set usedPysMemIds [dict create]
-
+  
   # Build mapping of physical memory IDs to their start addresses
   # This is used later to create entries for the memReport JSON
   set physMemStartAddresses [dict create]
@@ -170,10 +170,10 @@ proc process_memory_data {} {
         lappend regionStartAddresses $regionAddr
       }
     }
-
+    
     # Create JSON entry for memory report relating to the regions
     set jsonAddresses [join [lmap addr $regionStartAddresses {format "\"%s\"" $addr}] ", "]
-
+    
     # Filter out reserved domain regions
     if {$regionDomain ne $reservedDomain} {
       set jsonRegionEntry "\{ \"name\" : \"$regionId\", \"size\" : \"$regionSize\", \"start\" : \[ $jsonAddresses \] \}"
@@ -181,13 +181,13 @@ proc process_memory_data {} {
       set jsonRegionEntry "\{ \"name\" : \"$regionId\", \"size\" : \"$regionSize\", \"start\" : \[ $jsonAddresses \], \"reserved\" : true \}"
     }
     puts $::channelName [format "param:memReportRegionEntry%d=%s" $regIdx $jsonRegionEntry]
-
+    
     # Increment counter for valid memory report entries
     incr memReportRegionEntries
 
     # The value doesn't matter here (so 1 is used). Just need the keys.
     dict set usedPysMemIds $regionPhysMemId 1
-
+     
     for {set coreIdx 0} {$coreIdx < $numCores} {incr coreIdx} {
       set key_regionCoreIsAccessible [format "regionCoreIsAccessible%d_%d" $coreIdx $regIdx]
       set regionCoreIsAccessible [dict get $::param_dict $key_regionCoreIsAccessible]
@@ -232,7 +232,7 @@ proc process_memory_data {} {
             set regionHasCacheSecureCapability $viewIdx
           }
 
-        }
+        }   
 
         puts $::channelName [format "param:regionHasEmptyCapability%d_%d=%s" $coreIdx $regIdx $regionHasEmptyCapability]
         puts $::channelName [format "param:regionHasCacheCapability%d_%d=%s" $coreIdx $regIdx $regionHasCacheCapability]
@@ -305,7 +305,7 @@ proc process_memory_data {} {
 
       for {set viewIdx 0} {$viewIdx < $numMemoryViewMaps} {incr viewIdx} {
 #       set key_memoryViewMap [format "memoryViewMap%d_%d_%d" $memIdx $coreIdx $viewIdx]
-#       set memoryViewMap [dict get $::param_dict $key_memoryViewMap]
+#       set memoryViewMap [dict get $::param_dict $key_memoryViewMap] 
         set key_memoryViewAddress [format "memoryViewAddress%d_%d_%d" $memIdx $coreIdx $viewIdx]
         set memoryViewAddress [dict get $::param_dict $key_memoryViewAddress]
         set key_memoryViewMapIsICache [format "memoryViewMapIsICache%d_%d_%d" $memIdx $coreIdx $viewIdx]

@@ -3,7 +3,7 @@
 #
 # \brief
 # This make file is called recursively and is used to build the
-# resources file system. It is expected to be run from the example directory.
+# resoures file system. It is expected to be run from the example directory.
 #
 ################################################################################
 # \copyright
@@ -93,4 +93,11 @@ _MTB_RECIPE__OPENOCD_DEBUG_ARGS=$(_MTB_RECIPE__OPENOCD_SCRIPTS) -s $(_MTB_RECIPE
 
 _MTB_RECIPE__JLINK_DEBUG_ARGS=-if $(_MTB_RECIPE__PROBE_INTERFACE) -device $(_MTB_RECIPE__JLINK_DEVICE_CFG) -endian little -speed auto -port 2331 -swoport 2332 -telnetport 2333 -vd -ir -localhostonly 1 -singlerun -strict -timeout 0 -nogui
 
+################################################################################
+# Include device specific programming makefile
+################################################################################
+ifeq (EXPLORER,$(_MTB_RECIPE__DEVICE_DIE))
 include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/program_pse8xxgp.mk
+else
+include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/program_pse8xxl.mk
+endif

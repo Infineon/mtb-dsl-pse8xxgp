@@ -2,7 +2,7 @@
 # \file recipe_pse8xxgp.mk
 #
 # \brief
-# Set up a set of defines, includes, software components, linker script,
+# Set up a set of defines, includes, software components, linker script, 
 # Pre and Post build steps and call a macro to create a specific ELF file.
 #
 ################################################################################

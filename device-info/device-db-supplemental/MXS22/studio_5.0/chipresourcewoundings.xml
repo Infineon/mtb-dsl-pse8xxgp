@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Woundings xml_version="1" xmlns="http://cypress.com/xsd/cychipresourcewoundings_v1">
   <MemoryWounding name="RRAM_KB" memoryId="RRAM" />
   <MemoryWounding name="DCDRAM_KB" memoryId="DCDRAM" />
@@ -39,6 +39,9 @@
   <RemoveListWounding name="ETH_REMOVED">
     <Block name="eth" />
   </RemoveListWounding>
+  <RemoveListWounding name="I2S_REMOVED">
+    <Block name="tdm.tdm" />
+  </RemoveListWounding>
   <RemoveListWounding name="I3C_REMOVED">
     <Block name="i3c" />
   </RemoveListWounding>
@@ -48,14 +51,11 @@
   <RemoveListWounding name="LPCOMP_REMOVED">
     <Block name="lpcomp.comp" />
   </RemoveListWounding>
-  <RemoveListWounding name="I2S_REMOVED">
-    <Block name="tdm.tdm" />
-  </RemoveListWounding>
   <RemoveListWounding name="PDM_REMOVED">
     <Block name="pdm.rx_struct" />
-    <Block name="pdm.tx_struct" />
   </RemoveListWounding>
   <RemoveListWounding name="SAR12_REMOVED">
+    <Block name="asar" />
     <Block name="pass.sar" />
   </RemoveListWounding>
   <RemoveListWounding name="SCB_REMOVED">
@@ -67,6 +67,34 @@
   <RemoveListWounding name="TIMERCOUNTERPWM_REMOVED">
     <Block name="tcpwm.group.cnt" />
   </RemoveListWounding>
+  <IndexResourceWounding name="I2S_RX_REMOVED">
+    <ResourceIndex index="0">
+      <Block name="tdm[0].tdm[0].rx_struct[0]" />
+    </ResourceIndex>
+    <ResourceIndex index="1">
+      <Block name="tdm[0].tdm[1].rx_struct[0]" />
+    </ResourceIndex>
+    <ResourceIndex index="2">
+      <Block name="tdm[0].tdm[2].rx_struct[0]" />
+    </ResourceIndex>
+    <ResourceIndex index="3">
+      <Block name="tdm[0].tdm[3].rx_struct[0]" />
+    </ResourceIndex>
+  </IndexResourceWounding>
+  <IndexResourceWounding name="I2S_TX_REMOVED">
+    <ResourceIndex index="0">
+      <Block name="tdm[0].tdm[0].tx_struct[0]" />
+    </ResourceIndex>
+    <ResourceIndex index="1">
+      <Block name="tdm[0].tdm[1].tx_struct[0]" />
+    </ResourceIndex>
+    <ResourceIndex index="2">
+      <Block name="tdm[0].tdm[2].tx_struct[0]" />
+    </ResourceIndex>
+    <ResourceIndex index="3">
+      <Block name="tdm[0].tdm[3].tx_struct[0]" />
+    </ResourceIndex>
+  </IndexResourceWounding>
   <IndexResourceWounding name="SMIF_REMOVED">
     <ResourceIndex index="0">
       <Block name="smif[0].core[0]" />

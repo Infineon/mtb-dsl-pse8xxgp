@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2016-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -51,7 +51,7 @@
 * devices/include/pse84_config.h).
 *
 * As an illustration of the clocking system, the following diagram shows the
-* PSOC EDGE E8 clock tree.
+* PSOC EDGE E8 clock tree. 
 * The actual tree may vary depending on the device series.
 * Consult the Technical Reference Manual for your device for details.
 *
@@ -446,7 +446,8 @@ extern "C" {
 
 #if defined (CY_IP_MXS22SRSS)
 /** IHO clock frequency */
-#define CY_SYSCLK_IHO_FREQ  (50000000UL) /* Hz */
+
+#define CY_SYSCLK_IHO_FREQ  (50000000UL) /* Hz for PSVP */
 
 #endif /* CY_IP_MXS22SRSS*/
 
@@ -2497,7 +2498,6 @@ void Cy_SysClk_WcoBypass(cy_en_wco_bypass_modes_t bypass);
 /* ============================    MF SECTION    ============================ */
 /* ========================================================================== */
 
-
 /** \} group_sysclk_mf_enums */
 
 
@@ -2505,6 +2505,7 @@ void Cy_SysClk_WcoBypass(cy_en_wco_bypass_modes_t bypass);
 #define CY_SYSCLK_MF_DIVIDER_MIN                  (1U)
 #define CY_SYSCLK_MF_DIVIDER_MAX                  (256U)
 #define CY_SYSCLK_IS_MF_DIVIDER_VALID(locDiv)     ((CY_SYSCLK_MF_DIVIDER_MIN <= (locDiv)) && ((locDiv) <= CY_SYSCLK_MF_DIVIDER_MAX))
+
 /** \endcond */
 
 
@@ -4255,7 +4256,6 @@ typedef enum
 *
 *******************************************************************************/
 void Cy_SysClk_ClkBakSetSource(cy_en_clkbak_in_sources_t source);
-
 
 /*******************************************************************************
 * Function Name: Cy_SysClk_ClkBakGetSource

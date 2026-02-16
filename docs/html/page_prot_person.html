@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;"
+  <div id="splitbar" style="-moz-user-select:none;" 
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('page_prot_person.html',''); initResiza
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0"
+<iframe src="javascript:void(0)" frameborder="0" 
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -86,8 +86,52 @@ $(document).ready(function(){initNavTree('page_prot_person.html',''); initResiza
   <div class="headertitle"><div class="title">Introducing Protection Personalities </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="Domain_personality"></a></p>
-<h1>Protection Domains</h1>
+<div class="textblock"><p ><a class="anchor" id="protection_personalities"></a></p>
+<h1>Protection Personalities</h1>
+<p >This section describes the Protection personalities available in the Device Configurator.</p>
+<p >In the default device conﬁguration - By default, Protection level is set to 'Non-Secure' and PPC (Peripheral Protection Controllers) conﬁguration is automatically configured to Non-secure Domain.</p>
+<div class="image">
+<img src="default_protection_personality.png" alt="" width="70%"/>
+<div class="caption">
+Protection personalities</div></div>
+ <h2>Configure Protection Level</h2>
+<p >User can change the protection level by clicking on the Protection Resource in the device configurator and select the target protection level from the parameters display on the right side. By selecting 'Secure Services + Peripherals' and 'Custom Security' user can customize PPC cofiguration for different PPC regions. Here is the brief description of various protection levels </p><ul>
+<li>
+<b>Non-Secure:</b> All PPC regions are assigned to the M33_M55 protection domain and accessible to both cores. </li>
+<li>
+<b>Secure Services:</b> PPC regions required by secure services are assigned to the M33_S protection domain by default and only accessible to the M33 secure core. </li>
+<li>
+<b>Secure Services + Peripherals:</b> PPC regions required by secure services and peripherals are assigned to the M33_S protection domain by default and only accessible to the M33 secure core. Related regions are grouped together under one name and all share a security domain. </li>
+<li>
+<b>Custom Security:</b> All PPC regions are assigned to the M33_M55 protection domain by default and accessible to both cores. Each region can be assigned to different security domains independently. </li>
+</ul>
+<div class="image">
+<img src="protection_levels.png" alt="" width="70%"/>
+<div class="caption">
+Protection Level</div></div>
+ <h2>Enable Secure Enclave</h2>
+<p >When the Secure Enclave option is enabled, user can use secure enclave runtime services. PPC regions required by secure enclave runtime are assigned to M33_S protection domain and only accessible to the M33 secure core.</p>
+<div class="image">
+<img src="secure_enclave.png" alt="" width="70%"/>
+<div class="caption">
+Enable Secure Enclave</div></div>
+<p ><a class="anchor" id="PPC_personality"></a></p><h1>PPC (Peripheral Protection Controllers) Personalities</h1>
+<p >There are two PERI instances listed under Peripheral Protection Controller (PPC) each consisting of several PPC regions. When user selects protection level as 'Secured Services + Peripherals' PPC ensures that peripherals are only accessed by the CPUs in matching security states. The following section will demonstrate the 'Secured Services + Peripherals' flow</p>
+<div class="image">
+<img src="ppc_personality.png" alt="" width="70%"/>
+<div class="caption">
+PPC personality</div></div>
+ <p >The configurator warns of locations where two peripherals are connected but cross a security boundary. Many of these have suggested fixes.</p>
+<div class="image">
+<img src="fixit_example.png" alt="" width="70%"/>
+<div class="caption">
+PPC personality fixit example</div></div>
+ <p >If desired, you can disable the warnings under the Protection configuration’s Validation option by selecting 'None.'</p>
+<div class="image">
+<img src="validation_setting.png" alt="" width="70%"/>
+<div class="caption">
+PPC personality validation security</div></div>
+<p ><a class="anchor" id="Domain_personality"></a></p><h1>Protection Domains</h1>
 <p >The Protection Domain personality allows you to configure security settings for device memory:</p>
 <div class="image">
 <img src="protection_domain_personality.png" alt=""/>

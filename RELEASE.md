@@ -1,9 +1,14 @@
-# ModusToolbox™ PSE8xxGP Device Support Library 1.2.0
+# ModusToolbox™ PSE8xxGP Device Support Library 1.3.0
 ## What's Included?
 
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
 ## Change log
+### v1.3.0
+* Fixed issue with Micron SFDP compatibility
+* Documentation updates
+* Personality updates
+* Bug Fixes
 ### v1.2.0
 * PDL ethif driver update with the new API Cy_ETHIF_GetPrivateData
 * Graphics updates
@@ -43,4 +48,4 @@ For more information, refer to the following documents:
 * [Infineon Technologies AG](https://www.infineon.com)
 
 ---
-© 2025, Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation.
+© 2026, Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation.

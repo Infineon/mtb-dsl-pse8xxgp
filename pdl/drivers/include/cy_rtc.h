@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2016-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -370,8 +370,8 @@ typedef enum
 **/
 typedef enum
 {
-    CY_RTC_CLK_SELECT_WCO,              /**< Select WCO as input to RTC */
-    CY_RTC_CLK_SELECT_ALTBAK,           /**< Select ALTBAK as input to RTC */
+    CY_RTC_CLK_SELECT_WCO              ,  /**< Select WCO as input to RTC */
+    CY_RTC_CLK_SELECT_ALTBAK           ,  /**< Select ALTBAK as input to RTC */
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || defined (CY_IP_MXS22SRSS)
     CY_RTC_CLK_SELECT_ILO,              /**< Select ILO as input to RTC */
     CY_RTC_CLK_SELECT_PILO              /**< Select PILO as input to RTC */
@@ -1350,7 +1350,7 @@ __STATIC_INLINE void Cy_RTC_SyncToRtcAhbAlarm(uint32_t alarmTimeBcd, uint32_t al
 /*******************************************************************************
 *      Internal Functions
 *******************************************************************************/
-
+ 
 #if defined(__cplusplus)
 }
 #endif

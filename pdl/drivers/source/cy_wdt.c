@@ -33,8 +33,6 @@
 extern "C" {
 #endif
 
-
-
 /*******************************************************************************
 * Function Name: Cy_WDT_Init
 ****************************************************************************//**
@@ -271,6 +269,6 @@ void Cy_WDT_ClearWatchdog(void)
 }
 #endif
 
-#endif /* CY_IP_MXS28SRSS, CY_IP_MXS40SRSS */
+#endif /* defined (CY_IP_MXS28SRSS)|| defined (CY_IP_MXS40SSRSS ) || defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2) || defined (CY_IP_MXS22SRSS) */
 
 /* [] END OF FILE */

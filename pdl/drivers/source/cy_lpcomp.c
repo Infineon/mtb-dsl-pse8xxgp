@@ -40,6 +40,7 @@ extern "C" {
 #if defined (CY_IP_MXS22LPCOMP)
 #include "cy_systrimm.h"
 
+
 /* Start trimming data for COMP_CH0 */
 #define TRIMM_START_IDX_COMP_CH0                                                                (90UL)
 /* Start trimming data for COMP_CH1 */

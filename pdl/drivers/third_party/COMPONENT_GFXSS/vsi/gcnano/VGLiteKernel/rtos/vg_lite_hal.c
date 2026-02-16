@@ -233,7 +233,7 @@ vg_lite_error_t vg_lite_hal_allocate(uint32_t size, void **memory)
 vg_lite_error_t vg_lite_hal_free(void *memory)
 {
     vg_lite_error_t error = VG_LITE_SUCCESS;
-
+    
 #if _BAREMETAL
     free(memory);
 #else
@@ -692,7 +692,7 @@ static int vg_lite_init(void)
     /* Setup register memory. **********************************************/
     device->register_base = registerMemBase;
 
-
+    
     /* Initialize contiguous memory. ***************************************/
     /* Allocate the contiguous memory. */
     for (i = 0; i < VG_SYSTEM_RESERVE_COUNT; i++) {

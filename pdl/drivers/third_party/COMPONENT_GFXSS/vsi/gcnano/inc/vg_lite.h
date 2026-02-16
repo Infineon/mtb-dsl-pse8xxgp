@@ -268,7 +268,7 @@ typedef unsigned int        vg_lite_color_t;
     {
         /* The following OPENVG_* enums are defined corresponding to OpenVG
          * VGImageFormat enums so VGLite API can take OpenVG VGImageFormat enums directly.
-         *
+         * 
          * Note: The bits for each color channel are stored within a machine word
          * from MSB to LSB in the order indicated by the pixel format name.
          * This is opposite of VG_LITE_* formats (from LSB to MSB).
@@ -340,7 +340,7 @@ typedef unsigned int        vg_lite_color_t;
         OPENVG_lABGR_8888_PRE                           =  9 | (1 << 6) | (1 << 7),
 
         /* The following VG_LITE_* enums are original VGLite API image format enums.
-         *
+         * 
          * Note: The bits for each color channel are stored within a machine word
          * from LSB to MSB in the order indicated by the pixel format name.
          * This is opposite of OPENVG VG_* formats (from MSB to LSB).
@@ -624,7 +624,7 @@ typedef unsigned int        vg_lite_color_t;
     typedef enum vg_lite_index_endian
     {
         VG_LITE_INDEX_LITTLE_ENDIAN,            /*! Parse the index pixel from low to high,
-                                                 *! when using index1, the parsing order is bit0~bit7.
+                                                 *! when using index1, the parsing order is bit0~bit7. 
                                                  *! when using index2, the parsing order is bit0:1,bit2:3,bit4:5.bit6:7.
                                                  *! when using index4, the parsing order is bit0:3,bit4:7.
                                                  */
@@ -1097,9 +1097,9 @@ typedef unsigned int        vg_lite_color_t;
     /* Generate a 3x3 homogenous matrix to transform 4 source coordinates to 4 target coordinates. */
     vg_lite_error_t vg_lite_get_transform_matrix(vg_lite_float_point4_t src, vg_lite_float_point4_t dst, vg_lite_matrix_t *mat);
 
-    /*
+    /* 
     * Allocates a buffer with a user-defined stride alignment from GPU-accessible memory.
-    * If no specific alignment is needed, use vg_lite_allocate(), which defaults to 64-byte alignment.
+    * If no specific alignment is needed, use vg_lite_allocate(), which defaults to 64-byte alignment. 
     * If a different stride alignment is required, pass the desired alignment value (e.g., 128 for 128-byte alignment).
     * Note: calling vg_lite_allocate_with_align(buffer, 0) also results in 64 byte alignment.
     */

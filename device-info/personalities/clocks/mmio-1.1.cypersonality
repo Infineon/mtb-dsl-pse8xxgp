@@ -95,7 +95,7 @@
       <ParamString id='TARGET_DISPLAY_$idx' default='`${splitJoin(JOINED_TARGETS_$idx, ", ")}`' visible='false' editable='false' group='' name='' desc='' />
       <ParamString id='displayedTargets_$idx' name='Downstream Peripherals' desc='The peripherals this clock gets used by.' default='`${TARGET_DISPLAY_$idx eq "" ? "None" : TARGET_DISPLAY_$idx}`' visible='`${HAS_DIVIDER_$idx}`' editable='false' group='`${DIVIDER_DISPLAY_NAME_$idx}`' />
 
-      <ParamSignal port='clk_pclk_root[$idx]' canBeEmpty='true' visible='`${(GROUP_PRESENT &amp; (1 &lt;&lt; $idx))}`' group='`${DIVIDER_DISPLAY_NAME_$idx}`' name='Source' desc='The source clock to the divider.'  />
+      <ParamSignal port='clk_pclk_root[$idx]' canBeEmpty='true' visible='`${(GROUP_PRESENT &amp; (1 &lt;&lt; $idx))}`' group='`${DIVIDER_DISPLAY_NAME_$idx}`' name='Source' desc='The source clock to the divider.'  /> 
       <ParamString id='SOURCE_LOC_$idx' default='`${getBlockFromSignal("clk_pclk_root[$idx]")}`' visible='false' editable='false' name='' group='' desc='' />
       <ParamString id='SOURCE_LOC_ENABLED_$idx' default='`${isBlockUsed(SOURCE_LOC_$idx)}`' visible='false' editable='false' name='' group='' desc='' />
       <ParamRange  id='SOURCE_FREQ_$idx' default='`${getOrDefault(getExposedMember(SOURCE_LOC_$idx, "frequency"),0)}`' min='0' max='400000000' resolution='1' visible='false' editable='false' name='' group='' desc='' />

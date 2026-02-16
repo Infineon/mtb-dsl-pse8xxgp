@@ -581,6 +581,9 @@ static uint32_t SfdpGetMemoryDensity(uint8_t const sfdpBuffer[])
 static void SfdpGetReadCmd_1_8_8(uint8_t const sfdpBuffer[],
                              cy_stc_smif_mem_cmd_t* cmdRead)
 {
+    uint32_t mode_cycles = _FLD2VAL(CY_SMIF_SFDP_1_8_8_MODE_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_40]);
+    uint32_t dummy_cycles = _FLD2VAL(CY_SMIF_SFDP_1_8_8_DUMMY_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_40]);
+
     /* 8-bit command. 8 x I/O Read command */
     cmdRead->command = sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_41];
 
@@ -594,21 +597,22 @@ static void SfdpGetReadCmd_1_8_8(uint8_t const sfdpBuffer[],
     cmdRead->addrWidth = CY_SMIF_WIDTH_OCTAL;
 
     /* The 8-bit mode byte. This value is 0xFFFFFFFF when there is no mode present */
-    if (0U == (_FLD2VAL(CY_SMIF_SFDP_1_8_8_MODE_CYCLES,
-               (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_40])))
+    if (0U == mode_cycles)
     {
         cmdRead->mode = CY_SMIF_NO_COMMAND_OR_MODE;
+        cmdRead->dummyCycles = dummy_cycles;
     }
     else
     {
         cmdRead->mode = READ_ENHANCED_MODE_DISABLED;
         cmdRead->modeWidth = CY_SMIF_WIDTH_OCTAL;
         cmdRead->modePresence = CY_SMIF_PRESENT_1BYTE;
+        /* We always transfer 1 mode byte (8 bits) which takes 1 clock cycle on 8 data lines.
+         * SFDP mode_cycles indicates the number of cycles the flash expects for mode transfer.
+         * Adjust dummy cycles: subtract 1 (cycle we use for mode byte) and add mode_cycles
+         * (cycles flash expects). This handles cases where mode_cycles != 1. */
+        cmdRead->dummyCycles = dummy_cycles - 1U + mode_cycles;
     }
-
-    /* The dummy cycles number. A zero value suggests no dummy cycles */
-    cmdRead->dummyCycles = _FLD2VAL(CY_SMIF_SFDP_1_8_8_DUMMY_CYCLES,
-                           (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_40]);
 
     /* dummy cycles present - 1 byte transfer */
     if(cmdRead->dummyCycles > 0U)
@@ -676,7 +680,7 @@ static void SfdpGetReadCmd_1_1_8(uint8_t const sfdpBuffer[],
     cmdRead->dataWidth = CY_SMIF_WIDTH_OCTAL;
 }
 #endif
-
+ 
 /*******************************************************************************
 * Function Name: SfdpGetReadCmd_1S_4D_4D
 ****************************************************************************//**
@@ -694,6 +698,9 @@ static void SfdpGetReadCmd_1_1_8(uint8_t const sfdpBuffer[],
 static void SfdpGetReadCmd_1S_4D_4D(uint8_t const sfdpBuffer[],
                              cy_stc_smif_mem_cmd_t* cmdRead)
 {
+    uint32_t mode_cycles = _FLD2VAL(CY_SMIF_SFDP_1_4_4_MODE_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_88]);
+    uint32_t dummy_cycles = _FLD2VAL(CY_SMIF_SFDP_1_4_4_DUMMY_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_88]);
+
     /* 8-bit command. 4 x I/O Read command */
     cmdRead->command = sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_89];
 
@@ -711,10 +718,10 @@ static void SfdpGetReadCmd_1S_4D_4D(uint8_t const sfdpBuffer[],
     cmdRead->addrRate = CY_SMIF_DDR;
 
     /* The 8-bit mode byte. This value is 0xFFFFFFFF when there is no mode present */
-    if (0U == (_FLD2VAL(CY_SMIF_SFDP_1_4_4_MODE_CYCLES,
-               (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_88])))
+    if (0U == mode_cycles)
     {
         cmdRead->mode = CY_SMIF_NO_COMMAND_OR_MODE;
+        cmdRead->dummyCycles = dummy_cycles;
     }
     else
     {
@@ -722,14 +729,19 @@ static void SfdpGetReadCmd_1S_4D_4D(uint8_t const sfdpBuffer[],
         cmdRead->modeWidth = CY_SMIF_WIDTH_QUAD;
         cmdRead->modeRate = CY_SMIF_DDR;
         cmdRead->modePresence = CY_SMIF_PRESENT_1BYTE;
+        /* We always transfer 1 mode byte (8 bits) which takes 1 clock cycle on 4 data lines with DDR
+         * (4 lines x 2 bits per clock = 8 bits per clock).
+         * SFDP mode_cycles indicates the number of cycles the flash expects for mode transfer.
+         * Adjust dummy cycles: subtract 1 (cycle we use for mode byte) and add mode_cycles
+         * (cycles flash expects). This handles cases where mode_cycles != 1. */
+        cmdRead->dummyCycles = dummy_cycles - 1U + mode_cycles;
     }
 
-    /* The dummy cycles number. A zero value suggests no dummy cycles */
-    cmdRead->dummyCycles = _FLD2VAL(CY_SMIF_SFDP_1_4_4_DUMMY_CYCLES,
-                           (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_88]);
-
     /* dummy cycles present - 1 byte transfer */
-    cmdRead->dummyCyclesPresence = CY_SMIF_PRESENT_1BYTE;
+    if(cmdRead->dummyCycles > 0U)
+    {
+        cmdRead->dummyCyclesPresence = CY_SMIF_PRESENT_1BYTE;
+    }
 
     /* The data transfer width */
     cmdRead->dataWidth = CY_SMIF_WIDTH_QUAD;
@@ -739,7 +751,7 @@ static void SfdpGetReadCmd_1S_4D_4D(uint8_t const sfdpBuffer[],
 
 
 }
-
+ 
 /*******************************************************************************
 * Function Name: SfdpGetReadCmd_1_4_4
 ****************************************************************************//**
@@ -757,6 +769,9 @@ static void SfdpGetReadCmd_1S_4D_4D(uint8_t const sfdpBuffer[],
 static void SfdpGetReadCmd_1_4_4(uint8_t const sfdpBuffer[],
                              cy_stc_smif_mem_cmd_t* cmdRead)
 {
+    uint32_t mode_cycles = _FLD2VAL(CY_SMIF_SFDP_1_4_4_MODE_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_08]);
+    uint32_t dummy_cycles = _FLD2VAL(CY_SMIF_SFDP_1_4_4_DUMMY_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_08]);
+
     /* 8-bit command. 4 x I/O Read command */
     cmdRead->command = sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_09];
 
@@ -770,23 +785,25 @@ static void SfdpGetReadCmd_1_4_4(uint8_t const sfdpBuffer[],
     cmdRead->addrWidth = CY_SMIF_WIDTH_QUAD;
 
     /* The 8-bit mode byte. This value is 0xFFFFFFFF when there is no mode present */
-    if (0U == (_FLD2VAL(CY_SMIF_SFDP_1_4_4_MODE_CYCLES,
-               (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_08])))
+    if (0U == mode_cycles)
     {
         cmdRead->mode = CY_SMIF_NO_COMMAND_OR_MODE;
+        cmdRead->dummyCycles = dummy_cycles;
     }
     else
     {
         cmdRead->mode = READ_ENHANCED_MODE_DISABLED;
         cmdRead->modeWidth = CY_SMIF_WIDTH_QUAD;
         cmdRead->modePresence = CY_SMIF_PRESENT_1BYTE;
+        /* We always transfer 1 mode byte (8 bits) which takes 2 clock cycles on 4 data lines.
+         * SFDP mode_cycles indicates the number of cycles the flash expects for mode transfer.
+         * Adjust dummy cycles: subtract 2 (cycles we use for mode byte) and add mode_cycles
+         * (cycles flash expects). This handles cases where mode_cycles != 2. */
+        cmdRead->dummyCycles = dummy_cycles - 2U + mode_cycles;
     }
 
-    /* The dummy cycles number. A zero value suggests no dummy cycles */
-    cmdRead->dummyCycles = _FLD2VAL(CY_SMIF_SFDP_1_4_4_DUMMY_CYCLES,
-                           (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_08]);
-
     /* dummy cycles present - 1 byte transfer */
+    /* A zero value suggests no dummy cycles */
     if(cmdRead->dummyCycles > 0UL)
     {
             cmdRead->dummyCyclesPresence = CY_SMIF_PRESENT_1BYTE;
@@ -868,6 +885,9 @@ static void SfdpGetReadCmd_1_1_4(uint8_t const sfdpBuffer[],
 static void SfdpGetReadCmd_1_2_2(uint8_t const sfdpBuffer[],
                              cy_stc_smif_mem_cmd_t* cmdRead)
 {
+    uint32_t mode_cycles = _FLD2VAL(CY_SMIF_SFDP_1_2_2_MODE_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_0E]);
+    uint32_t dummy_cycles = _FLD2VAL(CY_SMIF_SFDP_1_2_2_DUMMY_CYCLES, (uint32_t) sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_0E]);
+
     /* 8-bit command. 2 x I/O Read command */
     cmdRead->command  = sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_0F];
 
@@ -878,21 +898,22 @@ static void SfdpGetReadCmd_1_2_2(uint8_t const sfdpBuffer[],
     cmdRead->addrWidth = CY_SMIF_WIDTH_DUAL;
 
     /* The 8-bit mode byte. This value is 0xFFFFFFFF when there is no mode present */
-    if (0U == _FLD2VAL(CY_SMIF_SFDP_1_2_2_MODE_CYCLES, (uint32_t)
-              sfdpBuffer[CY_SMIF_SFDP_BFPT_BYTE_0E]))
+    if (0U == mode_cycles)
     {
         cmdRead->mode = CY_SMIF_NO_COMMAND_OR_MODE;
+        cmdRead->dummyCycles = dummy_cycles;
     }
     else
     {
         cmdRead->mode = READ_ENHANCED_MODE_DISABLED;
         cmdRead->modeWidth = CY_SMIF_WIDTH_DUAL;
         cmdRead->modePresence = CY_SMIF_PRESENT_1BYTE;
+        /* We always transfer 1 mode byte (8 bits) which takes 4 clock cycles on 2 data lines.
+         * SFDP mode_cycles indicates the number of cycles the flash expects for mode transfer.
+         * Adjust dummy cycles: subtract 4 (cycles we use for mode byte) and add mode_cycles
+         * (cycles flash expects). This handles cases where mode_cycles != 4. */
+        cmdRead->dummyCycles = dummy_cycles - 4U + mode_cycles;
     }
-
-    /* The dummy cycles number. A zero value suggests no dummy cycles. */
-    cmdRead->dummyCycles = _FLD2VAL(CY_SMIF_SFDP_1_2_2_DUMMY_CYCLES,
-                            (uint32_t) sfdpBuffer [CY_SMIF_SFDP_BFPT_BYTE_0E]);
 
     /* dummy cycles present - 1 byte transfer */
     if(cmdRead->dummyCycles > 0UL)
@@ -1788,7 +1809,7 @@ static uint32_t SfdpGetSectorEraseCommand(cy_stc_smif_mem_device_cfg_t *device,
              */
             device->eraseCmd->command = sfdpBuffer[eraseOffset];
             device->eraseCmd->cmdPresence = CY_SMIF_PRESENT_1BYTE;
-
+ 
             /* Recalculate eraseOffset for the 3-byte Address Instruction Table
              * to find the device->eraseSize and device->eraseTime parameters based on Erase Type.
              */
@@ -2362,7 +2383,7 @@ static cy_en_smif_protocol_mode_t GetOctalDDRParams(SMIF_Type *base,
     return pMode;
 }
 #endif
-
+ 
 #ifndef SMIF_JEDEC_STANDARD_DEVICE_RESET_SUPPORT
 /*******************************************************************************
 * Function Name: Cy_SMIF_Reset_Memory
@@ -2769,6 +2790,7 @@ cy_en_smif_status_t Cy_SMIF_MemInitSfdpMode(SMIF_Type *base,
     /* XIP and Device Register initialization */
     if ((CY_SMIF_SUCCESS == result) &&
         (0U != (memCfg->flags & CY_SMIF_FLAG_MEMORY_MAPPED)) &&
+        (0U != (memCfg->memMappedSize)) &&
         (_FLD2VAL(SMIF_CTL_XIP_MODE, SMIF_CTL(base)) != 1U))
     {
         /* Check valid parameters for XIP */

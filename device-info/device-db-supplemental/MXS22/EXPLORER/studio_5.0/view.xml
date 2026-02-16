@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <View xmlns="http://cypress.com/xsd/cystudioview_v2">
   <Parameters>
     <Param name="PERI0_MMIO0_TARGETS" value="mxrramc[0];m33syscpuss[0];mxsramc[0];mxsramc[1];mxcm33[0];mxipc[0];mxfault[0];srss[0];debug600[0];m0seccpuss[0];crypto[0]" />

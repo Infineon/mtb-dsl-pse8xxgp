@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2020-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2020-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -94,7 +94,7 @@
 * These transactions are handled transparently by the DRV-level API. Use the
 * PIPE, SEMA  layers of the API
 * to implement communication in your application.
-* The data transferred is limited to a single 32-bit value in case of PIPE and SEMA
+* The data transferred is limited to a single 32-bit value in case of PIPE and SEMA 
 * As implemented by the PIPE API, that value is a pointer to a data structure of arbitrary size
 * and complexity.
 *

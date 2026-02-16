@@ -62,52 +62,52 @@ static void cy_gfxss_update_display_rect_params(viv_display_size_type display_si
             dc_rect->w = 320;
             dc_rect->h = 480;
             break;
-
+    
         case vivDISPLAY_480_800_60:
             dc_rect->w = 480;
             dc_rect->h = 800;
             break;
-
+    
         case vivDISPLAY_480_864_60:
             dc_rect->w = 480;
             dc_rect->h = 864;
             break;
-
+    
         case vivDISPLAY_640_480_60:
             dc_rect->w = 640;
             dc_rect->h = 480;
             break;
-
+    
         case vivDISPLAY_720_480_60:
             dc_rect->w = 720;
             dc_rect->h = 480;
             break;
-
+    
         case vivDISPLAY_800_480_60:
             dc_rect->w = 800;
             dc_rect->h = 480;
             break;
-
+    
         case vivDISPLAY_1024_600_60:
             dc_rect->w = 1024;
             dc_rect->h = 600;
             break;
-
+    
         case vivDISPLAY_1024_768_60:
             dc_rect->w = 1024;
             dc_rect->h = 768;
             break;
-
+    
         case vivDISPLAY_1280_720_60:
             dc_rect->w = 1280;
             dc_rect->h = 720;
             break;
-
+    
         case vivDISPLAY_1920_1080_60:
             dc_rect->w = 1920;
             dc_rect->h = 1080;
             break;
-
+    
         default:
             dc_rect->w = 0;
             dc_rect->h = 0;
@@ -184,19 +184,19 @@ static uint32_t cy_gfxss_configure_layer(cy_stc_gfx_layer_config_t *layer_config
     viv_dc_buffer buffer = {0};
     uint32_t ret = 0;
     viv_dc_rect display_rect = {0};
-
+ 
     /* select layer */
     viv_dc_select_layer(layer_config->layer_type);
-
+ 
     /* enable layer if visibility is true*/
     if (layer_config->visibility)
     {
         viv_layer_enable(vivTRUE);
-    }
+    } 
     bpp = cy_gfxss_get_bpp_from_format(layer_config->input_format_type);
-
+ 
     stride = layer_config->width * bpp / 8;
-
+ 
     /* config the buffer's phyAddr/format/tilemode/bufferWidth/bufferHeight/stride to kernel */
     buffer.phyAddress[0] = (gctADDRESS) layer_config->buffer_address;
     buffer.stride[0] = stride;
@@ -220,13 +220,13 @@ static uint32_t cy_gfxss_configure_layer(cy_stc_gfx_layer_config_t *layer_config
     viv_layer_scale(&display_rect, vivFILTER_H3_V3);
 
     viv_layer_set_position(layer_config->pos_x, layer_config->pos_y);
-
+ 
     viv_layer_zorder(layer_config->zorder);
 
     viv_layer_poterduff_blend(vivTRUE, vivPD_SRC_OVER);
-
+ 
     viv_layer_set_display(vivDISPLAY_0);
-
+ 
     return ret;
 }
 /** Display controller initialization */
@@ -293,12 +293,12 @@ static vivSTATUS cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *conf
     if(config->ovl1_layer_config != NULL && config->ovl1_layer_config->layer_enable )
     {
         /* Check if Overlay 1 is using YUV format and unsupported tiling type */
-    if ((config->ovl1_layer_config->input_format_type >= vivYUY2 && config->ovl1_layer_config->input_format_type <= vivNV21)
+    if ((config->ovl1_layer_config->input_format_type >= vivYUY2 && config->ovl1_layer_config->input_format_type <= vivNV21) 
             || config->ovl1_layer_config->tiling_type != vivLINEAR )
         {
             return vivSTATUS_NOT_SUPPORT;
         }
-
+    
         cy_gfxss_configure_layer(config->ovl1_layer_config);
     }
 
@@ -318,7 +318,7 @@ static vivSTATUS cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *conf
     else
     {
         display_output.type = vivDBI;
-
+        
         if(config->display_type == GFX_DISP_TYPE_DSI_DBI)
         {
             viv_set_output_dbi(vivDISPLAY_0, vivDBI_B);
@@ -327,7 +327,7 @@ static vivSTATUS cy_gfxss_dc_init(GFXSS_Type *base, cy_stc_gfx_dc_config_t *conf
         {
             viv_set_output_dbi(vivDISPLAY_0, (viv_dbi_type)config->display_type);
         }
-        viv_set_output(vivDISPLAY_0, &display_output, vivTRUE);
+        viv_set_output(vivDISPLAY_0, &display_output, vivTRUE);    
         viv_set_commit(1);
     }
 
@@ -392,7 +392,7 @@ cy_en_gfx_status_t Cy_GFXSS_Init(GFXSS_Type *base, cy_stc_gfx_config_t *config, 
         {
             result = CY_GFX_BAD_PARAM;
         }
-
+        
         context->clockHz = config->clockHz;
         context->mipidsi_context.virtual_ch = mipi_dsi_cfg->virtual_ch;             /**< Display controller configuration */
         context->mipidsi_context.num_of_lanes = mipi_dsi_cfg->num_of_lanes;           /**< GPU configuration is optional */
@@ -402,8 +402,8 @@ cy_en_gfx_status_t Cy_GFXSS_Init(GFXSS_Type *base, cy_stc_gfx_config_t *config, 
         context->mipidsi_context.dsi_mode = mipi_dsi_cfg->dsi_mode;               /**< Command mode/Video mode */
         context->mipidsi_context.mode_flags = mipi_dsi_cfg->mode_flags;             /**< Additional mode information */
         context->mipidsi_context.enable = true;
-
-        memcpy(&context->mipidsi_context.display_params, mipi_dsi_cfg->display_params, sizeof(cy_stc_mipidsi_display_params_t));        /**< Display parameters */
+        
+        memcpy(&context->mipidsi_context.display_params, mipi_dsi_cfg->display_params, sizeof(cy_stc_mipidsi_display_params_t));        /**< Display parameters */   
     }else{
          context->mipidsi_context.enable = false;
     }
@@ -510,7 +510,7 @@ cy_en_gfx_status_t Cy_GFXSS_Init(GFXSS_Type *base, cy_stc_gfx_config_t *config, 
 
 cy_en_gfx_status_t  Cy_GFXSS_SleepCallback(cy_stc_syspm_callback_params_t *callbackParams, cy_en_syspm_callback_mode_t mode)
 {
-    /*
+    /* 
      * No action required for sleep mode.
      * The graphics subsystem is an active component and does not retain state across sleep.
      * No context save/restore is needed before or after sleep transitions.
@@ -541,7 +541,7 @@ cy_en_syspm_status_t  Cy_GFXSS_DeepSleepCallback(cy_stc_syspm_callback_params_t 
     {
         case CY_SYSPM_CHECK_READY:
         {
-		bool checkFail = false;
+        	bool checkFail = false;
             intr_mask = dc_base->MXDC.INTR_MASK;
             dc_base->MXDC.INTR_MASK = 0U;
             if(locContext->gpu_context.enabled)
@@ -572,13 +572,13 @@ cy_en_syspm_status_t  Cy_GFXSS_DeepSleepCallback(cy_stc_syspm_callback_params_t 
             {
                 gpu_base->MXGPU.CTL |= GFXSS_GPU_MXGPU_CTL_ENABLED_Msk;
             }
-
+            
             /* Configure Display Controller */
             uint32_t frac_divider = (uint32_t)(((float)(locContext->clockHz / 1000U) / locContext->mipidsi_context.display_params.pixel_clock) * BIT(16));   //Getting fractional divider value for pixel clock in fixed point representation.
             frac_divider < 0x20000 ? frac_divider = 0x20000 : frac_divider; //Minimum value of fractional divider is 2.
             dc_base->MXDC.CLK_CTL = _VAL2FLD(GFXSS_DC_MXDC_CLK_CTL_CLK_DIV, frac_divider) | GFXSS_DC_MXDC_CLK_CTL_CLK_CORE_Msk;
             dc_base->MXDC.CTL |= GFXSS_DC_MXDC_CTL_ENABLED_Msk;
-
+            
             dc_base->MXDC.INTR_MASK |= _VAL2FLD(GFXSS_DC_MXDC_INTR_MASK_CORE_MASK, 1U) | _VAL2FLD(GFXSS_DC_MXDC_INTR_MASK_ADDR0_MASK, 1U)
                                     | _VAL2FLD(GFXSS_DC_MXDC_INTR_MASK_ADDR1_MASK, 1U) | _VAL2FLD(GFXSS_DC_MXDC_INTR_MASK_ADDR2_MASK, 1U)
                                     | _VAL2FLD(GFXSS_DC_MXDC_INTR_MASK_ADDR3_MASK, 1U) | _VAL2FLD(GFXSS_DC_MXDC_INTR_MASK_RLAD_ERROR_MASK, 1U);
@@ -659,12 +659,12 @@ cy_en_syspm_status_t  Cy_GFXSS_DeepSleepCallback(cy_stc_syspm_callback_params_t 
             }else{
                 dccfg.cursor_config = &locContext->dc_context.cursor_config;
             }
-            dccfg.display_type = locContext->dc_context.display_type;
-            dccfg.display_format = locContext->dc_context.display_format;
-            dccfg.display_size = locContext->dc_context.display_size;
-            dccfg.display_width = locContext->dc_context.display_width;
-            dccfg.display_height = locContext->dc_context.display_height;
-            dccfg.interrupt_mask = locContext->dc_context.interrupt_mask;
+            dccfg.display_type = locContext->dc_context.display_type;         
+            dccfg.display_format = locContext->dc_context.display_format;        
+            dccfg.display_size = locContext->dc_context.display_size;        
+            dccfg.display_width = locContext->dc_context.display_width;        
+            dccfg.display_height = locContext->dc_context.display_height;      
+            dccfg.interrupt_mask = locContext->dc_context.interrupt_mask;   
 
             /* Configure MIPI DSI */
             if(locContext->mipidsi_context.enable != false){
@@ -675,12 +675,12 @@ cy_en_syspm_status_t  Cy_GFXSS_DeepSleepCallback(cy_stc_syspm_callback_params_t 
                 dsicfg.max_phy_clk = locContext->mipidsi_context.max_phy_clk;
                 dsicfg.dsi_mode = locContext->mipidsi_context.dsi_mode;
                 dsicfg.mode_flags = locContext->mipidsi_context.mode_flags;
-                dsicfg.display_params = &locContext->mipidsi_context.display_params;
+                dsicfg.display_params = &locContext->mipidsi_context.display_params;  
                 Cy_MIPIDSI_Init(mipidsi_base, &dsicfg, &locContext->mipidsi_context);
             }
             cy_gfxss_dc_init(locBase, &dccfg, &dsicfg);
-
-            if(dccfg.rlad_config != NULL)
+  
+            if(dccfg.rlad_config != NULL) 
             {
                 Cy_GFXSS_RLAD_SetImage(locBase, dccfg.rlad_config, locContext);
                 if(locContext->dc_context.rlad_config.enable){
@@ -709,7 +709,7 @@ cy_en_syspm_status_t  Cy_GFXSS_DeepSleepCallback(cy_stc_syspm_callback_params_t 
                 }
             }
             if(locContext->dc_context.ovl1_layer_config.layer_enable){
-		Cy_GFXSS_Set_Overlay1(locBase, (uint32_t *)(locContext->dc_context.ovl1_layer_config.buffer_address), locContext);
+            	Cy_GFXSS_Set_Overlay1(locBase, (uint32_t *)(locContext->dc_context.ovl1_layer_config.buffer_address), locContext);
             }
             if(locContext->gpu_context.enabled && locContext->gpu_context.vg_lite_initialised){
                 vg_lite_init(locContext->gpu_context.ts_width, locContext->gpu_context.ts_height);
@@ -748,9 +748,9 @@ cy_en_syspm_status_t  Cy_GFXSS_DeepSleepCallback(cy_stc_syspm_callback_params_t 
 void Cy_GFXSS_Clear_DC_Interrupt(GFXSS_Type *base, cy_stc_gfx_context_t *context)
 {
   CY_ASSERT(base != NULL);
-
+  
   (void)context;
-
+  
   GFXSS_DC_Type *dc_base = &(base->GFXSS_DC);
 
   /* DC */
@@ -764,9 +764,9 @@ void Cy_GFXSS_Clear_DC_Interrupt(GFXSS_Type *base, cy_stc_gfx_context_t *context
 void Cy_GFXSS_Clear_GPU_Interrupt(GFXSS_Type *base, cy_stc_gfx_context_t *context)
 {
   CY_ASSERT(base != NULL);
-
+  
   (void)context;
-
+ 
   GFXSS_GPU_Type *gpu_base = &(base->GFXSS_GPU);
 
   if (gpu_base != NULL)
@@ -779,9 +779,9 @@ void Cy_GFXSS_Clear_GPU_Interrupt(GFXSS_Type *base, cy_stc_gfx_context_t *contex
 void  Cy_GFXSS_Interrupt(GFXSS_Type *base, cy_stc_gfx_context_t *context)
 {
   CY_ASSERT(base != NULL);
-
+  
   (void)context;
-
+  
   GFXSS_GPU_Type *gpu_base = &(base->GFXSS_GPU);
   GFXSS_DC_Type *dc_base = &(base->GFXSS_DC);
   GFXSS_MIPIDSI_Type *mipidsi_base = &(base->GFXSS_MIPIDSI);
@@ -814,7 +814,7 @@ cy_en_gfx_status_t Cy_GFXSS_Set_FrameBuffer(GFXSS_Type *base, uint32_t* gfx_laye
     {
         return CY_GFX_BAD_PARAM;
     }
-
+    
     base->GFXSS_DC.DCNANO.GCREGFRAMEBUFFERADDRESS = (uint32_t)gfx_layer_buffer;
     context->dc_context.gfx_layer_config.buffer_address = (gctADDRESS *)gfx_layer_buffer;
     viv_set_commit(0x1);
@@ -839,7 +839,7 @@ cy_en_gfx_status_t Cy_GFXSS_Set_FrameBuffer_YUV(GFXSS_Type *base, uint32_t* y_bu
         }
         base->GFXSS_DC.DCNANO.GCREGDCTILEUVFRAMEBUFFERADR = (uint32_t)uv_buffer;
         context->dc_context.gfx_layer_config.uv_buffer_address = (gctADDRESS *)uv_buffer;
-    }
+    } 
     viv_set_commit(0x1);
     return CY_GFX_SUCCESS;
 }
@@ -886,7 +886,7 @@ cy_en_gfx_status_t Cy_GFXSS_Set_Overlay1(GFXSS_Type *base, uint32_t* overlay1_bu
         return CY_GFX_BAD_PARAM;
     }
 
-    base->GFXSS_DC.DCNANO.GCREGOVERLAYADDRESS1 = (uint32_t)overlay1_buffer;
+    base->GFXSS_DC.DCNANO.GCREGOVERLAYADDRESS1 = (uint32_t)overlay1_buffer; 
     context->dc_context.ovl1_layer_config.buffer_address = (gctADDRESS *)overlay1_buffer;
     viv_set_commit(0x1);
     return CY_GFX_SUCCESS;
@@ -895,8 +895,8 @@ cy_en_gfx_status_t Cy_GFXSS_Set_Overlay1(GFXSS_Type *base, uint32_t* overlay1_bu
 cy_en_gfx_status_t Cy_GFXSS_Set_Layer_Enabled(GFXSS_Type *base, cy_en_gfx_layer_type_t layer_id, bool enable)
 {
     if (NULL == base)
-    {
-        return CY_GFX_BAD_PARAM;
+    { 
+        return CY_GFX_BAD_PARAM; 
     }
 
     switch(layer_id)
@@ -911,7 +911,7 @@ cy_en_gfx_status_t Cy_GFXSS_Set_Layer_Enabled(GFXSS_Type *base, cy_en_gfx_layer_
                 base->GFXSS_DC.DCNANO.GCREGFRAMEBUFFERCONFIG &= ~GFXSS_DC_DCNANO_GCREGFRAMEBUFFERCONFIG_GCREGFRAMEBUFFERCONFIG_ENABLE_Msk;
             }
             break;
-
+    
         case GFX_LAYER_OVERLAY0:
             if (enable)
             {
@@ -933,7 +933,7 @@ cy_en_gfx_status_t Cy_GFXSS_Set_Layer_Enabled(GFXSS_Type *base, cy_en_gfx_layer_
             }
             break;
         default:
-            return CY_GFX_BAD_PARAM;
+            return CY_GFX_BAD_PARAM; 
     }
     viv_set_commit(0x1);
     return CY_GFX_SUCCESS;
@@ -949,9 +949,9 @@ uint32_t* Cy_GFXSS_Get_FrameBufferAddress(GFXSS_Type *base)
 
 cy_en_gfx_status_t Cy_GFXSS_DeInit(GFXSS_Type *base, cy_stc_gfx_context_t *context)
 {
-    if ((NULL == base) || (NULL == context))
+    if ((NULL == base) || (NULL == context)) 
     {
-        return CY_GFX_BAD_PARAM;
+        return CY_GFX_BAD_PARAM; 
     }
 
     GFXSS_GPU_Type *gpu_base = &(base->GFXSS_GPU);
@@ -1034,8 +1034,8 @@ cy_en_gfx_status_t Cy_GFXSS_RLAD_Enable( GFXSS_Type *base, cy_stc_gfx_context_t 
 {
     if ((NULL == base) || (NULL == context))
     {
-        return CY_GFX_BAD_PARAM;
-    }
+        return CY_GFX_BAD_PARAM; 
+    } 
 
     GFXSS_DC_Type *gfxss_dc = &(base->GFXSS_DC);
 
@@ -1055,8 +1055,8 @@ cy_en_gfx_status_t Cy_GFXSS_RLAD_Disable( GFXSS_Type *base, cy_stc_gfx_context_t
 {
     if ((NULL == base) || (NULL == context))
     {
-        return CY_GFX_BAD_PARAM;
-    }
+        return CY_GFX_BAD_PARAM; 
+    } 
 
     GFXSS_DC_Type *gfxss_dc = &(base->GFXSS_DC);
 
@@ -1077,8 +1077,8 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
 
     if ((NULL == base) || (NULL == context))
     {
-        return CY_GFX_BAD_PARAM;
-    }
+        return CY_GFX_BAD_PARAM; 
+    } 
 
     GFXSS_DC_Type *gfxss_dc = &(base->GFXSS_DC);
     GFXSS_MIPIDSI_Type *mipi_dsi_base = &(base->GFXSS_MIPIDSI);
@@ -1089,7 +1089,7 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
     uint32_t No_of_lines = 0, i=0, j = 0, line_stride = 0, line_stride_overlay = 0, line_stride_overlay1 = 0;
     bool is_yuv_gfx = false, is_yuv_ovl0 = false;
     uint32_t uv_stride = 0, uv_stride_overlay = 0;
-    uint8_t bytes_per_pixel_framebuffer = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+    uint8_t bytes_per_pixel_framebuffer = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;    
     float bytes_per_pixel_dc_output = 0;
     uint8_t bytes_per_pixel_overlay = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
     uint8_t bytes_per_pixel_overlay1 = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
@@ -1246,12 +1246,12 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
     No_of_lines = (uint32_t)(DBI_SCLICE_LIMIT_IN_BYTES / (horizontal_resolution * bytes_per_pixel_dc_output));
     // Adjust for YUV tiled formats - must be multiple of 8
     if ((is_yuv_gfx || is_yuv_ovl0) && (No_of_lines % 8 != 0)) {
-	No_of_lines = (No_of_lines / 8) * 8;
+    	No_of_lines = (No_of_lines / 8) * 8;
     }
-
+    
     mipi_dsi_base->DWCMIPIDSI.DBI_CMDSIZE = _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_WR_CMD_SIZE , (No_of_lines * bytes_per_pixel_dc_output * horizontal_resolution) + 1U ) |
                                    _VAL2FLD( GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_ALLOWED_CMD_SIZE , ((uint8_t)(AXI_BURST_LENGTH / bytes_per_pixel_dc_output)) * bytes_per_pixel_dc_output + 1U);
-    mipi_dsi_base->DWCMIPIDSI.DBI_CFG = _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_OUT_DBI_CONF , context->mipidsi_context.dpi_fmt) |
+    mipi_dsi_base->DWCMIPIDSI.DBI_CFG = _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_OUT_DBI_CONF , context->mipidsi_context.dpi_fmt) | 
                                    _VAL2FLD( GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_IN_DBI_CONF , context->mipidsi_context.dpi_fmt);
     gfxss_dc->DCNANO.GCREGFRAMEBUFFERSTRIDE = line_stride;
     gfxss_dc->DCNANO.GCREGOVERLAYSTRIDE = line_stride_overlay;
@@ -1261,7 +1261,7 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
     gfxss_dc->DCNANO.GCREGOVERLAYSIZE1 = _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_WIDTH, horizontal_resolution) | _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_HEIGHT, No_of_lines);
     gfxss_dc->DCNANO.GCREGVDISPLAY = _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_DISPLAY_END, No_of_lines) | _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_TOTAL, (No_of_lines + 1));
     gfxss_dc->DCNANO.GCREGVSYNC =  _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_START, 0U ) | _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_END,  No_of_lines);
-
+    
     if(is_yuv_gfx){
         // Ensure we wait for YUV tile setup complete before starting the transfer
         yuv_tile_setup_delay_us = ((46U * lane_byte_clock_KHz) / 1000U) + 1000U;
@@ -1306,7 +1306,7 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
             gfxss_dc->DCNANO.GCREGOVERLAYADDRESS += (tile_rows * line_stride_overlay);
             if (uv_stride_overlay > 0) {
                 gfxss_dc->DCNANO.GCREGDCTILEUVOVERLAYADR += (tile_rows * uv_stride_overlay);
-                }
+                } 
         } else {
             gfxss_dc->DCNANO.GCREGOVERLAYADDRESS += (No_of_lines * line_stride_overlay);
         }
@@ -1344,14 +1344,14 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
         else
         {
             rtos_delay_us = ((No_of_lines * line_stride * 1000U )/ dbi_clock_KHz) + 50U;
-        }
+        } 
         Cy_SysLib_Rtos_DelayUs(rtos_delay_us);
     }
         return CY_GFX_SUCCESS;
 }
 
 cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t start_line_offset, uint32_t end_line_offset, cy_stc_gfx_context_t *context) {
-
+    
 
     // Check if start_line_offset and end_line_offset is in required vertical length of display panel
 
@@ -1368,7 +1368,7 @@ cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t star
     uint32_t horizontal_resolution = context->dc_context.display_width;
     uint32_t No_of_lines = 0, i = 0, line_stride = 0, line_stride_overlay = 0, line_stride_overlay1 = 0;
 
-    uint8_t bytes_per_pixel_framebuffer = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+    uint8_t bytes_per_pixel_framebuffer = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;    
     float bytes_per_pixel_dc_output = 0;
     uint8_t bytes_per_pixel_overlay = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
     uint8_t bytes_per_pixel_overlay1 = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
@@ -1450,7 +1450,7 @@ cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t star
     }
     mipi_dsi_base->DWCMIPIDSI.DBI_CMDSIZE = _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_WR_CMD_SIZE , (No_of_lines * bytes_per_pixel_dc_output * horizontal_resolution) + 1U ) |
                                    _VAL2FLD( GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_ALLOWED_CMD_SIZE , ((uint8_t)(AXI_BURST_LENGTH / bytes_per_pixel_dc_output)) * bytes_per_pixel_dc_output + 1U);
-    mipi_dsi_base->DWCMIPIDSI.DBI_CFG = _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_OUT_DBI_CONF , context->mipidsi_context.dpi_fmt) |
+    mipi_dsi_base->DWCMIPIDSI.DBI_CFG = _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_OUT_DBI_CONF , context->mipidsi_context.dpi_fmt) | 
                                    _VAL2FLD( GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_IN_DBI_CONF , context->mipidsi_context.dpi_fmt);
 
     if ((horizontal_resolution * bytes_per_pixel_framebuffer) % AXI_BURST_LENGTH != 0U)
@@ -1460,7 +1460,7 @@ cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t star
     else
     {
         line_stride = horizontal_resolution * bytes_per_pixel_framebuffer;
-
+        
     }
 
     if ((horizontal_resolution * bytes_per_pixel_overlay) % AXI_BURST_LENGTH != 0U)
@@ -1520,10 +1520,10 @@ cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t star
         gfxss_dc->DCNANO.GCREGFRAMEBUFFERADDRESS += (No_of_lines * line_stride);
         gfxss_dc->DCNANO.GCREGOVERLAYADDRESS += (No_of_lines * line_stride_overlay);
         gfxss_dc->DCNANO.GCREGOVERLAYADDRESS1 += (No_of_lines * line_stride_overlay1);
-
+    
     }
 
-    // Remaining number of lines
+    // Remaining number of lines 
     No_of_lines = partial_size % No_of_lines;
 
 
@@ -1537,7 +1537,7 @@ cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t star
         else
         {
             rtos_delay_us = ((No_of_lines * line_stride * 1000U )/ dbi_clock_KHz) + 50U;
-        }
+        } 
 
         // Update frame buffer for remaining number of lines
         mipi_dsi_base->DWCMIPIDSI.DBI_CMDSIZE = _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_WR_CMD_SIZE , (No_of_lines * bytes_per_pixel_dc_output * horizontal_resolution) + 1U ) |
@@ -1569,8 +1569,8 @@ cy_en_gfx_status_t Cy_GFXSS_Enable_GPU( GFXSS_Type *base, cy_stc_gfx_context_t *
 {
     if ((NULL == base) || (NULL == context))
     {
-        return CY_GFX_BAD_PARAM;
-    }
+        return CY_GFX_BAD_PARAM; 
+    } 
 
     uint32_t timeout = CY_GFXSS_TOTAL_NO_OF_RETRIES;
     GFXSS_GPU_Type *gpu_base = &(base->GFXSS_GPU);
@@ -1591,10 +1591,10 @@ cy_en_gfx_status_t Cy_GFXSS_Enable_GPU( GFXSS_Type *base, cy_stc_gfx_context_t *
 }
 
 cy_en_gfx_status_t Cy_GFXSS_Disable_GPU( GFXSS_Type *base, cy_stc_gfx_context_t *context)
-{
+{    
     if ((NULL == base) || (NULL == context))
     {
-        return CY_GFX_BAD_PARAM;
+        return CY_GFX_BAD_PARAM; 
     }
 
     uint32_t timeout = CY_GFXSS_TOTAL_NO_OF_RETRIES;

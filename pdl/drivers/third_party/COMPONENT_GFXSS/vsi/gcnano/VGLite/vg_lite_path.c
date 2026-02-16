@@ -51,16 +51,16 @@ static uint32_t convert_path_format(vg_lite_format_t format)
     switch (format) {
         case VG_LITE_S8:
             return 0;
-
+            
         case VG_LITE_S16:
             return 0x100000;
-
+            
         case VG_LITE_S32:
             return 0x200000;
-
+            
         case VG_LITE_FP32:
             return 0x300000;
-
+            
         default:
             return 0;
     }
@@ -72,13 +72,13 @@ static uint32_t convert_path_quality(vg_lite_quality_t quality)
     switch (quality) {
         case VG_LITE_HIGH:
             return 0x3;
-
+            
         case VG_LITE_UPPER:
             return 0x2;
-
+            
         case VG_LITE_MEDIUM:
             return 0x1;
-
+            
         default:
             return 0x0;
     }
@@ -250,8 +250,8 @@ vg_lite_error_t vg_lite_init_path(vg_lite_path_t* path,
 
 vg_lite_error_t vg_lite_set_path_type(vg_lite_path_t* path, vg_lite_path_type_t path_type)
 {
-    if (!path ||
-        (path_type != VG_LITE_DRAW_FILL_PATH &&
+    if (!path || 
+        (path_type != VG_LITE_DRAW_FILL_PATH && 
          path_type != VG_LITE_DRAW_STROKE_PATH &&
          path_type != VG_LITE_DRAW_FILL_STROKE_PATH)
        )
@@ -368,7 +368,7 @@ vg_lite_error_t vg_lite_upload_path(vg_lite_path_t * path)
     /* Initialize command buffer prefix. */
     ((uint32_t *) buffer->memory)[0] = VG_LITE_DATA((path->path_length + 7) / 8);
     ((uint32_t *) buffer->memory)[1] = 0;
-
+    
     /* Copy the path data. */
     memcpy((uint32_t *) buffer->memory + 2, path->path, path->path_length);
 
@@ -384,7 +384,7 @@ vg_lite_error_t vg_lite_upload_path(vg_lite_path_t * path)
     path->uploaded.bytes = bytes;
     path->path_changed = 0;
     VLM_PATH_ENABLE_UPLOAD(*path);      /* Implicitly enable path uploading. */
-
+    
     /* Return pointer to vg_lite_buffer structure. */
     return error;
 }
@@ -395,12 +395,12 @@ vg_lite_uint32_t vg_lite_get_path_length(vg_lite_uint8_t *cmd, vg_lite_uint32_t 
     int32_t dCount = 0;
     uint32_t i = 0;
     int32_t data_size = 0;
-
+    
     data_size = get_data_size(format);
-
+    
     for (i = 0; i < count; i++) {
         size++;     /* OP CODE. */
-
+        
         dCount = get_data_count(cmd[i]);
         size = CDALIGN(size, data_size);
         size += dCount * data_size;
@@ -410,7 +410,7 @@ vg_lite_uint32_t vg_lite_get_path_length(vg_lite_uint8_t *cmd, vg_lite_uint32_t 
         size++;
         size = CDALIGN(size, data_size);
     }
-
+    
     return size;
 }
 
@@ -525,7 +525,7 @@ vg_lite_error_t vg_lite_append_path(vg_lite_path_t *path,
                 ((cmd[i] & 0x01) == 1)) {
                 rel = 1;
             }
-            else if ((cmd[i] >= VLC_OP_HLINE) &&
+            else if ((cmd[i] >= VLC_OP_HLINE) && 
                 ((cmd[i] & 0x01) == 0)) {
                 rel = 1;
             }
@@ -1140,19 +1140,19 @@ vg_lite_error_t vg_lite_draw(vg_lite_buffer_t *target,
     if (ts_is_fullscreen == 0){
         transform(&temp, (vg_lite_float_t)path->bounding_box[0], (vg_lite_float_t)path->bounding_box[1], matrix);
         point_min = point_max = temp;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[2], (vg_lite_float_t)path->bounding_box[1], matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[2], (vg_lite_float_t)path->bounding_box[3], matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[0], (vg_lite_float_t)path->bounding_box[3], matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
@@ -1211,7 +1211,7 @@ vg_lite_error_t vg_lite_draw(vg_lite_buffer_t *target,
 
                 if (VLM_PATH_GET_UPLOAD_BIT(*path) == 1) {
                     VG_LITE_RETURN_ERROR(push_call(&s_context, path->uploaded.address, path->uploaded.bytes));
-                }
+                } 
                 else {
                     VG_LITE_RETURN_ERROR(push_data(&s_context, path->path_length, path->path));
                 }
@@ -1234,7 +1234,7 @@ vg_lite_error_t vg_lite_draw(vg_lite_buffer_t *target,
 
                 if (VLM_PATH_STROKE_GET_UPLOAD_BIT(*path) == 1) {
                     VG_LITE_RETURN_ERROR(push_call(&s_context, path->stroke->uploaded.address, path->stroke->uploaded.bytes));
-                }
+                } 
                 else {
                     VG_LITE_RETURN_ERROR(push_data(&s_context, path->stroke_size, path->stroke_path));
                 }
@@ -1273,7 +1273,7 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
     uint32_t pattern_tile = 0;
     uint32_t transparency_mode = 0;
     vg_lite_float_t ratio = 1;
-
+    
     /* The following code is from "draw path" */
     uint32_t format, quality, tiling, fill;
     uint32_t tessellation_size;
@@ -1446,7 +1446,7 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
     /* Determine image mode (NORMAL or MULTIPLY) depending on the color. */
     imageMode = (source->image_mode == VG_LITE_NONE_IMAGE_MODE) ? 0 : (source->image_mode == VG_LITE_MULTIPLY_IMAGE_MODE) ? 0x00002000 : 0x00001000;
     tiled_source = (source->tiled != VG_LITE_LINEAR) ? 0x10000000 : 0 ;
-
+    
     if (pattern_mode == VG_LITE_PATTERN_COLOR)
     {
         uint8_t a,r,g,b;
@@ -1536,25 +1536,25 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
     if (ts_is_fullscreen == 0){
         transform(&temp, (vg_lite_float_t)path->bounding_box[0], (vg_lite_float_t)path->bounding_box[1], &matrix);
         point_min = point_max = temp;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[2], (vg_lite_float_t)path->bounding_box[1], &matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[2], (vg_lite_float_t)path->bounding_box[3], &matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[0], (vg_lite_float_t)path->bounding_box[3], &matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         point_min.x = MAX(point_min.x, 0);
         point_min.y = MAX(point_min.y, 0);
         point_max.x = MIN(point_max.x, dst_align_width);
@@ -1632,7 +1632,7 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
 
                 if (VLM_PATH_STROKE_GET_UPLOAD_BIT(*path) == 1) {
                     VG_LITE_RETURN_ERROR(push_call(&s_context, path->stroke->uploaded.address, path->stroke->uploaded.bytes));
-                }
+                } 
                 else {
                     VG_LITE_RETURN_ERROR(push_data(&s_context, path->stroke_size, path->stroke_path));
                 }
@@ -2061,7 +2061,7 @@ vg_lite_error_t vg_lite_draw_linear_grad(vg_lite_buffer_t * target,
 
                 if (VLM_PATH_GET_UPLOAD_BIT(*path) == 1) {
                     VG_LITE_RETURN_ERROR(push_call(&s_context, path->uploaded.address, path->uploaded.bytes));
-                }
+                } 
                 else {
                     VG_LITE_RETURN_ERROR(push_data(&s_context, path->path_length, path->path));
                 }
@@ -2360,8 +2360,8 @@ vg_lite_error_t vg_lite_draw_radial_grad(vg_lite_buffer_t * target,
     radius2      = radius * radius;
     if (fx*fx + fy*fy > radius2)
     {
-        /* If the focal point is outside the circle, let's move it
-            to inside the circle. Per vg11 spec pg125 "If (fx, fy) lies outside ...
+        /* If the focal point is outside the circle, let's move it 
+            to inside the circle. Per vg11 spec pg125 "If (fx, fy) lies outside ... 
             For here, we set it at 0.9 ratio to the center.
         */
         vg_lite_float_t fr = (vg_lite_float_t)sqrt(fx*fx + fy*fy);
@@ -3106,7 +3106,7 @@ vg_lite_error_t vg_lite_draw(vg_lite_buffer_t* target,
                 next_boundary = (y + (height + 1) / 2);
 #elif (!gcFEATURE_VG_PARALLEL_PATHS && gcFEATURE_VG_SPLIT_PATH)
             next_boundary = (y + 32) & 0xffffffe0;
-#else
+#else           
             next_boundary = (y + 16) & 0xfffffff0;
 #endif
             par_height = ((next_boundary < point_max.y) ? next_boundary - y : (point_max.y - y));
@@ -3572,7 +3572,7 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
         VG_LITE_RETURN_ERROR(push_state_ptr(&s_context, 0x0A08, (void *) &y_step[0]));
         VG_LITE_RETURN_ERROR(push_state_ptr(&s_context, 0x0A09, (void *) &y_step[1]));
     }
-
+    
     /* Setup the command buffer. */
     VG_LITE_RETURN_ERROR(push_state_ptr(&s_context, 0x0A18, (void *) &c_step[0]));
     VG_LITE_RETURN_ERROR(push_state_ptr(&s_context, 0x0A19, (void *) &c_step[1]));
@@ -3661,25 +3661,25 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
     if (ts_is_fullscreen == 0) {
         transform(&temp, (vg_lite_float_t)path->bounding_box[0], (vg_lite_float_t)path->bounding_box[1], &matrix);
         point_min = point_max = temp;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[2], (vg_lite_float_t)path->bounding_box[1], &matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[2], (vg_lite_float_t)path->bounding_box[3], &matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         transform(&temp, (vg_lite_float_t)path->bounding_box[0], (vg_lite_float_t)path->bounding_box[3], &matrix);
         if (temp.x < point_min.x) point_min.x = temp.x;
         if (temp.y < point_min.y) point_min.y = temp.y;
         if (temp.x > point_max.x) point_max.x = temp.x;
         if (temp.y > point_max.y) point_max.y = temp.y;
-
+    
         point_min.x = MAX(point_min.x, 0);
         point_min.y = MAX(point_min.y, 0);
         point_max.x = MIN(point_max.x, target->width);
@@ -3791,7 +3791,7 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
 
     if (parallel_workpaths1 > parallel_workpaths2)
         parallel_workpaths1 = parallel_workpaths2;
-#endif
+#endif 
     for (y = point_min.y; y < point_max.y; y += par_height) {
 #if (gcFEATURE_VG_PARALLEL_PATHS && gcFEATURE_VG_SPLIT_PATH && gcFEATURE_VG_512_HALF_SPLIT && !gcFEATURE_VG_512_PARALLEL_PATHS)
         next_boundary = (y + 512) & 0xfffffe00;
@@ -3802,7 +3802,7 @@ vg_lite_error_t vg_lite_draw_pattern(vg_lite_buffer_t *target,
             next_boundary = (y + (height + 1) / 2);
 #elif (!gcFEATURE_VG_PARALLEL_PATHS && gcFEATURE_VG_SPLIT_PATH)
         next_boundary = (y + 32) & 0xffffffe0;
-#else
+#else   
         next_boundary = (y + 16) & 0xfffffff0;
 #endif
         par_height = ((next_boundary < point_max.y) ? next_boundary - y : (point_max.y - y));
@@ -4417,7 +4417,7 @@ vg_lite_error_t vg_lite_draw_linear_grad(vg_lite_buffer_t* target,
 #if gcFEATURE_VG_512_PARALLEL_PATHS
             if (height <= 128)
                 parallel_workpaths1 = 4;
-            else
+            else 
                 parallel_workpaths1 = height * 128 / 4096 - 1;
 
             if (parallel_workpaths1 > parallel_workpaths2)
@@ -4834,8 +4834,8 @@ vg_lite_error_t vg_lite_draw_radial_grad(vg_lite_buffer_t* target,
     radius2      = radius * radius;
     if (fx*fx + fy*fy > radius2)
     {
-        /* If the focal point is outside the circle, let's move it
-            to inside the circle. Per vg11 spec pg125 "If (fx, fy) lies outside ...
+        /* If the focal point is outside the circle, let's move it 
+            to inside the circle. Per vg11 spec pg125 "If (fx, fy) lies outside ... 
             For here, we set it at 0.9 ratio to the center.
         */
         vg_lite_float_t fr = (vg_lite_float_t)sqrt(fx*fx + fy*fy);
@@ -5299,7 +5299,7 @@ vg_lite_error_t vg_lite_draw_radial_grad(vg_lite_buffer_t* target,
 #if gcFEATURE_VG_512_PARALLEL_PATHS
             if (height <= 128)
                 parallel_workpaths1 = 4;
-            else
+            else 
                 parallel_workpaths1 = height * 128 / 4096 - 1;
 
             if (parallel_workpaths1 > parallel_workpaths2)

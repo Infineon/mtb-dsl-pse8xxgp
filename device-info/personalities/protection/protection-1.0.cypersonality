@@ -34,6 +34,8 @@
       <ExposedMember key='domain_unprotected' paramId='domain_unprotected$MAX_DEFAULT_DOMAINS_MINUS_ONE' />
       <ExposedMember key='pcSwitch' paramId='pcSwitch' />
       <ExposedMember key='secureDebuggerAccess' paramId='secureDebuggerAccess' />
+      <ExposedMember key='enableSecureEnclave' paramId='enableSecureEnclave' />
+      <ExposedMember key='isProtectionLevelCustom' paramId='isProtectionLevelCustom' />
     </Implements>
   </BehaviorImplementation>
 
@@ -58,6 +60,13 @@
 
     <!-- Handle Secure domain debugger access -->
     <ParamBool id='secureDebuggerAccess' name='Allow Debug access to secure domain?' default='true' visible='true' desc='Is debugger PC access allowed in the secure default domain?' />
+
+    <!-- Enable Secure Enclave checkbox -->
+    <ParamBool id='enableSecureEnclave' name='Enable Secure Enclave' default='false' visible='`${type eq SECURE_SERVICES || type eq SECURE_PERIPHERALS}`' desc='When enabled, PPC regions used by Secure Enclave Runtime Services will be assigned to CM33s (Domain 0).' />
+    <ParamString id='secureEnclaveNotice' name='Notice' visible='`${enableSecureEnclave}`' editable='false' default='PPC regions used by Secure Enclave Runtime Services assigned to Domain 0.' />
+
+    <!-- Is Custom Secure -->
+    <ParamBool id='isProtectionLevelCustom' default='`${type eq SECURE_CUSTOM}`' />
 
     <ParamChoice id="validation_security_boundary" name="Validation" default="SECURE" visible="true" desc='What level of checking should be done on connections between peripherals.'>
       <Entry name="None" value="NONE" />

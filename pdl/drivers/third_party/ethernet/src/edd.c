@@ -5059,3 +5059,5 @@ CEDI_OBJ *CEDI_GetInstance(void) {
 #endif
 
 #endif /* CY_IP_MXETH */
+
+

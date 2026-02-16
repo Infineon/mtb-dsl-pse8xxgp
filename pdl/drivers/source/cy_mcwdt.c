@@ -79,6 +79,7 @@ cy_en_mcwdt_status_t Cy_MCWDT_Init(MCWDT_STRUCT_Type *base, cy_stc_mcwdt_config_
                                        _VAL2FLD(MCWDT_STRUCT_MCWDT_CONFIG_WDT_MODE0, config->c0Mode);
 
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
+
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_STRUCT_MCWDT_CONFIG_WDT_LOWER_MODE0, config->c0LowerLimitMode);
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_STRUCT_MCWDT_CONFIG_WDT_LOWER_MODE1, config->c1LowerLimitMode);
         MCWDT_LOWER_LIMIT(base) = _VAL2FLD(MCWDT_STRUCT_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT1, config->c1LowerLimit) |
@@ -86,11 +87,13 @@ cy_en_mcwdt_status_t Cy_MCWDT_Init(MCWDT_STRUCT_Type *base, cy_stc_mcwdt_config_
 #endif /* CY_IP_MXS28SRSS, CY_IP_MXS40SSRSS, CY_IP_MXS22SRSS  */
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
+
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY0_1, config->c0c1carryoutconfig);
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY1_2, config->c1c2carryoutconfig);
 
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH0_1, config->c0c1matchconfig);
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH1_2, config->c1c2matchconfig);
+
 #endif /* CY_IP_MXS40SSRSS, CY_IP_MXS22SRSS */
 
         ret = CY_MCWDT_SUCCESS;
@@ -179,6 +182,7 @@ uint32_t Cy_MCWDT_GetCountCascaded(MCWDT_STRUCT_Type const *base)
 #endif
     /* Check if the counter0 is Free running */
     if (0UL == _FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR0, MCWDT_CONFIG(base)))
+
     {
         /* Save match0 value with the correction when counter0
          *  goes to zero when it reaches the match0 value.

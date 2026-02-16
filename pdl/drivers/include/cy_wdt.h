@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2016-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2016-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -322,6 +322,7 @@ typedef enum
 * \addtogroup group_wdt_functions
 * @{
 */
+
 /* WDT API */
 void Cy_WDT_Init(void);
 void Cy_WDT_Lock(void);
@@ -367,12 +368,12 @@ __STATIC_INLINE uint32_t Cy_WDT_GetMatchBits(void);
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_Enable(void)
 {
+
 #if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     SRSS_WDT_CTL |= WDT_CTL_ENABLE_Msk;
 #else
     SRSS_WDT_CTL |= _VAL2FLD(SRSS_WDT_CTL_WDT_EN, 1U);
 #endif
-
     Cy_WDT_ClearInterrupt();
 }
 
@@ -587,7 +588,6 @@ __STATIC_INLINE void Cy_WDT_UnmaskInterrupt(void)
 #endif
 }
 /** \} group_wdt_functions */
-
 #if defined(__cplusplus)
 }
 #endif

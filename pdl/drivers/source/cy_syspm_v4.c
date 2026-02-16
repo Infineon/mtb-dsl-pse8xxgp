@@ -34,7 +34,9 @@
 #include "cy_ipc_sema.h"
 #include "mtb_srf.h"
 #include "system_edge.h"
-
+#if defined(COMPONENT_SECURE_DEVICE) && defined(CYCFG_PROTECTION_SE_ENABLE)
+#include "ifx_se_platform.h"
+#endif /* defined(COMPONENT_SECURE_DEVICE) && defined(CYCFG_PROTECTION_SE_ENABLE) */
 /*******************************************************************************
 *       Internal Functions
 *******************************************************************************/
@@ -390,7 +392,6 @@ cy_rslt_t cy_pdl_syspm_srf_syscm55enable_impl_s(mtb_srf_input_ns_t* inputs_ns,
     return status;
 }
 
-
 cy_rslt_t cy_pdl_syspm_srf_syscm55reset_impl_s(mtb_srf_input_ns_t* inputs_ns,
                                             mtb_srf_output_ns_t* outputs_ns,
                                             mtb_srf_invec_ns_t* inputs_ptr_ns,
@@ -436,6 +437,48 @@ cy_rslt_t cy_pdl_syspm_srf_syscm55disable_impl_s(mtb_srf_input_ns_t* inputs_ns,
 
     Cy_SysCM55Disable();
     return (cy_rslt_t)CY_RSLT_SUCCESS;
+}
+
+cy_rslt_t cy_pdl_syspm_srf_systransinitiate_impl_s(mtb_srf_input_ns_t* inputs_ns,
+                                            mtb_srf_output_ns_t* outputs_ns,
+                                            mtb_srf_invec_ns_t* inputs_ptr_ns,
+                                            uint8_t inputs_ptr_cnt_ns,
+                                            mtb_srf_outvec_ns_t* outputs_ptr_ns,
+                                            uint8_t outputs_ptr_cnt_ns)
+{
+    CY_UNUSED_PARAMETER(inputs_ns);
+    CY_UNUSED_PARAMETER(inputs_ptr_ns);
+    CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
+
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_status_out_t output;
+    output.retVal = Cy_SysPm_SystemTransitionInitiate();
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
+
+    return status;
+}
+
+cy_rslt_t cy_pdl_syspm_srf_systransfinalize_impl_s(mtb_srf_input_ns_t* inputs_ns,
+                                            mtb_srf_output_ns_t* outputs_ns,
+                                            mtb_srf_invec_ns_t* inputs_ptr_ns,
+                                            uint8_t inputs_ptr_cnt_ns,
+                                            mtb_srf_outvec_ns_t* outputs_ptr_ns,
+                                            uint8_t outputs_ptr_cnt_ns)
+{
+    CY_UNUSED_PARAMETER(inputs_ns);
+    CY_UNUSED_PARAMETER(inputs_ptr_ns);
+    CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
+
+    cy_rslt_t status;
+    cy_pdl_syspm_srf_status_out_t output;
+    output.retVal = Cy_SysPm_SystemTransitionFinalize();
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
+
+    return status;
 }
 
 /* All operations for the SYSPM submodule of the PDL module */
@@ -561,6 +604,34 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .impl = cy_pdl_syspm_srf_syscm55disable_impl_s,
         .input_values_len = 0UL,
         .output_values_len = 0UL,
+        .input_len ={ 0UL, 0UL, 0UL },
+        .needs_copy = { false, false, false },
+        .output_len ={ 0UL, 0UL, 0UL },
+        .allowed_rsc = NULL,
+        .num_allowed = 0UL,
+    },
+    {
+        .module_id = MTB_SRF_MODULE_PDL,
+        .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
+        .op_id = CY_PDL_SYSPM_OP_SYSTRANSINITIATE,
+        .write_required = false,
+        .impl = cy_pdl_syspm_srf_systransinitiate_impl_s,
+        .input_values_len = 0UL,
+        .output_values_len = sizeof(cy_pdl_syspm_srf_status_out_t),
+        .input_len ={ 0UL, 0UL, 0UL },
+        .needs_copy = { false, false, false },
+        .output_len ={ 0UL, 0UL, 0UL },
+        .allowed_rsc = NULL,
+        .num_allowed = 0UL,
+    },
+    {
+        .module_id = MTB_SRF_MODULE_PDL,
+        .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
+        .op_id = CY_PDL_SYSPM_OP_SYSTRANSFINALIZE,
+        .write_required = false,
+        .impl = cy_pdl_syspm_srf_systransfinalize_impl_s,
+        .input_values_len = 0UL,
+        .output_values_len = sizeof(cy_pdl_syspm_srf_status_out_t),
         .input_len ={ 0UL, 0UL, 0UL },
         .needs_copy = { false, false, false },
         .output_len ={ 0UL, 0UL, 0UL },
@@ -3098,6 +3169,122 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToUlp(void)
     return retVal;
 }
 
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionInitiate(void)
+{
+    #ifdef CYCFG_PROTECTION_SE_ENABLE
+    #if defined(COMPONENT_SECURE_DEVICE)
+    ifx_se_status_t status = ifx_se_disable(NULL);
+    return IFX_SE_IS_STATUS_SUCCESS(status) ? CY_SYSPM_SUCCESS : CY_SYSPM_FAIL;
+
+    #elif defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
+    cy_en_syspm_status_t retVal = CY_SYSPM_FAIL;
+    mtb_srf_invec_ns_t* inVec = NULL;
+    mtb_srf_outvec_ns_t* outVec = NULL;
+    cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, CY_PDL_SYSPM_SRF_POOL_TIMEOUT);
+    if (result != CY_RSLT_SUCCESS)
+    {
+        return CY_SYSPM_FAIL;
+    }
+    mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_syspm_srf_status_out_t output_args;
+    cy_pdl_invoke_srf_args invoke_args =
+    {
+        .inVec = inVec,
+        .outVec = outVec,
+        .output_ptr = &output,
+        .op_id = CY_PDL_SYSPM_OP_SYSTRANSINITIATE,
+        .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
+        .base = NULL,
+        .sub_block = 0UL,
+        .input_base = NULL,
+        .input_len = 0UL,
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
+        .invec_bases = NULL,
+        .invec_sizes = 0UL,
+        .outvec_bases = NULL,
+        .outvec_sizes = 0UL
+    };
+    result = _Cy_PDL_Invoke_SRF(&invoke_args);
+    if(result != CY_RSLT_SUCCESS)
+    {
+        mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
+        return CY_SYSPM_FAIL;
+    }
+    memcpy(&output_args, &(output->output_values[0]), sizeof(output_args));
+    retVal = output_args.retVal;
+    result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
+    if(result != CY_RSLT_SUCCESS)
+    {
+        return CY_SYSPM_FAIL;
+    }
+    return retVal;
+    #else
+    return CY_SYSPM_FAIL;
+    #endif /* COMPONENT_SECURE_DEVICE */
+    #else
+    return CY_SYSPM_SUCCESS;
+    #endif /* CYCFG_PROTECTION_SE_ENABLE */
+}
+
+cy_en_syspm_status_t Cy_SysPm_SystemTransitionFinalize(void)
+{
+    #ifdef CYCFG_PROTECTION_SE_ENABLE
+    #if defined(COMPONENT_SECURE_DEVICE)
+    ifx_se_status_t status = ifx_se_enable(NULL);
+    return IFX_SE_IS_STATUS_SUCCESS(status) ? CY_SYSPM_SUCCESS : CY_SYSPM_FAIL;
+
+    #elif defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
+    cy_en_syspm_status_t retVal = CY_SYSPM_FAIL;
+    mtb_srf_invec_ns_t* inVec = NULL;
+    mtb_srf_outvec_ns_t* outVec = NULL;
+    cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, CY_PDL_SYSPM_SRF_POOL_TIMEOUT);
+    if (result != CY_RSLT_SUCCESS)
+    {
+        return CY_SYSPM_FAIL;
+    }
+    mtb_srf_output_ns_t* output = NULL;
+    cy_pdl_syspm_srf_status_out_t output_args;
+    cy_pdl_invoke_srf_args invoke_args =
+    {
+        .inVec = inVec,
+        .outVec = outVec,
+        .output_ptr = &output,
+        .op_id = CY_PDL_SYSPM_OP_SYSTRANSFINALIZE,
+        .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
+        .base = NULL,
+        .sub_block = 0UL,
+        .input_base = NULL,
+        .input_len = 0UL,
+        .output_base = (uint8_t*)&output_args,
+        .output_len = sizeof(output_args),
+        .invec_bases = NULL,
+        .invec_sizes = 0UL,
+        .outvec_bases = NULL,
+        .outvec_sizes = 0UL
+    };
+    result = _Cy_PDL_Invoke_SRF(&invoke_args);
+    if(result != CY_RSLT_SUCCESS)
+    {
+        mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
+        return CY_SYSPM_FAIL;
+    }
+    memcpy(&output_args, &(output->output_values[0]), sizeof(output_args));
+    retVal = output_args.retVal;
+    result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
+    if(result != CY_RSLT_SUCCESS)
+    {
+        return CY_SYSPM_FAIL;
+    }
+    return retVal;
+    #else
+    return CY_SYSPM_FAIL;
+    #endif /* COMPONENT_SECURE_DEVICE */
+    #else
+    return CY_SYSPM_SUCCESS;
+    #endif /* CYCFG_PROTECTION_SE_ENABLE */
+}
+
 cy_en_syspm_status_t Cy_SysPm_SystemEnterHp(void)
 {
     uint32_t interruptState;
@@ -3118,6 +3305,12 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterHp(void)
     */
     if (retVal == CY_SYSPM_SUCCESS)
     {
+        /* Initiate system transition - disable SE */
+        retVal = Cy_SysPm_SystemTransitionInitiate();
+        if (retVal != CY_SYSPM_SUCCESS)
+        {
+            return retVal;
+        }
 
         /* Call the registered callback functions with the
         * CY_SYSPM_BEFORE_TRANSITION parameter
@@ -3150,6 +3343,13 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterHp(void)
         if (pmCallbackRoot[cbLpRootIdx] != NULL)
         {
             (void) Cy_SysPm_ExecuteCallback(CY_SYSPM_HP, CY_SYSPM_AFTER_TRANSITION);
+        }
+
+        /* Finalize system transition - enable SE */
+        retVal = Cy_SysPm_SystemTransitionFinalize();
+        if( retVal != CY_SYSPM_SUCCESS)
+        {
+            return retVal;
         }
     }
     else
@@ -3186,6 +3386,13 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterUlp(void)
     */
     if (retVal == CY_SYSPM_SUCCESS)
     {
+        /* Initiate system transition - disable SE */
+        retVal = Cy_SysPm_SystemTransitionInitiate();
+        if (retVal != CY_SYSPM_SUCCESS)
+        {
+            return retVal;
+        }
+
         /* Call the registered callback functions with the
         * CY_SYSPM_BEFORE_TRANSITION parameter
         */
@@ -3217,6 +3424,13 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterUlp(void)
         if (pmCallbackRoot[cbUlpRootIdx] != NULL)
         {
             (void) Cy_SysPm_ExecuteCallback(CY_SYSPM_ULP, CY_SYSPM_AFTER_TRANSITION);
+        }
+
+        /* Finalize system transition - enable SE */
+        retVal = Cy_SysPm_SystemTransitionFinalize();
+        if( retVal != CY_SYSPM_SUCCESS)
+        {
+            return retVal;
         }
     }
     else
@@ -3253,6 +3467,13 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void)
     */
     if (retVal == CY_SYSPM_SUCCESS)
     {
+        /* Initiate system transition - disable SE */
+        retVal = Cy_SysPm_SystemTransitionInitiate();
+        if (retVal != CY_SYSPM_SUCCESS)
+        {
+            return retVal;
+        }
+
         /* Call the registered callback functions with the
         * CY_SYSPM_BEFORE_TRANSITION parameter
         */
@@ -3283,6 +3504,13 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void)
         if (pmCallbackRoot[cbUlpRootIdx] != NULL)
         {
             (void) Cy_SysPm_ExecuteCallback(CY_SYSPM_LP, CY_SYSPM_AFTER_TRANSITION);
+        }
+
+        /* Finalize system transition - enable SE */
+        retVal = Cy_SysPm_SystemTransitionFinalize();
+        if( retVal != CY_SYSPM_SUCCESS)
+        {
+            return retVal;
         }
     }
     else

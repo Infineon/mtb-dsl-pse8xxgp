@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2020-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2020-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -107,6 +107,7 @@ extern "C" {
 #define cy_en_SysFault_source_t en_sysfault_source_t
 #define CY_SYSFAULT_NO_FAULT (((uint8_t)M33SYSCPUSS_RRAMC_MMIO_PC_LOCK_FAULT) + 1U)
 #endif
+
 
 /*******************************************************************************
 *       Function Constants

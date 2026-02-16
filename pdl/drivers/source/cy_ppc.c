@@ -133,7 +133,7 @@ cy_en_ppc_status_t Cy_Ppc_ConfigAttrib(PPC_Type* base, const cy_en_prot_region_t
     uint32_t regionInstance = actual_region >> 5U;            // i-th Instance is region / 32U
 
     prog_attribute(base, attribute, regionBitValue, regionInstance);
-
+    
     return CY_PPC_SUCCESS;
 }
 

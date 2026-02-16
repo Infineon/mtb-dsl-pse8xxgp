@@ -66,6 +66,8 @@
     <Member key='domain_unprotected' /> <!-- String: Location ID for the unprotected protection domain -->
     <Member key='pcSwitch' />  <!-- boolean: Protection Context switching: true to switch PC when transitioning between secure and non-secure -->
     <Member key='secureDebuggerAccess' />  <!-- boolean: Secure Debugger Access: true to allow debugger PC access in the secure default domain -->
+    <Member key='enableSecureEnclave' />  <!-- boolean: Enable Secure Enclave: true to assign registers marked with used_by_se_rt=true to CM33s (Domain 0) -->
+    <Member key='isProtectionLevelCustom' />  <!-- boolean: True if protection level is set to Custom Security -->
   </Behavior>
 
   <Behavior type="mpc_v1">

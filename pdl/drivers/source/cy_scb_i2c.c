@@ -2552,7 +2552,7 @@ static void SlaveHandleDataReceive(CySCB_Type *base, cy_stc_scb_i2c_context_t *c
             {
                 numToCopy = context->slaveRxBufferSize;
             }
-
+            
             /* Get data from RX FIFO */
             numToCopy = Cy_SCB_ReadArray(base, context->slaveRxBuffer, numToCopy);
             context->slaveRxBufferIdx  += numToCopy;

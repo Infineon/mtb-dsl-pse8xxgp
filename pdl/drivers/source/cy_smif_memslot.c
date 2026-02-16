@@ -138,7 +138,7 @@ cy_en_smif_status_t Cy_SMIF_MemInit(SMIF_Type *base,
                 SMIF_RWDS_DRIVE_STRENGTH(base) = CY_GPIO_DRIVE_FULL;
                 SMIF_DEVICE_IDX_RX_CAPTURE_CONFIG(base, idx) |= _VAL2FLD(SMIF_CORE_DEVICE_RX_CAPTURE_CONFIG_NEG_SDL_TAP_SEL, 1U);
                 SMIF_DEVICE_IDX_RX_CAPTURE_CONFIG(base, idx) |= _VAL2FLD(SMIF_CORE_DEVICE_RX_CAPTURE_CONFIG_POS_SDL_TAP_SEL, 1U);
-
+ 
                 /* SPI(deviceCfg) and Hyperbus(hbdeviceCfg) are mutually exclusive and if both are initialized, priority would be for SPI(deviceCfg) */
                 if(memCfg->deviceCfg != NULL)
                 {
@@ -697,7 +697,7 @@ cy_en_smif_status_t Cy_SMIF_MemOctalEnable(SMIF_Type *base,
     }
     return (result);
 }
-
+ 
 /*******************************************************************************
 * Function Name: Cy_SMIF_MemCmdReadStatus
 ****************************************************************************//**
@@ -1628,7 +1628,7 @@ cy_en_smif_status_t Cy_SMIF_MemRead(SMIF_Type *base, cy_stc_smif_mem_config_t co
                                             cmdRead->dataRate,
                                             context);
             }
-
+ 
             if(CY_SMIF_SUCCESS != status)
             {
                 break;
@@ -2845,7 +2845,7 @@ cy_en_smif_status_t Cy_SMIF_MemCalibrateSDL(SMIF_Type *base, const cy_stc_smif_m
 
     return SMIF_Status;
 }
-
+ 
 #if defined(__cplusplus)
 }
 #endif

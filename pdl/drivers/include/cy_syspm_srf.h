@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright(c) 2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2025-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -104,6 +104,8 @@ typedef enum
     CY_PDL_SYSPM_OP_SYSCM55ENABLE,          /**< Cy_SYSPM_SysCM55Enable */
     CY_PDL_SYSPM_OP_SYSCM55RESET,           /**< Cy_SYSPM_SysCM55Reset */
     CY_PDL_SYSPM_OP_SYSCM55DISABLE,         /**< Cy_SYSPM_SysCM55Disable */
+    CY_PDL_SYSPM_OP_SYSTRANSINITIATE,       /**< Cy_SysPm_SystemTransitionInitiate */
+    CY_PDL_SYSPM_OP_SYSTRANSFINALIZE,       /**< Cy_SysPm_SystemTransitionFinalize */
     CY_PDL_SYSPM_OP_MAX,                    /**< Maximum operation ID for bounds checking */
 } cy_syspm_srf_op_id_t;
 

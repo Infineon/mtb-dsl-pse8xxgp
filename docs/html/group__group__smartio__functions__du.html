@@ -58,7 +58,7 @@ $(function() {
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;"
+  <div id="splitbar" style="-moz-user-select:none;" 
        class="ui-resizable-handle">
   </div>
 </div>
@@ -77,15 +77,188 @@ $(document).ready(function(){initNavTree('group__group__smartio__functions__du.h
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0"
+<iframe src="javascript:void(0)" frameborder="0" 
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Data Unit Functions<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a> &raquo; <a class="el" href="group__group__smartio.html">SmartIO      (Smart I/O)</a> &raquo; <a class="el" href="group__group__smartio__functions.html">Functions</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+<a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gae59c99daba955d9d9e03ab439b59aaae"><td class="memItemLeft" align="right" valign="top"><a id="gae59c99daba955d9d9e03ab439b59aaae" name="gae59c99daba955d9d9e03ab439b59aaae"></a>
+<a class="el" href="group__group__smartio__enums.html#ga8e445e3c1017ca42126054f92192574a">cy_en_smartio_dutr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_GetDuTr</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#gada9635df8a567b5f23ff07ada7f11e52">cy_en_smartio_trnum_t</a> trNum)</td></tr>
+<tr class="separator:gae59c99daba955d9d9e03ab439b59aaae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2791a66b980fdcc2e10703c5f16bb26d"><td class="memItemLeft" align="right" valign="top"><a id="ga2791a66b980fdcc2e10703c5f16bb26d" name="ga2791a66b980fdcc2e10703c5f16bb26d"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetDuTr</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#gada9635df8a567b5f23ff07ada7f11e52">cy_en_smartio_trnum_t</a> trNum, <a class="el" href="group__group__smartio__enums.html#ga8e445e3c1017ca42126054f92192574a">cy_en_smartio_dutr_t</a> trSrc)</td></tr>
+<tr class="separator:ga2791a66b980fdcc2e10703c5f16bb26d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb4f7bfb6ade46d6edd68f90e7af9f75"><td class="memItemLeft" align="right" valign="top"><a id="gacb4f7bfb6ade46d6edd68f90e7af9f75" name="gacb4f7bfb6ade46d6edd68f90e7af9f75"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetDuTrAll</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga8e445e3c1017ca42126054f92192574a">cy_en_smartio_dutr_t</a> trSrc)</td></tr>
+<tr class="separator:gacb4f7bfb6ade46d6edd68f90e7af9f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3bafd4cf984805bf343944e07bf32643"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#gacfaf7f3f3da3ca7f410eaa10259e7906">cy_en_smartio_dudata_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio__functions__du.html#ga3bafd4cf984805bf343944e07bf32643">Cy_SmartIO_GetDuData</a> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga96fa546d7e13456f28abee35633cf53e">cy_en_smartio_datanum_t</a> dataNum)</td></tr>
+<tr class="memdesc:ga3bafd4cf984805bf343944e07bf32643"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the data unit's input "data" source.  <a href="group__group__smartio__functions__du.html#ga3bafd4cf984805bf343944e07bf32643">More...</a><br /></td></tr>
+<tr class="separator:ga3bafd4cf984805bf343944e07bf32643"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga40f9d9ba8ffe672324e60a51c04bd804"><td class="memItemLeft" align="right" valign="top"><a id="ga40f9d9ba8ffe672324e60a51c04bd804" name="ga40f9d9ba8ffe672324e60a51c04bd804"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetDuData</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga96fa546d7e13456f28abee35633cf53e">cy_en_smartio_datanum_t</a> dataNum, <a class="el" href="group__group__smartio__enums.html#gacfaf7f3f3da3ca7f410eaa10259e7906">cy_en_smartio_dudata_t</a> dataSrc)</td></tr>
+<tr class="separator:ga40f9d9ba8ffe672324e60a51c04bd804"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefd76726e13bee514024cbf7d4ebb553"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#ga4ea9cfed3efce3d97268d64dcda40e4e">cy_en_smartio_duopc_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio__functions__du.html#gaefd76726e13bee514024cbf7d4ebb553">Cy_SmartIO_GetDuOpc</a> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base)</td></tr>
+<tr class="memdesc:gaefd76726e13bee514024cbf7d4ebb553"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the data unit's opcode.  <a href="group__group__smartio__functions__du.html#gaefd76726e13bee514024cbf7d4ebb553">More...</a><br /></td></tr>
+<tr class="separator:gaefd76726e13bee514024cbf7d4ebb553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3b9caf1e87da8d3872ab2449913efb94"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#ga92590e8168bc8f4aa7855cafc4aeac81">cy_en_smartio_dusize_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio__functions__du.html#ga3b9caf1e87da8d3872ab2449913efb94">Cy_SmartIO_GetDuSize</a> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base)</td></tr>
+<tr class="memdesc:ga3b9caf1e87da8d3872ab2449913efb94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the data unit's opcode operand bit-width.  <a href="group__group__smartio__functions__du.html#ga3b9caf1e87da8d3872ab2449913efb94">More...</a><br /></td></tr>
+<tr class="separator:ga3b9caf1e87da8d3872ab2449913efb94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga62b8df937119b494d51ada12398b2551"><td class="memItemLeft" align="right" valign="top"><a id="ga62b8df937119b494d51ada12398b2551" name="ga62b8df937119b494d51ada12398b2551"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetDuOperation</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, <a class="el" href="group__group__smartio__enums.html#ga4ea9cfed3efce3d97268d64dcda40e4e">cy_en_smartio_duopc_t</a> opcode, <a class="el" href="group__group__smartio__enums.html#ga92590e8168bc8f4aa7855cafc4aeac81">cy_en_smartio_dusize_t</a> size)</td></tr>
+<tr class="separator:ga62b8df937119b494d51ada12398b2551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab1340a5e9102399b87eb497c75db9680"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio__functions__du.html#gab1340a5e9102399b87eb497c75db9680">Cy_SmartIO_GetDataReg</a> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base)</td></tr>
+<tr class="memdesc:gab1340a5e9102399b87eb497c75db9680"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the data unit's DATA register value.  <a href="group__group__smartio__functions__du.html#gab1340a5e9102399b87eb497c75db9680">More...</a><br /></td></tr>
+<tr class="separator:gab1340a5e9102399b87eb497c75db9680"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga392876b5a82279207eef1c5929e6123b"><td class="memItemLeft" align="right" valign="top"><a id="ga392876b5a82279207eef1c5929e6123b" name="ga392876b5a82279207eef1c5929e6123b"></a>
+<a class="el" href="group__group__smartio__enums.html#ga539e453be0c4fdbcba47609451495f13">cy_en_smartio_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SmartIO_SetDataReg</b> (<a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *base, uint8_t dataReg)</td></tr>
+<tr class="separator:ga392876b5a82279207eef1c5929e6123b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga3bafd4cf984805bf343944e07bf32643" name="ga3bafd4cf984805bf343944e07bf32643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3bafd4cf984805bf343944e07bf32643">&#9670;&nbsp;</a></span>Cy_SmartIO_GetDuData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#gacfaf7f3f3da3ca7f410eaa10259e7906">cy_en_smartio_dudata_t</a> Cy_SmartIO_GetDuData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__smartio__enums.html#ga96fa546d7e13456f28abee35633cf53e">cy_en_smartio_datanum_t</a>&#160;</td>
+          <td class="paramname"><em>dataNum</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the data unit's input "data" source. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the Smart I/O base address</td></tr>
+    <tr><td class="paramname">dataNum</td><td>Input data number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Data unit input trigger source</dd></dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Refer to the Cy_SmartIO_SetDuData function usage example */</span></div>
+<div class="line"> </div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gaefd76726e13bee514024cbf7d4ebb553" name="gaefd76726e13bee514024cbf7d4ebb553"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaefd76726e13bee514024cbf7d4ebb553">&#9670;&nbsp;</a></span>Cy_SmartIO_GetDuOpc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#ga4ea9cfed3efce3d97268d64dcda40e4e">cy_en_smartio_duopc_t</a> Cy_SmartIO_GetDuOpc </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the data unit's opcode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the Smart I/O base address</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Data unit opcode</dd></dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Refer to the Cy_SmartIO_SetDuOperation function usage example */</span></div>
+<div class="line"> </div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga3b9caf1e87da8d3872ab2449913efb94" name="ga3b9caf1e87da8d3872ab2449913efb94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3b9caf1e87da8d3872ab2449913efb94">&#9670;&nbsp;</a></span>Cy_SmartIO_GetDuSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE <a class="el" href="group__group__smartio__enums.html#ga92590e8168bc8f4aa7855cafc4aeac81">cy_en_smartio_dusize_t</a> Cy_SmartIO_GetDuSize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the data unit's opcode operand bit-width. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the Smart I/O base address</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Data unit operand bit-width</dd></dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Refer to the Cy_SmartIO_SetDuOperation function usage example */</span></div>
+<div class="line"> </div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gab1340a5e9102399b87eb497c75db9680" name="gab1340a5e9102399b87eb497c75db9680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab1340a5e9102399b87eb497c75db9680">&#9670;&nbsp;</a></span>Cy_SmartIO_GetDataReg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE uint8_t Cy_SmartIO_GetDataReg </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSMARTIO__PRT__Type.html">SMARTIO_PRT_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the data unit's DATA register value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the Smart I/O base address</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>DATA register value</dd></dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"> </div>
+<div class="line">    <span class="comment">/* Refer to the Cy_SmartIO_SetDataReg function usage example */</span></div>
+<div class="line"> </div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part

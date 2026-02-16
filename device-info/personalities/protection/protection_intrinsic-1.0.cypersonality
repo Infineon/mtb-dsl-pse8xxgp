@@ -324,6 +324,7 @@
 
   <Variables>
     <Variable id='isProtectionUsed' value='`${isBlockUsed("vres[0].protection[0]")}`' />
+    <Variable id='isProtectionLevelCustom' value='`${getOrDefault(getExposedMember("vres[0].protection[0]", "isProtectionLevelCustom"), false)}`' />
     <Variable id='isSauUsed' value='`${isBlockUsed("m33syscpuss[0].cm33[0].sau[0]")}`' />
     <Variable id='isMpuUsedCM33S' value='`${isBlockUsed("m33syscpuss[0].cm33[0].mpu_s[0]")}`' />
     <Variable id='isMpcUsed' value='`${isBlockUsed("vres[0].protection[0].mpc[0]")}`' />
@@ -333,10 +334,13 @@
 
   <ConfigFirmware>
     <ConfigInclude value='cycfg_system.h' public='source' />
+    <ConfigInclude value='cycfg_ppc.h' public='source' guard=' (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' include='`${!isProtectionLevelCustom}`' />
+    <ConfigInclude value='ifx_se_platform.h' public='source' guard=' (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' include='`${!isProtectionLevelCustom}`' />
     <ConfigInstruction value='Cy_SAU_Init(SAU, SAU_config, sizeof(SAU_config) / sizeof(SAU_config[0]));' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; !defined(CYBSP_SKIP_SAU_INIT)' include='`${isSauUsed &amp;&amp; isProtectionUsed}`' purpose='INITIALIZE' />
     <ConfigInstruction value='Cy_MPU_Init(cycfg_mpu_cm33_s_0_config, sizeof(cycfg_mpu_cm33_s_0_config) / sizeof(cycfg_mpu_cm33_s_0_config[0]));' guard=' (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; !defined(CYBSP_SKIP_MPU_INIT)' include='`${isMpuUsedCM33S &amp;&amp; isProtectionUsed}`'  purpose='INITIALIZE' />
     <ConfigInstruction value='init_cycfg_mpc();' guard=' (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED) &amp;&amp; !defined(CYBSP_SKIP_MPC_INIT)' include='`${isMpcUsed &amp;&amp; isProtectionUsed}`' purpose='INITIALIZE' />
     <!--Always include Cy_PPC_Init call, since the intrinsic PPC personality always generates initialization code.-->
+    <ConfigInstruction value='ifx_se_disable(NULL);' guard=' (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED) &amp;&amp; !defined(CYCFG_PROTECTION_SE_ENABLE)' include='`${isProtectionUsed &amp;&amp; !isProtectionLevelCustom}`' purpose='INITIALIZE' />
     <ConfigInstruction value='init_cycfg_ppc0();' guard=' (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED) &amp;&amp; !defined(CYBSP_SKIP_PPC_INIT)' include='`${isProtectionUsed}`' purpose='INITIALIZE' />
     <ConfigInstruction value='init_cycfg_ppc1();' guard=' (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED) &amp;&amp; !defined(CYBSP_SKIP_PPC_INIT)' include='`${isProtectionUsed}`' purpose='INITIALIZE' />
     <ConfigInstruction value='Cy_MPU_Init(cycfg_mpu_cm33_ns_0_config, sizeof(cycfg_mpu_cm33_ns_0_config) / sizeof(cycfg_mpu_cm33_ns_0_config[0]));' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_NON_SECURE_DEVICE) &amp;&amp; !defined(CYBSP_SKIP_MPU_INIT)' include='`${isMpuUsedCM33NS &amp;&amp; isProtectionUsed}`' purpose='INITIALIZE' />

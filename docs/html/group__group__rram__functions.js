@@ -13,7 +13,6 @@ var group__group__rram__functions =
     [ "Cy_RRAM_TSWriteByteArray", "group__group__rram__functions.html#gabbb124a09514ef4682c5baf51b174252", null ],
     [ "Cy_RRAM_ReadByteArray", "group__group__rram__functions.html#ga46f7425e05efe4bcca9f60e4b1270a2c", null ],
     [ "Cy_RRAM_TSReadByteArray", "group__group__rram__functions.html#gab83a5d1d995a7202bb60108220fc4a7b", null ],
-    [ "Cy_RRAM_Init", "group__group__rram__functions.html#gaa292dd156320e78758016cd435f4c0b0", null ],
     [ "Cy_RRAM_GetStatus", "group__group__rram__functions.html#ga3208ac6bc03444c7c745d9732c43bfa1", null ],
     [ "Cy_RRAM_IsBusy", "group__group__rram__functions.html#ga192cc5981022af305325a681074f28af", null ],
     [ "Cy_RRAM_GetAHBError", "group__group__rram__functions.html#gacdaa2e260da5c0623f5ef257103d439f", null ],

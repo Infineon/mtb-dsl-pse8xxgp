@@ -2,11 +2,11 @@ var group__group__hal__memoryspi =
 [
     [ "MemorySPI HAL Results", "group__group__hal__results__memoryspi.html", "group__group__hal__results__memoryspi" ],
     [ "mtb_hal_memoryspi_command_t", "group__group__hal__memoryspi.html#structmtb__hal__memoryspi__command__t", [
-      [ "instruction", "group__group__hal__memoryspi.html#af3bcaf3d19cfa240c9e2ea5568d50dfc", null ],
-      [ "address", "group__group__hal__memoryspi.html#adf8e6ab239e40ac86c4ee95b935cd1f7", null ],
-      [ "mode_bits", "group__group__hal__memoryspi.html#a3e416686bf141d28637088a4f577d0a3", null ],
-      [ "dummy_cycles", "group__group__hal__memoryspi.html#a76c2d59d5bf591971b35199c378d7b41", null ],
-      [ "data", "group__group__hal__memoryspi.html#a6f9601b57c377eaeda7ebffcfbf6d946", null ]
+      [ "instruction", "group__group__hal__memoryspi.html#add1076e7b3d28406fa958d9ee8170296", null ],
+      [ "address", "group__group__hal__memoryspi.html#a9c34ee3068eca70c8a51bd7bf2ce24c1", null ],
+      [ "mode_bits", "group__group__hal__memoryspi.html#a35b1b47ba01d6468e581f588133e41b0", null ],
+      [ "dummy_cycles", "group__group__hal__memoryspi.html#a4dc58c7b6012bde53de7bc65cc217d16", null ],
+      [ "data", "group__group__hal__memoryspi.html#a2c2f60219a82eaf32f759665922b7520", null ]
     ] ],
     [ "mtb_hal_memoryspi_command_t.instruction", "group__group__hal__memoryspi.html#structmtb__hal__memoryspi__command__t_8instruction", [
       [ "bus_width", "group__group__hal__memoryspi.html#aaea78d2eed5d55bf6a19b3a4933520d2", null ],

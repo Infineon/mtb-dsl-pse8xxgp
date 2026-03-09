@@ -33,7 +33,7 @@ _MTB_RECIPE__IDE_EXPORT_INTERFACE_VERSION=interface_version_4
 _MTB_RECIPE__IDE_RECIPE_DIR:=$(MTB_TOOLS__RECIPE_DIR)/make/recipe/$(_MTB_RECIPE__IDE_EXPORT_INTERFACE_VERSION)
 include $(_MTB_RECIPE__IDE_RECIPE_DIR)/recipe_ide_common.mk
 
-# Path to debug certificatee
+# Path to debug certificate
 ifneq ($(CY_DBG_CERTIFICATE_PATH),)
 CY_DBG_CERTIFICATE_PATH_APPLICATION:=$(CY_DBG_CERTIFICATE_PATH)
 else

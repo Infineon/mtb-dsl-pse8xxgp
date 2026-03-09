@@ -1,9 +1,12 @@
-# ModusToolbox™ PSE8xxGP Device Support Library 1.3.0
+# ModusToolbox™ PSE8xxGP Device Support Library 1.4.0
 ## What's Included?
 
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
-## Change log
+## Change log 
+### v1.4.0
+* Protection personality bug fix
+* Fix recipe-make version
 ### v1.3.0
 * Fixed issue with Micron SFDP compatibility
 * Documentation updates

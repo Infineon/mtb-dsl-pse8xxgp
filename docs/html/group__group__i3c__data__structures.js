@@ -116,7 +116,7 @@ var group__group__i3c__data__structures =
     [ "cy_stc_i3c_hdr_cmd_t", "group__group__i3c__data__structures.html#structcy__stc__i3c__hdr__cmd__t", [
       [ "code", "group__group__i3c__data__structures.html#a529b679650cd4cac051c642aac43b1f5", null ],
       [ "ndatawords", "group__group__i3c__data__structures.html#ad3b10e81a59b08087cf3e2256661f0f4", null ],
-      [ "data", "group__group__i3c__data__structures.html#a4223c942e74b56a55cc6d5ce1fc02387", null ]
+      [ "data", "group__group__i3c__data__structures.html#a36cff2e484c2e0f382777e68d5ed368e", null ]
     ] ],
     [ "cy_stc_i3c_context_t", "group__group__i3c__data__structures.html#structcy__stc__i3c__context__t", null ],
     [ "cy_stc_i3c_controller_xfer_config_t", "group__group__i3c__data__structures.html#structcy__stc__i3c__controller__xfer__config__t", [
@@ -195,9 +195,9 @@ var group__group__i3c__data__structures =
       [ "payloadByte2", "group__group__i3c__data__structures.html#afc9e006d05afcb7c7765151e114fa042", null ],
       [ "payloadByte3", "group__group__i3c__data__structures.html#a6796c22636808f00966b7f33234a17ad", null ]
     ] ],
-    [ "cy_stc_i3c_controller_devlist_t.__unnamed26__", "group__group__i3c__data__structures.html#unioncy__stc__i3c__controller__devlist__t_8____unnamed26____", null ],
+    [ "cy_stc_i3c_controller_devlist_t.__unnamed24__", "group__group__i3c__data__structures.html#unioncy__stc__i3c__controller__devlist__t_8____unnamed24____", null ],
     [ "cy_stc_i3c_hdr_cmd_t.data", "group__group__i3c__data__structures.html#unioncy__stc__i3c__hdr__cmd__t_8data", null ],
-    [ "cy_stc_i3c_ccc_dev_desc_t.__unnamed29__", "group__group__i3c__data__structures.html#unioncy__stc__i3c__ccc__dev__desc__t_8____unnamed29____", [
+    [ "cy_stc_i3c_ccc_dev_desc_t.__unnamed27__", "group__group__i3c__data__structures.html#unioncy__stc__i3c__ccc__dev__desc__t_8____unnamed27____", [
       [ "dcr", "group__group__i3c__data__structures.html#acad62314330b0a7a106aec2b9b6d9411", null ],
       [ "lvr", "group__group__i3c__data__structures.html#af6dc1ca6e047a512316ad6ff43128128", null ]
     ] ],

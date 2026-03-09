@@ -69,10 +69,7 @@ var searchData=
   ['viv_5finterface_66',['viv_interface',['../structviv__interface.html',1,'']]],
   ['viv_5finterface_5fquery_5fchip_5fidentity_67',['viv_interface_query_chip_identity',['../structviv__interface__query__chip__identity.html',1,'']]],
   ['viv_5flayer_5falpha_5fmode_68',['viv_layer_alpha_mode',['../structviv__layer__alpha__mode.html',1,'']]],
-  ['viv_5fmem_5fnode_69',['viv_mem_node',['../structviv__mem__node.html',1,'']]],
-  ['viv_5fmem_5fnode_5flist_70',['viv_mem_node_list',['../structviv__mem__node__list.html',1,'']]],
-  ['viv_5fmem_5fnode_5flist_5ftable_71',['viv_mem_node_list_table',['../structviv__mem__node__list__table.html',1,'']]],
-  ['viv_5foutput_72',['viv_output',['../structviv__output.html',1,'']]],
-  ['viv_5ftilestatus_5fbuffer_73',['viv_tilestatus_buffer',['../structviv__tilestatus__buffer.html',1,'']]],
-  ['vivflat_5fmapping_5frange_74',['vivFLAT_MAPPING_RANGE',['../structvivFLAT__MAPPING__RANGE.html',1,'']]]
+  ['viv_5foutput_69',['viv_output',['../structviv__output.html',1,'']]],
+  ['viv_5ftilestatus_5fbuffer_70',['viv_tilestatus_buffer',['../structviv__tilestatus__buffer.html',1,'']]],
+  ['vivflat_5fmapping_5frange_71',['vivFLAT_MAPPING_RANGE',['../structvivFLAT__MAPPING__RANGE.html',1,'']]]
 ];

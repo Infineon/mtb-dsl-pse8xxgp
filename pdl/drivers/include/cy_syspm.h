@@ -4674,7 +4674,7 @@ void Cy_SysPm_DeepSleepIoUnfreeze(void);
 *   if called from secure core, it directly disables the SE
 *   else if SRF-integrated configurations, it uses the Secure Runtime Framework
 *   else returns fail
-* - In secure enclave disabled device configurations
+* - In secure enclave disabled device configurations 
 *   it returns success as SE is disbaled at boot up time
 *
 * \return
@@ -4705,7 +4705,7 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionInitiate(void);
 *   if called from secure core, it directly enables the SE
 *   else if SRF-integrated configurations, it uses the Secure Runtime Framework
 *   else returns fail
-* - In secure enclave disabled device configurations
+* - In secure enclave disabled device configurations 
 *   it returns success as disbaling SE is not applicable
 *
 * \return

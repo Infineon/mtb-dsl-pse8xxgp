@@ -487,7 +487,7 @@ __STATIC_INLINE void Cy_MCWDT_Disable(MCWDT_STRUCT_Type *base, uint32_t counters
     disableCounters = ((0UL != (counters & CY_MCWDT_CTR0)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE0_Msk : 0UL) |
                       ((0UL != (counters & CY_MCWDT_CTR1)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE1_Msk : 0UL) |
                       ((0UL != (counters & CY_MCWDT_CTR2)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE2_Msk : 0UL);
-
+  
 
     MCWDT_CTL(base) &= ~disableCounters;
 #endif
@@ -708,12 +708,12 @@ __STATIC_INLINE void Cy_MCWDT_SetClearOnMatch(MCWDT_STRUCT_Type *base, cy_en_mcw
     if (CY_MCWDT_COUNTER0 == counter)
     {
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR0, enable);
-
+        
     }
     else
     {
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR1, enable);
-
+        
     }
 }
 
@@ -746,7 +746,7 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetClearOnMatch(MCWDT_STRUCT_Type const *base,
     if (CY_MCWDT_COUNTER0 == counter)
     {
         getClear = _FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR0, MCWDT_CONFIG(base));
-
+        
     }
     else
     {
@@ -846,7 +846,7 @@ __STATIC_INLINE void Cy_MCWDT_SetMatch(MCWDT_STRUCT_Type *base, cy_en_mcwdtctr_t
     CY_ASSERT_L3(CY_MCWDT_IS_CNT_NUM_VALID(counter));
 
     CY_ASSERT_L2(CY_MCWDT_IS_MATCH_VALID((CY_MCWDT_COUNTER0 == counter) ?                                        \
-
+                                                                                 
                                          ((MCWDT_CONFIG(base) & MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR0_Msk) > 0U) :  \
                                          ((MCWDT_CONFIG(base) & MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR1_Msk) > 0U),   \
                                          match));
@@ -890,7 +890,7 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetMatch(MCWDT_STRUCT_Type const *base, cy_en_
 
     match = (counter == CY_MCWDT_COUNTER0) ? _FLD2VAL(MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH0, MCWDT_MATCH(base)) :
                                           _FLD2VAL(MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH1, MCWDT_MATCH(base));
-
+    
 
     return (match);
 }
@@ -1391,12 +1391,12 @@ __STATIC_INLINE void Cy_MCWDT_SetCascadeCarryOutRollOver(MCWDT_STRUCT_Type *base
     if (CY_MCWDT_CASCADE_C0C1 == counter)
     {
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY0_1, carryoutconfig);
-
+    
     }
     else
     {
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY1_2, carryoutconfig);
-
+    
     }
 }
 
@@ -1465,12 +1465,12 @@ __STATIC_INLINE void Cy_MCWDT_SetCascadeMatchCombined(MCWDT_STRUCT_Type *base, c
     if (CY_MCWDT_CASCADE_C0C1 == counter)
     {
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH0_1, matchconfig);
-
+        
     }
     else
     {
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH1_2, matchconfig);
-
+        
     }
 }
 

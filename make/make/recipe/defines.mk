@@ -41,7 +41,7 @@ endif
 ################################################################################
 _MTB_RECIPE__PROGRAM_INTERFACE_SUPPORTED:=KitProg3 JLink
 #
-# Compactibility interface for this recipe make
+# Compatibility interface for this recipe make
 #
 MTB_RECIPE__INTERFACE_VERSION:=2
 MTB_RECIPE__EXPORT_INTERFACES:=4 5
@@ -91,11 +91,4 @@ MVE_SELECT?=
 endif
 endif
 
-################################################################################
-# Include device specific defines
-################################################################################
-ifeq (EXPLORER,$(_MTB_RECIPE__DEVICE_DIE))
 include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/defines_pse8xxgp.mk
-else
-include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/defines_pse8xxl.mk
-endif

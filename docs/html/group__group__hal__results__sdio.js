@@ -1,5 +1,6 @@
 var group__group__hal__results__sdio =
 [
+    [ "MTB_HAL_API_AVAILABLE_SDIO_GET_MAX_FREQUENCY", "group__group__hal__results__sdio.html#gafcd900f4b62e6aa20e8cf807e17a309b", null ],
     [ "MTB_HAL_SDIO_RSLT_ERR_BAD_PARAM", "group__group__hal__results__sdio.html#gaee5ca332ac40c27b45910b79ccc6ec05", null ],
     [ "MTB_HAL_SDIO_RSLT_ERR_UNSUPPORTED", "group__group__hal__results__sdio.html#ga7586c811511d54d046ec165889e821be", null ],
     [ "MTB_HAL_SDIO_RSLT_ERR_CONFIG", "group__group__hal__results__sdio.html#ga4a78d33376b7ef85807dc317684488f6", null ],

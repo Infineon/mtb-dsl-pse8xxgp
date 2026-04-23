@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2025 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1931,7 +1931,8 @@ cy_en_smif_status_t Cy_SMIF_IsCryptoEnabled(SMIF_Type *base, cy_en_smif_slave_se
 ****************************************************************************//**
 *
 * Configures a crypto region with specified start address, size and keys.
-*
+* For On-the-Fly encryption/decryption, after setting the keys for the region, user needs to enable the crypto region using \ref Cy_SMIF_SetCryptoEnable API. When a crypto region is enabled
+* all the read/write accesses to the flash device that fall within the address range of the crypto region will be encrypted/decrypted on the fly.
 * \param base
 * Holds the base address of the SMIF block registers.
 *
@@ -1947,7 +1948,7 @@ cy_en_smif_status_t Cy_SMIF_IsCryptoEnabled(SMIF_Type *base, cy_en_smif_slave_se
 *       - \ref CY_SMIF_BAD_PARAM
 *
 * \funcusage
-* \snippet smif/snippet/main.c snippet_Cy_SMIF_Encrypt
+* \snippet smif/snippet/main.c snippet_SetCryptoKeyRegion
 *
 *
 *******************************************************************************/

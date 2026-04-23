@@ -6,8 +6,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2018-2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2018-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +46,10 @@ _MTB_RECIPE__IDE_BUILD_PATH_RELATIVE:=$(notdir $(MTB_TOOLS__OUTPUT_BASE_DIR))/la
 _MTB_RECIPE__IDE_BUILD_APPLICATION_PATH_RELATIVE:=$(notdir $(MTB_TOOLS__PRJ_DIR))/$(_MTB_RECIPE__IDE_BUILD_PATH_RELATIVE)
 _MTB_RECIPE__IDE_COMBINED_HEX_RELATIVE:=$(patsubst $(call mtb__path_normalize,$(MTB_TOOLS__PRJ_DIR)/../)/%,%,$(_MTB_RECIPE__APP_HEX_FILE))
 _MTB_RECIPE__IDE_COMMON_TEXT_DATA_FILE=$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/recipe_ide_commom_text_data.txt
+
+# This is used for combiner-signer single-core projects in order to add proper Erase tasks to VSCode.
+# Redefine in specific recipe if needed (e.g. for external memory erase support).
+_MTB_RECIPE__VSCODE_TASKS_ERASE_MEMORIES_SUPPORTED?=internal
 
 ##############################################
 # VSCode
@@ -221,6 +225,26 @@ _MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE=$(MTB_TOOLS__OUTPUT_CONFIG_DIR)
 vscode_generate: MTB_CORE__EXPORT_CMDLINE += -metadata $(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE)
 vscode_generate: recipe_vscode_combine_sign_meta
 
+# Build multicore task list (base list without lib_mgr and erase tasks)
+_MTB_RECIPE__VSCODE_MULTICORE_COMBINE_SIGN_TASKS_LIST := \
+    .vscode/tasks.json=.vscode/tasks_partial.json \
+    $(foreach index,$(MTB_COMBINE_SIGN_$(_MTB_RECIPE__IDE_PRJ_DIR_NAME)_HEX_FILES),.vscode/tasks_$(index).json)
+
+# Build singlecore task list (extends multicore list)
+_MTB_RECIPE__VSCODE_SINGLECORE_COMBINE_SIGN_TASKS_LIST := \
+    $(_MTB_RECIPE__VSCODE_MULTICORE_COMBINE_SIGN_TASKS_LIST)
+
+# check if task_lib_mgr exist
+ifneq ($(wildcard $(_MTB_RECIPE__IDE_CORE_SCRIPT_DIR)/vscode/task_lib_mgr.json),)
+_MTB_RECIPE__VSCODE_SINGLECORE_COMBINE_SIGN_TASKS_LIST += .vscode/task_lib_mgr.json
+ifeq ($(filter internal,$(_MTB_RECIPE__VSCODE_TASKS_ERASE_MEMORIES_SUPPORTED)),internal)
+_MTB_RECIPE__VSCODE_SINGLECORE_COMBINE_SIGN_TASKS_LIST += .vscode/tasks_erase_device.json
+endif
+ifeq ($(filter external,$(_MTB_RECIPE__VSCODE_TASKS_ERASE_MEMORIES_SUPPORTED)),external)
+_MTB_RECIPE__VSCODE_SINGLECORE_COMBINE_SIGN_TASKS_LIST += .vscode/tasks_erase_all.json
+endif
+endif
+
 recipe_vscode_combine_sign_meta:
 	$(call mtb__file_write,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),)
 	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),TEMPLATE_REPLACE=$(_MTB_RECIPE__VSCODE_CS_LAUNCH_JSON)=.vscode/launch_&&IDX&&.json)
@@ -229,7 +253,20 @@ recipe_vscode_combine_sign_meta:
 	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),TEMPLATE_REPLACE=$(_MTB_RECIPE__IDE_CORE_SCRIPT_DIR)/vscode/tasks_partial.json=.vscode/tasks_partial.json)
 	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),TEMPLATE_REPLACE=$(_MTB_RECIPE__VSCODE_CS_TASKS_JSON)=.vscode/tasks_&&IDX&&.json)
 	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),TEMPLATE_REPEAT=.vscode/tasks_&&IDX&&.json=$(MTB_COMBINE_SIGN_$(_MTB_RECIPE__IDE_PRJ_DIR_NAME)_HEX_FILES))
-	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),MERGE_TASKS_JSON=.vscode/tasks.json=.vscode/tasks_partial.json $(foreach index,$(MTB_COMBINE_SIGN_$(_MTB_RECIPE__IDE_PRJ_DIR_NAME)_HEX_FILES),.vscode/tasks_$(index).json))
+ifneq (,$(_MTB_RECIPE__IS_MULTI_CORE_APPLICATION))
+# multicore-core projects
+	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),MERGE_TASKS_JSON=$(_MTB_RECIPE__VSCODE_MULTICORE_COMBINE_SIGN_TASKS_LIST))
+else
+# single-core projects
+ifeq ($(filter internal,$(_MTB_RECIPE__VSCODE_TASKS_ERASE_MEMORIES_SUPPORTED)),internal)
+	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),TEMPLATE_REPLACE=$(_MTB_RECIPE__IDE_CORE_SCRIPT_DIR)/vscode/task_erase_device.json=.vscode/tasks_erase_device.json)
+endif
+ifeq ($(filter external,$(_MTB_RECIPE__VSCODE_TASKS_ERASE_MEMORIES_SUPPORTED)),external)
+	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),TEMPLATE_REPLACE=$(_MTB_RECIPE__IDE_CORE_SCRIPT_DIR)/vscode/task_erase_all.json=.vscode/tasks_erase_all.json)
+endif
+	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),TEMPLATE_REPLACE=$(_MTB_RECIPE__IDE_CORE_SCRIPT_DIR)/vscode/task_lib_mgr.json=.vscode/task_lib_mgr.json)
+	$(call mtb__file_append,$(_MTB_RECIPE__VSCODE_COMBINE_SIGN_MEATA_DATA_FILE),MERGE_TASKS_JSON=$(_MTB_RECIPE__VSCODE_SINGLECORE_COMBINE_SIGN_TASKS_LIST))
+endif
 
 .PHONY: recipe_ide_combine_sign_text_replacement recipe_vscode_combine_sign_meta
 

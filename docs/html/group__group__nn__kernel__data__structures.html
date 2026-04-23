@@ -101,10 +101,10 @@ $(document).ready(function(){initNavTree('group__group__nn__kernel__data__struct
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:structcy__nn__conv__params__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__conv__params__t">cy_nn_conv_params_t</a></td></tr>
-<tr class="memdesc:structcy__nn__conv__params__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convolution parameter structure.  <a href="group__group__nn__kernel__data__structures.html#structcy__nn__conv__params__t">More...</a><br /></td></tr>
+<tr class="memdesc:structcy__nn__conv__params__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convolution paramter structure.  <a href="group__group__nn__kernel__data__structures.html#structcy__nn__conv__params__t">More...</a><br /></td></tr>
 <tr class="separator:structcy__nn__conv__params__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcy__nn__fc__params__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__fc__params__t">cy_nn_fc_params_t</a></td></tr>
-<tr class="memdesc:structcy__nn__fc__params__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">FC parameter structure.  <a href="group__group__nn__kernel__data__structures.html#structcy__nn__fc__params__t">More...</a><br /></td></tr>
+<tr class="memdesc:structcy__nn__fc__params__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">FC paramter structure.  <a href="group__group__nn__kernel__data__structures.html#structcy__nn__fc__params__t">More...</a><br /></td></tr>
 <tr class="separator:structcy__nn__fc__params__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcy__nn__pool__params__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__pool__params__t">cy_nn_pool_params_t</a></td></tr>
 <tr class="memdesc:structcy__nn__pool__params__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Average pool parameter structure.  <a href="group__group__nn__kernel__data__structures.html#structcy__nn__pool__params__t">More...</a><br /></td></tr>
@@ -308,7 +308,7 @@ filterOffset</td>
 <td class="fielddoc">
 Filter offset value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a9cd6112d0e878df05578ec238420e384" name="a9cd6112d0e878df05578ec238420e384"></a>float</td>
+<a id="a1dd6826862b482256d887792cc7185d0" name="a1dd6826862b482256d887792cc7185d0"></a>float *</td>
 <td class="fieldname">
 outScalingFactor</td>
 <td class="fielddoc">
@@ -343,7 +343,13 @@ Packed Sparse weights. </td></tr>
 <td class="fieldname">
 scratchBuf</td>
 <td class="fielddoc">
-scratch buffer for fc layer, will be used for for\ DMA descriptors and MEMIO configuration in DMA mode </td></tr>
+scratch buffer for fc layer, will be used for for DMA descriptors and scaling factors </td></tr>
+<tr><td class="fieldtype">
+<a id="a35511466be7b306c9a2f0013566638ad" name="a35511466be7b306c9a2f0013566638ad"></a>bool</td>
+<td class="fieldname">
+isPerChannel</td>
+<td class="fielddoc">
+Per-channel output scaling. </td></tr>
 </table>
 
 </div>
@@ -390,7 +396,7 @@ Selection activation data-path width. </td></tr>
 <td class="fieldname">
 scratchBuf</td>
 <td class="fielddoc">
-DMA descriptors and MEMIO configuration in DMA mode. </td></tr>
+used for xpose operations, DMA descriptors and MEMIO configuration in DMA mode </td></tr>
 </table>
 
 </div>

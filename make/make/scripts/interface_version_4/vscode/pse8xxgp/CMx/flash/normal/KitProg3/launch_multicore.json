@@ -28,6 +28,8 @@
                 "monitor targets cat1d.cm33",//CM55 Only//
                 "monitor flash write_image erase {&&_MTB_RECIPE__HEX_FILE&&}",
                 "monitor reset init",
+                "monitor mww 0x54004054 0",//CM55 Only//
+                "monitor mww 0x54004050 4",//CM55 Only//
                 "monitor reset_halt &&_MTB_RECIPE__OPENOCD_RESET_TARGET&&"
             ],
             "overrideRestartCommands": [

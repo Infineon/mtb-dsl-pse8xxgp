@@ -481,7 +481,7 @@ On WDT driver version B this function simply call Cy_WDT_SetService() function. 
 <p>The Watchdog timer should be unlocked before changing the match value. Call the <a class="el" href="group__group__wdt__functions.html#ga51094ce9149f69553b6348eccbd89667" title="Unlocks the Watchdog Timer configuration register.">Cy_WDT_Unlock()</a> function to unlock the WDT.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">match</td><td>The valid valid range is [0-65535]. The value to be used to match against the counter. </td></tr>
+    <tr><td class="paramname">match</td><td>The valid range is [0 - (WDT_MAX_MATCH_VALUE-1U)]. The value to be used to match against the counter. </td></tr>
   </table>
   </dd>
 </dl>

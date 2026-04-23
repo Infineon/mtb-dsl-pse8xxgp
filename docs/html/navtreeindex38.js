@@ -1,5 +1,14 @@
 var NAVTREEINDEX38 =
 {
+"group__mtb__syspm__group__tcpwm.html#gae4e1019ddd23f8572ad8839ea97c1cb6":[2,3,8,1],
+"group__mtb__syspm__group__tcpwm.html#structmtb__syspm__tcpwm__deepsleep__context__t":[2,3,8,0],
+"group__mtb__syspm__group__uart.html":[2,3,5],
+"group__mtb__syspm__group__uart.html#a5a8bab6a443c1b86c298356540fd0bf4":[2,3,5,0,2],
+"group__mtb__syspm__group__uart.html#a74e727e7e7a3a991f36389f7161b9c35":[2,3,5,1,1],
+"group__mtb__syspm__group__uart.html#a7a491d3a5b3a020cb842adb14089ea8d":[2,3,5,0,1],
+"group__mtb__syspm__group__uart.html#a7c53bce4269360cb26fe5ac535d84b68":[2,3,5,1,0],
+"group__mtb__syspm__group__uart.html#aa879021abcdb4db4b0acec52e62d480c":[2,3,5,0,0],
+"group__mtb__syspm__group__uart.html#ac1895270956c07836703e3e1d2c4b7d0":[2,3,5,1,2],
 "group__mtb__syspm__group__uart.html#gaae94a7c91e603be2f1d3d7cfa412f4ed":[2,3,5,2],
 "group__mtb__syspm__group__uart.html#structmtb__syspm__callbacks__uart__pins":[2,3,5,0],
 "group__mtb__syspm__group__uart.html#structmtb__syspm__uart__deepsleep__context__t":[2,3,5,1],

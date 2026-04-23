@@ -6,8 +6,8 @@
   </Constants>
   <FittingRules>
     <MappingRules>
-      <IpBlock name='m33syscpuss,m55appcpuss' />
-      <Resource name='(m33syscpuss|m55appcpuss).(cm33|cm55).(mpu_ns|mpu_s)' />
+      <IpBlock name='m33syscpuss,m55appcpuss,cpuss,appcpuss' />
+      <Resource name='(m33syscpuss|m55appcpuss|cpuss|appcpuss).(cm33|cm55).(mpu_ns|mpu_s)' />
       <OperatingMode value='MCU' />
     </MappingRules>
   </FittingRules>
@@ -27,10 +27,10 @@
     <Repeat count='$REGION_COUNT'>
       <ParamString id='name$idx' default='`${getBlockDisplayName(INST_LOC, false) . " Region $idx"}`' editable='false' visible='false' desc='' group='' name='' />
       <ParamString id='shortname$idx' default='MPU region $idx' editable='false' visible='false' desc='' group='' name='' />
-      <ParamBool id='enable$idx' name='`${shortname$idx}`' group='' default='false' visible='true' editable='true' desc='Should the MPU region region be enabled?' />
-      <ParamString id='base_addr$idx' name='Start Address' group='`${shortname$idx}`' default='0x00000000' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Base address of MPU region region $idx.' />
-      <ParamString id='size$idx' name='Size (bytes)' group='`${shortname$idx}`' default='`${toHex(1048576, 8)}`' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Size of MPU region region $idx.' />
-      <ParamString id='end_addr$idx' name='End Address' group='`${shortname$idx}`' default='`${toHex(base_addr$idx + size$idx - 1, 8)}`' visible='`${enable$idx}`' editable='false' desc='End address of MPU region region $idx. Syntax in inclusive format.' />
+      <ParamBool id='enable$idx' name='`${shortname$idx}`' group='' default='false' visible='true' editable='true' desc='Should the MPU region be enabled?' />
+      <ParamString id='base_addr$idx' name='Start Address' group='`${shortname$idx}`' default='0x00000000' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Base address of MPU region $idx.' />
+      <ParamString id='size$idx' name='Size (bytes)' group='`${shortname$idx}`' default='`${toHex(1048576, 8)}`' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Size of MPU region $idx.' />
+      <ParamString id='end_addr$idx' name='End Address' group='`${shortname$idx}`' default='`${toHex(base_addr$idx + size$idx - 1, 8)}`' visible='`${enable$idx}`' editable='false' desc='End address of MPU region $idx. Syntax in inclusive format.' />
       <ParamBool id='privileged$idx' name='Privileged Access Only' group='`${shortname$idx}`' default='false' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Are these memory locations only accessible to privileged callers?' />
       <ParamBool id='writable$idx' name='Writable' group='`${shortname$idx}`' default='true' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Are these memory locations writable?' />
       <ParamBool id='executable$idx' name='Executable' group='`${shortname$idx}`' default='false' visible='`${enable$idx}`' editable='`${enable$idx}`' desc='Are these memory locations executable?' />

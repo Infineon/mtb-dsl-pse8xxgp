@@ -7,7 +7,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2022-2025 Cypress Semiconductor Corporation
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -215,5 +216,4 @@ cy_en_autanalog_status_t Cy_AutAnalog_CTB_LoadDynamicConfig(uint8_t ctbIdx, uint
 }
 
 #endif /* CY_IP_MXS22LPPASS_CTB */
-
 /* [] END OF FILE */

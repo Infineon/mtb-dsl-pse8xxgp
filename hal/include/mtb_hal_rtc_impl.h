@@ -5,9 +5,9 @@
 * Provides a high level interface for interacting with the Infineon RTC.
 *
 ********************************************************************************
-* \copyright
-* Copyright 2019-2024 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation
+   * \copyright
+* Copyright(c) 2019-2026 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
 *

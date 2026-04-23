@@ -418,7 +418,6 @@ __STATIC_INLINE void     Cy_IPC_Drv_SetInterrupt (IPC_INTR_STRUCT_Type * base,
 __STATIC_INLINE void     Cy_IPC_Drv_ClearInterrupt (IPC_INTR_STRUCT_Type * base,
                                                       uint32_t ipcReleaseMask, uint32_t ipcNotifyMask);
 
-
 /*******************************************************************************
 * Function Name: Cy_IPC_Drv_GetIpcBaseAddress
 ****************************************************************************//**
@@ -1044,6 +1043,7 @@ __STATIC_INLINE  cy_en_ipcdrv_status_t  Cy_IPC_Drv_ReadMsgPtr (IPC_STRUCT_Type c
 *******************************************************************************/
 __STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_LockAcquire (IPC_STRUCT_Type const * base)
 {
+    CY_ASSERT_L1(NULL != base);
     return ( 0UL != _FLD2VAL(IPC_STRUCT_ACQUIRE_SUCCESS, REG_IPC_STRUCT_ACQUIRE(base))) ? CY_IPC_DRV_SUCCESS : CY_IPC_DRV_ERROR;
 }
 

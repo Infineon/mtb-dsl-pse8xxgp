@@ -71,11 +71,25 @@ proc get_cload_min_value {start end cpad ctrace cload_total} {
 proc get_table_gtrim_col {row rneg_min} {
     for {set index 0} {$index < 16} {incr index} {
         set real_val [decode_table_value $row $index]
-        if {$real_val > $rneg_min} {
+        if {$real_val >= $rneg_min} {
             return $index
         }
     }
     return -1
+}
+
+# Find column with the highest rneg value (last-resort fallback)
+proc get_table_max_gtrim_col {row} {
+    set max_val -32768
+    set max_col 0
+    for {set index 0} {$index < 16} {incr index} {
+        set real_val [decode_table_value $row $index]
+        if {$real_val > $max_val} {
+            set max_val $real_val
+            set max_col $index
+        }
+    }
+    return $max_col
 }
 
 proc get_table_max_rneg {row} {
@@ -128,6 +142,14 @@ proc eco_solver {argc argv} {
     set matched_ctrim               [expr {int($cdac_match_row) % 32}]
     set matched_cdac                [decode_cdac_value $matched_ctrim]
     set matched_gtrim_col           [get_table_gtrim_col $cdac_match_row $required_rneg]
+    if {$matched_gtrim_col == -1} {
+        # Gain margin not met — fall back to bare ESR threshold
+        set matched_gtrim_col       [get_table_gtrim_col $cdac_match_row $esr]
+    }
+    if {$matched_gtrim_col == -1} {
+        # Even bare ESR threshold not met — use column with max rneg
+        set matched_gtrim_col       [get_table_max_gtrim_col $cdac_match_row]
+    }
     set matched_rneg                [decode_table_value $cdac_match_row $matched_gtrim_col]
     set max_available_rneg          [get_table_max_rneg $cdac_match_row]
     set lmotional                   [expr {1000000 / ($cmotional * (2 * 3.1415 * $freq) * (2 * 3.1415 * $freq))}]
@@ -149,6 +171,12 @@ proc eco_solver {argc argv} {
     set cload_closest_match_min     [lindex $cload_min_data 1]
     set matched_cload2              [lindex $cload_min_data 2]
     set matched_gtrim_col2          [get_table_gtrim_col $cload_match_row $required_rneg]
+    if {$matched_gtrim_col2 == -1} {
+        set matched_gtrim_col2      [get_table_gtrim_col $cload_match_row $esr]
+    }
+    if {$matched_gtrim_col2 == -1} {
+        set matched_gtrim_col2      [get_table_max_gtrim_col $cload_match_row]
+    }
     set matched_rneg2               [decode_table_value $cload_match_row $matched_gtrim_col2]
     set max_available_rneg2         [get_table_max_rneg $cload_match_row]
     set tau2                        [expr {double(2000 * $lmotional) / ($matched_rneg2 - $effective_esr)}]

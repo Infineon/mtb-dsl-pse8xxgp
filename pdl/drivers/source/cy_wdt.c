@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,7 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
+
 
 /*******************************************************************************
 * Function Name: Cy_WDT_Init
@@ -135,7 +136,7 @@ void Cy_WDT_Unlock(void)
 * function to unlock the WDT.
 *
 * \param match
-* The valid valid range is [0-65535]. The value to be used to match
+* The  valid range is [0 - (WDT_MAX_MATCH_VALUE-1U)]. The value to be used to match
 * against the counter.
 *
 *******************************************************************************/

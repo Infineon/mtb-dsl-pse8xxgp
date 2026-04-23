@@ -19,12 +19,13 @@ var group__group__nn__kernel__data__structures =
       [ "inputOffset", "group__group__nn__kernel__data__structures.html#a54a625454d2977f648a7e96b74a1542b", null ],
       [ "outputOffset", "group__group__nn__kernel__data__structures.html#aeda5df8724a29e91144d8014b7404b97", null ],
       [ "filterOffset", "group__group__nn__kernel__data__structures.html#a31b2508c6832d1b413436b53ccf92a33", null ],
-      [ "outScalingFactor", "group__group__nn__kernel__data__structures.html#a9cd6112d0e878df05578ec238420e384", null ],
+      [ "outScalingFactor", "group__group__nn__kernel__data__structures.html#a1dd6826862b482256d887792cc7185d0", null ],
       [ "outClipping", "group__group__nn__kernel__data__structures.html#a32755a7dfb93354b573acfb7da3ed664", null ],
       [ "inputSize", "group__group__nn__kernel__data__structures.html#af14b1c10946c0dc0f6a416c86e6bc4b4", null ],
       [ "outputSize", "group__group__nn__kernel__data__structures.html#aafc7b39740ce4fb577ddcc68b609dfa4", null ],
       [ "sparseWeights", "group__group__nn__kernel__data__structures.html#afe811bdd1975ed8b053fb093390a922d", null ],
-      [ "scratchBuf", "group__group__nn__kernel__data__structures.html#abc595e3d0a41dac7d98565d43d2819be", null ]
+      [ "scratchBuf", "group__group__nn__kernel__data__structures.html#abc595e3d0a41dac7d98565d43d2819be", null ],
+      [ "isPerChannel", "group__group__nn__kernel__data__structures.html#a35511466be7b306c9a2f0013566638ad", null ]
     ] ],
     [ "cy_nn_pool_params_t", "group__group__nn__kernel__data__structures.html#structcy__nn__pool__params__t", [
       [ "strideCol", "group__group__nn__kernel__data__structures.html#a4d4f57d447e26e02274568c8b818e380", null ],

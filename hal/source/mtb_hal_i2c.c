@@ -6,9 +6,9 @@
 * a wrapper around the lower level PDL API.
 *
 ********************************************************************************
-* \copyright
-* Copyright 2018-2022 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation
+   * \copyright
+* Copyright(c) 2018-2026 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -100,7 +100,7 @@ static volatile mtb_hal_i2c_t* _mtb_hal_i2c_irq_obj = NULL;
 //--------------------------------------------------------------------------------------------------
 cy_rslt_t mtb_hal_i2c_process_interrupt(mtb_hal_i2c_t* obj)
 {
-    /* Save the old value and store it aftewards in case we get into a nested IRQ situation */
+    /* Save the old value and store it afterwards in case we get into a nested IRQ situation */
     /* Safe to cast away volatile because we don't expect this pointer to be changed while we're in
      * here, they just might change where the original pointer points */
     mtb_hal_i2c_t* old_irq_obj = (mtb_hal_i2c_t*)_mtb_hal_i2c_irq_obj;

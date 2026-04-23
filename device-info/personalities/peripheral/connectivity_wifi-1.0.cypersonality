@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2019-2025 Cypress Semiconductor Corporation
+* (c) 2019-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -42,8 +43,8 @@
 
     <!-- Host wake settings -->
     <ParamBool id='hostWake' name='Enable' group='Host Wake Configuration' default='true' visible='true' editable='true' desc='Enable host wake configuration.' />
-    <ParamBlock id='hostIRQ' blockType='ioss\.port\.pin' name='Host Device Interrupt Pin' group='Host Wake Configuration' canBeEmpty='true' visible='`${hostWake}`' desc='Select the host pin which is connected to WiFi device&apos;s WL_HOST_WAKE signal. The pin must be enabled on the Pins tab to be added as an option to the pull-down menu. If left empty, the HOST_WAKE pin will be unconfigured.' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+    <ParamBlock id='hostIRQ' blockType='(ioss|iocl)\.port\.pin' name='Host Device Interrupt Pin' group='Host Wake Configuration' canBeEmpty='true' visible='`${hostWake}`' desc='Select the host pin which is connected to WiFi device&apos;s WL_HOST_WAKE signal. The pin must be enabled on the Pins tab to be added as an option to the pull-down menu. If left empty, the HOST_WAKE pin will be unconfigured.' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='isrTrigger' severity='WARNING' reason='The pin must be configured to generate interrupts on rising or falling edge.'>
           <Choice>
             <Option value='CY_GPIO_INTR_RISING'/>

@@ -8,7 +8,8 @@
 *  Personality for configuration USB.
 ********************************************************************************
 * \copyright
-* Copyright (c) (2023), Cypress Semiconductor Corporation (an Infineon company) or
+* (c) 2023-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * an affiliate of Cypress Semiconductor Corporation.
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -104,15 +105,11 @@
   </Parameters>
 
   <DRCs>
-    <DRC type="WARNING" text="`${&quot;CLK_HF8 does not meet the requirements. The frequency must be in the range 50 MHz +/- &quot; . phyPllAccuracy * 100 . &quot; % or 24 MHz +/- &quot; . phyPllAccuracy * 100 . &quot; % or the maximum deviation in the range [&quot; . phyPllAccuracy1Lower . &quot;-&quot; . phyPllAccuracy1Up . &quot;] / [&quot; . phyPllAccuracy2Lower . &quot;-&quot; . phyPllAccuracy2Up . &quot;] Hz&quot;}`"
-        condition="`${!((phyPllRange1) || (phyPllRange2))}`"
-        location="`${phyPll}`" paramId="frequencyInfo"/>
-
-    <DRC type="ERROR" text="`${&quot;For USB operation, set CLK_HF1 to &quot; . mmioExpClkHfHz / 1000000 . &quot; MHz.&quot;}`"
-        condition="`${(!isUlpSelected) &amp;&amp; (((abs(mmioClkHfHz - mmioExpClkHfHz) / mmioClkHfHz) * 100) &gt; 1.0)}`" />
-
     <DRC type="ERROR" text="Clock for USB must be always connected"
         condition="`${!clkphyPllIsConnected}`" paramId="clk_phy_pll_ref[0]"/>
+
+    <DRC type="ERROR" text="PHY PLL reference clock must be one of the allowed frequencies: 24 or 50 MHz."
+        condition="`${clkphyPllIsConnected &amp;&amp; !((phyPllHz eq 24000000) || (phyPllHz eq 50000000))}`" paramId="clk_phy_pll_ref[0]"/>
 
     <DRC type="ERROR" text="Clock for USB must be always connected"
         condition="`${!mmioClkHfIsConnected}`" paramId="mmio_clk_hf[0]"/>
@@ -123,11 +120,11 @@
     <DRC type="ERROR" text="Peri 1 Memory Mapped IO APP_MMIO 3 divider must be enabled for USB operation (See Peripheral-Clocks Tab)"
         condition="`${!peri1MemoryMappedIoAppMmio3}`" paramId="peri[1].peri_group[3]"/>
 
-    <DRC type="WARNING" text="Divider of Peri 1 Memory Mapped IO APP_MMIO 3 must be set according to the supported frequencies for USB Core: 100 MHz and 200 Mhz."
-        condition="`${selectedPwrMode ne &quot;LP&quot; &amp;&amp; !((peri1MemoryMappedIoAppMmio3DivFreq eq 100000000) || (peri1MemoryMappedIoAppMmio3DivFreq eq 200000000))}`" paramId="peri[1].peri_group[3]"/>
+    <DRC type="WARNING" text="Divider of Peri 1 Memory Mapped IO APP_MMIO 3 must be set to a frequency less than or equal to 100 MHz."
+        condition="`${selectedPwrMode ne &quot;LP&quot; &amp;&amp; (peri1MemoryMappedIoAppMmio3DivFreq &gt; 100000000)}`" paramId="peri[1].peri_group[3]"/>
 
     <DRC type="WARNING" text="Divider of Peri 1 Memory Mapped IO APP_MMIO 3 must be set according to the supported frequencies in LP mode for USB Core: greater or equal 40 Mhz."
-        condition="`${(selectedPwrMode eq &quot;LP&quot;) &amp;&amp; (peri1MemoryMappedIoAppMmio3DivFreq lt 40000000)}`" paramId="peri[1].peri_group[3]"/>
+        condition="`${(selectedPwrMode eq &quot;LP&quot;) &amp;&amp; (peri1MemoryMappedIoAppMmio3DivFreq &lt; 40000000)}`" paramId="peri[1].peri_group[3]"/>
   </DRCs>
 
    <ConfigFirmware>

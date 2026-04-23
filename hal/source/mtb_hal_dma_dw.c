@@ -5,9 +5,9 @@
 * Implements a high level interface for interacting with the Infineon Datawire DMA.
 *
 ********************************************************************************
-* \copyright
-* Copyright 2018-2022 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation
+   * \copyright
+* Copyright(c) 2018-2026 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -76,8 +76,8 @@ static uint32_t _mtb_hal_dma_dw_get_expected_bursts(mtb_hal_dma_t* obj)
 
 
 /** Convert PDL interrupt cause to hal dma event */
-__STATIC_INLINE mtb_hal_dma_event_t _mtb_hal_dma_dw_convert_interrupt_cause(mtb_hal_dma_t* obj,
-                                                                            cy_en_dma_intr_cause_t cause)
+__STATIC_INLINE uint32_t _mtb_hal_dma_dw_convert_interrupt_cause(mtb_hal_dma_t* obj,
+                                                                 cy_en_dma_intr_cause_t cause)
 {
     static const mtb_hal_dma_event_t hal[] =
     {
@@ -92,7 +92,7 @@ __STATIC_INLINE mtb_hal_dma_event_t _mtb_hal_dma_dw_convert_interrupt_cause(mtb_
         MTB_HAL_DMA_DESCR_BUS_ERROR
     };
 
-    mtb_hal_dma_event_t hal_rslt = MTB_HAL_DMA_NO_INTR;
+    uint32_t hal_rslt = MTB_HAL_DMA_NO_INTR;
     CY_ASSERT(cause < sizeof(hal)/sizeof(mtb_hal_dma_event_t));
     if (cause < sizeof(hal)/sizeof(mtb_hal_dma_event_t))
     {
@@ -119,7 +119,8 @@ static void _mtb_hal_dma_dw_irq_handler(mtb_hal_dma_t* obj)
 {
     /* Get interrupt type and call users event callback if they have enabled that event */
     cy_en_dma_intr_cause_t cause = Cy_DMA_Channel_GetStatus(obj->base.dw_base, obj->channel);
-    mtb_hal_dma_event_t event_type = _mtb_hal_dma_dw_convert_interrupt_cause(obj, cause);
+    mtb_hal_dma_event_t event_type = (mtb_hal_dma_event_t)_mtb_hal_dma_dw_convert_interrupt_cause(
+        obj, cause);
     uint32_t events_to_callback = event_type & obj->irq_cause;
 
     /* Clear all interrupts - this should be done prior to callback, in case the user wishes to

@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2022-2025 Cypress Semiconductor Corporation
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -51,8 +52,8 @@
       <Entry name='IMO'    value='imo'    visible='`${hasBlock("srss[0].clock[0].imo[0]")}`'/>
       <Entry name='ECO'    value='eco'    visible='`${hasBlock("srss[0].clock[0].eco[0]")}`'/>
       <Entry name='EXTCLK' value='ext'    visible='`${hasBlock("srss[0].clock[0].ext[0]")}`'/>
-      <Entry name='ALTHF'  value='althf'  visible='`${hasBlock("srss[0].clock[0].altlf[0]")}`'/>
-      <Entry name='ILO'    value='ilo'    visible='`${!hasBlock("srss[0].clock[0].ilo[1]")}`'/>
+      <Entry name='ALTHF'  value='althf'  visible='`${hasBlock("srss[0].clock[0].althf[0]")}`'/>
+      <Entry name='ILO'    value='ilo'    visible='`${hasBlock("srss[0].clock[0].ilo[0]") &amp;&amp; !hasBlock("srss[0].clock[0].ilo[1]")}`'/>
       <!-- Not a typo. We check for ILO1 here because if we do not have ILO1 we use the unsuffixed variant -->
       <Entry name='ILO0'   value='ilo0'   visible='`${hasBlock("srss[0].clock[0].ilo[1]")}`'/>
       <Entry name='ILO1'   value='ilo1'   visible='`${hasBlock("srss[0].clock[0].ilo[1]")}`'/>

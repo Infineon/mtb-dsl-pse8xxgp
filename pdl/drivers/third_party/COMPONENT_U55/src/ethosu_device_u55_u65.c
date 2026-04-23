@@ -20,9 +20,13 @@
  * Includes
  ******************************************************************************/
 
-#include "ethosu_interface.h"
+
 
 #include "ethosu_device.h"
+#if defined (ETHOSU55) || defined (ETHOSU65)
+
+
+#include "ethosu_interface.h"
 #include "ethosu_log.h"
 
 #ifdef ETHOSU55
@@ -388,3 +392,4 @@ bool ethosu_dev_verify_optimizer_config(struct ethosu_device *dev, uint32_t cfg_
 
     return ret;
 }
+#endif

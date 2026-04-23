@@ -2,9 +2,9 @@
 * \file mtb_hal_timer_common_v1.h
 *
 ********************************************************************************
-* \copyright
-* Copyright 2019-2021 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation
+   * \copyright
+* Copyright(c) 2019-2026 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
 *

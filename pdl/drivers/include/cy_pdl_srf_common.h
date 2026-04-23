@@ -26,6 +26,8 @@
 *******************************************************************************/
 
 
+#if !defined(CY_SRF_DISABLE)
+    
 #pragma once
 
 /**
@@ -100,5 +102,5 @@ cy_rslt_t _Cy_PDL_Invoke_SRF(cy_pdl_invoke_srf_args* args);
 /** \} group_pdl_srf_common_funcs */
 
 #endif /* !defined(COMPONENT_SECURE_DEVICE) && (CY_PDL_ENABLE_SECURE_AWARE) */
-
+#endif /* CY_SRF_DISABLE */
 /** \} group_pdl_srf_common */

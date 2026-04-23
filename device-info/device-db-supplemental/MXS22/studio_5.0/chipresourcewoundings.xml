@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Woundings xml_version="1" xmlns="http://cypress.com/xsd/cychipresourcewoundings_v1">
-  <MemoryWounding name="RRAM_KB" memoryId="RRAM" />
   <MemoryWounding name="DCDRAM_KB" memoryId="DCDRAM" />
-  <MemoryWounding name="SRAM_KB" memoryId="SRAM" />
+  <MemoryWounding name="ROM_KB" memoryId="ROM" />
+  <MemoryWounding name="RRAM_KB" memoryId="RRAM" />
   <MemoryWounding name="SOCMEM_KB" memoryId="SOCMEM_RAM" />
+  <MemoryWounding name="SRAM_KB" memoryId="SRAM" />
   <BooleanWounding name="CAMERA">
     <Block name="ispss" />
   </BooleanWounding>

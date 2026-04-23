@@ -45,66 +45,66 @@ cy_en_nnlite_status_t cy_nn_lstm_step_s8_s16(const int8_t *input,
     const int32_t n_block = n_batch * n_cell;
 
     cy_en_nnlite_status_t status;
+
     // Calculate the input gate
-   status =
-     cy_nn_lstm_calculate_gate_s8_s16(input,
-                                      lstm->input_offset,
-                                      input_to_input_weight,
-                                      lstm->input_gate_bias,
-                                      lstm->input_to_input_scaling,
-                                      output_state,
-                                      lstm->output_state_offset,
-                                      recurrent_to_input_weight,
-                                      lstm->recurrent_to_input_scaling,
-                                      n_batch,
-                                      n_input,
-                                      n_output,
-                                      n_cell,
-                                      CY_NN_SIGMOID,
-                                      scratch_buffers->input_gate,
-                                      scratch_buffers->tmp_gate_buf);
+    status =
+    cy_nn_lstm_calculate_gate_s8_s16(input,
+                                        input_to_input_weight,
+                                        lstm->input_gate_bias,
+                                        lstm->input_to_input_scaling,
+                                        output_state,
+                                        recurrent_to_input_weight,
+                                        lstm->recurrent_to_input_scaling,
+                                        lstm,
+                                        n_batch,
+                                        n_input,
+                                        n_output,
+                                        n_cell,
+                                        CY_NN_SIGMOID,
+                                        scratch_buffers->input_gate,
+                                        scratch_buffers);
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
-    // Calculate the forget gate
+
+	// Calculate the forget gate
     status =
       cy_nn_lstm_calculate_gate_s8_s16(input,
-                                      lstm->input_offset,
                                       input_to_forget_weight,
                                       lstm->forget_gate_bias,
                                       lstm->input_to_forget_scaling,
                                       output_state,
-                                      lstm->output_state_offset,
                                       recurrent_to_forget_weight,
                                       lstm->recurrent_to_forget_scaling,
+                                      lstm,
                                       n_batch,
                                       n_input,
                                       n_output,
                                       n_cell,
                                       CY_NN_SIGMOID,
                                       scratch_buffers->forget_gate,
-                                      scratch_buffers->tmp_gate_buf);
+                                      scratch_buffers);
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
+
     // Calculate the cell update gate
     status =
       cy_nn_lstm_calculate_gate_s8_s16(input,
-                                      lstm->input_offset,
                                       input_to_cell_weight,
                                       lstm->cell_gate_bias,
                                       lstm->input_to_cell_scaling,
                                       output_state,
-                                      lstm->output_state_offset,
                                       recurrent_to_cell_weight,
                                       lstm->recurrent_to_cell_scaling,
+                                      lstm,
                                       n_batch,
                                       n_input,
                                       n_output,
                                       n_cell,
                                       CY_NN_TANH,
                                       scratch_buffers->cell_gate,
-                                      scratch_buffers->tmp_gate_buf);
+                                      scratch_buffers);
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
@@ -122,21 +122,20 @@ cy_en_nnlite_status_t cy_nn_lstm_step_s8_s16(const int8_t *input,
     // Calculate the output gate
     status =
       cy_nn_lstm_calculate_gate_s8_s16(input,
-                                      lstm->input_offset,
                                       input_to_output_weight,
                                       lstm->output_gate_bias,
                                       lstm->input_to_output_scaling,
                                       output_state,
-                                      lstm->output_state_offset,
                                       recurrent_to_output_weight,
                                       lstm->recurrent_to_output_scaling,
+                                      lstm,
                                       n_batch,
                                       n_input,
                                       n_output,
                                       n_cell,
                                       CY_NN_SIGMOID,
                                       scratch_buffers->output_gate,
-                                      scratch_buffers->tmp_gate_buf);
+                                      scratch_buffers);
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
@@ -147,18 +146,29 @@ cy_en_nnlite_status_t cy_nn_lstm_step_s8_s16(const int8_t *input,
                                      cell_state,
                                      lstm->cell_state_shift,
                                      scratch_buffers->output_gate,
-                                     lstm->hidden_scaling,
-                                     lstm->hidden_offset,
+                                     lstm,
                                      output_state,
                                      scratch_buffers->input_gate);
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
-    Cy_NNLite_Byte_Copy(output_state, output, n_batch * n_output * sizeof(int8_t));
+
+    uint32_t output_size_bytes;
+    switch(lstm->output_size) {
+        case CY_NNLITE_OUTPUT_8BIT:
+            output_size_bytes = sizeof(int8_t);
+            break;
+        case CY_NNLITE_OUTPUT_16BIT:
+            output_size_bytes = sizeof(int16_t);
+            break;
+        default:
+            return CY_NNLITE_BAD_PARAM;
+    }
+    Cy_NNLite_Byte_Copy(output_state, output, n_batch * n_output * output_size_bytes);
 #if 0 // ORIGINAL CMSIS-NN
     arm_memcpy_s8(output, output_state, n_batch * n_output * sizeof(int8_t));
 #endif
     return CY_NNLITE_SUCCESS;
 }
 
-#endif //CY_IP_MXNNLITE_VERSION
+#endif // CY_IP_MXNNLITE_VERSION !=1

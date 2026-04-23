@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation
+* (c) 2018-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -146,14 +147,14 @@
     <!-- Connections -->
     <ParamSignal port='clock_i3c_en[0]' name='Clock Signal' group='Connections' visible='true' desc='The clock input defines the operating frequency.' canBeEmpty='false' />
     <ParamSignal port='i3c_scl[0]' name='SCL' group='Connections' visible='true' desc='Serial clock (SCL) is the controller-generated I3C clock.' canBeEmpty='false'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ' />
         </Parameter>
       </Constraint>
     </ParamSignal>
     <ParamSignal port='i3c_sda[0]' name='SDA' group='Connections' visible='true' desc='Serial data (SDA) is the I3C data signal.' canBeEmpty='false'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ' />
         </Parameter>
@@ -171,11 +172,24 @@
     <ParamBool id='pclkOk' name='PCLK Valid' group='Internal' default='`${hasConnection("clock_i3c_en", 0) &amp;&amp; isBlockUsed(sourceClock)}`' visible='false' editable='false' desc='Checks whether there is a PCLK connected and enabled.' />
     <ParamString id='pclkDst' name='PCLK Destination' group='Internal' default='PCLK_I3C_CLOCK_I3C_EN' visible='false' editable='false' desc='Generates PCLK connection define.' />
 
+    <!-- Internal params: mirror Cy_I3C_SetDataRate algorithm for auto-mode actual rate display
+         clkPeriodNs = ceil(1e9/clkHz),  hcnt = max(ceil(41/clkPeriodNs)-1, 5)
+         PP lcnt = max(ceil(clkHz/PP_rateHz) - hcnt, 5)
+         OD lcnt = max(ceil(clkHz/OD_rateHz) - hcnt, ceil(200/clkPeriodNs)) -->
+    <ParamRange id='autoClkPeriodNs' name='Auto Clock Period' group='Internal' default='`${ceil(1000000000.0 / i3cClkHz)}`' min='1' max='1000' resolution='1' visible='false' editable='false' desc='Input clock period in nanoseconds.' />
+    <ParamRange id='autoRawHcnt' name='Auto Raw HCNT' group='Internal' default='`${ceil(41.0 / autoClkPeriodNs) - 1}`' min='0' max='255' resolution='1' visible='false' editable='false' desc='Computed SCL high count before minimum clamp.' />
+    <ParamRange id='autoHcnt' name='Auto HCNT' group='Internal' default='`${autoRawHcnt > 5 ? autoRawHcnt : 5}`' min='5' max='255' resolution='1' visible='false' editable='false' desc='Computed SCL high count (clamped to minimum 5).' />
+    <ParamRange id='autoRawPPLcnt' name='Auto Raw PP LCNT' group='Internal' default='`${ceil(i3cClkHz * 1.0 / (PushPullDataRate * 1000)) - autoHcnt}`' min='-255' max='255' resolution='1' visible='false' editable='false' desc='Computed Push-Pull low count before minimum clamp.' />
+    <ParamRange id='autoPPLcnt' name='Auto PP LCNT' group='Internal' default='`${autoRawPPLcnt > 5 ? autoRawPPLcnt : 5}`' min='5' max='255' resolution='1' visible='false' editable='false' desc='Computed Push-Pull low count (clamped to minimum 5).' />
+    <ParamRange id='autoODLcntMin' name='Auto OD LCNT Min' group='Internal' default='`${ceil(200.0 / autoClkPeriodNs)}`' min='1' max='255' resolution='1' visible='false' editable='false' desc='Minimum OD low count to satisfy 200 ns tLow requirement.' />
+    <ParamRange id='autoRawODLcnt' name='Auto Raw OD LCNT' group='Internal' default='`${ceil(i3cClkHz * 1.0 / (OpenDrainDataRate * 1000)) - autoHcnt}`' min='-255' max='255' resolution='1' visible='false' editable='false' desc='Computed Open-Drain low count before minimum clamp.' />
+    <ParamRange id='autoODLcnt' name='Auto OD LCNT' group='Internal' default='`${autoRawODLcnt > autoODLcntMin ? autoRawODLcnt : autoODLcntMin}`' min='1' max='255' resolution='1' visible='false' editable='false' desc='Computed Open-Drain low count (clamped to minimum tLow).' />
+
     <!-- Actual Data rate -->
-    <ParamRange id='acheivedPushPullDataRate' name='Actual Data Rate Push Pull Mode(kbps)' group='Actual Data Rate' default='`${(i3cClkHz / ((PushPullHighCount + PushPullLowCount) * 1000))}`' min='0' max='12500' resolution='1' visible='`${(ManualDataRate &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='The actual Push-Pull data rate displays the data rate at which the I3C operates with current settings.' />
+    <ParamRange id='acheivedPushPullDataRate' name='Actual Data Rate Push Pull Mode(kbps)' group='Actual Data Rate' default='`${ManualDataRate ? (i3cClkHz / ((PushPullHighCount + PushPullLowCount) * 1000)) : (i3cClkHz / ((autoHcnt + autoPPLcnt) * 1000))}`' min='0' max='12500' resolution='1' visible='`${Controller &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW)}`' editable='false' desc='The actual Push-Pull data rate displays the data rate at which the I3C operates with current settings.' />
     <ParamRange id='sclLowPushPull' name='tLow_pp (ns)' group='Actual Data Rate' default='`${((1000000000.0 / i3cClkHz) * PushPullLowCount)}`' min='0' max='2040' resolution='1' visible='`${((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='tLow parameter (the LOW period of the Push-pull SCL clock).' />
     <ParamRange id='sclHighPushPull' name='tHigh_pp (ns)' group='Actual Data Rate' default='`${((1000000000.0 / i3cClkHz) * PushPullHighCount)}`' min='0' max='2040' resolution='1' visible='`${((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='tHigh parameter (the HIGH period of the Push-pull SCL clock).' />
-    <ParamRange id='acheivedOpenDrainDataRate' name='Actual Data Rate - Open Drain Mode(kbps)' group='Actual Data Rate' default='`${(i3cClkHz / ((OpenDrainHighCount + OpenDrainLowCount) * 1000))}`' min='0' max='4000' resolution='1' visible='`${(ManualDataRate &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='The actual Open-Drain rate displays the data rate at which the I3C operates with current settings.' />
+    <ParamRange id='acheivedOpenDrainDataRate' name='Actual Data Rate - Open Drain Mode(kbps)' group='Actual Data Rate' default='`${ManualDataRate ? (i3cClkHz / ((OpenDrainHighCount + OpenDrainLowCount) * 1000)) : (i3cClkHz / ((autoHcnt + autoODLcnt) * 1000))}`' min='0' max='4000' resolution='1' visible='`${Controller &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW)}`' editable='false' desc='The actual Open-Drain rate displays the data rate at which the I3C operates with current settings.' />
     <ParamRange id='sclLowOpenDrain' name='tLow_od (ns)' group='Actual Data Rate' default='`${((1000000000.0 / i3cClkHz) * OpenDrainLowCount)}`' min='0' max='2040' resolution='1' visible='`${((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='tLow parameter (the LOW period of the Open-Drain SCL clock).' />
     <ParamRange id='sclHighOpenDrain' name='tHigh_od (ns)' group='Actual Data Rate' default='`${((1000000000.0 / i3cClkHz) * OpenDrainHighCount)}`' min='0' max='2040' resolution='1' visible='`${((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='tHigh parameter (the HIGH period of the Open-Drain SCL clock).' />
     <ParamRange id='acheivedI2CFMDataRate' name='Actual Data Rate - I2C FM(kbps)' group='Actual Data Rate' default='`${(i3cClkHz / ((I2CFMLowCount + I2CFMHighCount) * 1000))}`' min='0' max='400' resolution='1' visible='`${(ManualDataRate &amp;&amp; (I3CBusMode ne CY_I3C_BUS_PURE))}`' editable='false' desc='The actual I2C FM rate displays the data rate at which the I3C operates with current settings.' />
@@ -188,7 +202,7 @@
     <ParamRange id='acheivedSDR_2_DataRate' name='Actual Data Rate - SDR2(kbps)' group='Actual Data Rate' default='`${(i3cClkHz / ((PushPullHighCount + ExtLowCnt2) * 1000))}`' min='0' max='6000' resolution='1' visible='`${((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='The actual SDR2 data rate displays the data rate at which the I3C operates with current settings.' />
     <ParamRange id='acheivedSDR_3_DataRate' name='Actual Data Rate - SDR3(kbps)' group='Actual Data Rate' default='`${(i3cClkHz / ((PushPullHighCount + ExtLowCnt3) * 1000))}`' min='0' max='4000' resolution='1' visible='`${((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='The actual SDR3 data rate displays the data rate at which the I3C operates with current settings.' />
     <ParamRange id='acheivedSDR_4_DataRate' name='Actual Data Rate - SDR4(kbps)' group='Actual Data Rate' default='`${(i3cClkHz / ((PushPullHighCount + ExtLowCnt4) * 1000))}`' min='0' max='2000' resolution='1' visible='`${((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW))}`' editable='false' desc='The actual SDR4 data rate displays the data rate at which the I3C operates with current settings.' />
-    <ParamString id='ClkFreq' name='Clock Frequency' group='Actual Data Rate' default='`${(i3cClkHz &lt; 1000000) ? (i3cClkHz / 1000.0) . " kHz" : (i3cClkHz / 1000000.0) . " MHz"}`' visible='`${ManualDataRate}`' editable='false' desc='Frequency of the connected clock' />
+    <ParamString id='ClkFreq' name='Clock Frequency' group='Actual Data Rate' default='`${(i3cClkHz &lt; 1000000) ? (i3cClkHz / 1000.0) . " kHz" : (i3cClkHz / 1000000.0) . " MHz"}`' visible='`${Controller}`' editable='false' desc='Frequency of the connected clock' />
 
     <!-- Advanced-->
     <ParamBool id='inFlash' name='Store Config in Flash' group='Advanced' default='true' visible='true' editable='true' desc='Controls whether the configuration structure is stored in flash (const, true) or SRAM (not const, false).' />
@@ -208,7 +222,8 @@
     <DRC type='ERROR' text='Push Pull High Period should be greater than 31ns' paramId='PushPullHighCount' condition='`${Controller ? ((ManualDataRateCtrl &amp;&amp; (((1000000000 / i3cClkHz) * PushPullHighCount) &lt; (31)))? "1" : "0") : "0"}`' />
     <DRC type='ERROR' text='Push Pull Low Period should be greater than 31ns' paramId='PushPullHighCount' condition='`${Controller ? ((ManualDataRateCtrl &amp;&amp; (((1000000000 / i3cClkHz) * PushPullLowCount) &lt; (31)))? "1" : "0") : "0"}`' />
 
-    <DRC type='ERROR' text='Open Drain High Period should be less than 41ns' paramId='OpenDrainHighCount' condition='`${Controller ? ((((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW)) &amp;&amp; (((1000000000 / i3cClkHz) * OpenDrainHighCount) &gt;= (41)))? "1" : "0") : "0"}`' />
+    <DRC type='ERROR' text='Open Drain High Period should be less than 41ns' paramId='OpenDrainHighCount' condition='`${Controller ? (((ManualDataRate &amp;&amp; (I3CBusMode eq CY_I3C_BUS_MIXED_FAST)) &amp;&amp; (((1000000000 / i3cClkHz) * OpenDrainHighCount) &gt;= (41)))? "1" : "0") : "0"}`' />
+    <DRC type='WARNING' text='Open Drain High Period should be less than 41ns' paramId='OpenDrainHighCount' condition='`${Controller ? ((((ManualDataRate &amp;&amp; (I3CBusMode eq CY_I3C_BUS_PURE)) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW)) &amp;&amp; (((1000000000 / i3cClkHz) * OpenDrainHighCount) &gt;= (41)))? "1" : "0") : "0"}`' />
     <DRC type='ERROR' text='Open Drain Low Period should be atleast 200ns' paramId='OpenDrainLowCount' condition='`${Controller ? ((((ManualDataRate) &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW)) &amp;&amp; (((1000000000 / i3cClkHz) * OpenDrainLowCount) &lt; (200)))? "1" : "0") : "0"}`' />
 
     <!-- tLOW + trCL and tHIGH + trCL from the spec -->

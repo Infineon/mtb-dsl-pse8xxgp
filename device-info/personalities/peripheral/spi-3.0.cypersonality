@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2022-2025 Cypress Semiconductor Corporation
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -212,12 +213,12 @@
     <ParamBool id='hasConnectionMiso' name='hasConnectionMiso' group='Internal' default='`${hasVisibleOption("spi_miso[0]")}`' visible='false' editable='false' desc='This parameter determines if MISO has valid connections.' />
 
     <ParamSignal port='spi_clk[0]'  name='SCLK' group='Connections' visible='`${MasterMode ? hasConnectionSclk : true}`' desc='The Serial Clock (SCLK) from the master to slave device.' canBeEmpty='`${MasterMode}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
@@ -227,12 +228,12 @@
     <ParamString id='sclkPin' name='sclkPin' group='Internal' default='`${getBlockFromSignal("spi_clk[0]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='spi_mosi[0]' name='MOSI' group='Connections' visible='`${hasConnectionMosi}`' desc='The Master Output Slave Input (MOSI) signal between the master and slave devices.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
@@ -242,12 +243,12 @@
     <ParamString id='mosiPin' name='mosiPin' group='Internal' default='`${getBlockFromSignal("spi_mosi[0]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='spi_miso[0]' name='MISO' group='Connections' visible='`${hasConnectionMiso}`' desc='The Master Input Slave Output (MOSI) signal between the slave and master devices.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='`${DmMISO}`' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='`${DmMISO}`' />
         </Parameter>
@@ -257,12 +258,12 @@
     <ParamString id='misoPin' name='misoPin' group='Internal' default='`${getBlockFromSignal("spi_miso[0]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='spi_select0[0]' name='SS0' group='Connections' visible='`${isConnectableSel0}`' desc='The Master Output / Slave Input Slave Select (SS) signal. The master uses SS signal to enable Slave for the following communication.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
@@ -272,12 +273,12 @@
     <ParamString id='ssel0Pin' name='ssel0Pin' group='Internal' default='`${getBlockFromSignal("spi_select0[0]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='spi_select1[0]' name='SS1' group='Connections' visible='`${isConnectableSel1}`' desc='The Master Output / Slave Input Slave Select (SS) signal. The master uses SS signal to enable Slave for the following communication.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
@@ -287,12 +288,12 @@
     <ParamString id='ssel1Pin' name='ssel1Pin' group='Internal' default='`${getBlockFromSignal("spi_select1[0]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='spi_select2[0]' name='SS2' group='Connections' visible='`${isConnectableSel2}`' desc='The Master Output / Slave Input Slave Select (SS) signal. The master uses SS signal to enable Slave for the following communication.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
@@ -302,12 +303,12 @@
     <ParamString id='ssel2Pin' name='ssel2Pin' group='Internal' default='`${getBlockFromSignal("spi_select2[0]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='spi_select3[0]' name='SS3' group='Connections' visible='`${isConnectableSel3}`' desc='The Master Output / Slave Input Slave Select (SS) signal. The master uses SS signal to enable Slave for the following communication.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='`${DmMOSI}`' />
         </Parameter>
@@ -317,12 +318,12 @@
     <ParamString id='ssel3Pin' name='ssel3Pin' group='Internal' default='`${getBlockFromSignal("spi_select3[0]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='tr_rx_req[0]' name='RX Trigger Output' group='Connections' visible='`${MasterMode ? hasConnectionMiso : hasConnectionMosi}`' desc='Connects SCB RX trigger output to the DMA. Configure RX FIFO Level to define this output behavior.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -331,12 +332,12 @@
     </ParamSignal>
 
     <ParamSignal port='tr_tx_req[0]' name='TX Trigger Output' group='Connections' visible='`${MasterMode ? hasConnectionMosi : hasConnectionMiso}`' desc='Connects SCB TX trigger output to the DMA. Configure TX FIFO Level to define this output behavior.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>

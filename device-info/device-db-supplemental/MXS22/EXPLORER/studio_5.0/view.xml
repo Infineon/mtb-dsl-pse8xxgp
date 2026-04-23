@@ -8,7 +8,7 @@
     <Param name="PERI0_MMIO4_TARGETS" value="mxnnlite[0]" />
     <Param name="PERI0_MMIO5_TARGETS" value="pass[0]" />
     <Param name="PERI1_MMIO0_TARGETS" value="m55appcpuss[0];mxcm55[0];saxidmac[0];mxipc[1]" />
-    <Param name="PERI1_MMIO1_TARGETS" value="pdm[0];tdm[0].tdm[0];tdm[0].tdm[1];smif[0].core[0];smif[0].core[1];smif[1].core[0];smif[1].core[1]" />
+    <Param name="PERI1_MMIO1_TARGETS" value="pdm[0];tdm[0].tdm[0];tdm[0].tdm[1];smif[0].core[0];smif[1].core[0]" />
     <Param name="PERI1_MMIO2_TARGETS" value="mxu55[0];socmem[0]" />
     <Param name="PERI1_MMIO3_TARGETS" value="gfxss[0];sdhc[0];sdhc[1];usbhs[0]" />
     <Param name="PERI1_MMIO4_TARGETS" value="m55appcpuss[0]" />

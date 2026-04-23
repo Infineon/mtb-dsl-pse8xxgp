@@ -6,8 +6,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,9 +28,8 @@ $(info Processing $(lastword $(MAKEFILE_LIST)))
 endif
 
 #
-# Architecure specifics
+# Architecture specifics
 #
-_MTB_RECIPE__OPENOCD_CHIP_NAME:=cat1d
 _MTB_RECIPE__JLINK_DEVICE_CM0_CFG:=PSE84x_CM0p
 _MTB_RECIPE__OPENOCD_DEVICE_CFG:=infineon/pse84xgxs2.cfg
 _MTB_RECIPE__IDE_TEMPLATE_TARGET_DIR=pse8xxgp
@@ -42,7 +41,6 @@ _MTB_RECIPE__JLINK_DEVICE_CM0_CFG:=PSE84x_A0_CM0p
 _MTB_RECIPE__OPENOCD_DEVICE_CFG:=infineon/pse84_a0.cfg
 endif
 ifeq ($(APPTYPE), ram)
-_MTB_RECIPE__APPTYPE_DIR:=ram
 _MTB_RECIPE__BITFILE_LIFECYCLE_SUBDIR:=
 _MTB_RECIPE__PREBUILT_SECURE_APP=secure_region.hex
 _MTB_RECIPE__PREBUILT_CM0_IMAGE=cm0_boot_app.elf
@@ -54,7 +52,6 @@ else
 _MTB_RECIPE__BITFILE_LIFECYCLE_SUBDIR:=normal
 endif
 else #ifeq ($(APPTYPE), flash)
-_MTB_RECIPE__APPTYPE_DIR:=flash
 # Generate specific configs for bare bitfile with MVP bootrom
 ifeq ($(BITFILE_PROVISIONED),false)
 _MTB_RECIPE__PREBUILT_SECURE_APP=secure_region_rram.bin
@@ -119,3 +116,6 @@ _MTB_RECIPE__OPENOCD_PROBE_FREQUENCY?=adapter speed 8000;
 else
 _MTB_RECIPE__OPENOCD_PROBE_FREQUENCY?=adapter speed 12000;
 endif
+
+_MTB_RECIPE__VSCODE_MULTI_CORE_TASKS_JSON_NAME:=tasks.json
+_MTB_RECIPE__ERASE_TEMPLATE_FOLDER_NAME:=external

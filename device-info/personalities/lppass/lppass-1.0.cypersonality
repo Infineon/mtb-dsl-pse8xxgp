@@ -154,7 +154,7 @@
        <ParamSignal port='ctbl_pads[$idx]' name='CTB`${$idx / 8}` PIN[`${$idx % 8}`]' group='CTB Connections'
         visible='`${hasBlock("pass[0].ctb[" . ($idx / 8) . "]") &amp;&amp; hasVisibleOption("ctbl_pads[$idx]")}`'
         desc='CTB`${$idx / 8}` pin' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='The pin Drive Mode parameter does not match the expected.'>
             <Fixed value='CY_GPIO_DM_ANALOG' />
           </Parameter>
@@ -171,7 +171,7 @@
       <ParamSignal port='dac_pads[$idx]' name='DAC $idx PIN' group='DAC Connections'
         visible='`${hasBlock("pass[0].dac[$idx]") &amp;&amp; hasVisibleOption("dac_pads[$idx]")}`'
         desc='DAC $idx pin' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='The pin Drive Mode parameter does not match the expected.'>
             <Fixed value='CY_GPIO_DM_ANALOG' />
           </Parameter>
@@ -185,7 +185,7 @@
                     hasBlock("pass[0].ctb[0].oa[$idx]") &amp;&amp;
                     hasVisibleOption("ctbl_oa$idx_out_10x[0]")}`'
         desc='CTB0 OA$idx OUT 10x pin' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='The pin Drive Mode parameter does not match the expected.'>
             <Fixed value='CY_GPIO_DM_ANALOG' />
           </Parameter>
@@ -199,7 +199,7 @@
                     hasBlock("pass[0].ctb[1].oa[$idx]") &amp;&amp;
                     hasVisibleOption("ctbl_oa$idx_out_10x[1]")}`'
         desc='CTB1 OA$idx OUT 10x pin' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='The pin Drive Mode parameter does not match expected.'>
             <Fixed value='CY_GPIO_DM_ANALOG' />
           </Parameter>
@@ -211,7 +211,7 @@
       <ParamSignal port='ptc_pads[$idx]' name='PTC/SAR PIN[$idx]' group='PTC and SAR Connections'
         visible='`${(hasBlock("pass[0].ptc[0]") || hasBlock("pass[0].sar[0]")) &amp;&amp; hasVisibleOption("ptc_pads[$idx]")}`'
         desc='PTComp and SAR ADC pin' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='The pin Drive Mode parameter does not match the expected.'>
             <Fixed value='CY_GPIO_DM_ANALOG' />
           </Parameter>
@@ -222,7 +222,7 @@
 
     <Repeat count='4'>
       <ParamSignal port='lppass_dout[$idx]' name='GPIO Digital Output PIN[$idx]' group='Connections' visible='`${hasVisibleOption("lppass_dout[$idx]")}`' desc='GPIO Digital Output pins' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='DEFAULT' reason=''>
             <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
           </Parameter>
@@ -233,7 +233,7 @@
     <!-- TrigMux connections -->
     <Repeat count='8'>
       <ParamSignal port='tr_lppass_out[$idx]' name='Trigger Output $idx' group='Trigger Output' visible='true' desc='Trigger Output $idx' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -244,7 +244,7 @@
 
     <Repeat count='4'>
       <ParamSignal port='tr_lppass_in[$idx]' name='Trigger Input $idx' group='Trigger Input' visible='true' desc='Trigger Input $idx' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>

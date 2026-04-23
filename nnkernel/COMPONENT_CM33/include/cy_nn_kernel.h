@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file cy_nn_kernel.h
-* \version 1.0
+* \version 2.0
 *
 * \brief
 * Provides NNLite accelerator driver API declarations.
@@ -46,13 +46,11 @@ extern "C" {
 #endif
 #include "cy_device.h"
 #include "cy_pdl.h"
+#include "cy_nn_types.h"
 
 #define OUT_SCALING_FACTOR_EXP_MIN 96
 #define OUT_SCALING_FACTOR_EXP_MAX 135
 
-#if CY_IP_MXNNLITE_VERSION !=1
-#include "cy_nn_types.h"
-#endif
 
 /**
 * \defgroup group_nn_kernel NNLITE HW Accelerator KERNEL LIB
@@ -85,7 +83,6 @@ extern "C" {
 /** \addtogroup group_nn_kernel_enums
 * \{
 */
-#if CY_IP_MXNNLITE_VERSION==1
 /** NNLite DMA descriptor types */
 typedef enum
 {
@@ -106,40 +103,10 @@ typedef enum
 typedef enum
 {
   CY_NNLITE_PP_ACCELERATOR_START = 0,/**< Profile point for NNLite IP start */
-  CY_NNLITE_PP_TRANSPOSE_START,/**< Profile point for TRANSPOSE Operation*/
-  CY_NNLITE_PP_TRANSPOSE_DMA_TRIGGER,/**< Profile point for TRANSPOSE DMA Trigger */
-  CY_NNLITE_PP_TRANSPOSE_DONE,/**< Profile point for TRANSPOSE DMA Completion */
-  CY_NNLITE_PP_DMA_MODE_TRIGGER,/**< Profile point for DMA Mode API DMA Trigger */
-  CY_NNLITE_PP_DMA_MODE_END,/**< Profile point for DMA Mode Completion */
-  CY_NNLITE_PP_ACCELERATOR_DONE,/**< Profile point for NNLite Completion */
-  CY_NNLITE_PP_COUNT,/**< Profile point Count */
-} cy_nnlite_profile_points_type_t;
-#else
-
-/** NNLite DMA queue states */
-typedef enum
-{
-  CY_NNLITE_DMA_QUEUE_EMPTY = 0, /**< nnlite dma queue is empty */
-  CY_NNLITE_DMA_OPERATION_QUEUED,/**< nnlite dma operation queued */
-  CY_NNLITE_DMA_QUEUE_TRIGGERED, /**< nnlite dma is triggered */
-  CY_NNLITE_DMA_QUEUE_DONE, /**< nnlite dma is executed */
-} cy_nnlite_dma_queue_state_t;
-
-/** NNLite DMA descriptor types */
-typedef enum
-{
-  CY_NNLITE_DMA_DESC_MEMIO = 0,/**< Descriptor is for MEMIO transfer */
-} cy_nnlite_current_dma_desc_type_t;
-
-/** NNLite Kernel API's intermediate Profile points types */
-typedef enum
-{
-  CY_NNLITE_PP_ACCELERATOR_START = 0,/**< Profile point for NNLite IP start */
   CY_NNLITE_PP_DMA_MODE_TRIGGER,/**< Profile point for DMA Mode API DMA Trigger */
   CY_NNLITE_PP_DMA_MODE_END,/**< Profile point for DMA Mode Completion */
   CY_NNLITE_PP_ACCELERATOR_DONE,/**< Profile point for NNLite Completion */
 } cy_nnlite_profile_points_type_t;
-#endif
 
 /** \} group_nn_kernel_enums */
 
@@ -148,16 +115,13 @@ typedef enum
 * \{
 */
 
+
 /**
  *****************************************************************************
- ** \brief Convolution parameter structure
+ ** \brief Convolution paramter structure
  *****************************************************************************/
 typedef struct cy_nn_conv_params_s
 {
-#if CY_IP_MXNNLITE_VERSION==1
-  int32_t startCol; /**< Activation start column */
-  int32_t startRow; /**< Activation start Row */
-#endif
   int16_t padValue; /**< padding value for activation */
   uint8_t padWidth; /**< padding width - padded columns before data start*/
   uint8_t padHeight; /**< padding height - padded rows before data start*/
@@ -166,60 +130,33 @@ typedef struct cy_nn_conv_params_s
   int32_t inputOffset; /**< activation value offset */
   int32_t outputOffset; /**< output offset value */
   int32_t filterOffset; /**< filter offset value */
-#if CY_IP_MXNNLITE_VERSION==1
-  int32_t outClippingMask; /**< output value saturated to max/min based on\
-                            clippingMask value*/
-  float *outScalingFactor; /**< per axis output scaling factor */
-#else
   const float *outScalingFactor; /**< per axis output scaling factor */
   cy_nnlite_clipping_t outClipping; /**< output value clipping */
   cy_en_nnlite_activation_size_t  act_size; /**< Selection activation data-path width */
   bool sparseWeights;                         /**< Packed Sparse weights */
-#endif
   int8_t *scratchBuf; /**< scratch buffer for convolution layer, will be used\
                        DMA descriptors in DMA mode */
 } cy_nn_conv_params_t;
 
 /**
  *****************************************************************************
- ** \brief FC parameter structure
+ ** \brief FC paramter structure
  *****************************************************************************/
 typedef struct cy_nn_fc_params_s
 {
   int32_t inputOffset; /**< activation value offset */
   int32_t outputOffset; /**< output offset vaLUE */
   int32_t filterOffset; /**< Filter offset value */
-  float outScalingFactor; /**< output scaling factor */
-#if CY_IP_MXNNLITE_VERSION==1
-  int32_t outClippingMask; /**< output value saturated to max/min based on\
-                            clippingMask value*/
-#else
+  float *outScalingFactor; /**< output scaling factor */
   cy_nnlite_clipping_t outClipping; /**< output value clipping */
   cy_en_nnlite_activation_size_t inputSize;   /**< Input data precision */
   cy_en_nnlite_output_size_t     outputSize;  /**<  Output precision  */
   bool sparseWeights;                         /**< Packed Sparse weights */
-#endif
-  int8_t *scratchBuf; /**< scratch buffer for fc layer, will be used for for\
-                       DMA descriptors and MEMIO configuration in DMA mode */
+  int8_t *scratchBuf; /**< scratch buffer for fc layer, will be used for for
+                       DMA descriptors and scaling factors */
+  bool isPerChannel;  /**< Per-channel output scaling */
 } cy_nn_fc_params_t;
 
-#if CY_IP_MXNNLITE_VERSION==1
-/**
- *****************************************************************************
- ** \brief Average pool parameter structure
- *****************************************************************************/
-typedef struct
-{
-  uint8_t padWidth; /**< padding width */
-  uint8_t padHeight; /**< padding height */
-  uint8_t strideCol; /**< stride column */
-  uint8_t strideRow; /**< stride row */
-  int32_t outClippingMask; /**< output value saturated to max/min based on\
-                           clippingMask value*/
-  int8_t *scratchBuf;   /**< used for transpose operations,
-                           DMA descriptors and MEMIO configuration in DMA mode */
-} cy_nn_avgpool_params_t;
-#else
 /**
  *****************************************************************************
  ** \brief Average pool parameter structure
@@ -230,11 +167,11 @@ typedef struct cy_nn_pool_params_s
   uint8_t strideRow; /**< stride row */
   cy_nnlite_clipping_t outClipping; /**< output value clipping */
   cy_en_nnlite_activation_size_t  act_size; /**< Selection activation data-path width */
-  int8_t *scratchBuf;   /**< DMA descriptors and MEMIO configuration in DMA mode */
+  int8_t *scratchBuf;   /**< used for xpose operations,
+                           DMA descriptors and MEMIO configuration in DMA mode */
 } cy_nn_pool_params_t;
-#endif
 
-#if CY_IP_MXNNLITE_VERSION !=1
+
 /**
  *****************************************************************************
  ** \brief Pointwise operation parameter structure
@@ -305,7 +242,6 @@ typedef struct cy_nn_layernorm_params_s
   int8_t *scratchBuf;  /**<  Scratch buffer for intermediate tensors  */
 } cy_nn_layernorm_params_t;
 
-#endif
 
 /**
  *****************************************************************************
@@ -325,31 +261,15 @@ typedef struct cy_nn_dims_s
   uint32_t dims[4];  /**<  dimension array of tensor */
 } cy_nn_dims_t;
 
-#if CY_IP_MXNNLITE_VERSION ==1
 /**
  *****************************************************************************
  ** \brief activation parameter structure
  *****************************************************************************/
-typedef struct
-{
-  uint16_t intercept0; /**< intercept value for interpolation,
-                           x<0, LUTAddr = 0 */
-  uint16_t intercept1; /**< intercept value for interpolation,
-                           x>=0, LUTAddr = 1 */
-  uint16_t slope0; /**< slope value for interpolation, x<0, LUTAddr = 0 */
-  uint16_t slope1; /**< slope value for interpolation, x>=0, LUTAddr = 1 */
-} cy_nn_act_intrpl_param_t;
-#else
-/**
- *****************************************************************************
- ** \brief activation parameter structure
- *****************************************************************************/
+
 typedef struct
 {
   float segment[2]; /**< Interpolation values index 0: x >= 0, index 0 1: x < 0 */
 } cy_nn_act_intrpl_param_t;
-
-#endif
 
 /**
  *****************************************************************************
@@ -507,498 +427,10 @@ typedef struct cy_kernel_config
 /*****************************************************************************/
 /* Global function prototypes ('extern', definition in C source)             */
 /*****************************************************************************/
-#if CY_IP_MXNNLITE_VERSION ==1
-/**
- *****************************************************************************
- ** \brief  A function which returns a "virtual-weights" array's size for
- ** average pooling cases
- ** \retval size of  AvgPool Kernel weights
- *****************************************************************************/
-uint32_t Cy_NNLite_GetAvgPoolKernelWeightSize(void);
-/**
-*****************************************************************************
-** \brief  return AvgPool Kernel weight pointer
-** All-ones const weights array used by AvgPool
-** Size is returned by Cy_NNLite_GetAvgPoolKernelWeightSize.
-** These are best held in non-volatile "code" memory as the
-** NNLite's bus connectivity is optimized for this.
-** Held in SRAM banks will result in heavy contention
-** between the weight and activation streaming engines.
-**
-** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-int8_t *Cy_NNLite_GetAvgPoolKernelWeightPtr(void);
-
-/**
- *****************************************************************************
- ** \brief  A function set "virtual-weights" array's pointer and size for
- ** average pooling cases when valid pointer and size is passed, in case of
- ** NULL pointer or 0 size array's pointer will be reset to default value
- ** pointer should not be freed until AvgPool weight pointer is reset to
- ** default by calling same API with NULL pointer value or 0 size in argument
- **
- ** \param [in]  weightsArrayPtr   AvgPool Kernel weight array pointer
- **
- ** \param [in]  weightsArraySize  AvgPool Kernel weight array size
-
- *****************************************************************************/
-cy_en_nnlite_status_t  Cy_NNLite_SetAvgPoolKernelWeightArrayPtr(
-                int8_t *weightsArrayPtr, uint32_t weightsArraySize);
-
-/**
- *****************************************************************************
- ** \brief 2D Convolution CPU mode kernel API, API will configure nnlite and
- ** then start nnlite operation. API will work in blocking mode
- ** if callback function in  Kernel config structure is NULL,
- ** if valid callback function is passed in Kernel config, API will be non-blocking
- ** and callback function will be called after completion of layer, caller need to
- ** wait for callback function before calling another Kernel API, else error will be
- ** for other function
- ** intrplParam can be passed as NULL for default behavior of activation,
- ** to parametrize activation pass valid  intrplParam.
- ** filterData points to weights if sparsityBaseAddr is NULL otherwise weights
- ** pointer will be derived from sparsityBaseAddr and filterData will
- ** not be used.
- ** Valid scratch buffer should be passed in convParam, scratch buffer will be
- ** used for transpose operation (transpose scratch buffer and transpose DMA
- ** descriptors)for per axis convolution implementation, size of scratch buffer
- ** should be derived by calling function Cy_NNLite_ConvolutionScratchBufSize.
- ** Scratch buffer should be 4 byte aligned, and can be freed after receiving
- ** completion callback of API in case non blocking mode.
- ** For Multiscaling outData pointer should be 4 byte aligned for DMA transpose
- **
- ** \param [in]  inputData        activation buffer pointer
- **
- ** \param [in]  outData         output buffer pointer
- **
- ** \param [in]  inputDims        activation dimension pointer
- **
- ** \param [in]  outputDims       output dimension pointer
- **
- ** \param [in]  filterDims       filter dimension pointer
- **
- ** \param [in]  filterData       filter pointer
- **
- ** \param [in]  biasData         bias pointer
- **
- ** \param [in]  sparsityBaseAddr sparsity map base pointer
- **
- ** \param [in]  convParam        convolution parameter structure pointer
- **
- ** \param [in]  actType          output activation type
- **
- ** \param [in]  intrplParam      interpolation param for output activation
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_Convolution(const int8_t* inputData, int8_t* outData,
-                const cy_nn_dims_t *inputDims, const cy_nn_dims_t *outputDims,
-                const cy_nn_dims_t *filterDims, const int8_t *filterData,
-                const int32_t *biasData, const void *sparsityBaseAddr,
-                cy_nn_conv_params_t *convParam,
-                cy_en_nnlite_fused_activation_t actType,
-                cy_nn_act_intrpl_param_t *intrplParam);
-
-/**
- *****************************************************************************
- ** \brief Fully connected CPU mode kernel API, API will configure nnlite and
- ** then start nnlite operation. API will work in blocking mode
- ** if callback function in  Kernel config structure is NULL,
- ** if valid callback function is passed in Kernel config, API will be non-blocking
- ** and callback function will be called after completion of layer, caller need to
- ** wait for callback function before calling another Kernel API, else error will be
- ** for other function
- ** intrplParam can be passed as NULL for default behavior
- ** of activation, to parametrize activation pass valid  intrplParam.
- ** filterData points to weights If sparsityBaseAddr is NULL, otherwise
- ** weights pointer will be derived from sparsityBaseAddr and filterData
- ** will not be used.
- ** No scratch buffer is required in CPU mode fully connected
- **
- ** \param [in]  inputData        activation buffer pointer
- **
- ** \param [in]  outData         output buffer pointer
- **
- ** \param [in]  inputDims        activation dimension pointer
- **
- ** \param [in]  outputDims       output dimension pointer
- **
- ** \param [in]  filterDims       filter dimension pointer
- **
- ** \param [in]  filterData       filter pointer
- **
- ** \param [in]  biasData         bias pointer
- **
- ** \param [in]  sparsityBaseAddr sparsity map base pointer
- **
- ** \param [in]  fcParam          fully Connected parameter structure pointer
- **
- ** \param [in]  actType          output activation type
- **
- ** \param [in]  intrplParam      interpolation param for output activation
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_FullyConnected(const int8_t* inputData, int8_t* outData,
-                const cy_nn_dims_t *inputDims, const cy_nn_dims_t *outputDims,
-                const cy_nn_dims_t *filterDims, const int8_t *filterData,
-                const int32_t *biasData, const void *sparsityBaseAddr,
-                cy_nn_fc_params_t *fcParam,
-                cy_en_nnlite_fused_activation_t actType,
-                cy_nn_act_intrpl_param_t *intrplParam);
-/**
- *****************************************************************************
- ** \brief Average pool CPU mode kernel API, API will configure nnlite.
- ** and then start nnlite operation. API will work in blocking mode
- ** if callback function in  Kernel config structure is NULL,
- ** if valid callback function is passed in Kernel config, API will be non-blocking
- ** and callback function will be called after completion of layer, caller need to
- ** wait for callback function before calling another Kernel API, else error will be
- ** for other function
- ** Valid scratch buffer should be allocated and passed in avgpoolParam and
- ** scratch buffer should be 4 byte aligned. Size of scratch buffer should be
- ** calculated using API Cy_NNLite_AvgpoolDMAScratchBufSize
- ** Scratch buffer can be freed after receiving completion callback of API.
- **
- ** \param [in]  inputData        activation buffer pointer
- **
- ** \param [in]  outData         output buffer pointer
- **
- ** \param [in]  inputDims        activation dimension pointer
- **
- ** \param [in]  outputDims       output dimension pointer
- **
- ** \param [in]  filterDims       filter dimension pointer
- **
- ** \param [in]  avgpoolParam     average pool parameter structure pointer
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_Avgpool(const int8_t* inputData, int8_t* outData,
-                const cy_nn_dims_t *inputDims, const cy_nn_dims_t *outputDims,
-                const cy_nn_dims_t *filterDims,
-                cy_nn_avgpool_params_t *avgpoolParam);
-
-/**
- *****************************************************************************
- ** \brief 2D Convolution kernel DMA API, API will fill DMA descriptor
- ** pointing nnlite MEMIO configuration structure.
- ** intrplParam can be passed as NULL for default behavior of activation, to
- ** parametrize activation pass valid  intrplParam.
- ** filterData points to weights If sparsityBaseAddr is NULL otherwise weights
- ** pointer will be derived from sparsityBaseAddr and filterData will
- ** not be used.
- ** Valid scratch buffer should be passed in convParam, scratch buffer will be
- ** used for nnlite MEMIO configuration structure (per axis 1), and for
- ** transpose operation for per axis (transpose scratch buffer and transpose
- ** DMA descriptors) convolution implementation, size of scratch buffer should
- ** be derived by calling function Cy_NNLite_ConvolutionScratchBufSize.
- ** Scratch buffer should be 4 byte aligned and can be freed after receiving completion
- ** callback in case of Non blocking mode.
- ** N convolutions Descriptors and Transpose Descriptors will be Queue in DMA
- ** together. CY_NNLITE_OP_QUEUED will be the return value on success
- ** After queuing kernel, DMA needs to be triggered by calling
- ** API Cy_TriggerNNLiteDMAQueue.Callback function from kernel config
- ** structure will be called after completion of all queued layers
- ** kernel config structure should point to valid callback function.
- ** For Multiscaling outData pointer should be 4 byte aligned for DMA transpose
- ** \param [in]  inputData        activation buffer pointer
- **
- ** \param [in]  outData         output buffer pointer
- **
- ** \param [in]  inputDims        activation dimension pointer
- **
- ** \param [in]  outputDims       output dimension pointer
- **
- ** \param [in]  filterDims       filter dimension pointer
- **
- ** \param [in]  filterData       filter pointer
- **
- ** \param [in]  biasData         bias pointer
- **
- ** \param [in]  sparsityBaseAddr sparsity map base pointer
- **
- ** \param [in]  convParam        convolution parameter structure pointer
- **
- ** \param [in]  actType          output activation type
- **
- ** \param [in]  intrplParam      interpolation param for output activation
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_ConvolutionDMA(const int8_t* inputData, int8_t* outData,
-                const cy_nn_dims_t *inputDims, const cy_nn_dims_t *outputDims,
-                const cy_nn_dims_t *filterDims, const int8_t *filterData,
-                const int32_t *biasData, const void *sparsityBaseAddr,
-                cy_nn_conv_params_t *convParam,
-                cy_en_nnlite_fused_activation_t actType,
-                cy_nn_act_intrpl_param_t *intrplParam);
-
-/**
- *****************************************************************************
- ** \brief DMA based fully connected(Dense) kernel API, API will fill DMA
- ** descriptor pointing NNLite MEMIO configuration structure.
- ** intrplParam can be passed as NULL for default behavior of activation,
- ** to parametrize activation pass valid  intrplParam.
- ** filterData points to weights if sparsityBaseAddr is NULL otherwise weights
- ** pointer will be derived from sparsityBaseAddr and filterData will not be
- ** used.
- ** Valid scratch buffer should be passed in fcParam, scratch buffer will be
- ** used for DMA descriptors and for nnlite MEMIO configuration structure for
- ** DMA. Size of scratch buffer should be calculated using API
- ** Cy_NNLite_FullyConnectedDMAScratchBufSize
- ** API will setup DMA descriptor and will Queue DMA operation.
- ** CY_NNLITE_OP_QUEUED will be the return value on success
- ** After queuing kernel, DMA needs to be triggered by calling
- ** API Cy_TriggerNNLiteDMAQueue. Callback function from kernel config will
- ** be called after completion of all queued layers, kernel config
- ** structure should point to valid callback function.Scratch buffer can be
- ** freed after receiving completion callback.
- **
- ** \param [in]  inputData        activation buffer pointer
- **
- ** \param [in]  outData         output buffer pointer
- **
- ** \param [in]  inputDims        activation dimension pointer
- **
- ** \param [in]  outputDims       output dimension pointer
- **
- ** \param [in]  filterDims       filter dimension pointer
- **
- ** \param [in]  filterData       filter pointer
- **
- ** \param [in]  biasData         bias pointer
- **
- ** \param [in]  sparsityBaseAddr sparsity map base pointer
- **
- ** \param [in]  fcParam          fully Connected parameter structure pointer
- **
- ** \param [in]  actType          output activation type
- **
- ** \param [in]  intrplParam      interpolation param for output activation
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_FullyConnectedDMA(const int8_t* inputData, int8_t* outData,
-                const cy_nn_dims_t *inputDims, const cy_nn_dims_t *outputDims,
-                const cy_nn_dims_t *filterDims, const int8_t *filterData,
-                const int32_t *biasData, const void *sparsityBaseAddr,
-                cy_nn_fc_params_t *fcParam,
-                cy_en_nnlite_fused_activation_t actType,
-                cy_nn_act_intrpl_param_t *intrplParam);
-
-/**
- *****************************************************************************
- ** \brief Average pool kernel API DMA mode, API will fill DMA descriptor
- ** pointing NNLite MEMIO configuration structure.Implemented in nnlite using
- ** convolution.
- ** Valid scratch buffer should be allocated and passed in
- ** avgpoolParam. Scratch buffer should be 4 byte aligned and size of scratch buffer
- ** should be calculated using API
- ** Cy_NNLite_AvgPoolDMAScratchBufSize. Scratch buffer will be used for DMA
- ** descriptors and for MEMIO configuration structure and for creating
- ** weights for weights streamer for convolution operation.
- ** API will setup DMA descriptor and will Queue DMA operation.
- ** CY_NNLITE_OP_QUEUED will be the return value on success
- ** After queuing kernel, DMA needs to be triggered by calling
- ** API Cy_TriggerNNLiteDMAQueue.
- ** Callback function from kernel config will be called after completion of
- ** all queued layers,kernel config structure should point to valid
- ** callback function. Scratch buffer can be freed after receiving completion
- ** callback.
- **
- ** \param [in]  inputData        activation buffer pointer
- **
- ** \param [in]  outData         output buffer pointer
- **
- ** \param [in]  inputDims        activation dimension pointer
- **
- ** \param [in]  outputDims       output dimension pointer
- **
- ** \param [in]  filterDims       filter dimension pointer
- **
- ** \param [in]  avgpoolParam     average pool parameter structure pointer
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_AvgpoolDMA(const int8_t* inputData, int8_t* outData,
-                const cy_nn_dims_t *inputDims,
-                const cy_nn_dims_t *outputDims,
-                const cy_nn_dims_t *filterDims,
-                cy_nn_avgpool_params_t *avgpoolParam);
-
-/**
- *****************************************************************************
- ** \brief Cy_NNLite_TriggerDMAQueue will trigger DMA transfer of Queued layer
- ** starting from first queued layer, callback function will be called after
- ** completion of all the Queued layer if valid callback function is passed
- ** in kernel context, API will work in blocking mode if callback function is
- ** NULL
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t Cy_NNLite_TriggerDMAQueue(void);
-
-/**
- *****************************************************************************
- ** \brief Cy_NNLite_GetQueuedLayerCount will return count of queued layer
- ** for DMA
- **
- ** \retval dmaQDepth number of layers in DMA Queue
- *****************************************************************************/
-uint32_t Cy_NNLite_GetQueuedLayerCount(void);
-
-/**
- *****************************************************************************
- ** \brief API will return return size of scratch buffer in bytes for Average
- ** pool kernel in CPU mode, buffer size will be equal to filter
- ** dimensions
- **
- ** \param [in]  filterDims  filter dimension
- ** \param [in]  inDims      input dimension
- ** \param [in]  outDims     output dimension
- ** \retval buffer size
- *****************************************************************************/
-uint32_t Cy_NNLite_AvgpoolScratchBufSize(const cy_nn_dims_t *filterDims,
-                      const cy_nn_dims_t *inDims, const cy_nn_dims_t *outDims);
 
 
-/**
- *****************************************************************************
- ** \brief API will return return size of scratch buffer in bytes for Average
- ** pool kernel in DMA mode, buffer size will be equal to filter dimensions
- ** plus cy_nnlite_memio_dma_t and dma descriptors, cy_nnlite_memio_dma_t will
- ** be used as source pointer having nnlite MEMIO configuration
- **
- ** \param [in]  filterDims  filter dimension
- ** \param [in]  inDims  input dimension
- ** \param [in]  outDims  output dimension
- **
- ** \retval buffer size
- *****************************************************************************/
-uint32_t Cy_NNLite_AvgpoolDMAScratchBufSize(const cy_nn_dims_t *filterDims,
-                      const cy_nn_dims_t *inDims, const cy_nn_dims_t *outDims);
 
-/**
- *****************************************************************************
- ** \brief ConvolutionScratchBufSize API will return scratch buffer size for
- ** convolution kernel CPU mode, buffer will be used for transpose function
- ** which will required scratch buffer equal to out buffer plus DMA
- ** descriptor, count of descriptors depends on size of output buffer
- ** if all scaling factor pointed by outScalingFactor are equal, transpose
- ** functionality will not be required and size return will be 0 bytes
- **
- ** \param [in]  filterDims  filter dimension
- ** \param [in]  outputDims  output dimension
- ** \param [in]  outScalingFactor scaling factor array pointer
- **
- ** \retval buffer size
- *****************************************************************************/
-uint32_t Cy_NNLite_ConvolutionScratchBufSize(const cy_nn_dims_t *filterDims,
-                                      const cy_nn_dims_t *outputDims,
-                                      float *outScalingFactor);
 
-/**
- *****************************************************************************
- ** \brief Cy_NNLite_ConvolutionDMAScratchBufSize API will return scratch
- ** buffer size for convolution kernel DMA mode, buffer will be used for
- ** cy_nnlite_memio_dma_t * number of filters plus transpose function which
- ** will required scratch buffer equal to out buffer plus DMA descriptors,
- ** count of descriptors depends on size of output buffer
- ** if all scaling factor pointed by outScalingFactor are equal, transpose
- ** functionality will not be required, buffer size will be for only for DMA
- ** operation
- **
- ** \param [in]  filterDims  filter dimension
- ** \param [in]  outputDims  output dimension
- ** \param [in]  outScalingFactor scaling factor array pointer
- **
- ** \retval buffer size
- *****************************************************************************/
-uint32_t
-Cy_NNLite_ConvolutionDMAScratchBufSize(const cy_nn_dims_t *filterDims,
-                                       const cy_nn_dims_t *outputDims,
-                                       float *outScalingFactor);
-
-/**
- *****************************************************************************
- ** \brief API will return scratch buffer size for fully connected DMA mode
- ** kernel, buffer will be used for DMA descriptors and for MEMIO
- ** configuration structure of type cy_nnlite_memio_dma_t for DMA
- **
- ** \retval buffer size
- *****************************************************************************/
-uint32_t Cy_NNLite_FullyConnectedDMAScratchBufSize(void);
-
-/**
- *****************************************************************************
- ** \brief Cy_NNLite_GetCurrDMAQueue API will copy current dma queue in to
- ** dmaQueue pointer, valid dmaQueue pointer should be passed.
- ** To get the runnable queue Cy_NNLite_GetCurrDMAQueue should be
- ** called after the created in Kernel DMA API such as Cy_NNLite_AvgpoolDMA
- ** and get executed by calling Cy_NNLite_TriggerDMAQueue
- **
- ** \param [in] dmaQueue dma queue pointer in which dma queue will be copied
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
- cy_en_nnlite_status_t
- Cy_NNLite_GetCurrDMAQueue(cy_nnlite_dma_queue_config_t *dmaQueue);
-
-/**
- *****************************************************************************
- ** \brief Cy_NNLite_RunDMAQueue API will Trigger DMA dmaQueue queue
- ** valid dmaQueue pointer should be passed, DMA queue should return
- ** from Cy_NNLite_GetCurrDMAQueue
- ** queue will be in  runnable state if Cy_NNLite_GetCurrDMAQueue
- ** called after queue created in Kernel DMA API such as Cy_NNLite_AvgpoolDMA
- ** and get executed by calling Cy_NNLite_TriggerDMAQueue.
- ** API will work in blocking mode if callback function is passed as NULL
- ** in kernel context
- **
- ** \param [in] dmaQueue dma queue pointer in which dma queue will be copied
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- *****************************************************************************/
- cy_en_nnlite_status_t
- Cy_NNLite_RunDMAQueue(cy_nnlite_dma_queue_config_t *dmaQueue);
-
-/**
- *****************************************************************************
- ** \brief  Kernel Init API, initializes PDL driver and setup IRQ handler and
- ** setup function pointers from kernelConfig argument. KernelConfig should
- ** have valid pointer for Mutex variable and function pointers for
- ** mutexCreate, mutexDelete, mutexLock, mutexUnlock and and should have valid
- ** pointers for Semaphore variable and function pointers for SemCreate,
- ** SemDelete, SemWait and SemGive for synchronization primitives. This API will
- ** allocate mutex and semaphore by calling mutexCreate and SemCreate, and will
- ** use them in successive call to other kernel public API's. API needs to be
- ** called before calling any other kernel API, If any of the pointers in
- ** KernelConfig is not valid API will return error code ,return value of API
- ** should be check to confirm successful initialization.
- **
- ** \param [in]  kernelConfig  kernel configuration structure
- **
- ** \retval cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t Cy_NNLite_KernelInit(cy_kernel_config_t *kernelConfig);
-
- /**
- *****************************************************************************
- ** \brief  Kernel Deinit API, de-initialize PDL driver and synchronization
- ** primitives. needs re initialization after this API is called. Should be
- ** called only at end of program
- **
- ** \retval cy_en_nnlite_status_t
- *****************************************************************************/
-cy_en_nnlite_status_t Cy_NNLite_KernelDeInit(void);
-#else
 /**
  *****************************************************************************
  ** \brief Set PWL interpolation parameters for LeakyRElU activation
@@ -1225,6 +657,11 @@ Cy_NNLite_DepthwiseConvolutionDMA(const int8_t* inputData, int8_t* outData,
  ** and callback function will be called after completion of layer, caller need to
  ** wait for callback function before calling another Kernel API, else error will be
  ** for other function
+ ** intrplParam can be passed as NULL for default behavior
+ ** of activation, to parametrize activation pass valid  intrplParam.
+ ** filterData points to weights If sparsityBaseAddr is NULL, otherwise
+ ** weights pointer will be derived from sparsityBaseAddr and filterData
+ ** will not be used.
  **
  ** \param [in]  inputData        activation buffer pointer
  **
@@ -1897,8 +1334,31 @@ uint32_t Cy_NNLite_LayerNormScratchBufSize (const cy_nn_dims_t *inputDims,
  *****************************************************************************/
 
 cy_en_nnlite_status_t
-Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData,
-                    uint32_t count);
+Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData, uint32_t count);
+
+
+
+/**
+ *****************************************************************************
+ ** \brief Repeat Byte Copy operation with new input/output buffers
+ **
+ ** \note Must follow a Cy_NNLite_Byte_Copy operation that has setup the NNLite Pipeline,
+ ** in a context where this setup can be guaranteed to still be valid.
+ ** For example, this can be used to block copies for concatenation operations.
+ **
+ ** \param [in]  inData         address start byte vector  to be copied
+ **
+ ** \param [in]  outData        destination start address
+ **
+ ** \param [in]  count          Number of bytes to be copied
+ **
+ ** \retval Refer \ref cy_en_nnlite_status_t
+ **
+ **
+ *****************************************************************************/
+
+cy_en_nnlite_status_t
+Cy_NNLite_Redo_Byte_Copy(const int8_t *inData, int8_t* outData,  uint32_t count);
 
 /**
  *****************************************************************************
@@ -1970,7 +1430,7 @@ Cy_NNLite_Q31Reciprocal(const uint32_t *inData, float* outData,
  **
  */
 cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
-                                                   const int8_t *input_data,
+                                                   const void *input_data,
                                                    const cy_nn_lstm_dims *lstm_dims,
                                                    const int8_t *input_to_input_weights,
                                                    const int8_t *input_to_forget_weights,
@@ -1982,9 +1442,9 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
                                                    const int8_t *recurrent_to_output_weights,
                                                    const int8_t *projection_weights,
                                                    const cy_nn_lstm_params *lstm,
-                                                   int8_t *output_state,
+                                                   void *output_state,
                                                    int16_t *cell_state,
-                                                   int8_t *output_data);
+                                                   void *output_data);
 
 
 /**
@@ -2164,7 +1624,6 @@ cy_en_nnlite_status_t Cy_NNLite_KernelDeInit(void);
 void Cy_NNLite_Isr(void);
 #endif
 
-#endif
 /** \} group_nn_kernel_functions */
 
 #ifdef __cplusplus

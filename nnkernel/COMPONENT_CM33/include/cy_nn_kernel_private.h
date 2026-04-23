@@ -35,9 +35,12 @@ extern "C" {
 #endif
 
 #include "cy_pdl.h"
+
+#if !defined(IFX_USE_MXNNLITE_STREAM_EMU) && !defined(ETISS_RISCV)
 #ifndef CY_NNLITE_DMA_DEVICE
 /* value 1, enables DMA mode API's */
 #define CY_NNLITE_DMA_DEVICE  (1)
+#endif
 #endif
 
 #ifndef NNLITE_DMA_CHAN

@@ -14,5 +14,6 @@ var group__group__hal__sdio =
     [ "mtb_hal_sdio_configure", "group__group__hal__sdio.html#ga22f42a7f791389773bec1278f308ea31", null ],
     [ "mtb_hal_sdio_register_callback", "group__group__hal__sdio.html#ga9daa9d2419c7387dc568d65c24500245", null ],
     [ "mtb_hal_sdio_enable_event", "group__group__hal__sdio.html#gaa2a281c84aff503b7b81cbe672cb5750", null ],
-    [ "mtb_hal_sdio_process_interrupt", "group__group__hal__sdio.html#gafd3f8f63c8b88ece1642ad4bd0511062", null ]
+    [ "mtb_hal_sdio_process_interrupt", "group__group__hal__sdio.html#gafd3f8f63c8b88ece1642ad4bd0511062", null ],
+    [ "mtb_hal_sdio_get_max_frequency", "group__group__hal__sdio.html#ga36a9f666f1be602d9151de9b6b34bc73", null ]
 ];

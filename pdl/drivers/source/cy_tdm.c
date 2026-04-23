@@ -6,7 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2021, Cypress Semiconductor Corporation. All rights reserved.
+* (c) 2021-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.

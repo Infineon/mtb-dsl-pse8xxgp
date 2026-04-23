@@ -58,12 +58,12 @@
 * Use the CY_ASSERT() macro to check expressions that must be true if the
 * program is running correctly. It is a convenient way to insert sanity checks.
 * The CY_ASSERT() macro is defined in the cy_utils.h file, which is part of the
-* <a href="https://github.com/Infineon/core-lib">Cypress Core Library (core-lib)</a>.
+* <a href="https://github.com/Infineon/core-lib">Infineon Core Library (core-lib)</a>.
 * The macro behavior is as follows: if the expression passed
 *  to the macro is false, the CPU is halted. \n
 *
 * Starting from the driver version 2.50, the CY_ASSERT macro was moved
-* to the Cypress Core Library (core-lib). Also, the CY_ASSERT implementation
+* to the Infineon Core Library (core-lib). Also, the CY_ASSERT implementation
 * was changed not to call Cy_SysLib_AssertFailed() function, so user application
 * that relied on that should take this change into account. \n
 *
@@ -71,7 +71,7 @@
 * The PDL source code uses this assert mechanism extensively. It is recommended
 * that you enable asserts when debugging firmware. \n
 * <b> Assertion Classes and Levels </b> <br />
-* The <a href="https://github.com/Infineon/core-lib">Cypress Core Library</a>
+* The <a href="https://github.com/Infineon/core-lib">Infineon Core Library</a>
 * defines three assert classes, which correspond to different
 * kinds of parameters. There is a corresponding assert "level" for each class.
 * <table class="doxtable">
@@ -710,6 +710,7 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 */
 /** A basic WatchDog Timer (WDT) reset has occurred since the last power cycle. */
 #define CY_SYSLIB_RESET_HWWDT                 (0x0001U)
+
 /** The fault logging system requested a reset from its Active logic. */
 #define CY_SYSLIB_RESET_ACT_FAULT             (0x0002U)
 /** The fault logging system requested a reset from its Deep-Sleep logic. */
@@ -754,6 +755,8 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 #define CY_SYSLIB_RESET_BODVBAT               (0x100000U)
 /** Overvoltage detection on the internal core VCCD supply.  This is a high-voltage cause bit that blocks recording of other high-voltage cause bits, except RESET_PORVDDD  *XRES, or WDT. */
 #define CY_SYSLIB_RESET_OVDVCCD               (0x400000U)
+
+
 /** PXRES triggered.  This is a high-voltage cause bit that blocks recording of other high-voltage cause bits, except RESET_PORVDDD, *XRES, or WDT. Hardware clears this bit during POR. */
 #define CY_SYSLIB_RESET_PXRES                 (0x10000000U)
 /** Structural reset was asserted.  This is a high-voltage cause bit that blocks recording of other high-voltage cause bits, except RESET_PORVDDD, *XRES, or WDT. Hardware clears this bit during POR. */

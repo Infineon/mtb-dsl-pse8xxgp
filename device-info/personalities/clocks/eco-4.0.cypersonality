@@ -9,7 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) 2022-2025, Cypress Semiconductor Corporation (an Infineon company) or
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * an affiliate of Cypress Semiconductor Corporation.
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -108,10 +109,10 @@ Only after providing values for all parameters, the configurability can be deter
 
     <!-- Restrict ECO connections to pins -->
     <ParamSignal port='eco_in[0]' name='Input' group='Connections' visible='true' desc='The input/passive terminal of the internal ECO circuitry' canBeEmpty='false' requirePreferred='true'>
-      <Constraint type='REQUIRE' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
+      <Constraint type='REQUIRE' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='eco_out[0]' name='Output' group='Connections' visible='true' desc='The output/active terminal of the internal ECO circuitry' canBeEmpty='false' requirePreferred='true'>
-      <Constraint type='REQUIRE' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
+      <Constraint type='REQUIRE' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
     </ParamSignal>
 
     <ParamBool id='suppressCodeGen' default='true' />

@@ -1,5 +1,12 @@
 var NAVTREEINDEX24 =
 {
+"group__group__scb__uart__macros__receive__status.html#ga5ddb60f6cf8432fb0e2bc15b1a353902":[2,2,23,4,0,3,0],
+"group__group__scb__uart__macros__receive__status.html#gabab74988473020abe0dae2cc861cdf26":[2,2,23,4,0,3,4],
+"group__group__scb__uart__macros__receive__status.html#gad7b10851c71b52b4a17b018f52d3154d":[2,2,23,4,0,3,3],
+"group__group__scb__uart__macros__receive__status.html#gaf716a74dfcc32ecbefe0dbff302677fc":[2,2,23,4,0,3,5],
+"group__group__scb__uart__macros__receive__status.html#gaf9abe86a752ec938ab197bd512bf6d22":[2,2,23,4,0,3,2],
+"group__group__scb__uart__macros__rx__fifo__status.html":[2,2,23,4,0,1],
+"group__group__scb__uart__macros__rx__fifo__status.html#ga2b72cda1727aaa447c0820ec971452a1":[2,2,23,4,0,1,5],
 "group__group__scb__uart__macros__rx__fifo__status.html#ga2c2ad72882685c29a4755ead9e5bcda9":[2,2,23,4,0,1,0],
 "group__group__scb__uart__macros__rx__fifo__status.html#ga305036745f5db0cea8cd97fa8b6ade43":[2,2,23,4,0,1,7],
 "group__group__scb__uart__macros__rx__fifo__status.html#ga756096145d4da064bb6ef14344923cd8":[2,2,23,4,0,1,3],
@@ -242,12 +249,5 @@ var NAVTREEINDEX24 =
 "group__group__sd__host__low__level__functions.html#gac3728dc79e71af7ee2b2521b38fa7a06":[2,2,24,1,1,7],
 "group__group__sd__host__low__level__functions.html#gacfa588e2d3797fab335cc8880d59d0ee":[2,2,24,1,1,32],
 "group__group__sd__host__low__level__functions.html#gad14bf4c715eaa282580d89bd2be1a420":[2,2,24,1,1,2],
-"group__group__sd__host__low__level__functions.html#gad575d00f4e29d87dd3221ff84b0d855c":[2,2,24,1,1,15],
-"group__group__sd__host__low__level__functions.html#gae619bd70f081a40c7e213712561d3dcc":[2,2,24,1,1,5],
-"group__group__sd__host__low__level__functions.html#gae9adeccedaf9ba116531ca4192a22cd7":[2,2,24,1,1,8],
-"group__group__sd__host__low__level__functions.html#gaf3571becec1bbf64c3ba0fae36fe65fc":[2,2,24,1,1,40],
-"group__group__sd__host__low__level__functions.html#gafc789757b3705982647dae009225d149":[2,2,24,1,1,41],
-"group__group__sd__host__low__level__functions.html#gafc7f356fa8eaf81ab1e4abafeb46064c":[2,2,24,1,1,1],
-"group__group__sd__host__macros.html":[2,2,24,0],
-"group__group__sd__host__macros__card__states.html":[2,2,24,0,1]
+"group__group__sd__host__low__level__functions.html#gad575d00f4e29d87dd3221ff84b0d855c":[2,2,24,1,1,15]
 };

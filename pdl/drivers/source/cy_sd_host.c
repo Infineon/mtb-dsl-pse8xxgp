@@ -8,8 +8,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2018-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,6 @@
 *******************************************************************************/
 
 #include "cy_device.h"
-
 #if defined (CY_IP_MXSDHC)
 
 #include "cy_sd_host.h"
@@ -4819,16 +4818,20 @@ static cy_en_sd_host_bus_speed_mode_t Cy_SD_Host_FindBusSpeedMode(SDHC_Type *bas
 
             if (CY_SD_HOST_SUCCESS == ret)
             {
-                /* Parse the response on DAT lines and assign bus.speed mode */
-                if ((bool)(status[3] & 0x0000800UL)) /* Bit 404 refers to DDR50 support in 512 bit SD status */
+                /* Parse the response on DAT lines and assign bus speed mode.
+                 * Switch Function Status bits 415:400 contain Function Group 1 (Access Mode) support.
+                 * Per SD Physical Layer Spec 4.3.10.4, data is shifted MSB first, so bits 415:400
+                 * map to bits 23:8 of status[3] (byte swap within each 32-bit word).
+                 * Bit 400 = SDR12, Bit 401 = HS/SDR25, Bit 402 = SDR50, Bit 403 = SDR104, Bit 404 = DDR50 */
+                if ((bool)(status[3] & 0x00001000UL)) /* Bit 404 - DDR50 support */
                 {
                     speedMode = CY_SD_HOST_BUS_SPEED_DDR50;
                 }
-                else if ((bool)(status[3] & 0x00002000UL))  /* Bit 402 refers to SDR50 support in 512 bit SD status */
+                else if ((bool)(status[3] & 0x00000400UL)) /* Bit 402 - SDR50 support */
                 {
                     speedMode = CY_SD_HOST_BUS_SPEED_SDR50;
                 }
-                else if ((bool)(status[3] & 0x00004000UL))  /* Bit 401 refers to SDR25/High-Speed support in 512 bit SD status */
+                else if ((bool)(status[3] & 0x00000200UL)) /* Bit 401 - SDR25/High-Speed support */
                 {
                     if (lowVoltageSignaling)
                     {
@@ -4839,7 +4842,7 @@ static cy_en_sd_host_bus_speed_mode_t Cy_SD_Host_FindBusSpeedMode(SDHC_Type *bas
                         speedMode = CY_SD_HOST_BUS_SPEED_HIGHSPEED;
                     }
                 }
-                else if ((bool)(status[3] & 0x00008000UL)) /* Bit 400 refers to SDR12_5/Default support in 512 bit SD status */
+                else if ((bool)(status[3] & 0x00000100UL)) /* Bit 400 - SDR12/Default support */
                 {
                     if (lowVoltageSignaling)
                     {
@@ -5557,5 +5560,4 @@ CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.1')
 #endif
 
 #endif /* CY_IP_MXSDHC */
-
 /* [] END OF FILE */

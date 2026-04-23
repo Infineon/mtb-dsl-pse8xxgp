@@ -52,6 +52,7 @@ typedef struct cy_nn_lstm_context_s
     int16_t *cell_gate;
     int16_t *output_gate;
     int16_t *tmp_gate_buf;
+    float  *fc_scratch_buf;
 } cy_nn_lstm_context;
 
 
@@ -73,6 +74,16 @@ typedef struct cy_nn_layer_norm_s
     int16_t *cell_weight;
     int16_t *output_weight;
 } cy_nn_layer_norm;
+
+
+/** Enum for specifying word size of input/output values
+ * @note must be cnsistent with cy_en_nnlite_activation_size_t / cy_en_nnlite_output_size_t
+ **/
+typedef enum cy_nn_word_size_s
+{
+    CY_NN_WORD_SIZE_8 = 0, /**< 8-bit word size */
+    CY_NN_WORD_SIZE_16 = 1, /**< 16-bit word size */
+} cy_nn_word_size;
 
 
 /** Parameters for integer LSTM, as defined in TFLM */
@@ -127,6 +138,8 @@ typedef struct cy_nn_lstm_params_s
     const int32_t *cell_gate_bias;
     const int32_t *output_gate_bias;
 
+    cy_nn_word_size input_size;
+    cy_nn_word_size output_size;
 
 } cy_nn_lstm_params;
 

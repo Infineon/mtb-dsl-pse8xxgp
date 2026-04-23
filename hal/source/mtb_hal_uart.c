@@ -6,9 +6,9 @@
 * a wrapper around the lower level PDL API.
 *
 ********************************************************************************
-* \copyright
-* Copyright 2018-2022 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation
+   * \copyright
+* Copyright(c) 2018-2026 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -35,7 +35,7 @@
 #include "mtb_hal_irq_impl.h"
 #if (MTB_HAL_DRIVER_AVAILABLE_DMA)
 #include "mtb_hal_dma.h"
-#endif /* (MTB_HAL_DRIVER_AVAILABLE_DMA */
+#endif /* (MTB_HAL_DRIVER_AVAILABLE_DMA) */
 #if defined(COMPONENT_MW_ASYNC_TRANSFER)
 #include "mtb_async_transfer.h"
 #endif // defined(COMPONENT_MW_ASYNC_TRANSFER)
@@ -96,7 +96,7 @@ __STATIC_INLINE uint32_t _mtb_hal_uart_get_mode(CySCB_Type const* base)
 //--------------------------------------------------------------------------------------------------
 static void _mtb_hal_uart_irq_handler(mtb_hal_uart_t* obj)
 {
-    /* Save the old value and store it aftewards in case we get into a nested IRQ situation */
+    /* Save the old value and store it afterwards in case we get into a nested IRQ situation */
     /* Safe to cast away volatile because we don't expect this pointer to be changed while we're in
        here, they
      * just might change where the original pointer points */
@@ -655,7 +655,7 @@ cy_rslt_t mtb_hal_uart_set_baud(mtb_hal_uart_t* obj, uint32_t baudrate, uint32_t
         *actualbaud = actual_freq/oversample;
     }
 
-    //Restore the pins fuctionality
+    //Restore the pins functionality
     if (NULL != obj->tx_pin.port)
     {
         Cy_GPIO_SetHSIOM(obj->tx_pin.port, obj->tx_pin.pinNum, tx_hsiom);

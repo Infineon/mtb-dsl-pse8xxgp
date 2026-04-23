@@ -18,11 +18,11 @@
 /******************************************************************************
  * Includes
  ******************************************************************************/
-#if defined (ETHOSU_ARCH) && defined(ETHOSU85)
+#include "ethosu_device.h"
+ #if defined (ETHOSU_ARCH) && defined(ETHOSU85)
 #include "ethosu85_interface.h"
 
 #include "ethosu_config_u85.h"
-#include "ethosu_device.h"
 #include "ethosu_log.h"
 
 #include <assert.h>

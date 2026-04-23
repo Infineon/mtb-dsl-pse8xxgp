@@ -303,12 +303,13 @@
 * \{
 *   There are multiple peripheral clock dividers that, in effect, create
 *   multiple separate peripheral clocks. The available dividers vary per device
-*   series. As an example, for the PSoC 63 series there are 29 dividers:
+*   series.
+*  The PSoC™ Edge E84 MCU has 26 peripheral clock dividers:
 *
-*   - eight 8-bit dividers
-*   - sixteen 16-bit dividers
-*   - four fractional 16.5-bit dividers (16 integer bits, 5 fractional bits)
-*   - one fractional 24.5-bit divider (24 integer bits, 5 fractional bits)
+*  - Fourteen 8-bit dividers
+*  - Five 16-bit integer dividers
+*  - Six 16.5 fractional dividers (16 integer bits, five fractional bits)
+*  - One 24.5 fractional divider (24 integer bits, five fractional bits)
 *
 *
 *   The 8-bit and 16-bit dividers are integer dividers. A divider value of 1
@@ -323,8 +324,7 @@
 *   a high-precision clock is required, for example, for a UART/SPI serial
 *   interface.
 *
-*   ![](sysclk_peri_divs.png)
-*
+*   ![](sysclk_peri_divs_pse84.png)*
 *   Each peripheral can connect to any one of the programmable dividers. A
 *   particular peripheral clock divider can drive multiple peripherals.
 *
@@ -447,7 +447,7 @@ extern "C" {
 #if defined (CY_IP_MXS22SRSS)
 /** IHO clock frequency */
 
-#define CY_SYSCLK_IHO_FREQ  (50000000UL) /* Hz for PSVP */
+#define CY_SYSCLK_IHO_FREQ  (50000000UL) /* Hz */
 
 #endif /* CY_IP_MXS22SRSS*/
 
@@ -1414,7 +1414,7 @@ bool Cy_SysClk_PllLostLock(uint32_t clkPath);
 *
 * Disables the selected PLL.
 *
-* \param clkPath Selects which PLL to disable. 1 is the first PLL; 0 is invalid.
+* \param clkPath Selects which PLL to disable.
 *
 * \return Error / status code: \n
 * CY_SYSCLK_SUCCESS - PLL successfully disabled \n

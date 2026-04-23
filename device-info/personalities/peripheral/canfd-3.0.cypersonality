@@ -9,7 +9,8 @@
 * CAN FD personality description file.
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation
+* (c) 2018-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -53,12 +54,12 @@
     <ParamRange  id='canClkHz' name='CAN Clk in Hz' group='Connections' default='`${getExposedMember(sourceClock, "frequency")}`' min='1' max='200000000' resolution='1' visible='false' editable='false' desc='CAN clock frequency in Hz' />
     <ParamString id='ClkFreq' name='Clock Frequency' group='Connections' default='`${(canClkHz &lt; 1000000) ? (canClkHz / 1000.0) . " kHz" : (canClkHz / 1000000.0) . " MHz"}`' visible='true' editable='false' desc='Frequency of the connected clock' />
     <ParamSignal port='ttcan_rx[0]' name='CAN Rx Pin' group='Connections' visible='true' desc='Reserve the ttcan_rx[0].' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -66,12 +67,12 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='ttcan_tx[0]' name='CAN Tx Pin' group='Connections' visible='true' desc='ttcan_tx[0]' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -79,12 +80,12 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='tr_fifo0[0]' name='DMA Rx FIFO 0 Trigger Output' group='Connections' visible='true' desc='Connects Rx FIFO 0 trigger output to the DMA.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-     <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+     <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -92,12 +93,12 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='tr_fifo1[0]' name='DMA Rx FIFO 1 Trigger Output' group='Connections' visible='true' desc='Connects Rx FIFO 1 trigger output to the DMA.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-     <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+     <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>

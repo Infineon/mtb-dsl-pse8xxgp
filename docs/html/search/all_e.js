@@ -41,7 +41,7 @@ var searchData=
   ['nnlite_5ftanh_5ffrac_5fbits_38',['NNLITE_TANH_FRAC_BITS',['../group__group__nnlite__macros.html#ga343fb778f3a0e0e19021902236d86342',1,'cy_nnlite.h']]],
   ['nnlite_5ftype_39',['NNLITE_Type',['../group__group__nnlite__macros.html#ga16578a8f987e8735705746f932876f7e',1,'cy_nnlite.h']]],
   ['nnlitemutex_40',['nnliteMutex',['../group__group__nn__kernel__data__structures.html#a7625a2fe1158fb79b9d13e1118cff9c8',1,'cy_kernel_config_t']]],
-  ['nnlitesem_41',['nnliteSem',['../group__group__nn__kernel__data__structures.html#af97d5667657f0253ecc459d1c1973a40',1,'cy_kernel_config_t::nnliteSem()'],['../structcy__kernel__context__t.html#a5b6b7caf4a5f302e9c96c175f53de40a',1,'cy_kernel_context_t::nnliteSem()']]],
+  ['nnlitesem_41',['nnliteSem',['../group__group__nn__kernel__data__structures.html#af97d5667657f0253ecc459d1c1973a40',1,'cy_kernel_config_t::nnliteSem()'],['../structcy__kernel__context__t.html#aee51a6c84a2aaa16939c4188e3af3687',1,'cy_kernel_context_t::nnliteSem()']]],
   ['nnlitestate_42',['nnliteState',['../group__group__nnlite__data__structures.html#a0b648c88e21579cf17c56af130b23466',1,'cy_nnlite_context_t']]],
   ['non_5fsecure_5fsflash_5ftype_43',['NON_SECURE_SFLASH_Type',['../structNON__SECURE__SFLASH__Type.html',1,'']]],
   ['nonmatchingframesextended_44',['nonMatchingFramesExtended',['../group__group__canfd__data__structures.html#a7c90e10439cb1881407990c66e521fd3',1,'cy_stc_canfd_global_filter_config_t']]],

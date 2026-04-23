@@ -16,6 +16,11 @@ This release of the PSOC™ Edge GNU make build recipe includes complete support
     * LLVM Embedded Toolchain for Arm
 
 ### What Changed?
+#### v2.3.3
+* Improved project export for the Keil uVision IDE.
+* Resolved several issues with memory utilization reporting.
+* Added Advanced KitProg3 Programming support to launch the ModusToolbox Programmer GUI directly from Eclipse.
+
 #### v2.3.2
 * Removed obsolete interface_version_3 support.
 * Added support for the memory report tool.
@@ -37,7 +42,7 @@ This version of the PSOC™ Edge build system was validated for compatibility wi
 
 | Software and Tools                        | Version |
 | :---                                      | :----:  |
-| ModusToolbox™ Software Environment        | 3.6     |
+| ModusToolbox™ Software Environment        | 3.8     |
 | GCC Compiler                              | 14.2.1  |
 | LLVM Compiler                             | 19.1.5  |
 | IAR Compiler                              | 9.50.2  |
@@ -49,4 +54,4 @@ Minimum required ModusToolbox™ Software Environment: v3.6
 * [Infineon GitHub](https://github.com/Infineon)
 * [ModusToolbox™](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software)
 ---
-(c) 2020-2025, Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+Copyright (c) 2020-2026, Infineon Technologies AG, or an affiliate of Infineon Technologies AG. All rights reserved.

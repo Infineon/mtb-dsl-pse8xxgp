@@ -26,6 +26,7 @@
 *******************************************************************************/
 
 
+#if !defined(CY_SRF_DISABLE)
 /**
 * \addtogroup group_pdl_srf
 * \{
@@ -106,7 +107,7 @@ extern mtb_srf_pool_t cy_pdl_srf_default_pool;
 * \addtogroup group_pdl_srf_macros
 * \{
 */
-#if !defined(CY_PDL_ENABLE_SECURE_AWARE) && !defined(CY_SRF_DISABLE)
+#if !defined(CY_PDL_ENABLE_SECURE_AWARE)
 /** PDL-wide Secure Aware Driver enablement.  Set to 0 to disable all Secure Aware Drivers */
 #define CY_PDL_ENABLE_SECURE_AWARE (1)
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE) */
@@ -180,5 +181,5 @@ cy_rslt_t cy_pdl_srf_module_register(mtb_srf_context_s_t* context);
 /** \} group_pdl_srf_funcs */
 
 #endif /* defined(COMPONENT_SECURE_DEVICE) && (CY_PDL_ENABLE_SECURE_AWARE) */
-
+#endif /* CY_SRF_DISABLE */
 /** \} group_pdl_srf */

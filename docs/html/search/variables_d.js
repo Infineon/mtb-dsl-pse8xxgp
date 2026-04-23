@@ -25,7 +25,7 @@ var searchData=
   ['ninvinpref_22',['ninvInpRef',['../group__group__autanalog__ctb__data__structures.html#a313b9ba4487b2567e9c1886c4704ddc0',1,'cy_stc_autanalog_ctb_dyn_t']]],
   ['nnlayer_5fctl_23',['NNLAYER_CTL',['../structMXNNLITE__2__0__Type.html#a83038b5638252248d3274e05d803ac3f',1,'MXNNLITE_2_0_Type']]],
   ['nnlitemutex_24',['nnliteMutex',['../group__group__nn__kernel__data__structures.html#a7625a2fe1158fb79b9d13e1118cff9c8',1,'cy_kernel_config_t']]],
-  ['nnlitesem_25',['nnliteSem',['../structcy__kernel__context__t.html#a5b6b7caf4a5f302e9c96c175f53de40a',1,'cy_kernel_context_t::nnliteSem()'],['../group__group__nn__kernel__data__structures.html#af97d5667657f0253ecc459d1c1973a40',1,'cy_kernel_config_t::nnliteSem()']]],
+  ['nnlitesem_25',['nnliteSem',['../structcy__kernel__context__t.html#aee51a6c84a2aaa16939c4188e3af3687',1,'cy_kernel_context_t::nnliteSem()'],['../group__group__nn__kernel__data__structures.html#af97d5667657f0253ecc459d1c1973a40',1,'cy_kernel_config_t::nnliteSem()']]],
   ['nnlitestate_26',['nnliteState',['../group__group__nnlite__data__structures.html#a0b648c88e21579cf17c56af130b23466',1,'cy_nnlite_context_t']]],
   ['nonmatchingframesextended_27',['nonMatchingFramesExtended',['../group__group__canfd__data__structures.html#a7c90e10439cb1881407990c66e521fd3',1,'cy_stc_canfd_global_filter_config_t']]],
   ['nonmatchingframesstandard_28',['nonMatchingFramesStandard',['../group__group__canfd__data__structures.html#abbd6e30ca429e9f46a03593f3a234042',1,'cy_stc_canfd_global_filter_config_t']]],

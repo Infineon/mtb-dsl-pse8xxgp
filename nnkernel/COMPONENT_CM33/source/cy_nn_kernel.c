@@ -51,9 +51,11 @@
 
 
 #if defined(IFX_USE_MXNNLITE_STREAM_EMU)
-/** Dummy NNLite register struct for PDL emulation */
+#if defined(PSE846GPS2DBZC4A)
+/** Dummy NNLite register struct for MTB PDL emulation */
 static NNLITE_Type nnlite_regs;
 static NNLITE_Type *MXNNLITE_REGS = &nnlite_regs;
+#endif
 #else
 #define MXNNLITE_REGS                            ((MXNNLITE_2_0_Type*) MXNNLITE_2_0_BASE)
 #endif
@@ -67,18 +69,25 @@ static NNLITE_Type *MXNNLITE_REGS = &nnlite_regs;
 */
 
 static uint32_t noopFunc() { return 0; }
+static void noopCallback() {}
 
 static cy_kernel_context_t kernelContext =
 {
-  .nnliteMutex = 0,
-  .nnliteSem = 0,
-  .completionCbFunc = 0,
-  .suspendedCbFunc = 0,
-  .cbArg = 0,
+  .nnliteMutex = NULL,
+  .nnliteSem = NULL,
+  .completionCbFunc = NULL,
+  .suspendedCbFunc = NULL,
+  .cbArg = NULL,
+  .profArg = NULL,
   .mutexLockFunc = noopFunc,
   .mutexUnlockFunc = noopFunc,
   .SemGiveFunc = noopFunc,
   .SemWaitFunc = noopFunc,
+  .profStart = noopCallback,
+  .profStop = noopCallback,
+  .profGetCount = noopCallback,
+  .LpmLockFunc = noopCallback,
+  .LpmUnlockFunc = noopCallback,
   .pdlContext = {
     .nnliteState = CY_NNLITE_INIT,
     .opStatus = CY_NNLITE_SUCCESS
@@ -95,6 +104,7 @@ static cy_kernel_context_t kernelContext =
   #endif
 #endif
 
+
 #ifndef MIN
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
@@ -105,9 +115,14 @@ static cy_kernel_context_t kernelContext =
  ** calls completion handles functions
  **
  *****************************************************************************/
+#if defined(IFX_USE_MXNNLITE_STREAM_EMU)
+__attribute__((used))
 void Cy_NNLite_Isr(void)
+#else
+void Cy_NNLite_Isr(void)
+#endif
 {
-#if  CY_NNLITE_DMA_DEVICE
+#if CY_NNLITE_DMA_DEVICE
   if (currDMAQ->dmaQDepth &&
   (currDMAQ->dmaQState == CY_NNLITE_DMA_QUEUE_TRIGGERED) &&
   (kernelContext.pdlContext.nnliteState == CY_NNLITE_OP_STARTED))
@@ -236,7 +251,7 @@ Cy_NNLite_KernelInit(cy_kernel_config_t *kernelConfig)
         if (status == CY_NNLITE_SUCCESS)
         {
           Cy_NNLite_SetInterruptMask(MXNNLITE_REGS, 0);
-#if !defined(IFX_USE_MXNNLITE_STREAM_EMU)
+#if !defined(IFX_USE_MXNNLITE_STREAM_EMU) && !defined(IFX_NNLITE_ZYNQ) && !defined(ETISS_RISCV)
           if ((kernelConfig->intrPriority != 0) &&
                 CY_SYSINT_IS_PRIORITY_VALID(kernelConfig->intrPriority))
           {
@@ -699,7 +714,7 @@ __Cy_NNLite_Convolution(const int8_t *inputData, int8_t *outData,
 
 /**
  *****************************************************************************
- ** \brief Depthwise Convolution CPU mode kernel API, API will configure nnlite and
+ ** \brief Convolution CPU mode kernel API, API will configure nnlite and
  ** then start nnlite operation.Callback function from kernel config structure
  ** will be called after completion of layer. Kernel config structure should
  ** point to valid callback function.
@@ -774,6 +789,44 @@ Cy_NNLite_ConvolutionDMA(const int8_t *inputData, int8_t *outData,
 
 #endif
 
+/**
+ *****************************************************************************
+ ** \brief Depthwise Convolution CPU mode kernel API, API will configure nnlite and
+ ** then start nnlite operation.Callback function from kernel config structure
+ ** will be called after completion of layer. Kernel config structure should
+ ** point to valid callback function.
+ ** filterData points to weights if sparsityBaseAddr is NULL otherwise weights
+ ** pointer will be derived from sparsityBaseAddr and filterData will
+ ** not be used.
+ ** Valid scratch buffer should be passed in convParam, scratch buffer will be
+ ** used for transpose operation (transpose scratch buffer and transpose DMA
+ ** descriptors)for per axis convolution implementation, size of scratch buffer
+ ** should be derived by calling function Cy_NNLite_ConvolutionScratchBufSize.
+ ** Scratch buffer can be freed after receving completion callback of API.
+ **
+ ** [in]  inputData        activation buffer pointer
+ **
+ ** [in]  outData         output buffer pointer
+ **
+ ** [in]  inputDims        activation dimension pointer
+ **
+ ** [in]  outpututDims     output dimension pointer
+ **
+ ** [in]  filterDims       filter dimension pointer
+ **
+ ** [in]  filterData       filter pointer
+ **
+ ** [in]  biasData         bias pointer
+ **
+ ** [in]  sparsityBaseAddr sparesity map base pointer
+ **
+ ** [in]  convParam        convolution parameter structure pointer
+ **
+ ** [in]  actType          output activation type
+ **
+ ** [in]  intrplParam      interpolation param for PWL output activation, null = nothing set
+ **
+ *****************************************************************************/
 cy_en_nnlite_status_t
 __Cy_NNLite_DepthwiseConvolution(const int8_t *inputData, int8_t *outData,
     const cy_nn_dims_t *inputDims, const cy_nn_dims_t *outputDims,
@@ -1062,7 +1115,7 @@ __Cy_NNLite_FullyConnected(const int8_t* inputData, int8_t* outData,
         /* repeatWeights = */ false,
         /* biasEn = */ biasEn,
         /* sparsityEn = */ (fcParam->sparseWeights?1:0),
-        /* outputRescaling= */ CY_NNLITE_OUTSCALE_PER_TENSOR,
+        /* outputRescaling= */ (fcParam->isPerChannel?CY_NNLITE_OUTSCALE_PER_AXIS:CY_NNLITE_OUTSCALE_PER_TENSOR),
         /* inputRescaling= */ CY_NNLITE_RESCALE_NONE,
         actType,
         fcParam->inputSize,
@@ -1072,7 +1125,7 @@ __Cy_NNLite_FullyConnected(const int8_t* inputData, int8_t* outData,
 
     Cy_NNLite_SetPrePostScaling(Memio,
       /*preScalingFactor=*/ 0.0f,
-      /*postScalingFactors=*/&fcParam->outScalingFactor);
+      /*postScalingFactors=*/fcParam->outScalingFactor);
 
     /* Disable DW trigger for CPU mode */
     Cy_NNLite_DatawireTriggerEnable(Memio, dmaMode);
@@ -1215,7 +1268,7 @@ __Cy_NNLite_FullyConnected_batch(const int8_t* inputData, int8_t* outData,
         outputChannels /* was: outputChannels workaround NNLite V2.3.0 bug AIMLXLR8R-513 */);
     for (uint32_t cnt = 0 ; cnt < outputDims->dims[1]; cnt++)
     {
-      scaling[cnt] = fcParam->outScalingFactor;
+      scaling[cnt] = fcParam->outScalingFactor[cnt];
     }
 
     Cy_NNLite_SetPrePostScaling(Memio,
@@ -2122,6 +2175,8 @@ Cy_NNLite_MulDMA(const int8_t* lhsData, const int8_t *rhsData, int8_t* outData,
                                CY_NNLITE_MUL, CY_NNLITE_ACTIVATION_NONE);
 }
 #endif
+
+#if  CY_NNLITE_DMA_DEVICE
 /**
  *****************************************************************************
  ** \brief API will return return size of scratch buffer for DMA mode API
@@ -2133,6 +2188,7 @@ uint32_t Cy_NNLite_DMAModeScratchBufSize(void)
 {
   return CY_NNLITE_DMA_SCRATCH_BUFFER_SIZE;
 }
+#endif
 
 /**
  *****************************************************************************
@@ -2274,7 +2330,7 @@ __Cy_NNLite_Activation(const int8_t *inData, int8_t* outData,
         /* inputRescaling= */ mac_in_rescaling,
         act_type,
         actParams->inputSize,
-        CY_NNLITE_ACTIVATION_8BIT,
+        /* weightSize = */ CY_NNLITE_ACTIVATION_8BIT, // AIMLXLR8R-1000 - must be this - HW quirk
         actParams->outputSize
     );
 
@@ -2403,6 +2459,7 @@ Cy_NNLite_ActivationDMA(const int8_t *inData, int8_t* outData,
 
 }
 #endif
+
 /**
  *****************************************************************************
  ** \brief Byte block copy using NNLite
@@ -2473,7 +2530,7 @@ Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData,
         /* inputRescaling= */ CY_NNLITE_RESCALE_NONE,
         CY_NNLITE_ACTIVATION_NONE,
         CY_NNLITE_ACTIVATION_8BIT,
-        CY_NNLITE_ACTIVATION_8BIT,
+        CY_NNLITE_ACTIVATION_8BIT, // AIMLXLR8R-1000 - must be this - HW quirk
         CY_NNLITE_OUTPUT_8BIT
     );
 
@@ -2484,6 +2541,86 @@ Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData,
     Cy_NNLite_SetInterruptMask(MXNNLITE_REGS, NNLITE_INTR_ENABLE_MASK);
     /* Disable DW trigger for CPU mode */
     Cy_NNLite_DatawireTriggerEnable(MXNNLITE_REGS, false);
+    kernelContext.LpmLockFunc();
+    kernelContext.profGetCount(kernelContext.profArg, CY_NNLITE_PP_ACCELERATOR_START);
+    status = Cy_NNLite_Start(MXNNLITE_REGS, &kernelContext.pdlContext);
+    if (status == CY_NNLITE_SUCCESS)
+    {
+        status = Cy_NNLite_WaitForCompletionPartialOp();
+    }
+    if (kernelContext.completionCbFunc == 0)
+    {
+      kernelContext.LpmUnlockFunc();
+    }
+  }
+  else
+  {
+    status = CY_NNLITE_BAD_STATE;
+  }
+  kernelContext.profStop(kernelContext.profArg);
+  kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+  return status;
+
+}
+
+
+/*
+ *****************************************************************************
+ **   nnlite out streamer set output channel count only
+ **
+ *****************************************************************************/
+static void
+Cy_NNLite_Redo_OutputChannels(NNLITE_Type *nnlite, uint32_t outputChannels)
+{
+  nnlite->OUTPUTCHANNELS = outputChannels;
+}
+
+/*
+ *****************************************************************************
+ **   nnlite out streamer set input channel count only
+ **
+ *****************************************************************************/
+
+static void
+Cy_NNLite_Redo_InputChannels(NNLITE_Type *nnlite,uint32_t inputChannel)
+{
+  nnlite->ACTIVATIONSTREAMERKERNELCHANNELTIMESWIDTH = inputChannel;
+  nnlite->ACTIVATIONSTREAMERCHANNELTIMESWIDTH = inputChannel;
+  nnlite->ACTIVATIONSTREAMERCHANNEL = inputChannel;
+
+}
+
+
+/**
+ *****************************************************************************
+ ** \brief Repeat unary operation with new input/output buffers
+ ****************************************************************************
+ */
+
+cy_en_nnlite_status_t
+Cy_NNLite_Redo_Byte_Copy(const int8_t *inData, int8_t* outData, uint32_t count)
+{
+  cy_en_nnlite_status_t status = CY_NNLITE_BAD_STATE;
+
+
+  if((NULL == inData) || (NULL == outData))
+  {
+    return CY_NNLITE_BAD_PARAM;
+  }
+
+  kernelContext.mutexLockFunc(kernelContext.nnliteMutex);
+  kernelContext.profStart(kernelContext.profArg);
+  if((kernelContext.pdlContext.nnliteState == CY_NNLITE_INIT) ||
+     (kernelContext.pdlContext.nnliteState == CY_NNLITE_OP_DONE))
+  {
+    Cy_NNLite_Redo_InputChannels(MXNNLITE_REGS, count);
+    Cy_NNLite_Redo_OutputChannels(MXNNLITE_REGS, count);
+
+    Cy_NNLite_StreamerBaseAddrSet(MXNNLITE_REGS,
+        CY_NNLITE_ACTIVATION_STREAMER, inData);
+    Cy_NNLite_StreamerBaseAddrSet(MXNNLITE_REGS,
+        CY_NNLITE_OUT_STREAMER, outData);
+
     kernelContext.LpmLockFunc();
     kernelContext.profGetCount(kernelContext.profArg, CY_NNLITE_PP_ACCELERATOR_START);
     status = Cy_NNLite_Start(MXNNLITE_REGS, &kernelContext.pdlContext);
@@ -2590,7 +2727,7 @@ Cy_NNLite_Q31Reciprocal(const uint32_t *inData, float* outData,
         /* inputRescaling= */ CY_NNLITE_RESCALE_NONE,
         CY_NNLITE_ACTIVATION_RECIPROCAL,
         CY_NNLITE_ACTIVATION_16BIT,
-        CY_NNLITE_ACTIVATION_16BIT,   // Ignored...
+        CY_NNLITE_ACTIVATION_8BIT,   // AIMLXLR8R-1000 - must be this - HW quirk
         CY_NNLITE_OUTPUT_32BIT
     );
 
@@ -2636,10 +2773,13 @@ uint32_t Cy_NNLite_FC_ScratchBufSize(const cy_nn_dims_t *inDims, const cy_nn_dim
   if ((inDims != NULL) && (outDims != NULL) && (inDims->dims[0] > 1))
   {
     size = (sizeof(float) * outDims->dims[1]);
+  } else {
+    size = sizeof(float);
   }
 
   return size;
 }
+
 /**
  * @brief Compute size scratch buffer required for SoftMax op.
  *
@@ -2712,7 +2852,7 @@ Cy_NNLite_SoftMax_RowMaxes(const int8_t* x_in,
                                   /* inputRescaling= */ CY_NNLITE_RESCALE_NONE,
                                   CY_NNLITE_ACTIVATION_NONE,
                                   smParams->inputSize,
-                                  CY_NNLITE_ACTIVATION_8BIT, // Ignored
+                                  CY_NNLITE_ACTIVATION_8BIT,  // AIMLXLR8R-1000 - must be this - HW quirk
                                   CY_NNLITE_ACT_AS_OUT_BW(smParams->inputSize)
       );
 
@@ -2787,7 +2927,7 @@ Cy_NNLite_SoftMax_SubFromRowMaxes(int8_t *max_in, const int8_t* x_in,
                               /* inputRescaling= */ CY_NNLITE_RESCALE_NONE,
                               CY_NNLITE_ACTIVATION_NONE,
                               smParams->inputSize,
-                              smParams->inputSize,
+                              /* weightSize = */ CY_NNLITE_ACTIVATION_8BIT, // AIMLXLR8R-1000 - must be this - HW quirk
                               smParams->outputSize
   );
 
@@ -3065,8 +3205,8 @@ Cy_NNLite_SoftMax_ReciprocalExpSum(const int32_t* q31_exps,
                   cy_nnlite_clipping_t clip_diffs,
                   const cy_nn_pwise_unary_params_t *smParams)
 {
-cy_en_nnlite_status_t status;
-(void)smParams;
+  cy_en_nnlite_status_t status;
+  (void)smParams;
   Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       1,    /* Only fetch rhs once */
@@ -3096,7 +3236,7 @@ cy_en_nnlite_status_t status;
       /* inputRescaling= */ CY_NNLITE_RESCALE_NONE,
       CY_NNLITE_ACTIVATION_RECIPROCAL,
       CY_NNLITE_ACTIVATION_16BIT,    // SUM_ACT32 treats 32-bit values as pairs of 16-bit
-      CY_NNLITE_ACTIVATION_16BIT,   // Ignored...
+      CY_NNLITE_ACTIVATION_8BIT,   // AIMLXLR8R-1000 - must be this - HW quirk
       CY_NNLITE_OUTPUT_32BIT
   );
 
@@ -3176,7 +3316,7 @@ Cy_NNLite_SoftMax_Normalize(const int32_t* q31_exps,
 
         CY_NNLITE_ACTIVATION_NONE,
         CY_NNLITE_ACTIVATION_16BIT,   // 32-bit e-(MAX-x_i) fetched as pairs 16-bit values...
-        CY_NNLITE_ACTIVATION_16BIT,   // Ignored...
+        CY_NNLITE_ACTIVATION_8BIT,   // AIMLXLR8R-1000 - must be this - HW quirk
         smParams->outputSize,
         /* chunkingEn = */ false
     );
@@ -3220,7 +3360,7 @@ Cy_NNLite_SoftMax_Normalize(const int32_t* q31_exps,
         /* inputRescaling= */ CY_NNLITE_RESCALE_NONE,
         CY_NNLITE_ACTIVATION_NONE,
         CY_NNLITE_ACTIVATION_16BIT,
-        CY_NNLITE_ACTIVATION_16BIT,   // Ignored...
+        CY_NNLITE_ACTIVATION_8BIT,  // AIMLXLR8R-1000 - must be this - HW quirk
         smParams->outputSize
     );
 
@@ -3488,7 +3628,7 @@ static cy_en_nnlite_status_t
 Cy_NNLite_PrepareRescaleMinMax(const int8_t *inputData,
                     const cy_nn_dims_t *inputDims,
                     const cy_nn_dims_t *outDimsMeanVar,
-                    int8 *scratchBufMean, int32_t *min_val,
+                    int8_t *scratchBufMean, int32_t *min_val,
                     int32_t *max_val, cy_nn_pwise_binary_params_t *lnParams)
 {
   cy_en_nnlite_status_t status = CY_NNLITE_BAD_PARAM;

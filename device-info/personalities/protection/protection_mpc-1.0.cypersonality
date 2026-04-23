@@ -3,7 +3,6 @@
 <PersonalityTemplate id='protection_mpc' name='MPC' version='1.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v14'>
   <Constants>
     <Const id="PROTECTION_LOC" value='vres[0].protection[0]'/>
-    <Const id='MAX_MEMORY_COUNT' value='6' />
     <Const id='MAX_DOMAIN_COUNT' value='16' />
     <Const id='PC_COUNT' value='8' />
     <Const id='MAX_MEM_REGIONS' value='64' />
@@ -22,7 +21,19 @@
 
   <BehaviorImplementation>
     <Implements type="mpc_v1">
-      <ExposedMember key='response$idx' paramId='response$idx' repeatCount='$MAX_MEMORY_COUNT' />
+      <ExposedMember key='responseFlash' paramId='responseFlash' />
+      <ExposedMember key='responseRRAM' paramId='responseRRAM' />
+      <ExposedMember key='responseSMIF0' paramId='responseSMIF0' />
+      <ExposedMember key='responseSMIF1' paramId='responseSMIF1' />
+      <ExposedMember key='responseSOCMEM' paramId='responseSOCMEM' />
+      <ExposedMember key='responseSRAM0' paramId='responseSRAM0' />
+      <ExposedMember key='responseSRAM1' paramId='responseSRAM1' />
+      <ExposedMember key='responsePROMC' paramId='responsePROMC' />
+      <ExposedMember key='responsePPCASRAM0' paramId='responsePPCASRAM0' />
+      <ExposedMember key='responsePPCASRAM1' paramId='responsePPCASRAM1' />
+      <ExposedMember key='responsePPCASRAM2' paramId='responsePPCASRAM2' />
+      <ExposedMember key='responsePPCASRAM3' paramId='responsePPCASRAM3' />
+      <ExposedMember key='responsePPCASRAM4' paramId='responsePPCASRAM4' />
     </Implements>
   </BehaviorImplementation>
 
@@ -30,27 +41,165 @@
     <ParamDoc id='doc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/page_prot_person.html#MPC_personality' linkText='Open MPC Documentation' visible='true' desc='Open MPC Documentation' />
 
     <!-- Calculated here to not allow a response setting to be configured if no memory regions are associated with a particular physical memory -->
-    <ParamString id='regionCountRRAM' default='`${splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]"))}`' />
-    <ParamString id='regionCountSMIF0' default='`${splitCount(getMpcRegionStarts("smif[0].mpc[0]"))}`' />
-    <ParamString id='regionCountSMIF1' default='`${splitCount(getMpcRegionStarts("smif[1].mpc[0]"))}`' />
-    <ParamString id='regionCountSOCMEM' default='`${splitCount(getMpcRegionStarts("socmem[0].mpc[0]"))}`' />
-    <ParamString id='regionCountSRAM0' default='`${splitCount(getMpcRegionStarts("mxsramc[0].mpc[0]"))}`' />
-    <ParamString id='regionCountSRAM1' default='`${splitCount(getMpcRegionStarts("mxsramc[1].mpc[0]"))}`' />
+    <ParamString id='hasFlash' name="hasFlash" default='`${hasBlock("flashc[0].mpc[0]")}`' visible='false' />
+    <ParamString id='hasRRAM' name="hasRRAM" default='`${hasBlock("mxrramc[0].mpc[0]")}`' visible='false' />
+    <ParamString id='hasSMIF0' name="hasSMIF0" default='`${hasBlock("smif[0].mpc[0]")}`' visible='false' />
+    <ParamString id='hasSMIF1' name="hasSMIF1" default='`${hasBlock("smif[1].mpc[0]")}`' visible='false' />
+    <ParamString id='hasSOCMEM' name="hasSOCMEM" default='`${hasBlock("socmem[0].mpc[0]")}`' visible='false' />
+    <ParamString id='hasSRAM0' name="hasSRAM0" default='`${hasBlock("mxsramc[0].mpc[0]")}`' visible='false' />
+    <ParamString id='hasSRAM1' name="hasSRAM1" default='`${hasBlock("mxsramc[1].mpc[0]")}`' visible='false' />
+    <ParamString id='hasPROMC' name="hasPROMC" default='`${hasBlock("mxpromc[0].mpc[0]")}`' visible='false' />
+    <ParamString id='hasPPCASRAM0' name="hasPPCASRAM0" default='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]")}`' visible='false' />
+    <ParamString id='hasPPCASRAM1' name="hasPPCASRAM1" default='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]")}`' visible='false' />
+    <ParamString id='hasPPCASRAM2' name="hasPPCASRAM2" default='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]")}`' visible='false' />
+    <ParamString id='hasPPCASRAM3' name="hasPPCASRAM3" default='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]")}`' visible='false' />
+    <ParamString id='hasPPCASRAM4' name="hasPPCASRAM4" default='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]")}`' visible='false' />
 
-    <ParamString id='memory_count' default='`${getExposedMember("vres[0].protection[0]", "memory_count")}`' />
-    <Repeat count='$MAX_MEMORY_COUNT'>
-      <ParamString id='memory$idx' default='`${$idx &lt; memory_count ? getExposedMember("vres[0].protection[0]", "memory_$idx") : ""}`' />
-      <ParamChoice id='response$idx' name='`${memory$idx}`' group='Invalid Access Response' default='`${(memory$idx eq "RRAM") ? "CY_MPC_BUS_ERR" : "CY_MPC_RZWI"}`' visible='`${$idx &lt; memory_count}`'
-      editable='`${(memory$idx ne "RRAM") &amp;&amp; ($idx &lt; memory_count) &amp;&amp;
-                 (memory$idx eq "SMIF 0" ? (regionCountSMIF0 &gt; 0) :
-                  memory$idx eq "SMIF 1" ? (regionCountSMIF1 &gt; 0) :
-                  memory$idx eq "SocMem" ? (regionCountSOCMEM &gt; 0) :
-                  memory$idx eq "SRAM 0" ? (regionCountSRAM0 &gt; 0) :
-                  memory$idx eq "SRAM 1" ? (regionCountSRAM1 &gt; 0) : false)}`' desc='`${(memory$idx eq "RRAM") ? "The access response for the RRAM memory is configured at boot and is non-configurable for a user." : "What happens if the memory is accessed from a context that does not have access? Response setting is only configurable if there are memory regions configured within the " . memory$idx . " physical memory, and thus are non-editable."}`'>
-        <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
-        <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
-      </ParamChoice>
-    </Repeat>
+    <!-- ROT Configurability per memory type (from device-db, defaults to true for BWC) -->
+    <ParamBool id='rotConfigurableFlash' name="rotConfigurableFlash"
+        default='`${isBlockUsed("flashc[0].mpc[0]") ? getExposedMember("flashc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurableRRAM' name="rotConfigurableRRAM"
+        default='`${isBlockUsed("mxrramc[0].mpc[0]") ? getExposedMember("mxrramc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurableSMIF0' name="rotConfigurableSMIF0"
+        default='`${isBlockUsed("smif[0].mpc[0]") ? getExposedMember("smif[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurableSMIF1' name="rotConfigurableSMIF1"
+        default='`${isBlockUsed("smif[1].mpc[0]") ? getExposedMember("smif[1].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurableSOCMEM' name="rotConfigurableSOCMEM"
+        default='`${isBlockUsed("socmem[0].mpc[0]") ? getExposedMember("socmem[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurableSRAM0' name="rotConfigurableSRAM0"
+        default='`${isBlockUsed("mxsramc[0].mpc[0]") ? getExposedMember("mxsramc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurableSRAM1' name="rotConfigurableSRAM1"
+        default='`${isBlockUsed("mxsramc[1].mpc[0]") ? getExposedMember("mxsramc[1].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurablePROMC' name="rotConfigurablePROMC"
+        default='`${isBlockUsed("mxpromc[0].mpc[0]") ? getExposedMember("mxpromc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurablePPCASRAM0' name="rotConfigurablePPCASRAM0"
+        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurablePPCASRAM1' name="rotConfigurablePPCASRAM1"
+        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurablePPCASRAM2' name="rotConfigurablePPCASRAM2"
+        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurablePPCASRAM3' name="rotConfigurablePPCASRAM3"
+        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+    <ParamBool id='rotConfigurablePPCASRAM4' name="rotConfigurablePPCASRAM4"
+        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+
+    <ParamString id='regionCountFlash' name="regionCountFlash" default='`${hasFlash ? splitCount(getMpcRegionStarts("flashc[0].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountRRAM' name="regionCountRRAM" default='`${hasRRAM ? splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountSMIF0' name="regionCountSMIF0" default='`${hasSMIF0 ? splitCount(getMpcRegionStarts("smif[0].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountSMIF1' name="regionCountSMIF1" default='`${hasSMIF1 ? splitCount(getMpcRegionStarts("smif[1].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountSOCMEM' name="regionCountSOCMEM" default='`${hasSOCMEM ? splitCount(getMpcRegionStarts("socmem[0].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountSRAM0' name="regionCountSRAM0" default='`${hasSRAM0 ? splitCount(getMpcRegionStarts("mxsramc[0].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountSRAM1' name="regionCountSRAM1" default='`${hasSRAM1 ? splitCount(getMpcRegionStarts("mxsramc[1].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountPROMC' name="regionCountPROMC" default='`${hasPROMC ? splitCount(getMpcRegionStarts("mxpromc[0].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountPPCASRAM0' name="regionCountPPCASRAM0" default='`${hasPPCASRAM0 ? splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountPPCASRAM1' name="regionCountPPCASRAM1" default='`${hasPPCASRAM1 ? splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountPPCASRAM2' name="regionCountPPCASRAM2" default='`${hasPPCASRAM2 ? splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountPPCASRAM3' name="regionCountPPCASRAM3" default='`${hasPPCASRAM3 ? splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]")) : ""}`' visible='false' />
+    <ParamString id='regionCountPPCASRAM4' name="regionCountPPCASRAM4" default='`${hasPPCASRAM4 ? splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]")) : ""}`' visible='false' />
+
+    <ParamString id='flashName' name="flashName" default='`${hasFlash ? getBlockDisplayName("flashc[0].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='rramName' name="rramName" default='`${hasRRAM ? getBlockDisplayName("mxrramc[0].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='smif0Name' name="smif0Name" default='`${hasSMIF0 ? getBlockDisplayName("smif[0].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='smif1Name' name="smif1Name" default='`${hasSMIF1 ? getBlockDisplayName("smif[1].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='socmemName' name="socmemName" default='`${hasSOCMEM ? getBlockDisplayName("socmem[0].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='sram0Name' name="sram0Name" default='`${hasSRAM0 ? getBlockDisplayName("mxsramc[0].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='sram1Name' name="sram1Name" default='`${hasSRAM1 ? getBlockDisplayName("mxsramc[1].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='promcName' name="promcName" default='`${hasPROMC ? getBlockDisplayName("mxpromc[0].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='ppcasram0Name' name="ppcasram0Name" default='`${hasPPCASRAM0 ? "PPCA " . getBlockDisplayName("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='ppcasram1Name' name="ppcasram1Name" default='`${hasPPCASRAM1 ? "PPCA " . getBlockDisplayName("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='ppcasram2Name' name="ppcasram2Name" default='`${hasPPCASRAM2 ? "PPCA " . getBlockDisplayName("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='ppcasram3Name' name="ppcasram3Name" default='`${hasPPCASRAM3 ? "PPCA " . getBlockDisplayName("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]",true) : ""}`' visible='false' />
+    <ParamString id='ppcasram4Name' name="ppcasram4Name" default='`${hasPPCASRAM4 ? "PPCA " . getBlockDisplayName("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]",true) : ""}`' visible='false' />
+
+    <ParamString id='mpcCount' name="Number of MPCs" default='`${hasFlash + hasRRAM + hasSMIF0 + hasSMIF1 + hasSOCMEM + hasSRAM0 + hasSRAM1 + hasPROMC + hasPPCASRAM0 + hasPPCASRAM1 + hasPPCASRAM2 + hasPPCASRAM3 + hasPPCASRAM4}`' desc='Number of available MPCs' visible='false'/>
+    
+    <ParamChoice id='responseFlash' name='`${flashName}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasFlash}`'
+      editable='false' desc='The access response for the Flash memory is configured at boot and is not configurable by the user.'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responseRRAM' name='`${rramName}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasRRAM}`'
+      editable='false' desc='The access response for the RRAM memory is configured at boot and is not configurable by the user.'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responseSMIF0' name='`${smif0Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasSMIF0}`'
+      editable='`${(regionCountSMIF0 &gt; 0)}`' 
+      desc='`${(regionCountSMIF0 &gt; 0 ? "Determines what happens when the SMIF0 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the SMIF0 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responseSMIF1' name='`${smif1Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasSMIF1}`'
+      editable='`${(regionCountSMIF1 &gt; 0)}`' 
+      desc='`${(regionCountSMIF1 &gt; 0 ? "Determines what happens when the SMIF1 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the SMIF1 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responseSOCMEM' name='`${socmemName}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasSOCMEM}`'
+      editable='`${(regionCountSOCMEM &gt; 0)}`'
+      desc='`${(regionCountSOCMEM &gt; 0 ? "Determines what happens when the SOCMEM memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the SOCMEM memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responseSRAM0' name='`${sram0Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasSRAM0}`'
+      editable='`${(regionCountSRAM0 &gt; 0)}`' 
+      desc='`${(regionCountSRAM0 &gt; 0 ? "Determines what happens when the SRAM0 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the SRAM0 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responseSRAM1' name='`${sram1Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasSRAM1}`'
+      editable='`${(regionCountSRAM1 &gt; 0)}`' 
+      desc='`${(regionCountSRAM1 &gt; 0 ? "Determines what happens when the SRAM1 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the SRAM1 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responsePROMC' name='`${promcName}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasPROMC}`'
+      editable='`${(regionCountPROMC &gt; 0)}`' 
+      desc='`${(regionCountPROMC &gt; 0 ? "Determines what happens when the PROMC memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the PROMC memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responsePPCASRAM0' name='`${ppcasram0Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasPPCASRAM0}`'
+      editable='`${(regionCountPPCASRAM0 &gt; 0)}`' 
+      desc='`${(regionCountPPCASRAM0 &gt; 0 ? "Determines what happens when the PPCA SRAM0 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the PPCA SRAM0 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responsePPCASRAM1' name='`${ppcasram1Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasPPCASRAM1}`'
+      editable='`${(regionCountPPCASRAM1 &gt; 0)}`' 
+      desc='`${(regionCountPPCASRAM1 &gt; 0 ? "Determines what happens when the PPCA SRAM1 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the PPCA SRAM1 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responsePPCASRAM2' name='`${ppcasram2Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasPPCASRAM2}`'
+      editable='`${(regionCountPPCASRAM2 &gt; 0)}`' 
+      desc='`${(regionCountPPCASRAM2 &gt; 0 ? "Determines what happens when the PPCA SRAM2 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the PPCA SRAM2 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responsePPCASRAM3' name='`${ppcasram3Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasPPCASRAM3}`'
+      editable='`${(regionCountPPCASRAM3 &gt; 0)}`' 
+      desc='`${(regionCountPPCASRAM3 &gt; 0 ? "Determines what happens when the PPCA SRAM3 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the PPCA SRAM3 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
+    <ParamChoice id='responsePPCASRAM4' name='`${ppcasram4Name}`' group='Invalid Access Response' default='CY_MPC_BUS_ERR' visible='`${hasPPCASRAM4}`'
+      editable='`${(regionCountPPCASRAM4 &gt; 0)}`' 
+      desc='`${(regionCountPPCASRAM4 &gt; 0 ? "Determines what happens when the PPCA SRAM4 memory is accessed from a protection context that does not allow access. Response setting is only configurable if there are memory regions configured within the physical memory."
+      : "The access response for the PPCA SRAM4 memory is configured at boot and is not configurable by the user.")}`'>
+      <Entry name='Read Zero and Write Ignore' value='CY_MPC_RZWI' visible='true' />
+      <Entry name='Bus Error' value='CY_MPC_BUS_ERR' visible='true' />
+    </ParamChoice>
 
     <!-- Domains accumulation -->
     <Repeat count='$MAX_DOMAIN_COUNT'>
@@ -67,41 +216,83 @@
   </Parameters>
 
   <Variables>
-    <!-- RRAM Regions-->
-    <Variable id='regionStartsRRAM' value='`${getMpcRegionStarts("mxrramc[0].mpc[0]")}`' />
-    <Variable id='regionEndsRRAM' value='`${getMpcRegionEnds("mxrramc[0].mpc[0]")}`' />
-    <Variable id='regionDomainsRRAM' value='`${getMpcRegionDomainIds("mxrramc[0].mpc[0]")}`' />
+    <!-- Flash Regions -->
+    <Variable id='regionStartsFlash' value='`${hasFlash ? getMpcRegionStarts("flashc[0].mpc[0]") : ""}`' />
+    <Variable id='regionEndsFlash' value='`${hasFlash ? getMpcRegionEnds("flashc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsFlash' value='`${hasFlash ? getMpcRegionDomainIds("flashc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainCountFlash' value='`${(regionDomainsFlash ne "") ? splitCount(regionDomainsFlash) : 0}`' />
+
+    <!-- RRAM Regions -->
+    <Variable id='regionStartsRRAM' value='`${hasRRAM ? getMpcRegionStarts("mxrramc[0].mpc[0]") : ""}`' />
+    <Variable id='regionEndsRRAM' value='`${hasRRAM ? getMpcRegionEnds("mxrramc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsRRAM' value='`${hasRRAM ? getMpcRegionDomainIds("mxrramc[0].mpc[0]") : ""}`' />
     <Variable id='regionDomainCountRRAM' value='`${(regionDomainsRRAM ne "") ? splitCount(regionDomainsRRAM) : 0}`' />
 
-    <!-- SMIF0 Regions-->
-    <Variable id='regionStartsSMIF0' value='`${getMpcRegionStarts("smif[0].mpc[0]")}`' />
-    <Variable id='regionEndsSMIF0' value='`${getMpcRegionEnds("smif[0].mpc[0]")}`' />
-    <Variable id='regionDomainsSMIF0' value='`${getMpcRegionDomainIds("smif[0].mpc[0]")}`' />
+    <!-- SMIF0 Regions -->
+    <Variable id='regionStartsSMIF0' value='`${hasSMIF0 ? getMpcRegionStarts("smif[0].mpc[0]") : ""}`' />
+    <Variable id='regionEndsSMIF0' value='`${hasSMIF0 ? getMpcRegionEnds("smif[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsSMIF0' value='`${hasSMIF0 ? getMpcRegionDomainIds("smif[0].mpc[0]") : ""}`' />
     <Variable id='regionDomainCountSMIF0' value='`${(regionDomainsSMIF0 ne "") ? splitCount(regionDomainsSMIF0) : 0}`' />
 
-    <!-- SMIF1 Regions-->
-    <Variable id='regionStartsSMIF1' value='`${getMpcRegionStarts("smif[1].mpc[0]")}`' />
-    <Variable id='regionEndsSMIF1' value='`${getMpcRegionEnds("smif[1].mpc[0]")}`' />
-    <Variable id='regionDomainsSMIF1' value='`${getMpcRegionDomainIds("smif[1].mpc[0]")}`' />
+    <!-- SMIF1 Regions -->
+    <Variable id='regionStartsSMIF1' value='`${hasSMIF1 ? getMpcRegionStarts("smif[1].mpc[0]") : ""}`' />
+    <Variable id='regionEndsSMIF1' value='`${hasSMIF1 ? getMpcRegionEnds("smif[1].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsSMIF1' value='`${hasSMIF1 ? getMpcRegionDomainIds("smif[1].mpc[0]") : ""}`' />
     <Variable id='regionDomainCountSMIF1' value='`${(regionDomainsSMIF1 ne "") ? splitCount(regionDomainsSMIF1) : 0}`' />
 
-    <!-- SOCMEM Regions-->
-    <Variable id='regionStartsSOCMEM' value='`${getMpcRegionStarts("socmem[0].mpc[0]")}`' />
-    <Variable id='regionEndsSOCMEM' value='`${getMpcRegionEnds("socmem[0].mpc[0]")}`' />
-    <Variable id='regionDomainsSOCMEM' value='`${getMpcRegionDomainIds("socmem[0].mpc[0]")}`' />
+    <!-- SOCMEM Regions -->
+    <Variable id='regionStartsSOCMEM' value='`${hasSOCMEM ? getMpcRegionStarts("socmem[0].mpc[0]") : ""}`' />
+    <Variable id='regionEndsSOCMEM' value='`${hasSOCMEM ? getMpcRegionEnds("socmem[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsSOCMEM' value='`${hasSOCMEM ? getMpcRegionDomainIds("socmem[0].mpc[0]") : ""}`' />
     <Variable id='regionDomainCountSOCMEM' value='`${(regionDomainsSOCMEM ne "") ? splitCount(regionDomainsSOCMEM) : 0}`' />
 
-    <!-- SRAM0 Regions-->
-    <Variable id='regionStartsSRAM0' value='`${getMpcRegionStarts("mxsramc[0].mpc[0]")}`' />
-    <Variable id='regionEndsSRAM0' value='`${getMpcRegionEnds("mxsramc[0].mpc[0]")}`' />
-    <Variable id='regionDomainsSRAM0' value='`${getMpcRegionDomainIds("mxsramc[0].mpc[0]")}`' />
+    <!-- SRAM0 Regions -->
+    <Variable id='regionStartsSRAM0' value='`${hasSRAM0 ? getMpcRegionStarts("mxsramc[0].mpc[0]") : ""}`' />
+    <Variable id='regionEndsSRAM0' value='`${hasSRAM0 ? getMpcRegionEnds("mxsramc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsSRAM0' value='`${hasSRAM0 ? getMpcRegionDomainIds("mxsramc[0].mpc[0]") : ""}`' />
     <Variable id='regionDomainCountSRAM0' value='`${(regionDomainsSRAM0 ne "") ? splitCount(regionDomainsSRAM0) : 0}`' />
 
-    <!-- SRAM1 Regions-->
-    <Variable id='regionStartsSRAM1' value='`${getMpcRegionStarts("mxsramc[1].mpc[0]")}`' />
-    <Variable id='regionEndsSRAM1' value='`${getMpcRegionEnds("mxsramc[1].mpc[0]")}`' />
-    <Variable id='regionDomainsSRAM1' value='`${getMpcRegionDomainIds("mxsramc[1].mpc[0]")}`' />
+    <!-- SRAM1 Regions -->
+    <Variable id='regionStartsSRAM1' value='`${hasSRAM1 ? getMpcRegionStarts("mxsramc[1].mpc[0]") : ""}`' />
+    <Variable id='regionEndsSRAM1' value='`${hasSRAM1 ? getMpcRegionEnds("mxsramc[1].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsSRAM1' value='`${hasSRAM1 ? getMpcRegionDomainIds("mxsramc[1].mpc[0]") : ""}`' />
     <Variable id='regionDomainCountSRAM1' value='`${(regionDomainsSRAM1 ne "") ? splitCount(regionDomainsSRAM1) : 0}`' />
+  
+    <!-- PROMC Regions -->
+    <Variable id='regionStartsPROMC' value='`${hasPROMC ? getMpcRegionStarts("mxpromc[0].mpc[0]") : ""}`' />
+    <Variable id='regionEndsPROMC' value='`${hasPROMC ? getMpcRegionEnds("mxpromc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsPROMC' value='`${hasPROMC ? getMpcRegionDomainIds("mxpromc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainCountPROMC' value='`${(regionDomainsPROMC ne "") ? splitCount(regionDomainsPROMC) : 0}`' />
+    
+    <!-- PPCA SRAM0 Regions -->
+    <Variable id='regionStartsPPCASRAM0' value='`${hasPPCASRAM0 ? getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]") : ""}`' />
+    <Variable id='regionEndsPPCASRAM0' value='`${hasPPCASRAM0 ? getMpcRegionEnds("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsPPCASRAM0' value='`${hasPPCASRAM0 ? getMpcRegionDomainIds("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]") : ""}`' />
+    <Variable id='regionDomainCountPPCASRAM0' value='`${(regionDomainsPPCASRAM0 ne "") ? splitCount(regionDomainsPPCASRAM0) : 0}`' />
+
+    <!-- PPCA SRAM1 Regions -->
+    <Variable id='regionStartsPPCASRAM1' value='`${hasPPCASRAM1 ? getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]") : ""}`' />
+    <Variable id='regionEndsPPCASRAM1' value='`${hasPPCASRAM1 ? getMpcRegionEnds("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsPPCASRAM1' value='`${hasPPCASRAM1 ? getMpcRegionDomainIds("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]") : ""}`' />
+    <Variable id='regionDomainCountPPCASRAM1' value='`${(regionDomainsPPCASRAM1 ne "") ? splitCount(regionDomainsPPCASRAM1) : 0}`' />
+
+    <!-- PPCA SRAM2 Regions -->
+    <Variable id='regionStartsPPCASRAM2' value='`${hasPPCASRAM2 ? getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]") : ""}`' />
+    <Variable id='regionEndsPPCASRAM2' value='`${hasPPCASRAM2 ? getMpcRegionEnds("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsPPCASRAM2' value='`${hasPPCASRAM2 ? getMpcRegionDomainIds("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]") : ""}`' />
+    <Variable id='regionDomainCountPPCASRAM2' value='`${(regionDomainsPPCASRAM2 ne "") ? splitCount(regionDomainsPPCASRAM2) : 0}`' />
+
+    <!-- PPCA SRAM3 Regions -->
+    <Variable id='regionStartsPPCASRAM3' value='`${hasPPCASRAM3 ? getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]") : ""}`' />
+    <Variable id='regionEndsPPCASRAM3' value='`${hasPPCASRAM3 ? getMpcRegionEnds("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsPPCASRAM3' value='`${hasPPCASRAM3 ? getMpcRegionDomainIds("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]") : ""}`' />
+    <Variable id='regionDomainCountPPCASRAM3' value='`${(regionDomainsPPCASRAM3 ne "") ? splitCount(regionDomainsPPCASRAM3) : 0}`' />
+
+    <!-- PPCA SRAM4 Regions -->
+    <Variable id='regionStartsPPCASRAM4' value='`${hasPPCASRAM4 ? getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]") : ""}`' />
+    <Variable id='regionEndsPPCASRAM4' value='`${hasPPCASRAM4 ? getMpcRegionEnds("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]") : ""}`' />
+    <Variable id='regionDomainsPPCASRAM4' value='`${hasPPCASRAM4 ? getMpcRegionDomainIds("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]") : ""}`' />
+    <Variable id='regionDomainCountPPCASRAM4' value='`${(regionDomainsPPCASRAM4 ne "") ? splitCount(regionDomainsPPCASRAM4) : 0}`' />
   </Variables>
 
   <DRCs>
@@ -110,13 +301,13 @@
   <ConfigFirmware>
     <ConfigInclude value='cy_device.h' />
     <ConfigInclude value='cy_mpc.h' include='`${isBlockUsed("vres[0].memory[0]")}`' />
+    <ConfigInclude value='mtb_srf.h' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF) &amp;&amp; !defined(CY_SRF_DISABLE)' />
 
     <ConfigInclude value='stdbool.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
     <ConfigInclude value='stdint.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
     <ConfigInclude value='string.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
-    <ConfigInclude value='ifx_se_platform.h' guard='defined(CY_PDL_TZ_ENABLED)' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' />
+    <ConfigInclude value='ifx_se_platform.h' guard='defined(CY_PDL_TZ_ENABLED)' include='`${hasRRAM &amp;&amp; isBlockUsed("vres[0].memory[0]")}`' public='source' />
     <ConfigInclude value='cy_smif.h' include='`${isBlockUsed("vres[0].memory[0]")}`' public='source' guard='(smif_0_mpc_0_REGION_COUNT > 0U) || (smif_1_mpc_0_REGION_COUNT > 0U)' />
-    <ConfigInclude value='mtb_srf.h' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF)' />
 
     <ConfigDefine name='`${toUpper(getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName"))}`_UNIFIED_MPC_DOMAIN_IDX' value='`${mpc_domain_idx$idx{domainIdx}}`U' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' public='true' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'/>
     <ConfigDefine name='SMIF_DESELECT_DELAY' value='(7U)' public='false' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='(smif_0_mpc_0_REGION_COUNT > 0U) || (smif_1_mpc_0_REGION_COUNT > 0U)' />
@@ -134,127 +325,367 @@
       </ConfigStruct>
     </ConfigArray>
 
-    <ConfigArray name='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_regions' type='cy_stc_mpc_regions_t' const='true' public='true' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' guard='defined (CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'>
+    <!-- Locked ROT config: single S/NS attribute per domain (for CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED devices) -->
+    <ConfigStruct name='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_cfg' type='cy_stc_mpc_cfg_t' const='true' public='true' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'>
+      <Member name='secure' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "cmseAttribute") eq "NON_SECURE" ? "CY_MPC_NON_SECURE" : "CY_MPC_SECURE"}`' />
+    </ConfigStruct>
+
+    <!-- BWC: all regions for devices without ROT configurability (DISABLED - merged into single block below) -->
+    <ConfigArray name='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_regions' type='cy_stc_mpc_regions_t' const='true' public='true' include='false' guard='!defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'>
+      <!-- Flash Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasFlash &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountFlash) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsFlash, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("flashc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsFlash, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsFlash, $idx{regionIdx}) - splitAt(regionStartsFlash, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
       <!-- RRAM Regions-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountRRAM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsRRAM, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasRRAM &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountRRAM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsRRAM, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("mxrramc[0].mpc[0]", "RegisterDefine")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsRRAM, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsRRAM, $idx{regionIdx}) - splitAt(regionStartsRRAM, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
       <!-- SMIF0 Regions-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefine")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF0, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsSMIF0, $idx{regionIdx}) - splitAt(regionStartsSMIF0, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
       <!-- SMIF0 Regions (Alternate Base)-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefineUnified")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF0, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsSMIF0, $idx{regionIdx}) - splitAt(regionStartsSMIF0, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
       <!-- SMIF1 Regions-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefine")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF1, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsSMIF1, $idx{regionIdx}) - splitAt(regionStartsSMIF1, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
       <!-- SMIF1 Regions (Alternate Base)-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefineUnified")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF1, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsSMIF1, $idx{regionIdx}) - splitAt(regionStartsSMIF1, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
       <!-- SOCMEM Regions-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountSOCMEM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSOCMEM, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSOCMEM &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSOCMEM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSOCMEM, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("socmem[0].mpc[0]", "RegisterDefine")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsSOCMEM, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsSOCMEM, $idx{regionIdx}) - splitAt(regionStartsSOCMEM, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
       <!-- SRAM0 Regions-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountSRAM0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM0, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSRAM0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("mxsramc[0].mpc[0]", "RegisterDefine")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsSRAM0, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsSRAM0, $idx{regionIdx}) - splitAt(regionStartsSRAM0, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
       <!-- SRAM1 Regions-->
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${($idx{regionIdx} &lt; regionDomainCountSRAM1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM1, $idx{regionIdx})), "displayName")) : false}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSRAM1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
         <Member name='base' value='`${getExposedMember("mxsramc[1].mpc[0]", "RegisterDefine")}`' />
         <Member name='offset' value='`${toHex(splitAt(regionStartsSRAM1, $idx{regionIdx}), 8)}`' />
         <Member name='size' value='`${toHex((splitAt(regionEndsSRAM1, $idx{regionIdx}) - splitAt(regionStartsSRAM1, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
+      <!-- PROMC Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPROMC &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPROMC) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPROMC, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxpromc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPROMC, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPROMC, $idx{regionIdx}) - splitAt(regionStartsPROMC, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM0 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM0, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM1 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM1, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM2 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM2 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM2) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM2, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM2, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM2, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM2, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM3 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM3 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM3) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM3, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM3, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM3, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM3, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM4 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM4 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM4) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM4, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM4, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM4, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM4, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
     </ConfigArray>
 
-    <!-- Include the response setting in the generated struct if number of regions in a physical memory > 0 and it's not RRAM -->
-    <ConfigArray name='cy_response_mpcs' type='cy_stc_mpc_resp_cfg_t' const='true' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (CY_PDL_TZ_ENABLED)'>
-      <ConfigStruct name='empty' type='nested' const='true' public='true'
-      include='`${(memory$idx{memoryIdx} ne "RRAM") &amp;&amp; ($idx{memoryIdx} &lt; memory_count) &amp;&amp;
-                  (memory$idx{memoryIdx} eq "SMIF 0" ? (regionCountSMIF0 &gt; 0) :
-                  memory$idx{memoryIdx} eq "SMIF 1" ? (regionCountSMIF1 &gt; 0) :
-                  memory$idx{memoryIdx} eq "SocMem" ? (regionCountSOCMEM &gt; 0) :
-                  memory$idx{memoryIdx} eq "SRAM 0" ? (regionCountSRAM0 &gt; 0) :
-                  memory$idx{memoryIdx} eq "SRAM 1" ? (regionCountSRAM1 &gt; 0) : false)}`' repeatCount='$MAX_MEMORY_COUNT' repeatId='memoryIdx'>
-        <Member name='base' value='`${memory$idx{memoryIdx} eq "SMIF 0" ? getExposedMember("smif[0].mpc[0]", "RegisterDefine") :
-                                      memory$idx{memoryIdx} eq "SMIF 1" ? getExposedMember("smif[1].mpc[0]", "RegisterDefine") :
-                                      memory$idx{memoryIdx} eq "SocMem" ? getExposedMember("socmem[0].mpc[0]", "RegisterDefine") :
-                                      memory$idx{memoryIdx} eq "SRAM 0" ? getExposedMember("mxsramc[0].mpc[0]", "RegisterDefine") :
-                                      memory$idx{memoryIdx} eq "SRAM 1" ? getExposedMember("mxsramc[1].mpc[0]", "RegisterDefine") : "NULL"}`' />
-        <Member name='response' value='`${response$idx{memoryIdx}}`' />
+    <!-- MPC regions (rotConfigurable filter defaults to true for BWC) -->
+    <ConfigArray name='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_regions' type='cy_stc_mpc_regions_t' const='true' public='true' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' guard='defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'>
+      <!-- Flash Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasFlash &amp;&amp; rotConfigurableFlash &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountFlash) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsFlash, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("flashc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsFlash, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsFlash, $idx{regionIdx}) - splitAt(regionStartsFlash, $idx{regionIdx})), 8)}`' />
       </ConfigStruct>
-      <ConfigStruct name='empty' type='nested' const='true' public='true'
-      include='`${(memory$idx{memoryIdx} eq "SMIF 0" || memory$idx{memoryIdx} eq "SMIF 1") &amp;&amp; ($idx{memoryIdx} &lt; memory_count) &amp;&amp;
-                  (memory$idx{memoryIdx} eq "SMIF 0" ? (regionCountSMIF0 &gt; 0) :
-                  memory$idx{memoryIdx} eq "SMIF 1" ? (regionCountSMIF1 &gt; 0) : false)}`' repeatCount='$MAX_MEMORY_COUNT' repeatId='memoryIdx'>
-        <Member name='base' value='`${memory$idx{memoryIdx} eq "SMIF 0" ? getExposedMember("smif[0].mpc[0]", "RegisterDefineUnified") :
-                                      memory$idx{memoryIdx} eq "SMIF 1" ? getExposedMember("smif[1].mpc[0]", "RegisterDefineUnified") : "NULL"}`' />
-        <Member name='response' value='`${response$idx{memoryIdx}}`' />
+      <!-- RRAM Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasRRAM &amp;&amp; rotConfigurableRRAM &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountRRAM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsRRAM, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxrramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsRRAM, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsRRAM, $idx{regionIdx}) - splitAt(regionStartsRRAM, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF0 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; rotConfigurableSMIF0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF0, $idx{regionIdx}) - splitAt(regionStartsSMIF0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF0 Regions (Alternate Base)-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; rotConfigurableSMIF0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefineUnified")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF0, $idx{regionIdx}) - splitAt(regionStartsSMIF0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF1 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; rotConfigurableSMIF1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF1, $idx{regionIdx}) - splitAt(regionStartsSMIF1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF1 Regions (Alternate Base)-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; rotConfigurableSMIF1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefineUnified")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF1, $idx{regionIdx}) - splitAt(regionStartsSMIF1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SOCMEM Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSOCMEM &amp;&amp; rotConfigurableSOCMEM &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSOCMEM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSOCMEM, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("socmem[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSOCMEM, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSOCMEM, $idx{regionIdx}) - splitAt(regionStartsSOCMEM, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SRAM0 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM0 &amp;&amp; rotConfigurableSRAM0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSRAM0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxsramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSRAM0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSRAM0, $idx{regionIdx}) - splitAt(regionStartsSRAM0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SRAM1 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM1 &amp;&amp; rotConfigurableSRAM1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSRAM1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxsramc[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSRAM1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSRAM1, $idx{regionIdx}) - splitAt(regionStartsSRAM1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PROMC Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPROMC &amp;&amp; rotConfigurablePROMC &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPROMC) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPROMC, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxpromc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPROMC, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPROMC, $idx{regionIdx}) - splitAt(regionStartsPROMC, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM0 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM0 &amp;&amp; rotConfigurablePPCASRAM0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM0, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM1 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM1 &amp;&amp; rotConfigurablePPCASRAM1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM1, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM2 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM2 &amp;&amp; rotConfigurablePPCASRAM2 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM2) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM2, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM2, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM2, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM2, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM3 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM3 &amp;&amp; rotConfigurablePPCASRAM3 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM3) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM3, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM3, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM3, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM3, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM4 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM4 &amp;&amp; rotConfigurablePPCASRAM4 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM4) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM4, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM4, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM4, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM4, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+    </ConfigArray>
+
+    <!-- Locked ROT regions: for devices with CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED (only regions where rotConfigurable is false) -->
+    <ConfigArray name='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_regions' type='cy_stc_mpc_regions_t' const='true' public='true' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx'>
+      <!-- Flash Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasFlash &amp;&amp; !rotConfigurableFlash &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountFlash) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsFlash, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("flashc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsFlash, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsFlash, $idx{regionIdx}) - splitAt(regionStartsFlash, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- RRAM Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasRRAM &amp;&amp; !rotConfigurableRRAM &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountRRAM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsRRAM, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxrramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsRRAM, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsRRAM, $idx{regionIdx}) - splitAt(regionStartsRRAM, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF0 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; !rotConfigurableSMIF0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF0, $idx{regionIdx}) - splitAt(regionStartsSMIF0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF0 Regions (Alternate Base)-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; !rotConfigurableSMIF0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefineUnified")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF0, $idx{regionIdx}) - splitAt(regionStartsSMIF0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF1 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; !rotConfigurableSMIF1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF1, $idx{regionIdx}) - splitAt(regionStartsSMIF1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SMIF1 Regions (Alternate Base)-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; !rotConfigurableSMIF1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSMIF1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSMIF1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefineUnified")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSMIF1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSMIF1, $idx{regionIdx}) - splitAt(regionStartsSMIF1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SOCMEM Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSOCMEM &amp;&amp; !rotConfigurableSOCMEM &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSOCMEM) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSOCMEM, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("socmem[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSOCMEM, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSOCMEM, $idx{regionIdx}) - splitAt(regionStartsSOCMEM, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SRAM0 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM0 &amp;&amp; !rotConfigurableSRAM0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSRAM0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxsramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSRAM0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSRAM0, $idx{regionIdx}) - splitAt(regionStartsSRAM0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- SRAM1 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM1 &amp;&amp; !rotConfigurableSRAM1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountSRAM1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsSRAM1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxsramc[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsSRAM1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsSRAM1, $idx{regionIdx}) - splitAt(regionStartsSRAM1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PROMC Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPROMC &amp;&amp; !rotConfigurablePROMC &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPROMC) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPROMC, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("mxpromc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPROMC, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPROMC, $idx{regionIdx}) - splitAt(regionStartsPROMC, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM0 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM0 &amp;&amp; !rotConfigurablePPCASRAM0 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM0) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM0, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM0, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM0, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM0, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM1 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM1 &amp;&amp; !rotConfigurablePPCASRAM1 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM1) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM1, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM1, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM1, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM1, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM2 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM2 &amp;&amp; !rotConfigurablePPCASRAM2 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM2) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM2, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM2, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM2, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM2, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM3 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM3 &amp;&amp; !rotConfigurablePPCASRAM3 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM3) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM3, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM3, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM3, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM3, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+      <!-- PPCA SRAM4 Regions-->
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM4 &amp;&amp; !rotConfigurablePPCASRAM4 &amp;&amp; (($idx{regionIdx} &lt; regionDomainCountPPCASRAM4) ? (getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName") eq getExposedMember(getBlockFromInstance(splitAt(regionDomainsPPCASRAM4, $idx{regionIdx})), "displayName")) : false)}`' repeatCount='$MAX_MEM_REGIONS' repeatId='regionIdx'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "RegisterDefine")}`' />
+        <Member name='offset' value='`${toHex(splitAt(regionStartsPPCASRAM4, $idx{regionIdx}), 8)}`' />
+        <Member name='size' value='`${toHex((splitAt(regionEndsPPCASRAM4, $idx{regionIdx}) - splitAt(regionStartsPPCASRAM4, $idx{regionIdx})), 8)}`' />
+      </ConfigStruct>
+    </ConfigArray>
+
+    <!-- Include the response setting in the generated struct if number of regions in a physical memory > 0 and it's not RRAM or Flash -->
+    <ConfigArray name='cy_response_mpcs' type='cy_stc_mpc_resp_cfg_t' const='true' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (CY_PDL_TZ_ENABLED)'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; (regionCountSMIF0 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responseSMIF0}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; (regionCountSMIF1 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responseSMIF1}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSOCMEM &amp;&amp; (regionCountSOCMEM &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("socmem[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responseSOCMEM}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM0 &amp;&amp; (regionCountSRAM0 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("mxsramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responseSRAM0}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSRAM1 &amp;&amp; (regionCountSRAM1 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("mxsramc[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responseSRAM1}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPROMC &amp;&amp; (regionCountPROMC &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("mxpromc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responsePROMC}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM0 &amp;&amp; (regionCountPPCASRAM0 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responsePPCASRAM0}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM1 &amp;&amp; (regionCountPPCASRAM1 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responsePPCASRAM1}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM2 &amp;&amp; (regionCountPPCASRAM2 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responsePPCASRAM2}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM3 &amp;&amp; (regionCountPPCASRAM3 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responsePPCASRAM3}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasPPCASRAM4 &amp;&amp; (regionCountPPCASRAM4 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "RegisterDefine")}`' />
+        <Member name='response' value='`${responsePPCASRAM4}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF0 &amp;&amp; (regionCountSMIF0 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("smif[0].mpc[0]", "RegisterDefineUnified")}`' />
+        <Member name='response' value='`${responseSMIF0}`' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasSMIF1 &amp;&amp; (regionCountSMIF1 &gt; 0)}`'>
+        <Member name='base' value='`${getExposedMember("smif[1].mpc[0]", "RegisterDefineUnified")}`' />
+        <Member name='response' value='`${responseSMIF1}`' />
       </ConfigStruct>
     </ConfigArray>
 
     <ConfigVariable name='cy_response_mpcs_count' type='size_t' const='true' value='sizeof(cy_response_mpcs) / sizeof(cy_stc_mpc_resp_cfg_t)' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (CY_PDL_TZ_ENABLED)' />
 
-    <ConfigArray name='unified_mpc_domains' type='cy_stc_mpc_unified_t' const='true' public='true' include='true' guard='defined (CY_PDL_TZ_ENABLED)'>
+    <!-- Unified MPC domains: locked_rot members conditionally included for CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED -->
+    <ConfigArray name='unified_mpc_domains' type='cy_stc_mpc_unified_t' const='true' public='true' include='true' guard='defined(CY_PDL_TZ_ENABLED)'>
       <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${isBlockUsed("vres[0].protection[0].domain[$idx{domainIdx}]") &amp;&amp; !(getInstanceFromBlock("vres[0].protection[0].domain[$idx{domainIdx}]") eq (getOrDefault(getExposedMember("$PROTECTION_LOC", "domain_reserved"), "")))}`' repeatCount='$MAX_DOMAIN_COUNT' repeatId='domainIdx' >
         <Member name='regions' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_regions' />
         <Member name='region_count' value='sizeof(`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_regions) / sizeof(cy_stc_mpc_regions_t)' />
         <Member name='cfg' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_cfg' />
         <Member name='cfg_count' value='sizeof(`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_cfg) / sizeof(cy_stc_mpc_rot_cfg_t)' />
+        <Member name='locked_rot_regions' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_regions' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)' />
+        <Member name='locked_rot_region_count' value='sizeof(`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_regions) / sizeof(cy_stc_mpc_regions_t)' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)' />
+        <Member name='locked_rot_cfg' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_cfg' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)' />
       </ConfigStruct>
     </ConfigArray>
 
     <ConfigVariable name='unified_mpc_domains_count' type='size_t' const='true' value='sizeof(unified_mpc_domains) / sizeof(cy_stc_mpc_unified_t)' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (CY_PDL_TZ_ENABLED)' />
 
-    <ConfigArray name='mtb_srf_memory_protection_s' type='mtb_srf_memory_protection_s_t' const='true' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF)'>
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]")) &gt; 0}`' >
-        <Member name='ranges' value='`${getExposedMember("mxrramc[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
-        <Member name='size' value='`${splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]"))}`U' />
-      </ConfigStruct>
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${splitCount(getMpcRegionStarts("smif[0].mpc[0]")) &gt; 0}`' >
-        <Member name='ranges' value='`${getExposedMember("smif[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
-        <Member name='size' value='`${splitCount(getMpcRegionStarts("smif[0].mpc[0]")) * 2}`U' />
-      </ConfigStruct>
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${splitCount(getMpcRegionStarts("smif[1].mpc[0]")) &gt; 0}`' >
-        <Member name='ranges' value='`${getExposedMember("smif[1].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
-        <Member name='size' value='`${splitCount(getMpcRegionStarts("smif[1].mpc[0]")) * 2}`U' />
-      </ConfigStruct>
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${splitCount(getMpcRegionStarts("socmem[0].mpc[0]")) &gt; 0}`' >
-        <Member name='ranges' value='`${getExposedMember("socmem[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
-        <Member name='size' value='`${splitCount(getMpcRegionStarts("socmem[0].mpc[0]"))}`U' />
-      </ConfigStruct>
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${splitCount(getMpcRegionStarts("mxsramc[0].mpc[0]")) &gt; 0}`' >
-        <Member name='ranges' value='`${getExposedMember("mxsramc[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
-        <Member name='size' value='`${splitCount(getMpcRegionStarts("mxsramc[0].mpc[0]"))}`U' />
-      </ConfigStruct>
-      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${splitCount(getMpcRegionStarts("mxsramc[1].mpc[0]")) &gt; 0}`' >
-        <Member name='ranges' value='`${getExposedMember("mxsramc[1].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
-        <Member name='size' value='`${splitCount(getMpcRegionStarts("mxsramc[1].mpc[0]"))}`U' />
-      </ConfigStruct>
-    </ConfigArray>
-
-
-    <ConfigVariable name='mtb_srf_protection_range_s_count' type='uint8_t' const='true' value='sizeof(mtb_srf_memory_protection_s) / sizeof(mtb_srf_memory_protection_s_t)' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF)' />
-
-    <ConfigFunction public='in_source_file_only' signature='cy_rslt_t _cycfg_mpc_init_regions_rram(const cy_stc_mpc_regions_t* region, const cy_stc_mpc_rot_cfg_t* cfg, uint8_t cfg_count)' guard='defined(CY_PDL_TZ_ENABLED)' include='`${isBlockUsed("vres[0].memory[0]")}`' >
+    <ConfigFunction public='in_source_file_only' signature='cy_rslt_t _cycfg_mpc_init_regions_rram(const cy_stc_mpc_regions_t* region, const cy_stc_mpc_rot_cfg_t* cfg, uint8_t cfg_count)' guard='defined(CY_PDL_TZ_ENABLED)' include='`${hasRRAM &amp;&amp; isBlockUsed("vres[0].memory[0]")}`' >
       <Line value='    cy_rslt_t result = CY_RSLT_SUCCESS;'/>
       <Line value='    ifx_se_mpc_rot_cfg_t rotConfigRram;'/>
       <Line value='    ifx_se_mpc_rot_cfg_crc_t rotConfigCrcRram;'/>
@@ -305,6 +736,34 @@
       <Line value='    }'/>
       <Line value=''/>
       <Line value='    return retResult;'/>
+    </ConfigFunction>
+
+    <!-- Helper for locked ROT regions: calls Cy_Mpc_ConfigMpcStruct (non-ROT path) -->
+    <ConfigFunction public='in_source_file_only' signature='cy_rslt_t _cycfg_mpc_init_regions_nonrot(const cy_stc_mpc_regions_t* region, const cy_stc_mpc_cfg_t* cfg)' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
+      <Line value='    cy_rslt_t result = CY_RSLT_SUCCESS;'/>
+      <Line value=''/>
+      <Line value='    result = (cy_rslt_t)Cy_Mpc_ConfigMpcStruct(region-&gt;base, region-&gt;offset, region-&gt;size, cfg);'/>
+      <Line value=''/>
+      <Line value='    return result;'/>
+    </ConfigFunction>
+
+    <ConfigFunction public='prototype_in_header' signature='bool Cy_Mpc_IsRotConfigurable(const MPC_Type* base)' guard='defined(CY_PDL_TZ_ENABLED)'>
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("flashc[0].mpc[0]", "RegisterDefine")}`) return `${rotConfigurableFlash}`;' include='`${hasFlash}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("mxrramc[0].mpc[0]", "RegisterDefine")}`) return `${rotConfigurableRRAM}`;' include='`${hasRRAM}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("smif[0].mpc[0]", "RegisterDefine")}`) return `${rotConfigurableSMIF0}`;' include='`${hasSMIF0}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("smif[0].mpc[0]", "RegisterDefineUnified")}`) return `${rotConfigurableSMIF0}`;' include='`${hasSMIF0}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("smif[1].mpc[0]", "RegisterDefine")}`) return `${rotConfigurableSMIF1}`;' include='`${hasSMIF1}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("smif[1].mpc[0]", "RegisterDefineUnified")}`) return `${rotConfigurableSMIF1}`;' include='`${hasSMIF1}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("socmem[0].mpc[0]", "RegisterDefine")}`) return `${rotConfigurableSOCMEM}`;' include='`${hasSOCMEM}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("mxsramc[0].mpc[0]", "RegisterDefine")}`) return `${rotConfigurableSRAM0}`;' include='`${hasSRAM0}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("mxsramc[1].mpc[0]", "RegisterDefine")}`) return `${rotConfigurableSRAM1}`;' include='`${hasSRAM1}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("mxpromc[0].mpc[0]", "RegisterDefine")}`) return `${rotConfigurablePROMC}`;' include='`${hasPROMC}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "RegisterDefine")}`) return `${rotConfigurablePPCASRAM0}`;' include='`${hasPPCASRAM0}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "RegisterDefine")}`) return `${rotConfigurablePPCASRAM1}`;' include='`${hasPPCASRAM1}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "RegisterDefine")}`) return `${rotConfigurablePPCASRAM2}`;' include='`${hasPPCASRAM2}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "RegisterDefine")}`) return `${rotConfigurablePPCASRAM3}`;' include='`${hasPPCASRAM3}`' />
+      <Line value='    if (base == (MPC_Type*)`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "RegisterDefine")}`) return `${rotConfigurablePPCASRAM4}`;' include='`${hasPPCASRAM4}`' />
+      <Line value='    return true;' />
     </ConfigFunction>
 
     <ConfigFunction public='prototype_in_header' signature='cy_rslt_t init_cycfg_mpc(void)' guard='defined(CY_PDL_TZ_ENABLED)'>
@@ -379,11 +838,12 @@
       <Line value='        {'/>
       <Line value='            const cy_stc_mpc_regions_t* region = &amp;domain-&gt;regions[region_idx];'/>
       <Line value=''/>
-      <Line value='            if (region-&gt;base == (MPC_Type*)RRAMC0_MPC0)'/>
-      <Line value='            {'/>
-      <Line value='                currentResult = _cycfg_mpc_init_regions_rram(region, &amp;(domain-&gt;cfg[0]), domain->cfg_count);'/>
-      <Line value='            }'/>
-      <Line value='            else'/>
+      <Line value='            if (region-&gt;base == (MPC_Type*)RRAMC0_MPC0)' include='`${hasRRAM}`'/>
+      <Line value='            {' include='`${hasRRAM}`'/>
+      <Line value='                currentResult = _cycfg_mpc_init_regions_rram(region, &amp;(domain-&gt;cfg[0]), domain->cfg_count);' include='`${hasRRAM}`'/>
+      <Line value='            }' include='`${hasRRAM}`'/>
+      <Line value='            else' include='`${hasRRAM}`'/>
+      <Line value='            if (region-&gt;base != (MPC_Type*)FLASHC_MPC0)' include='`${hasFlash}`'/>
       <Line value='            {'/>
       <Line value='                // Check for an empty regions struct'/>
       <Line value='                if (region->base != NULL)'/>
@@ -397,6 +857,24 @@
       <Line value='                retResult = currentResult;'/>
       <Line value='            }'/>
       <Line value='        }'/>
+      <Line value=''/>
+      <Line value='#if defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)'/>
+      <Line value='        /* Process locked ROT regions */'/>
+      <Line value='        for (uint32_t region_idx = 0; region_idx &lt; domain-&gt;locked_rot_region_count; ++region_idx)'/>
+      <Line value='        {'/>
+      <Line value='            const cy_stc_mpc_regions_t* region = &amp;domain-&gt;locked_rot_regions[region_idx];'/>
+      <Line value=''/>
+      <Line value='            if (region-&gt;base != NULL)'/>
+      <Line value='            {'/>
+      <Line value='                currentResult = _cycfg_mpc_init_regions_nonrot(region, &amp;(domain-&gt;locked_rot_cfg));'/>
+      <Line value='            }'/>
+      <Line value=''/>
+      <Line value='            if (CY_RSLT_SUCCESS != currentResult)'/>
+      <Line value='            {'/>
+      <Line value='                retResult = currentResult;'/>
+      <Line value='            }'/>
+      <Line value='        }'/>
+      <Line value='#endif /* defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED) */'/>
       <Line value='    }'/>
       <Line value=''/>
       <Line value='#if (smif_1_mpc_0_REGION_COUNT > 0U)'/>

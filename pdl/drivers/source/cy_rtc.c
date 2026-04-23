@@ -7,8 +7,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@
 #if defined (CY_IP_MXS40SRSS_RTC) || defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
 
 #include "cy_rtc.h"
-#include "mtb_srf.h"
+#include "cy_pdl_srf.h"
 
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 2.2', 3, \
 'The unused code due to weak implementation can be overwritten further and then interrupt handler can call it.')
@@ -466,6 +466,7 @@ cy_en_rtc_status_t Cy_RTC_SetAlarmDateAndTime(cy_stc_rtc_alarm_t const *alarmDat
 * The alarm index to be configured, see \ref cy_en_rtc_alarm_t.
 *
 *******************************************************************************/
+
 void   Cy_RTC_GetAlarmDateAndTime(cy_stc_rtc_alarm_t *alarmDateTime, cy_en_rtc_alarm_t alarmIndex)
 {
     uint32_t tmpAlarmTime;
@@ -1010,13 +1011,6 @@ void Cy_RTC_SelectFrequencyPrescaler(cy_en_rtc_clock_freq_t clkSel)
 ****************************************************************************//**
 * \param clkSel Source clock, see \ref cy_en_rtc_clk_select_sources_t
 * Selects the source clock  for RTC.
-*
-* Changing clock selection is not guaranteed to be glitch free, thus alarms
-* should be deactivated before changing the selected clock. Afterwards the
-* RTC time should also be reconfigured.
-*
-* \return
-* Result of RTC clock source update. See \ref cy_en_rtc_status_t.
 *
 *******************************************************************************/
 void Cy_RTC_SelectClockSource(cy_en_rtc_clk_select_sources_t clkSel)

@@ -6,8 +6,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2018-2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2018-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -132,9 +132,10 @@ endif
 
 erase: erase_$(_MTB_RECIPE__PROGRAM_INTERFACE_SUBDIR)
 
+_MTB_RECIPE__ERASING_TARGET_MSG?="Erasing target device..."
 erase_$(_MTB_RECIPE__PROGRAM_INTERFACE_SUBDIR): debug_interface_check
 	$(MTB__NOISE)echo;\
-	echo "Erasing target device... ";\
+	echo $(_MTB_RECIPE__ERASING_TARGET_MSG);\
 	"$(_MTB_RECIPE__PROGRAM_ERASE_TOOL)" $(_MTB_RECIPE__ERASE_ARGS)
 
 program_proj: program_$(_MTB_RECIPE__PROGRAM_INTERFACE_SUBDIR)

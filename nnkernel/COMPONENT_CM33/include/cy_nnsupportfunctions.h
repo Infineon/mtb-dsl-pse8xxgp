@@ -91,22 +91,21 @@ cy_en_nnlite_status_t cy_nn_lstm_step_s8_s16(const int8_t *input,
  * 
  * @note in line with TFLM etc there is no 'recurrent_to_gate_bias' 
  */
-cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const int8_t *input,
-                                       const int32_t input_offset,
+cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const void *input,
                                        const int8_t *input_to_gate_weights,
                                        const int32_t *input_to_gate_bias,
                                        const cy_nn_scaling input_to_gate_scaling,
-                                       const int8_t *output_state,
-                                       const int32_t output_state_offset,
+                                       const void *output_state,
                                        const int8_t *recurrent_to_gate_weights,
                                        const cy_nn_scaling recurrent_to_gate_scaling,
+                                       const cy_nn_lstm_params *lstm,
                                        const int32_t n_batch,
                                        const int32_t n_input,
                                        const int32_t n_output,
                                        const int32_t n_cell,
                                        const cy_nn_activation_type activation_type,
                                        int16_t *gate,
-                                       int16_t *tmp_gate_buf);
+                                       cy_nn_lstm_context *scratch_buffers);
 
 /**
  * @brief       Update cell state for a single LSTM iteration step, int8x8_16 version.
@@ -142,9 +141,8 @@ cy_en_nnlite_status_t cy_nn_lstm_update_output_s8_s16(const int n_batch,
                                       int16_t *cell_state,
                                       const int32_t cell_state_scale,
                                       const int16_t *output_gate,
-                                      const cy_nn_scaling hidden_scale,
-                                      const int32_t hidden_offset,
-                                      int8_t *output_state,
+                                      const cy_nn_lstm_params *lstm,
+                                      void *output_state,
                                       int16_t *cell_gate_scratch);
 
 

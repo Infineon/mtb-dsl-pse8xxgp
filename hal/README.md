@@ -53,20 +53,20 @@ The HAL driver headers provide macros corresponding to codes for common error si
 For more details on interacting with `cy_rslt_t` see [Result Type](docs/html/group__group__result.html).
 
 ## RTOS Integration
-Some HAL drivers may have slightly different behavior when run in an RTOS environment. This is typically found in operations that need to wait for a significant period of time. In an RTOS aware environment, the function will attempt to wait to use the RTOS. This allows other threads in the application to run while the current operation is waiting. In non-RTOS aware environments (e.g. bare metal environments) the functions will instead rely on busy waits for operations to complete. To inform the HAL that an RTOS environment is being used the `RTOS_AWARE` component (COMPONENTS+=RTOS_AWARE) or the `CY_RTOS_AWARE` define (DEFINES+=CY_RTOS_AWARE) must be set. When set, the HAL will use the [RTOS Abstraction] (https://github.com/infineon/abstraction-rtos) APIs to wait.
+Some HAL drivers may have slightly different behavior when run in an RTOS environment. This is typically found in operations that need to wait for a significant period of time. In an RTOS aware environment, the function will attempt to wait to use the RTOS. This allows other threads in the application to run while the current operation is waiting. In non-RTOS aware environments (e.g. bare metal environments) the functions will instead rely on busy waits for operations to complete. To inform the HAL that an RTOS environment is being used the `RTOS_AWARE` component (COMPONENTS+=RTOS_AWARE) or the `CY_RTOS_AWARE` define (DEFINES+=CY_RTOS_AWARE) must be set. When set, the HAL will use the [RTOS Abstraction](https://github.com/infineon/abstraction-rtos) APIs to wait.
 
 When using HAL in an RTOS environment with the `RTOS_AWARE` component enabled, setup of the HAL drivers must be done after the RTOS has been initialized to ensure that the RTOS modules such as semaphores used by the HAL drivers are initialized properly.
 
 It is not safe to invoke more than one operation on the same HAL driver instance at a given time. If multiple threads can potentially interact with a HAL driver instance, it is the caller's responsibility to implement mutual exclusion measures (e.g. RTOS mutex, RTOS semaphore) to ensure that only one thread at a time interacts with a given instance.
 
 ## Data Cache Management
-Devices such as those in the XMC72 series contain a data cache (DCACHE). When working with DCACHE, it is important to be aware of issues related to cache coherency. The HAL contains code to perform cache management, but it also requires the application to be suitably structured. Refer to [DCACHE Management](docs/html/md_asset_dcache.html) for more information on this topic.
+Devices such as those in the XMC72 series contain a data cache (DCACHE). When working with DCACHE, it is important to be aware of issues related to cache coherency. The HAL contains code to perform cache management, but it also requires the application to be suitably structured. Refer to [DCACHE Management](docs/html/dcacheManagement.html) for more information on this topic.
 
 ## More information
-* [API Reference Guide] (https://infineon.github.io/mtb-hal-pse8xxgp/html/modules.html)
-* [Cypress Semiconductor, an Infineon Technologies Company] (http://www.cypress.com)
-* [Infineon GitHub] (https://github.com/infineon)
-* [ModusToolbox™] (https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software)
+* [API Reference Guide](https://infineon.github.io/mtb-hal-pse8xxgp/html/modules.html)
+* [Infineon Technologies AG](http://www.infineon.com)
+* [Infineon GitHub](https://github.com/infineon)
+* [ModusToolbox&trade;](https://www.infineon.com/design-resources/development-tools/sdk/modustoolbox-software)
 
 ---
-© Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation, 2019-2024.
+© Infineon Technologies AG or an affiliate of Infineon Technologies AG, 2019-2026.

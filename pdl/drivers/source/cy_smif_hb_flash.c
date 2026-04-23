@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2021-2025 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2021-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1007,4 +1007,3 @@ cy_en_smif_status_t Cy_SMIF_HyperBus_MMIO_Write(SMIF_Type *base,
 #if defined(__cplusplus)
 }
 #endif
-

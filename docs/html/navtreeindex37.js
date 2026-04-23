@@ -1,5 +1,14 @@
 var NAVTREEINDEX37 =
 {
+"group__group__tdm__data__structures.html#a09c56a3ee7782b5ffcdd29b82dfb75ab":[2,2,36,1,1,10],
+"group__group__tdm__data__structures.html#a0a4251c3863764fcad2e6d42efc5e483":[2,2,36,1,0,2],
+"group__group__tdm__data__structures.html#a0f68fc2bd9634c1abefa70fcc42d2dd4":[2,2,36,1,1,5],
+"group__group__tdm__data__structures.html#a131501de1e9ecad473879167462d09e7":[2,2,36,1,1,14],
+"group__group__tdm__data__structures.html#a1826efa7dbe3da948371ac205cfb272b":[2,2,36,1,0,1],
+"group__group__tdm__data__structures.html#a183ea391fe430018453adff41c8f1af1":[2,2,36,1,0,11],
+"group__group__tdm__data__structures.html#a188b3bdb661511f30b99b86118813642":[2,2,36,1,0,9],
+"group__group__tdm__data__structures.html#a1a14099f700bc3514d8debdaae4bd127":[2,2,36,1,0,5],
+"group__group__tdm__data__structures.html#a1c21b39d6dfa8bcf2a1bb167b5fc19a7":[2,2,36,1,1,15],
 "group__group__tdm__data__structures.html#a2613f222b739ffa08956452b746dcb73":[2,2,36,1,0,7],
 "group__group__tdm__data__structures.html#a3bc0d8a5a0059e0012490022c3f06a3d":[2,2,36,1,0,0],
 "group__group__tdm__data__structures.html#a4a4839e77c81bf1fe7c32b8edf67befe":[2,2,36,1,1,0],
@@ -240,14 +249,5 @@ var NAVTREEINDEX37 =
 "group__mtb__syspm__group__tcpwm.html":[2,3,8],
 "group__mtb__syspm__group__tcpwm.html#a793693deccb6a19adbef192bccfadbde":[2,3,8,0,0],
 "group__mtb__syspm__group__tcpwm.html#a935a5ac04f7d7936ab2d866e1a7ed186":[2,3,8,0,2],
-"group__mtb__syspm__group__tcpwm.html#acfdb8ad5b28c18b3699a7be09644384d":[2,3,8,0,1],
-"group__mtb__syspm__group__tcpwm.html#gae4e1019ddd23f8572ad8839ea97c1cb6":[2,3,8,1],
-"group__mtb__syspm__group__tcpwm.html#structmtb__syspm__tcpwm__deepsleep__context__t":[2,3,8,0],
-"group__mtb__syspm__group__uart.html":[2,3,5],
-"group__mtb__syspm__group__uart.html#a5a8bab6a443c1b86c298356540fd0bf4":[2,3,5,0,2],
-"group__mtb__syspm__group__uart.html#a74e727e7e7a3a991f36389f7161b9c35":[2,3,5,1,1],
-"group__mtb__syspm__group__uart.html#a7a491d3a5b3a020cb842adb14089ea8d":[2,3,5,0,1],
-"group__mtb__syspm__group__uart.html#a7c53bce4269360cb26fe5ac535d84b68":[2,3,5,1,0],
-"group__mtb__syspm__group__uart.html#aa879021abcdb4db4b0acec52e62d480c":[2,3,5,0,0],
-"group__mtb__syspm__group__uart.html#ac1895270956c07836703e3e1d2c4b7d0":[2,3,5,1,2]
+"group__mtb__syspm__group__tcpwm.html#acfdb8ad5b28c18b3699a7be09644384d":[2,3,8,0,1]
 };

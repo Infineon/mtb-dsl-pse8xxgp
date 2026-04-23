@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2020-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2020-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 *
 * SPDX-License-Identifier: BSD-3-Clause
 *

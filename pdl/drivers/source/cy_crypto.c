@@ -3,12 +3,12 @@
 * \version 2.150
 *
 * \brief
-*  Provides API implementation of the Cypress PDL Crypto driver.
+*  Provides API implementation of the Infineon PDL Crypto driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2020-2024), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2020-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");

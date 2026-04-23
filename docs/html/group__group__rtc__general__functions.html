@@ -379,12 +379,10 @@ Ensure that dataTime argument is DCache aligned when calling from a non-secured 
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">clkSel</td><td>Source clock, see <a class="el" href="group__group__rtc__enums.html#ga6620485d475a6116576bd6981e01108e">cy_en_rtc_clk_select_sources_t</a> Selects the source clock for RTC.</td></tr>
+    <tr><td class="paramname">clkSel</td><td>Source clock, see <a class="el" href="group__group__rtc__enums.html#ga6620485d475a6116576bd6981e01108e">cy_en_rtc_clk_select_sources_t</a> Selects the source clock for RTC. </td></tr>
   </table>
   </dd>
 </dl>
-<p>Changing clock selection is not guaranteed to be glitch free, thus alarms should be deactivated before changing the selected clock. Afterwards the RTC time should also be reconfigured.</p>
-<dl class="section return"><dt>Returns</dt><dd>Result of RTC clock source update. See <a class="el" href="group__group__rtc__enums.html#ga45a1b113f07f81bc369d7bf9da75eaae">cy_en_rtc_status_t</a>. </dd></dl>
 
 </div>
 </div>

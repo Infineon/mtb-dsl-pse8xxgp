@@ -773,6 +773,7 @@ Cy_NNLite_SetInterpolationParam(NNLITE_Type *nnlite,
 
   uint32_t *lut_regs_base = (uint32_t*)&nnlite->INTERPOLATIONLUTDATA0;
   uint32_t slope_bits = Cy_NNLite_Float_Rawbits(gradient);
+  CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 18.1','INTERPOLATIONLUTDATA0 and INTERPOLATIONLUTDATA1 are contiguous registers in the HW struct; segment is validated to be 0 or 1');
   lut_regs_base[segment] = slope_bits;
 
   return CY_NNLITE_SUCCESS;
@@ -1114,5 +1115,4 @@ void Cy_NNLite_InterruptHandler(NNLITE_Type *nnlite,
 #endif
 
 #endif /* CY_IP_MXNNLITE */
-
 /* [] END OF FILE */

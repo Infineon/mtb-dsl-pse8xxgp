@@ -7,7 +7,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2022-2025 Cypress Semiconductor Corporation
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1293,5 +1294,4 @@ static void Analog_UpdateTimerTable_SAR(uint8_t stateIdx, const cy_stc_autanalog
 #endif
 
 #endif /* CY_IP_MXS22LPPASS */
-
 /* [] END OF FILE */

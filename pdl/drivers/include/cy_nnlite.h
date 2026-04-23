@@ -7,7 +7,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2022 Cypress Semiconductor Corporation
+* (c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1097,5 +1098,4 @@ Cy_NNLite_WaitForCompletion(NNLITE_Type *nnlite, cy_nnlite_context_t *context);
 
 /** \} group_nnlite */
 #endif /* CY_NNLITE_PDL_H */
-
 /* [] END OF FILE */

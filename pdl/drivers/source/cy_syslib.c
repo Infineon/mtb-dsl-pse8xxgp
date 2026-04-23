@@ -6,8 +6,8 @@
 *   Provides system API implementation for the SysLib driver.
 *
 ********************************************************************************
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -236,8 +236,8 @@ uint32_t Cy_SysLib_GetResetReason(void)
     {
         retVal |= CY_SYSLIB_RESET_DS_OFF_WAKEUP;
     }
-	if(CY_SYSLIB_HIBERNATE_TOKEN == _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
-	{
+    if(CY_SYSLIB_HIBERNATE_TOKEN == _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+    {
         retVal |= CY_SYSLIB_RESET_HIB_WAKEUP;
     }
 
@@ -306,13 +306,13 @@ void Cy_SysLib_ClearResetReason(void)
     SRSS_RES_CAUSE_EXTEND = 0xFFFFFFFFU;
 #endif /* defined(CY_IP_MXS22SRSS) && (SRSS_POR_PRESENT) */
 
-	if(0U != _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+    if(0U != _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
     {
         /* Clears PWR_HIBERNATE token */
 #if CY_CPU_CORTEX_M4 && defined (CY_DEVICE_SECURE)
         CY_PRA_REG32_CLR_SET(CY_PRA_INDX_SRSS_PWR_HIBERNATE, SRSS_PWR_HIBERNATE_TOKEN, 0UL);
 #else
-    SRSS_PWR_HIBERNATE &= ~SRSS_PWR_HIBERNATE_TOKEN_Msk;
+        SRSS_PWR_HIBERNATE &= ~SRSS_PWR_HIBERNATE_TOKEN_Msk;
 #endif /* CY_CPU_CORTEX_M4 && defined (CY_DEVICE_SECURE) */
     }
 }

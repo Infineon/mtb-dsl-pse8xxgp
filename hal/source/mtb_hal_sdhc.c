@@ -6,9 +6,9 @@
 * is a wrapper around the lower level PDL API.
 *
 ********************************************************************************
-* \copyright
-* Copyright 2018-2024 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation
+   * \copyright
+* Copyright(c) 2018-2026 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -1246,6 +1246,17 @@ static uint16_t _mtb_hal_sdhc_get_sdclk_div(mtb_hal_sdhc_t* obj)
     clkDiv = ((upperFreqSel << _MTB_HAL_SDHC_UPPER_FREQ_SEL_POS) | lowerFreqSel);
 
     return clkDiv;
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_sdio_get_max_frequency
+//--------------------------------------------------------------------------------------------------
+uint32_t mtb_hal_sdio_get_max_frequency(mtb_hal_sdio_t* obj)
+{
+    CY_ASSERT(NULL != obj);
+
+    return (obj->sdxx.clock->interface->get_frequency_hz(obj->sdxx.clock->clock_ref));
 }
 
 

@@ -39,7 +39,8 @@
 
 
 cy_en_nnlite_status_t
-cy_nnlite_fc_s8_s16(const int8_t *input,
+cy_nnlite_fc_s16(const void *input,
+                    cy_nn_word_size input_size,
                     const int32_t input_offset,
                     const int8_t *weights,
                     const int32_t *bias,
@@ -47,7 +48,8 @@ cy_nnlite_fc_s8_s16(const int8_t *input,
                     float output_scale,
                     const int32_t n_input,
                     const int32_t n_output,
-                    const int32_t n_batch)
+                    const int32_t n_batch,
+                    void *scratch_buf)
 {    
     cy_en_nnlite_status_t status;                    
     cy_nn_dims_t input_dims = {{n_batch, n_input}};
@@ -57,12 +59,15 @@ cy_nnlite_fc_s8_s16(const int8_t *input,
     fc_param.inputOffset = input_offset;
     fc_param.filterOffset = 0;
     fc_param.outputOffset = 0;
-    fc_param.outScalingFactor = output_scale;
+    fc_param.outScalingFactor = &output_scale;
     fc_param.outClipping.min = INT16_MIN;
     fc_param.outClipping.max = INT16_MAX;
-    fc_param.inputSize = CY_NNLITE_ACTIVATION_8BIT;
+    // Consistency of this conversion is checked via static asserts in cy_nn_kernel.c
+    fc_param.inputSize = (cy_en_nnlite_activation_size_t)input_size;
     fc_param.outputSize = CY_NNLITE_OUTPUT_16BIT;
     fc_param.sparseWeights = false;
+    fc_param.scratchBuf = (int8_t *)scratch_buf;
+    fc_param.isPerChannel = false;
 
     status =
         Cy_NNLite_FullyConnected(input, (int8_t *)output, 
@@ -78,22 +83,21 @@ cy_nnlite_fc_s8_s16(const int8_t *input,
  * Calculates a single LSTM gate, int8x8_16 version.
  * Refer to header file for details
  */
-cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const int8_t *input,
-                                       const int32_t input_offset,
+cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const void *input,
                                        const int8_t *input_to_gate_weights,
                                        const int32_t *input_to_gate_bias,
                                        const cy_nn_scaling input_to_gate_scaling,
-                                       const int8_t *output_state,
-                                       const int32_t output_state_offset,
+                                       const void *output_state,
                                        const int8_t *recurrent_to_gate_weights,
                                        const cy_nn_scaling recurrent_to_gate_scaling,
+                                       const cy_nn_lstm_params *lstm,
                                        const int32_t n_batch,
                                        const int32_t n_input,
                                        const int32_t n_output,
                                        const int32_t n_cell,
                                        const cy_nn_activation_type activation_type,
                                        int16_t *gate,
-                                       int16_t *tmp_gate_buf)
+                                       cy_nn_lstm_context *scratch_buffers)
 {
     const int32_t n_block = n_batch * n_cell;
     // Note: with only 16-bit accumulation this factoring of LSTM is prone overflow.
@@ -114,15 +118,17 @@ cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const int8_t *input,
                                      n_batch);
 #endif
     cy_en_nnlite_status_t status =
-        cy_nnlite_fc_s8_s16(input,
-                            input_offset,
+        cy_nnlite_fc_s16(input,
+                         lstm->input_size,
+                            lstm->input_offset,
                             input_to_gate_weights,
                             input_to_gate_bias,
                             gate,
                             input_to_gate_scaling.scale,
                             n_input,
                             n_cell,
-                            n_batch);
+                            n_batch,
+                            scratch_buffers->fc_scratch_buf);
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
@@ -141,15 +147,17 @@ cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const int8_t *input,
                                      n_batch);
 #endif
     status =
-        cy_nnlite_fc_s8_s16(output_state,
-                            output_state_offset,
+        cy_nnlite_fc_s16(output_state,
+                            lstm->output_size,
+                            lstm->output_state_offset,
                             recurrent_to_gate_weights,
                             NULL, //  TFLM etc don't include a recurrent_to_gate_bias,
-                            tmp_gate_buf,
+                            scratch_buffers->tmp_gate_buf,
                             recurrent_to_gate_scaling.scale,
                             n_output,
                             n_cell,
-                            n_batch);    
+                            n_batch,
+                            scratch_buffers->fc_scratch_buf);
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
@@ -199,13 +207,10 @@ cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const int8_t *input,
         return status;
     }
     status = 
-        Cy_NNLite_AddSubMul((const int8_t *)gate, (const int8_t*)tmp_gate_buf, 
+        Cy_NNLite_AddSubMul((const int8_t *)gate, (const int8_t*)scratch_buffers->tmp_gate_buf,
                         (int8_t *)gate,
                         &inoutDims, &inoutDims, &add_params,
                         CY_NNLITE_ADD, nnlite_activation);
-
-
-
 
 #if 0 // ORIGINAL CMSIS-NN
 

@@ -1,5 +1,12 @@
 var NAVTREEINDEX22 =
 {
+"group__group__scb__common__macros.html":[2,2,23,0,0],
+"group__group__scb__common__macros.html#ga119c2bb900e3418638892acc64762524":[2,2,23,0,0,7],
+"group__group__scb__common__macros.html#ga151ae77db4fc084055c0fd3abaa2c677":[2,2,23,0,0,12],
+"group__group__scb__common__macros.html#ga3b69cded7913c23737b78d8728e7a3be":[2,2,23,0,0,10],
+"group__group__scb__common__macros.html#ga70d5fa77cf7e42bf5b5c19f0761454ed":[2,2,23,0,0,8],
+"group__group__scb__common__macros.html#ga9542eb5bb86deb8c5b229f503766d91b":[2,2,23,0,0,11],
+"group__group__scb__common__macros.html#gab50a7b4a1b916c7ecfcc38ac8d5fdea0":[2,2,23,0,0,9],
 "group__group__scb__common__macros.html#gac3e63ee1464db3c202e3474f54e1ab94":[2,2,23,0,0,14],
 "group__group__scb__common__macros.html#gaeeb6adf88a24d31476f0cd19c7403af5":[2,2,23,0,0,13],
 "group__group__scb__common__macros__SpiIntrStatuses.html":[2,2,23,0,0,6],
@@ -242,12 +249,5 @@ var NAVTREEINDEX22 =
 "group__group__scb__spi__data__structures.html#a853b8bf6437e4a60c959f048a5567003":[2,2,23,3,2,0,19],
 "group__group__scb__spi__data__structures.html#a8bd8054ad4eb5abac5e4e2d77f305a18":[2,2,23,3,2,0,17],
 "group__group__scb__spi__data__structures.html#a927681bbde837cd791b5079ef7d95fa7":[2,2,23,3,2,0,18],
-"group__group__scb__spi__data__structures.html#a951470717fc8f045858bca8588c4659f":[2,2,23,3,2,0,8],
-"group__group__scb__spi__data__structures.html#aa1b9fcfc4860b02fb7cd17fc49531cc3":[2,2,23,3,2,0,6],
-"group__group__scb__spi__data__structures.html#aacc86dbc09c7ca10d87a97938d4bb4a0":[2,2,23,3,2,0,22],
-"group__group__scb__spi__data__structures.html#aad9bb6b5bf1883ecb44ee09398903f47":[2,2,23,3,2,0,9],
-"group__group__scb__spi__data__structures.html#abd66f5fd0edb65771a1ce822db0d42d8":[2,2,23,3,2,0,12],
-"group__group__scb__spi__data__structures.html#ac6a475cbca4d11fc3c339007694e33c4":[2,2,23,3,2,0,5],
-"group__group__scb__spi__data__structures.html#ad34edde1bbeb56c4aa6c8a4449887897":[2,2,23,3,2,0,14],
-"group__group__scb__spi__data__structures.html#ade78bd095cdc2abc90389b653f072e94":[2,2,23,3,2,0,16]
+"group__group__scb__spi__data__structures.html#a951470717fc8f045858bca8588c4659f":[2,2,23,3,2,0,8]
 };

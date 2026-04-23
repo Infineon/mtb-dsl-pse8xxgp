@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -942,7 +942,6 @@ extern "C" {
 /* Macro to validate parameters in Cy_SysPm_ExecuteCallback() function */
 
 #if defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
-
 #define CY_SYSPM_IS_CALLBACK_TYPE_VALID(type)           (((type) == CY_SYSPM_SLEEP)         || \
                                                          ((type) == CY_SYSPM_DEEPSLEEP)     || \
                                                          ((type) == CY_SYSPM_DEEPSLEEP_RAM) || \
@@ -1153,6 +1152,7 @@ extern "C" {
 /** The internal define of the unlock value for the PMIC functions */
 #define CY_SYSPM_PMIC_UNLOCK_KEY                    (0x3AU)
 
+
 /** The internal define of the first wakeup pin bit used in the
 * Cy_SysPm_SetHibernateWakeupSource() function
 */
@@ -1237,7 +1237,6 @@ extern "C" {
                                             CY_SYSPM_HIBERNATE_RTC_ALARM   | CY_SYSPM_HIBERNATE_WDT |\
                                             CY_SYSPM_HIBERNATE_PIN0_LOW    | CY_SYSPM_HIBERNATE_PIN0_HIGH |\
                                             CY_SYSPM_HIBERNATE_PIN1_LOW    | CY_SYSPM_HIBERNATE_PIN1_HIGH)
-
 
 
 /* The mask for low power modes the power circuits (POR/BOD, Bandgap
@@ -2259,6 +2258,8 @@ typedef struct {
 * \{
 */
 
+/** \} group_syspm_functions_ppca */
+
 /**
 * \addtogroup group_syspm_functions_general
 * \{
@@ -2343,7 +2344,7 @@ cy_en_syspm_sram_pwr_mode_t Cy_SysPm_GetSRAMMacroPwrMode(cy_en_syspm_sram_index_
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SetSRAMPwrMode(cy_en_syspm_sram_index_t sramNum, cy_en_syspm_sram_pwr_mode_t sramPwrMode);
 
-#if defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+#if (defined (CY_IP_MXS22SRSS) && defined (CY_IP_MXSOCMEM)) || defined (CY_DOXYGEN)
 
 /*******************************************************************************
 * Function Name: Cy_SysPm_SetSOCMemPartActivePwrMode
@@ -2794,7 +2795,7 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetSysDeepSleepMode(void);
 *******************************************************************************/
 cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetAppDeepSleepMode(void);
 
-
+#if (defined (CY_IP_MXS22SRSS) && defined (CY_IP_MXSOCMEM)) || defined (CY_DOXYGEN)
 /*******************************************************************************
 * Function Name: Cy_SysPm_SetSOCMEMDeepSleepMode
 ****************************************************************************//**
@@ -2841,6 +2842,7 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetAppDeepSleepMode(void);
 *
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SetSOCMEMDeepSleepMode(cy_en_syspm_deep_sleep_mode_t deepSleepMode);
+#endif /* (defined (CY_IP_MXS22SRSS) && defined (CY_IP_MXSOCMEM)) || defined (CY_DOXYGEN) */
 
 /*******************************************************************************
 * Function Name: Cy_SysPm_SetPPUDeepSleepMode
@@ -2956,6 +2958,8 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToUlp(void);
 *
 *******************************************************************************/
 cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetDeepSleepMode(void);
+
+
 
 /*******************************************************************************
 * Function Name: Cy_SysPm_GetBootMode
@@ -3216,7 +3220,6 @@ he LP mode
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void);
 
-
 /*******************************************************************************
 * Function Name: Cy_SysPm_SystemEnterUlp
 ****************************************************************************//**
@@ -3300,7 +3303,6 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void);
 *
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SystemEnterUlp(void);
-
 
 #if defined (CY_IP_MXS22SRSS) || defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 > 0UL) || defined (CY_DOXYGEN)
 
@@ -3413,6 +3415,7 @@ void Cy_SysPm_SetRamTrimsPostDs(void);
 
 #endif /* (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN) ||
            (defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 > 0UL))*/
+
 
 /*******************************************************************************
 * Function Name: Cy_SysPm_SystemEnterHibernate
@@ -3772,7 +3775,7 @@ __STATIC_INLINE void Cy_SysPm_CpuSendWakeupEvent(void)
     __SEV();
 }
 
-#if defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+#if defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
 /*******************************************************************************
 * Function Name: Cy_SysPm_SystemIsMinRegulatorCurrentSet
 ****************************************************************************//**
@@ -4180,7 +4183,6 @@ __STATIC_INLINE bool Cy_SysPm_Cm55IsDeepSleep(void)
 #endif
 
 /** \} group_syspm_functions_power_status */
-
 
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)

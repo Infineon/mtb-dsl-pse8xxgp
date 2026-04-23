@@ -8,8 +8,8 @@
 
   <FittingRules>
     <MappingRules>
-      <IpBlock name='m33syscpuss' />
-      <Resource name='(m33syscpuss|m55appcpuss)\.(cm33|cm55)\.sau' />
+      <IpBlock name='m33syscpuss,cpuss,appcpuss' />
+      <Resource name='(m33syscpuss|m55appcpuss|cpuss|appcpuss)\.(cm33|cm55)\.sau' />
       <OperatingMode value='MCU' />
     </MappingRules>
   </FittingRules>

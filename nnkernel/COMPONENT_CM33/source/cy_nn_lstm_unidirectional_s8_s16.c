@@ -33,7 +33,7 @@
  *
  */
 cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
-                                                   const int8_t *input_data,
+                                                   const void *input_data,
                                                    const cy_nn_lstm_dims *lstm_dims,
                                                    const int8_t *in_to_in_weights,
                                                    const int8_t *in_to_forget_weights,
@@ -45,9 +45,9 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
                                                    const int8_t *recurrent_to_out_weights,
                                                    const int8_t *projection_weights,
                                                    const cy_nn_lstm_params *lstm,
-                                                   int8_t *output_state,
+                                                   void *output_state,
                                                    int16_t *cell_state,
-                                                   int8_t *output_data)
+                                                   void *output_data)
 {
     cy_en_nnlite_status_t status = CY_NNLITE_BAD_PARAM; // Empty time sequence
     const int32_t num_batch = lstm_dims->num_batches;
@@ -65,14 +65,38 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
         return CY_NNLITE_BAD_PARAM;
     }
 
+    uint32_t input_size_bytes;
+    switch(lstm->input_size)
+    {
+        case CY_NN_WORD_SIZE_8:
+            input_size_bytes = sizeof(int8_t);
+            break;
+        case CY_NN_WORD_SIZE_16:
+            input_size_bytes = sizeof(int16_t);
+            break;
+        default:
+            return CY_NNLITE_BAD_PARAM;
+    }
+    uint32_t output_size_bytes;
+    switch(lstm->output_size)
+    {
+        case CY_NN_WORD_SIZE_8:
+            output_size_bytes = sizeof(int8_t);
+            break;
+        case CY_NN_WORD_SIZE_16:
+            output_size_bytes = sizeof(int16_t);
+            break;
+        default:
+            return CY_NNLITE_BAD_PARAM;
+    }
     Cy_NNLite_StartMacroKernel();
     if (lstm->time_major)
     {
-        const int32_t in_step = num_batch * num_input;
-        const int32_t out_step = num_batch * out_batch_leading_dim;
+        const int32_t in_step = num_batch * num_input * input_size_bytes;
+        const int32_t out_step = num_batch * out_batch_leading_dim * output_size_bytes;
         for (int i_time = 0; i_time < max_time; i_time++)
         {
-            status = cy_nn_lstm_step_s8_s16(input_data + i_time * in_step,
+            status = cy_nn_lstm_step_s8_s16( (const int8_t *)input_data + i_time * in_step,
                                                                  in_to_in_weights,
                                                                  in_to_forget_weights,
                                                                  in_to_cell_weights,
@@ -88,7 +112,7 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
                                                                  num_output,
                                                                  output_state,
                                                                  cell_state,
-                                                                 output_data + i_time * out_step,
+                                                                 (int8_t *)output_data + i_time * out_step,
                                                                  scratch_buffers);
             if (status != CY_NNLITE_SUCCESS)
             {
@@ -100,13 +124,13 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
     {
         for (int i_batch = 0; i_batch < num_batch; i_batch++)
         {
-            const int32_t in_step = num_input;
-            const int32_t out_step = out_batch_leading_dim;
+            const int32_t in_step = num_input * input_size_bytes;
+            const int32_t out_step = out_batch_leading_dim *output_size_bytes;
             for (int i_time = 0; i_time < max_time; i_time++)
             {
                 const int32_t time_offset = i_batch * max_time + i_time;
 
-                status = cy_nn_lstm_step_s8_s16(input_data + time_offset * in_step,
+                status = cy_nn_lstm_step_s8_s16((const int8_t *)input_data + time_offset * in_step,
                                                                      in_to_in_weights,
                                                                      in_to_forget_weights,
                                                                      in_to_cell_weights,
@@ -120,9 +144,9 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
                                                                      num_cell,
                                                                      num_input,
                                                                      num_output,
-                                                                     output_state + i_batch * out_batch_leading_dim,
+                                                                     (int8_t *)output_state + i_batch * out_batch_leading_dim,
                                                                      cell_state + i_batch * num_cell,
-                                                                     output_data + time_offset * out_step,
+                                                                     (int8_t *)output_data + time_offset * out_step,
                                                                      scratch_buffers);
                 if (status != CY_NNLITE_SUCCESS)
                 {

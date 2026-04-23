@@ -11,7 +11,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation
+* (c) 2018-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -77,7 +78,7 @@
 
 
     <ParamSignal port='swj_swdio_tms[0]' name='`${dbgMode eq SWD ? "SWDIO" : "TMS"}`' group='`${dbgGroup}`' visible='`${dbgMode ne NONE}`' desc='Reserve the pin for `${dbgMode eq SWD ? "Single Wire Data In/Out" : "Test Mode Select"}`' canBeEmpty='`${dbgMode eq NONE}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Up. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -85,7 +86,7 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='clk_swj_swclk_tclk[0]' name='`${dbgMode eq SWD ? "SWCLK" : "TCLK"}`' group='`${dbgGroup}`' visible='`${(hasVisibleOption("clk_swj_swclk_tclk[0]")) &amp;&amp; (dbgMode ne NONE)}`' desc='Reserve the pin for `${dbgMode eq SWD ? "Single Wire Clock" : "Test Clock"}`' canBeEmpty='`${dbgMode eq NONE}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Down. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLDOWN' />
         </Parameter>
@@ -93,7 +94,7 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='swj_swclk_tclk[0]' name='`${dbgMode eq SWD ? "SWCLK" : "TCLK"}`' group='`${dbgGroup}`' visible='`${(hasVisibleOption("swj_swclk_tclk[0]")) &amp;&amp; (dbgMode ne NONE)}`' desc='Reserve the pin for `${dbgMode eq SWD ? "Single Wire Clock" : "Test Clock"}`' canBeEmpty='`${dbgMode eq NONE}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Down. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLDOWN' />
         </Parameter>
@@ -101,7 +102,7 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='swj_swo_tdo[0]' name='`${dbgMode eq SWD ? "SWO" : "TDO"}`' group='`${dbgMode eq SWD ? "Trace Pins" :  "JTAG Pins"}`' visible='`${(dbgMode eq JTAG) || ((dbgMode eq SWD) &amp;&amp; traceModeSerial)}`' desc='Reserve the pin for `${dbgMode eq SWD ? "Single Wire Output" : "Test Data Output"}`' canBeEmpty='`${!((dbgMode eq JTAG) || ((dbgMode eq SWD) &amp;&amp; traceModeSerial))}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -124,7 +125,7 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='swj_swdoe_tdi[0]' name='TDI' group='`${dbgGroup}`' visible='`${dbgMode eq JTAG}`' desc='Reserve pin for Test Data Input' canBeEmpty='`${dbgMode ne JTAG}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -132,7 +133,7 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='swj_trstn[0]' name='TRSTn' group='`${dbgGroup}`' visible='`${(hasVisibleOption("swj_trstn[0]")) &amp;&amp; (dbgMode eq JTAG)}`' desc='Reserve pin for Test Reset' canBeEmpty='true'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Up. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -140,7 +141,7 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='rst_swj_trstn[0]' name='TRSTn' group='`${dbgGroup}`' visible='`${(hasVisibleOption("rst_swj_trstn[0]")) &amp;&amp; (dbgMode eq JTAG)}`' desc='Reserve pin for Test Reset' canBeEmpty='true'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Up. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -149,7 +150,7 @@
     </ParamSignal>
 
     <ParamSignal port='trace_clock[0]' name='CLK' group='Trace Pins' visible='`${traceModeParallel &amp;&amp; traceClockExists}`' desc='Clock pin for the Cortex ETM Trace.' canBeEmpty='`${!(traceModeParallel &amp;&amp; traceClockExists)}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -173,7 +174,7 @@
     </ParamSignal>
     <Repeat count='64'>
       <ParamSignal port='trace_data[$idx]' name='Data[$idx]' group='Trace Pins' visible='`${$idx &lt; traceModeParallel}`' desc='Data[$idx] pin for the Cortex ETM Trace.' canBeEmpty='`${!($idx &lt; traceModeParallel)}`'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>

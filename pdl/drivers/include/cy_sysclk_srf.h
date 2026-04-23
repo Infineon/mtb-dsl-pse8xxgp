@@ -184,6 +184,7 @@ typedef enum
     /** \brief PERI Groups operations */
     CY_PDL_SYSCLK_OP_PERI_GET_DIV,             /**< Cy_SysClk_PeriGroupGetDivider */
     CY_PDL_SYSCLK_OP_PERI_SET_DIV,             /**< Cy_SysClk_PeriGroupSetDivider */
+    CY_PDL_SYSCLK_OP_PERI_SLAVE_INIT,          /**< Cy_SysClk_PeriGroupSlaveInit */
 #endif /* defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) */
 #if (defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK)) || defined(CY_DOXYGEN)
     /** \brief PERI Dividers operations */
@@ -192,6 +193,7 @@ typedef enum
     CY_PDL_SYSCLK_OP_PERIPCLK_GET_FRAC_DIV,    /**< Cy_SysClk_PeriPclkGetFracDivider */
     CY_PDL_SYSCLK_OP_PERIPCLK_SET_FRAC_DIV,    /**< Cy_SysClk_PeriPclkSetFracDivider */
     CY_PDL_SYSCLK_OP_PERIPCLK_GET_ASSN_DIV,    /**< Cy_SysClk_PeriPclkGetAssignedDivider */
+    CY_PDL_SYSCLK_OP_PERIPCLK_ASSIGN_DIV,      /**< Cy_SysClk_PeriPclkAssignDivider */
     CY_PDL_SYSCLK_OP_PERIPCLK_ENABLE_DIV,      /**< Cy_SysClk_PeriPclkEnableDivider */
     CY_PDL_SYSCLK_OP_PERIPCLK_DISABLE_DIV,     /**< Cy_SysClk_PeriPclkDisableDivider */
     CY_PDL_SYSCLK_OP_PERIPCLK_GET_FREQ,        /**< Cy_SysClk_PeriPclkGetFrequency */

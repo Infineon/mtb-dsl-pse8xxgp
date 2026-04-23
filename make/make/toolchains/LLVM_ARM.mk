@@ -6,8 +6,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2024-2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2024-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,12 +31,6 @@ endif
 # Macros
 ################################################################################
 
-# The base path to the LLVM_ARM cross compilation executables
-_MTB_TOOLCHAIN_LLVM_ARM__INSTALL_DIR:=$(wildcard $(call mtb_core__escaped_path,$(CY_TOOL_llvm_arm_BASE_ABS)))
-ifneq ($(_MTB_TOOLCHAIN_LLVM_ARM__INSTALL_DIR),)
-MTB_TOOLCHAIN_LLVM_ARM__BASE_DIR:=$(call mtb_core__escaped_path,$(CY_TOOL_llvm_arm_BASE_ABS))
-endif
-
 ifeq ($(TOOLCHAIN),LLVM_ARM)
 _MTB_TOOLCHAIN_LLVM_ARM__USER_1_DIR :=$(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_PATH)))
 ifneq ($(_MTB_TOOLCHAIN_LLVM_ARM__USER_1_DIR),)
@@ -51,7 +45,6 @@ endif
 
 check_toolchain_install:
 ifeq ($(MTB_TOOLCHAIN_LLVM_ARM__BASE_DIR),)
-	$(info CY_TOOL_llvm_arm_BASE_ABS=$(CY_TOOL_llvm_arm_BASE_ABS) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_TOOL_llvm_arm_BASE_ABS))),exists,absent)])
 	$(info CY_COMPILER_PATH=$(CY_COMPILER_PATH) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_PATH))),exists,absent)])
 	$(info CY_COMPILER_LLVM_ARM_DIR=$(CY_COMPILER_LLVM_ARM_DIR) [$(if $(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_LLVM_ARM_DIR))),exists,absent)])
 	$(error Error: Cannot find LLVM_ARM toolchain. Go to https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/ to download and install it. Create an environment variable CY_COMPILER_LLVM_ARM_DIR to specify the path to the installation directory)

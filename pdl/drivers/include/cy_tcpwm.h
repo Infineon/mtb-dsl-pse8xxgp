@@ -293,6 +293,7 @@ extern "C" {
 /** Output trigger generates signal on compare/capture 0 or 1 event */
 #define CY_TCPWM_CNT_TRIGGER_ON_CC0_OR_CC1_MATCH   (6U)
 #endif /* defined (CY_IP_MXS40TCPWM) || defined (CY_DOXYGEN) */
+
 /** Output trigger disabled */
 #define CY_TCPWM_CNT_TRIGGER_ON_DISABLED    (7U)
 /** \} group_tcpwm_output_trigger_modes */
@@ -1171,6 +1172,7 @@ __STATIC_INLINE void Cy_TCPWM_InputTriggerSetup (TCPWM_Type *base, uint32 cntNum
             TCPWM_GRP_CNT_TR_IN_SEL0(base, grp, cntNum) |= _VAL2FLD(TCPWM_GRP_CNT_V2_TR_IN_SEL0_CAPTURE0_SEL, triggerSignal);
             TCPWM_GRP_CNT_TR_IN_EDGE_SEL(base, grp, cntNum) |= _VAL2FLD(TCPWM_GRP_CNT_V2_TR_IN_EDGE_SEL_CAPTURE0_EDGE, edgeSelect);
             break;
+
         case CY_TCPWM_INPUT_TR_CAPTURE1:
         #if (CY_TCPWM_CC1_RUNTIME_CHECK)
             if (TCPWM_GRP_CC1(base, grp))

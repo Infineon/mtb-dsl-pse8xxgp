@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2025 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,10 +25,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
-
 #include "cy_device.h"
 
-#if defined (CY_IP_MXSMIF)
+#if (CY_IP_MXSMIF_VERSION == 4) || (CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6)
 
 #include "cy_smif_memnum.h"
 #include "cy_pdl_srf_common.h"
@@ -1481,5 +1480,4 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusWrite(cy_stc_smif_mem_context_t *conte
 #endif
 
 #endif /* CY_IP_MXSMIF */
-
 /* [] END OF FILE */

@@ -40,8 +40,11 @@
     <Variable id='ppc_reg$idx_used_by_ss' value='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . ppc_reg$idx . "\"]/@used_by_ss"), false)}`' repeatCount='$PPC_REGIONS'/>
     <Variable id='ppc_reg$idx_used_by_ss_pp' value='`${getOrDefault(getCustomData("/PPC_REGISTER[@key=\"" . ppc_reg$idx . "\"]/@used_by_ss_pp"), false)}`' repeatCount='$PPC_REGIONS'/>
 
-    <!-- Filter out regions that user application should not touch during runtime initialization (filter out registers that are accessible by PC 0). Also filtering out PPC block accessible only from secure world -->
-    <Variable id='ppc_reg$idx_filterOut' value='`${(ppc_reg$idx_pcMask &amp; 0x01) || (ppc_reg$idx eq "PPC1_PPC_PPC_SECURE" || ppc_reg$idx eq "PPC1_PPC_PPC_NONSECURE")}`' repeatCount='$PPC_REGIONS'/>
+    <!-- Filter out regions that secure application should not touch during runtime initialization -->
+    <!-- True if it should be filtered out -->
+    <!-- Filter if peri 0 and access to PC0 or if PPC1_PPC_PPC_SECURE/PPC1_PPC_PPC_NONSECURE -->
+    <!-- Regions that meet that criteria will break functionality if configured at runtime initialization-->
+    <Variable id='ppc_reg$idx_filterOut' value='`${(ppc_reg$idx_peri == 0) &amp;&amp; (ppc_reg$idx_pcMask &amp; 0x01) || (ppc_reg$idx eq "PPC1_PPC_PPC_SECURE" || ppc_reg$idx eq "PPC1_PPC_PPC_NONSECURE")}`' repeatCount='$PPC_REGIONS'/>
   </Variables>
 
 
@@ -49,63 +52,64 @@
   </DRCs>
 
   <ConfigFirmware>
-    <ConfigInclude value='cy_ppc.h' />
+    <ConfigInclude value='cy_ppc.h' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' />
 
-    <ConfigDefine name='PPC_PC_MASK_ALL_ACCESS' value='0xFFU' public='true' include='`${need_default}`' />
+    <ConfigDefine name='PPC_PC_MASK_ALL_ACCESS' value='0xFFU' public='true' include='`${need_default}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' />
 
     <!-- Backwards compatibility -->
-    <ConfigDefine name='Cy_PPC$idx_Init' value='init_cycfg_ppc$idx' public='true' include='`${hasBlock("peri[$idx]")}`' repeatCount='$MAX_PERI_INSTANCES' />
+    <ConfigDefine name='Cy_PPC$idx_Init' value='init_cycfg_ppc$idx' public='true' include='`${hasBlock("peri[$idx]")}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' />
+    <ConfigDefine name='PPC0' value='PPC' public='true' include='`${hasBlock("peri[0]")}`' guard='!defined(PPC0) &amp;&amp; (CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' />
 
-    <ConfigStruct name='cycfg_unused_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default}`'>
+    <ConfigStruct name='cycfg_unused_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Member name='pcMask' value='0xFF' />
       <Member name='secAttribute' value='CY_PPC_NON_SECURE' />
       <Member name='privAttribute' value='CY_PPC_NONPRIV' />
     </ConfigStruct>
 
-    <ConfigStruct name='cycfg_se_rt_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default &amp;&amp; enableSecureEnclave}`'>
+    <ConfigStruct name='cycfg_se_rt_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default &amp;&amp; enableSecureEnclave}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Member name='pcMask' value='`${getOrDefault(getExposedMember("vres[0].protection[0]", "secureDebuggerAccess"), true) ? "0x86" : "0x06"}`' />
       <Member name='secAttribute' value='CY_PPC_SECURE' />
       <Member name='privAttribute' value='CY_PPC_NONPRIV' />
     </ConfigStruct>
 
-    <ConfigStruct name='cycfg_ss_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`'>
+    <ConfigStruct name='cycfg_ss_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Member name='pcMask' value='`${getOrDefault(getExposedMember("vres[0].protection[0]", "secureDebuggerAccess"), true) ? "0x86" : "0x06"}`' />
       <Member name='secAttribute' value='CY_PPC_SECURE' />
       <Member name='privAttribute' value='CY_PPC_NONPRIV' />
     </ConfigStruct>
 
-    <ConfigStruct name='cycfg_ss_pp_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`'>
+    <ConfigStruct name='cycfg_ss_pp_ppc_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Member name='pcMask' value='`${getOrDefault(getExposedMember("vres[0].protection[0]", "secureDebuggerAccess"), true) ? "0x86" : "0x06"}`' />
       <Member name='secAttribute' value='CY_PPC_SECURE' />
       <Member name='privAttribute' value='CY_PPC_NONPRIV' />
     </ConfigStruct>
 
-    <ConfigArray name='cycfg_unused_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
+    <ConfigArray name='cycfg_unused_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
       <ArrayElement value='`${ppc_reg$idx_enum_name}`' include='`${($idx &lt; regCnt) &amp;&amp; ($idx{periInst} == ppc_reg$idx_peri) &amp;&amp; !(ppc_reg$idx_filterOut) &amp;&amp; !(enableSecureEnclave &amp;&amp; ppc_reg$idx_used_by_se_rt) &amp;&amp; !((protection_mode eq "SECURE_SERVICES") &amp;&amp; ppc_reg$idx_used_by_ss) &amp;&amp; !((protection_mode eq "SECURE_PERIPHERALS") &amp;&amp; ppc_reg$idx_used_by_ss_pp)}`' repeatCount='$PPC_REGIONS'/>
     </ConfigArray>
 
-    <ConfigArray name='cycfg_se_rt_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; enableSecureEnclave}`' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
+    <ConfigArray name='cycfg_se_rt_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; enableSecureEnclave}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
       <ArrayElement value='`${ppc_reg$idx_enum_name}`' include='`${($idx &lt; regCnt) &amp;&amp; ($idx{periInst} == ppc_reg$idx_peri) &amp;&amp; !(ppc_reg$idx_filterOut) &amp;&amp; (enableSecureEnclave &amp;&amp; ppc_reg$idx_used_by_se_rt)}`' repeatCount='$PPC_REGIONS'/>
     </ConfigArray>
 
-    <ConfigArray name='cycfg_ss_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
+    <ConfigArray name='cycfg_ss_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
       <ArrayElement value='`${ppc_reg$idx_enum_name}`' include='`${($idx &lt; regCnt) &amp;&amp; ($idx{periInst} == ppc_reg$idx_peri) &amp;&amp; !(ppc_reg$idx_filterOut) &amp;&amp; ((protection_mode eq "SECURE_SERVICES") &amp;&amp; ppc_reg$idx_used_by_ss)}`' repeatCount='$PPC_REGIONS'/>
     </ConfigArray>
 
-    <ConfigArray name='cycfg_ss_pp_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
+    <ConfigArray name='cycfg_ss_pp_ppc_$idx_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' repeatId='periInst'>
       <ArrayElement value='`${ppc_reg$idx_enum_name}`' include='`${($idx &lt; regCnt) &amp;&amp; ($idx{periInst} == ppc_reg$idx_peri) &amp;&amp; !(ppc_reg$idx_filterOut) &amp;&amp; ((protection_mode eq "SECURE_PERIPHERALS") &amp;&amp; ppc_reg$idx_used_by_ss_pp)}`' repeatCount='$PPC_REGIONS'/>
     </ConfigArray>
 
-    <ConfigVariable name='cycfg_unused_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_unused_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' repeatCount='$MAX_PERI_INSTANCES' />
+    <ConfigVariable name='cycfg_unused_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_unused_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' />
 
-    <ConfigVariable name='cycfg_se_rt_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_se_rt_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; enableSecureEnclave}`' repeatCount='$MAX_PERI_INSTANCES' />
+    <ConfigVariable name='cycfg_se_rt_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_se_rt_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; enableSecureEnclave}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' />
 
-    <ConfigVariable name='cycfg_ss_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_ss_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`' repeatCount='$MAX_PERI_INSTANCES' />
+    <ConfigVariable name='cycfg_ss_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_ss_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' />
 
-    <ConfigVariable name='cycfg_ss_pp_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_ss_pp_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`' repeatCount='$MAX_PERI_INSTANCES' />
+    <ConfigVariable name='cycfg_ss_pp_ppc_$idx_regions_count' type='size_t' const='true' value='sizeof(cycfg_ss_pp_ppc_$idx_regions) / sizeof(cy_en_prot_region_t)' public='true' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx) &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_PERI_INSTANCES' />
 
     <!-- Function if PPC configuration is not enabled -->
-    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_unsecure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default}`' replicateForAliases='false'>
+    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_unsecure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default}`' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Line value='cy_rslt_t ret = Cy_Ppc_InitPpc(base, CY_PPC_BUS_ERR);'/>
       <Line value=''/>
       <Line value='for (size_t index = 0; ret == CY_PPC_SUCCESS &amp;&amp; index &lt; count; index++)'/>
@@ -117,7 +121,7 @@
       <Line value='return ret;'/>
     </ConfigFunction>
 
-    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_se_rt_secure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default &amp;&amp; enableSecureEnclave}`' replicateForAliases='false'>
+    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_se_rt_secure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default &amp;&amp; enableSecureEnclave}`' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Line value='cy_rslt_t ret = CY_PPC_SUCCESS;'/>
       <Line value=''/>
       <Line value='for (size_t index = 0; ret == CY_PPC_SUCCESS &amp;&amp; index &lt; count; index++)'/>
@@ -129,7 +133,7 @@
       <Line value='return ret;'/>
     </ConfigFunction>
 
-    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_ss_secure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`' replicateForAliases='false'>
+    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_ss_secure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_SERVICES")}`' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Line value='cy_rslt_t ret = CY_PPC_SUCCESS;'/>
       <Line value=''/>
       <Line value='for (size_t index = 0; ret == CY_PPC_SUCCESS &amp;&amp; index &lt; count; index++)'/>
@@ -141,7 +145,7 @@
       <Line value='return ret;'/>
     </ConfigFunction>
 
-    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_ss_pp_secure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`' replicateForAliases='false'>
+    <ConfigFunction signature='cy_rslt_t cycfg_ppc_init_ss_pp_secure(PPC_Type* base, const cy_en_prot_region_t regions[], size_t count)' public='false' include='`${need_default &amp;&amp; (protection_mode eq "SECURE_PERIPHERALS")}`' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Line value='cy_rslt_t ret = CY_PPC_SUCCESS;'/>
       <Line value=''/>
       <Line value='for (size_t index = 0; ret == CY_PPC_SUCCESS &amp;&amp; index &lt; count; index++)'/>
@@ -153,7 +157,7 @@
       <Line value='return ret;'/>
     </ConfigFunction>
 
-    <ConfigFunction signature='cy_rslt_t init_cycfg_ppc$idx(void)' public='true' repeatCount='$MAX_PERI_INSTANCES' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' replicateForAliases='false'>
+    <ConfigFunction signature='cy_rslt_t init_cycfg_ppc$idx(void)' public='true' repeatCount='$MAX_PERI_INSTANCES' include='`${hasBlock("peri[$idx]") &amp;&amp; (!is_pp_enabled || is_ppc_disabled$idx)}`' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <Line value='cy_rslt_t ret = cycfg_ppc_init_unsecure(PPC$idx, cycfg_unused_ppc_$idx_regions, cycfg_unused_ppc_$idx_regions_count);' include='true'/>
       <Line value='#if defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' include='`${enableSecureEnclave || (protection_mode eq "SECURE_SERVICES") || (protection_mode eq "SECURE_PERIPHERALS")}`'/>
       <Line value='if (ret == CY_PPC_SUCCESS)' include='`${enableSecureEnclave}`'/>

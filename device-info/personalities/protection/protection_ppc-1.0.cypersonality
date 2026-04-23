@@ -157,24 +157,25 @@
   </DRCs>
 
   <ConfigFirmware>
-    <ConfigInclude value='cy_ppc.h' />
+    <ConfigInclude value='cy_ppc.h' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' />
 
-    <ConfigDefine name='`${getExposedMember("vres[0].protection[0].domain[$idx]", "displayName") . "_ppc_" . peri}`_REGION_COUNT' value='`${splitCount(tcl_ppc_region_set$idx, " ")}`U' public='true' include='`${tcl_ppc_region_set$idx ne ""}`' repeatCount='$MAX_DOMAINS'/>
+    <ConfigDefine name='CYCFG_PPC_ENABLED' value='1U' public='true' include='true' />
+    <ConfigDefine name='`${getExposedMember("vres[0].protection[0].domain[$idx]", "displayName") . "_ppc_" . peri}`_REGION_COUNT' value='`${splitCount(tcl_ppc_region_set$idx, " ")}`U' public='true' include='`${tcl_ppc_region_set$idx ne ""}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAINS'/>
 
     <!-- Create domain regions array -->
-    <ConfigArray name='`${getExposedMember("vres[0].protection[0].domain[$idx]", "displayName")}`_ppc_`${peri}`_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${tcl_ppc_region_set$idx ne ""}`' repeatCount='$MAX_DOMAINS' repeatId='domain'>
+    <ConfigArray name='`${getExposedMember("vres[0].protection[0].domain[$idx]", "displayName")}`_ppc_`${peri}`_regions' type='cy_en_prot_region_t' const='true' public='true' include='`${tcl_ppc_region_set$idx ne ""}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAINS' repeatId='domain'>
       <ArrayElement value='`${splitJoin(tcl_ppc_region_set$idx{domain}, ",&#10;    ", " ")}`' include='true' />
     </ConfigArray>
 
     <!-- Create domain attributes configurations -->
-    <ConfigStruct name='`${getExposedMember("vres[0].protection[0].domain[$idx{domain}]", "displayName")}`_ppc_`${peri}`_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${tcl_ppc_region_set$idx ne ""}`' repeatCount='$MAX_DOMAINS' repeatId='domain' >
+    <ConfigStruct name='`${getExposedMember("vres[0].protection[0].domain[$idx{domain}]", "displayName")}`_ppc_`${peri}`_cfg' type='cy_stc_ppc_attribute_t' const='true' public='true' include='`${tcl_ppc_region_set$idx ne ""}`' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' repeatCount='$MAX_DOMAINS' repeatId='domain' >
       <Member name='pcMask' value='`${toHex(en_mask$idx, 2)}`' />
       <Member name='secAttribute' value='CY_PPC_`${getExposedMember("vres[0].protection[0].domain[$idx]", "cmseAttribute")}`' />
       <Member name='privAttribute' value='CY_PPC_`${getExposedMember("vres[0].protection[0].domain[$idx]", "secureUnprivileged") ? "NONPRIV" : "PRIV"}`' />
     </ConfigStruct>
 
     <!-- Create domain configuration structure -->
-    <ConfigArray name='cycfg_ppc_`${peri}`_domains_config' type='cy_stc_ppc_cfg_t' const='true' public='true' include='true'>
+    <ConfigArray name='cycfg_ppc_`${peri}`_domains_config' type='cy_stc_ppc_cfg_t' const='true' public='true' include='true' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)'>
       <ConfigStruct name='na' type='na' const='true' public='false' include='`${(tcl_ppc_region_set$idx ne "") &amp;&amp; (domain_reserved ne getInstanceFromBlock("vres[0].protection[0].domain[$idx{domain}]"))}`' repeatCount='$MAX_DOMAINS' repeatId='domain'>
         <Member name='regions' value='&amp;`${getExposedMember("vres[0].protection[0].domain[$idx{domain}]", "displayName")}`_ppc_`${peri}`_regions[0]' />
         <Member name='region_count' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domain}]", "displayName") . "_ppc_" . peri}`_REGION_COUNT' />
@@ -183,7 +184,7 @@
     </ConfigArray>
 
     <!-- Variable count for the PPC structures -->
-    <ConfigVariable name='cycfg_ppc_`${peri}`_domains_count' type='size_t' const='true' value='sizeof(cycfg_ppc_`${peri}`_domains_config) / sizeof(cy_stc_ppc_cfg_t)' public='true' include='true' />
+    <ConfigVariable name='cycfg_ppc_`${peri}`_domains_count' type='size_t' const='true' value='sizeof(cycfg_ppc_`${peri}`_domains_config) / sizeof(cy_stc_ppc_cfg_t)' public='true' include='true' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' />
 
     <ConfigFunction signature='cy_rslt_t init_cycfg_ppc`${peri}`(void)' public='true' replicateForAliases='false' guard='(CY_SYSTEM_CPU_M33) &amp;&amp; defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(CY_PDL_TZ_ENABLED)' >
       <Line value='return Cy_PPC_Init(PPC`${peri}`, cycfg_ppc_`${peri}`_domains_config, cycfg_ppc_`${peri}`_domains_count, `${response}`);'/>

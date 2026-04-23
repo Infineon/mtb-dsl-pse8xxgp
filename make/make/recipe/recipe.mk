@@ -7,8 +7,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2021-2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2021-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -102,8 +102,6 @@ ifneq (,$(filter GCC_ARM LLVM_ARM,$(TOOLCHAIN)))
 MTB_TOOLCHAIN_$(TOOLCHAIN)__LDFLAGS+=-Wl,--print-memory-usage
 endif
 endif
-
-include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/recipe_pse8xxgp.mk
 
 ################################################################################
 # Programmer tool

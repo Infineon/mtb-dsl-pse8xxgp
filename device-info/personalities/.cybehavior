@@ -37,6 +37,7 @@
     <Extends type="clock_sourced_v1"/>
     <!--Indication whether The clock supervisor is enabled.-->
     <Member key="csvEnabled"/>
+    <Member key="clockInst"/>
   </Behavior>
 
   <!--Any special behavior for the MMIO clock to expose the standard clock_v1 behavior for all dividers. -->

@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation
+* (c) 2018-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -29,8 +30,8 @@
 <PersonalityTemplate id='smartio' name='Smart I/O' version='4.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v14'>
   <FittingRules>
     <MappingRules>
-      <IpBlock name='mxs22ioss,mxs40ioss,mxs40sioss' />
-      <Resource name='ioss\.port\.smartio' />
+      <IpBlock name='mxs22ioss,mxs40ioss,mxs40sioss,iocl' />
+      <Resource name='(ioss|iocl)\.port\.smartio' />
     </MappingRules>
   </FittingRules>
 
@@ -42,7 +43,7 @@
     <ParamCustom id='SmartIOConfigurator' name='Smart I/O Configurator' group='External Tools' path='`${cy_tools_path("smartio-configurator") . "/smartio-configurator"}`' visible='true' editable='true' desc='Launch Smart I/O Configurator'>
         <Arg value='`${"--design=" . cy_design_file()}`' />
         <Arg value='`${"--library=" . cy_libs_file()}`' />
-        <Arg value='`${"--resource=ioss[0].port[" . getInstNumber("port") . "].smartio[0]"}`' />
+        <Arg value='`${"--resource=" . resourcePrefix . "[" . Ioss . "].port[" . getInstNumber("port") . "].smartio[0]"}`' />
     </ParamCustom>
 
     <!--General-->
@@ -316,15 +317,19 @@
     <Variable id='ipblockName' value='`${getIpBlockName()}`' />
     <!-- Checks if mxs40ioss is the IP Block. -->
     <Variable id='mxs40iossIpblock' value='`${(ipblockName eq "mxs40ioss")}`' />
+    <!-- Checks if iocl is the IP Block. -->
+    <Variable id='ioclIpblock' value='`${(ipblockName eq "iocl")}`' />
     <Variable id='version' value='`${getVersion()}`' />
     <!-- Clock connection macro for devices with MXS40IOSS -->
     <Variable id='pclkDst1' value='PCLK_SMARTIO`${getInstNumber("port")}`_CLOCK' />
-    <!-- Clock connection macro for devices with MXS40SIOSS and MXS22IOSS -->
+    <!-- Clock connection macro for devices with MXS40SIOSS, MXS22IOSS and IOCL -->
     <Variable id='pclkDst2' value='PCLK_IOSS_CLOCK_SMARTIO_PCLK_POS_EN`${getInstNumber("port")}`' />
     <!-- Generates PCLK connection define. -->
     <Variable id='pclkDst' value='`${(mxs40iossIpblock ? pclkDst1 : pclkDst2)}`' />
-    <!-- Ioss instance name number. -->
-    <Variable id='Ioss' value='`${getInstNumber("ioss")}`' />
+    <!-- Resource prefix - either ioss or iocl -->
+    <Variable id='resourcePrefix' value='`${ioclIpblock ? "iocl" : "ioss"}`' />
+    <!-- Ioss/iocl instance name number. -->
+    <Variable id='Ioss' value='`${ioclIpblock ? getInstNumber("iocl") : getInstNumber("ioss")}`' />
   </Variables>
 
   <DRCs>
@@ -405,10 +410,10 @@
 
     <!-- Enable used pins DRC -->
     <DRC type='ERROR'
-         text='`${"Smart I/O " . InstNumber . " requires " . getBlockDisplayName("ioss[" . Ioss . "].port[" . InstNumber . "].pin[$idx]",false) . " to be enabled."}`'
-         condition='`${hasBlock("ioss[" . Ioss . "].port[" . InstNumber . "].pin[$idx]") ? (((chipMode$idx ne CY_SMARTIO_BYPASS) || (ioMode$idx ne CY_SMARTIO_BYPASS)) &amp;&amp; isBlockUsed("ioss[" . Ioss . "].port[" . InstNumber . "].pin[$idx]") == false) : false}`'
+         text='`${"Smart I/O " . InstNumber . " requires " . getBlockDisplayName(resourcePrefix . "[" . Ioss . "].port[" . InstNumber . "].pin[$idx]",false) . " to be enabled."}`'
+         condition='`${hasBlock(resourcePrefix . "[" . Ioss . "].port[" . InstNumber . "].pin[$idx]") ? (((chipMode$idx ne CY_SMARTIO_BYPASS) || (ioMode$idx ne CY_SMARTIO_BYPASS)) &amp;&amp; isBlockUsed(resourcePrefix . "[" . Ioss . "].port[" . InstNumber . "].pin[$idx]") == false) : false}`'
          repeatCount='8' >
-      <FixIt action='ENABLE_BLOCK' target='`${"ioss[" . Ioss . "].port[" . InstNumber . "].pin[$idx]"}`' value='' valid='true' />
+      <FixIt action='ENABLE_BLOCK' target='`${resourcePrefix . "[" . Ioss . "].port[" . InstNumber . "].pin[$idx]"}`' value='' valid='true' />
     </DRC>
 
   </DRCs>
@@ -416,7 +421,7 @@
   <!--Config Structs-->
   <ConfigFirmware>
     <ConfigInclude value='cy_smartio.h' include='true' />
-    <ConfigInclude value='cy_sysclk.h' include='`${pclkOk || (getIpBlockName() eq &quot;mxs22ioss&quot;)}`' />
+    <ConfigInclude value='cy_sysclk.h' include='`${pclkOk || (getIpBlockName() eq &quot;mxs22ioss&quot;) || ioclIpblock}`' />
     <ConfigDefine name='`${INST_NAME}`_HW' value='SMARTIO_PRT`${InstNumber}`' public='true' include='true' />
     <ConfigStruct name='`${INST_NAME . "_lutCfg$idx"}`' type='cy_stc_smartio_lutcfg_t' const='`${inFlash}`' public='true' include='`${lutEn$idx}`' repeatCount='8' >
       <Member name='tr0' value='`${lut$idxTr0}`' />
@@ -476,7 +481,7 @@
       <Member name='duCfg' value='`${duEn ? ("&amp;" . INST_NAME . "_duCfg") : "NULL"}`' />
       <Member name='hldOvr' value='`${hldOvr}`' />
     </ConfigStruct>
-    <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_SMARTIO_PERI_NR, CY_MMIO_SMARTIO_GROUP_NR, CY_MMIO_SMARTIO_SLAVE_NR, CY_MMIO_SMARTIO_CLK_HF_NR);' include='`${(getIpBlockName() eq "mxs22ioss")}`'  />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_SMARTIO_PERI_NR, CY_MMIO_SMARTIO_GROUP_NR, CY_MMIO_SMARTIO_SLAVE_NR, CY_MMIO_SMARTIO_CLK_HF_NR);' include='`${(getIpBlockName() eq "mxs22ioss") || ioclIpblock}`'  />
     <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriphAssignDivider(`${pclkDst1}`, `${getExposedMember(pclk, "clockSel")}`);' include='`${((mxs40iossIpblock) &amp;&amp; (version &lt; 3) &amp;&amp; pclkOk)}`'  />
     <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriPclkAssignDivider(`${pclkDst}`, `${getExposedMember(pclk, "clockSel")}`);' include='`${((((mxs40iossIpblock) &amp;&amp; (version &gt; 2)) || (!mxs40iossIpblock)) &amp;&amp; pclkOk)}`'  />
   </ConfigFirmware>

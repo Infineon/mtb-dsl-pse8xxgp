@@ -71,7 +71,19 @@
   </Behavior>
 
   <Behavior type="mpc_v1">
-    <Member key='response$idx' repeatCount='6' />
+    <Member key='responseFlash' />
+    <Member key='responseRRAM' />
+    <Member key='responseSMIF0' />
+    <Member key='responseSMIF1' />
+    <Member key='responseSOCMEM' />
+    <Member key='responseSRAM0' />
+    <Member key='responseSRAM1' />
+    <Member key='responsePROMC' />
+    <Member key='responsePPCASRAM0' />
+    <Member key='responsePPCASRAM1' />
+    <Member key='responsePPCASRAM2' />
+    <Member key='responsePPCASRAM3' />
+    <Member key='responsePPCASRAM4' />
   </Behavior>
 
   <Behavior type="protection_ppc_drc_v1">
@@ -83,6 +95,7 @@
     <Member key='blockSize' />
     <Member key='RegisterDefine' />
     <Member key='RegisterDefineUnified' />
+    <Member key='rot_configurable' />
   </Behavior>
 
   <Behavior type="sau_v1">

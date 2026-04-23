@@ -115,7 +115,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga2f4ffd40f54b17d26a70975ce828a199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Depthwise DMA mode kernel API, API will configure DMA descriptor pointing nnlite MEMIO configuration structure.  <br /></td></tr>
 <tr class="separator:ga2f4ffd40f54b17d26a70975ce828a199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabf4acdda27e317c08d7c11bdb9631e4c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#gabf4acdda27e317c08d7c11bdb9631e4c">Cy_NNLite_FullyConnected</a> (const int8_t *inputData, int8_t *outData, const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *inputDims, const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *outputDims, const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *filterDims, const int8_t *filterData, const int32_t *biasData, <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__fc__params__t">cy_nn_fc_params_t</a> *fcParam, <a class="el" href="group__group__nnlite__enums.html#ga384cb7d2feea111076bbd75ae43e60f6">cy_en_nnlite_fused_activation_t</a> actType, <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__act__intrpl__param__t">cy_nn_act_intrpl_param_t</a> *intrplParam)</td></tr>
-<tr class="memdesc:gabf4acdda27e317c08d7c11bdb9631e4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fully connected CPU mode kernel API, API will configure nnlite and then start nnlite operation.API will work in blocking mode For case inputDims-&gt;dims[0] &gt; 1,scratch buffer is required scratch buffer size in CPU should be calculated using Cy_NNLite_FC_ScratchBufSize API if callback function in Kernel config structure is NULL, if valid callback function is passed in Kernel config, API will be non-blocking and callback function will be called after completion of layer, caller need to wait for callback function before calling another Kernel API, else error will be for other function.  <br /></td></tr>
+<tr class="memdesc:gabf4acdda27e317c08d7c11bdb9631e4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fully connected CPU mode kernel API, API will configure nnlite and then start nnlite operation.API will work in blocking mode For case inputDims-&gt;dims[0] &gt; 1,scratch buffer is required scratch buffer size in CPU should be calculated using Cy_NNLite_FC_ScratchBufSize API if callback function in Kernel config structure is NULL, if valid callback function is passed in Kernel config, API will be non-blocking and callback function will be called after completion of layer, caller need to wait for callback function before calling another Kernel API, else error will be for other function intrplParam can be passed as NULL for default behavior of activation, to parametrize activation pass valid intrplParam.  <br /></td></tr>
 <tr class="separator:gabf4acdda27e317c08d7c11bdb9631e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabdfe1b52e4e3129cd6baa93f81236150"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#gabdfe1b52e4e3129cd6baa93f81236150">Cy_NNLite_FullyConnectedDMA</a> (const int8_t *inputData, int8_t *outData, const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *inputDims, const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *outputDims, const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *filterDims, const int8_t *filterData, const int32_t *biasData, <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__fc__params__t">cy_nn_fc_params_t</a> *fcParam, <a class="el" href="group__group__nnlite__enums.html#ga384cb7d2feea111076bbd75ae43e60f6">cy_en_nnlite_fused_activation_t</a> actType, <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__act__intrpl__param__t">cy_nn_act_intrpl_param_t</a> *intrplParam)</td></tr>
 <tr class="memdesc:gabdfe1b52e4e3129cd6baa93f81236150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fully connected DMA mode kernel API, API will configure DMA descriptor pointing nnlite MEMIO configuration structure.  <br /></td></tr>
@@ -177,12 +177,15 @@ Functions</h2></td></tr>
 <tr class="memitem:ga39fe05b891ec370a3c80098fc0c226ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#ga39fe05b891ec370a3c80098fc0c226ec">Cy_NNLite_Byte_Copy</a> (const int8_t *inData, int8_t *outData, uint32_t count)</td></tr>
 <tr class="memdesc:ga39fe05b891ec370a3c80098fc0c226ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Byte block copy using NNLite.  <br /></td></tr>
 <tr class="separator:ga39fe05b891ec370a3c80098fc0c226ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ba97a9e8bcd5eb16f80e78ea6b222b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#ga6ba97a9e8bcd5eb16f80e78ea6b222b4">Cy_NNLite_Redo_Byte_Copy</a> (const int8_t *inData, int8_t *outData, uint32_t count)</td></tr>
+<tr class="memdesc:ga6ba97a9e8bcd5eb16f80e78ea6b222b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Repeat Byte Copy operation with new input/output buffers.  <br /></td></tr>
+<tr class="separator:ga6ba97a9e8bcd5eb16f80e78ea6b222b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8f9de2b7fd88bf1cf4a5d312e5d629b5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#ga8f9de2b7fd88bf1cf4a5d312e5d629b5">Cy_NNLite_Q31Reciprocal</a> (const uint32_t *inData, float *outData, const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *inoutDims)</td></tr>
 <tr class="memdesc:ga8f9de2b7fd88bf1cf4a5d312e5d629b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Float reciprocal of (sums of) unsigned Q.31 values CPU mode kernel API.  <br /></td></tr>
 <tr class="separator:ga8f9de2b7fd88bf1cf4a5d312e5d629b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabd5ac089791284c715ad20d82bf66453"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#gabd5ac089791284c715ad20d82bf66453">Cy_NNLite_LSTM_Int8</a> (<a class="el" href="structcy__nn__lstm__context.html">cy_nn_lstm_context</a> *scratch_buffers, const int8_t *input_data, const <a class="el" href="structcy__nn__lstm__dims.html">cy_nn_lstm_dims</a> *lstm_dims, const int8_t *input_to_input_weights, const int8_t *input_to_forget_weights, const int8_t *input_to_cell_weights, const int8_t *input_to_output_weights, const int8_t *recurrent_to_input_weights, const int8_t *recurrent_to_forget_weights, const int8_t *recurrent_to_cell_weights, const int8_t *recurrent_to_output_weights, const int8_t *projection_weights, const <a class="el" href="structcy__nn__lstm__params.html">cy_nn_lstm_params</a> *lstm, int8_t *output_state, int16_t *cell_state, int8_t *output_data)</td></tr>
-<tr class="memdesc:gabd5ac089791284c715ad20d82bf66453"><td class="mdescLeft">&#160;</td><td class="mdescRight">LSTM unidirectional function with 8 bit input and output and 16 bit gate output Peephole connections, projection, clipping, combined input/forget gate and layer normalization are not supported.  <br /></td></tr>
-<tr class="separator:gabd5ac089791284c715ad20d82bf66453"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad525c1f3b5762bfe40a7fd37d3105ff9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#gad525c1f3b5762bfe40a7fd37d3105ff9">Cy_NNLite_LSTM_Int8</a> (<a class="el" href="structcy__nn__lstm__context.html">cy_nn_lstm_context</a> *scratch_buffers, const void *input_data, const <a class="el" href="structcy__nn__lstm__dims.html">cy_nn_lstm_dims</a> *lstm_dims, const int8_t *input_to_input_weights, const int8_t *input_to_forget_weights, const int8_t *input_to_cell_weights, const int8_t *input_to_output_weights, const int8_t *recurrent_to_input_weights, const int8_t *recurrent_to_forget_weights, const int8_t *recurrent_to_cell_weights, const int8_t *recurrent_to_output_weights, const int8_t *projection_weights, const <a class="el" href="structcy__nn__lstm__params.html">cy_nn_lstm_params</a> *lstm, void *output_state, int16_t *cell_state, void *output_data)</td></tr>
+<tr class="memdesc:gad525c1f3b5762bfe40a7fd37d3105ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">LSTM unidirectional function with 8 bit input and output and 16 bit gate output Peephole connections, projection, clipping, combined input/forget gate and layer normalization are not supported.  <br /></td></tr>
+<tr class="separator:gad525c1f3b5762bfe40a7fd37d3105ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab3d27f971da724a7522c05ea5e2df014"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nn__kernel__functions.html#gab3d27f971da724a7522c05ea5e2df014">Cy_NNLite_SoftMax_ScratchBufSize</a> (const <a class="el" href="group__group__nn__kernel__data__structures.html#structcy__nn__dims__t">cy_nn_dims_t</a> *inoutDims, const <a class="el" href="group__group__nnlite__enums.html#gab1d317e2be183e109725321de8c31bdb">cy_en_nnlite_activation_size_t</a> act_size)</td></tr>
 <tr class="memdesc:gab3d27f971da724a7522c05ea5e2df014"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute scratch buffer size needed to compute row-wise softmax of 2D input tensor.  <br /></td></tr>
 <tr class="separator:gab3d27f971da724a7522c05ea5e2df014"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -760,7 +763,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Fully connected CPU mode kernel API, API will configure nnlite and then start nnlite operation.API will work in blocking mode For case inputDims-&gt;dims[0] &gt; 1,scratch buffer is required scratch buffer size in CPU should be calculated using Cy_NNLite_FC_ScratchBufSize API if callback function in Kernel config structure is NULL, if valid callback function is passed in Kernel config, API will be non-blocking and callback function will be called after completion of layer, caller need to wait for callback function before calling another Kernel API, else error will be for other function. </p>
+<p>Fully connected CPU mode kernel API, API will configure nnlite and then start nnlite operation.API will work in blocking mode For case inputDims-&gt;dims[0] &gt; 1,scratch buffer is required scratch buffer size in CPU should be calculated using Cy_NNLite_FC_ScratchBufSize API if callback function in Kernel config structure is NULL, if valid callback function is passed in Kernel config, API will be non-blocking and callback function will be called after completion of layer, caller need to wait for callback function before calling another Kernel API, else error will be for other function intrplParam can be passed as NULL for default behavior of activation, to parametrize activation pass valid intrplParam. </p>
+<p>filterData points to weights If sparsityBaseAddr is NULL, otherwise weights pointer will be derived from sparsityBaseAddr and filterData will not be used.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">inputData</td><td>activation buffer pointer</td></tr>
@@ -782,7 +786,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>Fully connected CPU mode kernel API, API will configure nnlite and then start nnlite operation.API will work in blocking mode For case inputDims-&gt;dims[0] &gt; 1,scratch buffer is required scratch buffer size in CPU should be calculated using Cy_NNLite_FC_ScratchBufSize API if callback function in Kernel config structure is NULL, if valid callback function is passed in Kernel config, API will be non-blocking and callback function will be called after completion of layer, caller need to wait for callback function before calling another Kernel API, else error will be for other function.</p>
+<p>Fully connected CPU mode kernel API, API will configure nnlite and then start nnlite operation.API will work in blocking mode For case inputDims-&gt;dims[0] &gt; 1,scratch buffer is required scratch buffer size in CPU should be calculated using Cy_NNLite_FC_ScratchBufSize API if callback function in Kernel config structure is NULL, if valid callback function is passed in Kernel config, API will be non-blocking and callback function will be called after completion of layer, caller need to wait for callback function before calling another Kernel API, else error will be for other function intrplParam can be passed as NULL for default behavior of activation, to parametrize activation pass valid intrplParam.</p>
 <p>Kernel config structure should point to valid callback function. filterData points to weights If sparsityBaseAddr is NULL, otherwise weights pointer will be derived from sparsityBaseAddr and filterData will not be used. For case inputDims-&gt;dims[0] &gt; 1,scratch buffer is required scratch buffer size in CPU should be calculated using Cy_NNLite_FC_ScratchBufSize API For DMA mode scratch is sum of Cy_NNLite_FC_ScratchBufSize &amp; Cy_NNLite_DMAModeScratchBufSize</p>
 <p>[in] inputData activation buffer pointer</p>
 <p>[in] outData output buffer pointer</p>
@@ -2274,6 +2278,58 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ga6ba97a9e8bcd5eb16f80e78ea6b222b4" name="ga6ba97a9e8bcd5eb16f80e78ea6b222b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6ba97a9e8bcd5eb16f80e78ea6b222b4">&#9670;&#160;</a></span>Cy_NNLite_Redo_Byte_Copy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a> Cy_NNLite_Redo_Byte_Copy </td>
+          <td>(</td>
+          <td class="paramtype">const int8_t *&#160;</td>
+          <td class="paramname"><em>inData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t *&#160;</td>
+          <td class="paramname"><em>outData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Repeat Byte Copy operation with new input/output buffers. </p>
+<dl class="section note"><dt>Note</dt><dd>Must follow a Cy_NNLite_Byte_Copy operation that has setup the NNLite Pipeline, in a context where this setup can be guaranteed to still be valid. For example, this can be used to block copies for concatenation operations.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">inData</td><td>address start byte vector to be copied</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">outData</td><td>destination start address</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>Number of bytes to be copied</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">Refer</td><td><a class="el" href="group__group__nnlite__enums.html#ga8714c4a5105d4130fb67c76b0d9a1920">cy_en_nnlite_status_t</a></td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Repeat Byte Copy operation with new input/output buffers.</p>
+
+</div>
+</div>
 <a id="ga8f9de2b7fd88bf1cf4a5d312e5d629b5" name="ga8f9de2b7fd88bf1cf4a5d312e5d629b5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8f9de2b7fd88bf1cf4a5d312e5d629b5">&#9670;&#160;</a></span>Cy_NNLite_Q31Reciprocal()</h2>
 
@@ -2342,8 +2398,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gabd5ac089791284c715ad20d82bf66453" name="gabd5ac089791284c715ad20d82bf66453"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabd5ac089791284c715ad20d82bf66453">&#9670;&#160;</a></span>Cy_NNLite_LSTM_Int8()</h2>
+<a id="gad525c1f3b5762bfe40a7fd37d3105ff9" name="gad525c1f3b5762bfe40a7fd37d3105ff9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad525c1f3b5762bfe40a7fd37d3105ff9">&#9670;&#160;</a></span>Cy_NNLite_LSTM_Int8()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2357,7 +2413,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int8_t *&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>input_data</em>, </td>
         </tr>
         <tr>
@@ -2429,7 +2485,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int8_t *&#160;</td>
+          <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>output_state</em>, </td>
         </tr>
         <tr>
@@ -2441,7 +2497,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int8_t *&#160;</td>
+          <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>output_data</em>&#160;</td>
         </tr>
         <tr>
@@ -2582,8 +2638,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Compute scratch buffer size needed for DMA mode API. </p>
-<dl class="section return"><dt>Returns</dt><dd>uint32_t Size of scratch buffer required in bytes</dd></dl>
-<p>Compute scratch buffer size needed for DMA mode API.</p>
+<dl class="section return"><dt>Returns</dt><dd>uint32_t Size of scratch buffer required in bytes </dd></dl>
 
 </div>
 </div>

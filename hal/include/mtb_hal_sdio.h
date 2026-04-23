@@ -8,9 +8,9 @@
 * can be used directly.
 *
 ********************************************************************************
-* \copyright
-* Copyright 2018-2024 Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation
+   * \copyright
+* Copyright(c) 2018-2026 Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -136,6 +136,9 @@ extern "C" {
  *  \ingroup group_hal_results
  *  \{ *//**
  */
+
+/** Enable to retrieve the maximum SDIO frequency */
+#define MTB_HAL_API_AVAILABLE_SDIO_GET_MAX_FREQUENCY
 
 /** Incorrect parameter value define */
 #define MTB_HAL_SDIO_RSLT_ERR_BAD_PARAM                   \
@@ -341,6 +344,15 @@ void mtb_hal_sdio_enable_event(mtb_hal_sdio_t* obj, mtb_hal_sdio_event_t event, 
  * @return CY_RSLT_SUCCESS if the interrupt was processed successfully; otherwise an error
  */
 cy_rslt_t mtb_hal_sdio_process_interrupt(mtb_hal_sdio_t* obj);
+
+/**
+ * Get the maximum SDIO clock frequency
+ *
+ * @param obj The SDIO object for which the maximum clock frequency is queried
+ * @return The maximum SDIO Clock frequency in Hz.
+ */
+uint32_t mtb_hal_sdio_get_max_frequency(mtb_hal_sdio_t* obj);
+
 
 #if (MTB_HAL_DRIVER_AVAILABLE_SDIO_DEV)
 

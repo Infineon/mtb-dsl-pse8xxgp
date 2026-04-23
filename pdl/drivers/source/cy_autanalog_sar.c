@@ -7,7 +7,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2022-2025 Cypress Semiconductor Corporation
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1199,5 +1200,4 @@ void Cy_AutAnalog_SAR_LoadDieTempTrimmCoeff(uint32_t dieTrimmMultiplierHS, uint3
 }
 
 #endif /* CY_IP_MXS22LPPASS_SAR */
-
 /* [] END OF FILE */

@@ -33,9 +33,8 @@ cy_en_nnlite_status_t cy_nn_lstm_update_output_s8_s16(const int n_batch,
                                       int16_t *cell_state,
                                       const int32_t cell_state_scale,
                                       const int16_t *output_gate,
-                                      const cy_nn_scaling hidden_scaling,
-                                      const int32_t hidden_offset,
-                                      int8_t *output_state,
+                                      const cy_nn_lstm_params *lstm,
+                                      void *output_state,
                                       int16_t *cell_gate_scratch)
 {
     const int32_t size = n_batch * n_cell;
@@ -50,8 +49,8 @@ cy_en_nnlite_status_t cy_nn_lstm_update_output_s8_s16(const int n_batch,
 
     act_params.inputSize = CY_NNLITE_ACTIVATION_16BIT;
     act_params.outputSize = CY_NNLITE_OUTPUT_16BIT;
-    act_params.outClipping.max = (1<<15)-1;
     act_params.outClipping.min = -(1<<15);
+    act_params.outClipping.max = (1<<15)-1;
     act_params.outOffset = 0;
     // We have a power-of-two scale factor for the cell-state.  Usually 11 or 12...
     act_params.inScale = ldexpf(1.0f, cell_state_scale);
@@ -84,20 +83,30 @@ cy_en_nnlite_status_t cy_nn_lstm_update_output_s8_s16(const int n_batch,
 
     // Gates activation functions are Q.15 values so need
     // scale product accordingly
-
+    int16_t clip_bits;
+    switch(lstm->output_size) {
+        case CY_NN_WORD_SIZE_8:
+            clip_bits = 7;
+            break;
+        case CY_NN_WORD_SIZE_16:
+            clip_bits = 15;
+            break;
+        default:
+            return CY_NNLITE_BAD_PARAM;
+    }
     cy_nn_pwise_binary_params_t mul_params;
     mul_params.lhsOffset = 0;
     mul_params.rhsOffset = 0;
-    mul_params.outputOffset = hidden_offset;
-    mul_params.outClipping.min = INT8_MIN;
-    mul_params.outClipping.max = INT8_MAX;
+    mul_params.outputOffset = lstm->hidden_offset;
+    mul_params.outClipping.min = -(1<<clip_bits);
+    mul_params.outClipping.max = (1<<clip_bits)-1;
     mul_params.inputSize = CY_NNLITE_ACTIVATION_16BIT;
-    mul_params.outputSize = CY_NNLITE_OUTPUT_8BIT;
+    mul_params.outputSize = (cy_en_nnlite_output_size_t)lstm->output_size;
     mul_params.scaling.pre_mac_scaling_mode = CY_NNLITE_RESCALE_NONE;
     mul_params.scaling.pre_mac_scale = 1.0f;
     mul_params.scaling.pre_act_scaling_mode = CY_NNLITE_OUTSCALE_NONE;
     mul_params.scaling.pre_act_scale = 1.0f; // Ignored
-    mul_params.scaling.post_act_scale = hidden_scaling.scale;
+    mul_params.scaling.post_act_scale = lstm->hidden_scaling.scale;
 
     status =
         Cy_NNLite_Mul((const int8_t *)output_gate, (const int8_t*)cell_gate_scratch,

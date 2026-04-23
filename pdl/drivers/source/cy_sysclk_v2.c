@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -97,6 +97,13 @@ typedef struct {
     uint32_t divider;
 } cy_pdl_sysclk_srf_perigroup_set_div_in_t;
 
+#if defined(CY_IP_MXS22SRSS)
+typedef struct {
+    uint32_t slaveNum;
+    uint32_t clkHfNum;
+} cy_pdl_sysclk_srf_perigroup_slave_init_in_t;
+#endif /* defined(CY_IP_MXS22SRSS) */
+
 #endif /* defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) */
 #if defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK)
 typedef struct {
@@ -134,6 +141,11 @@ typedef struct {
 typedef struct {
     uint32_t assigned_div;
 } cy_pdl_sysclk_srf_peripclk_get_assn_div_out_t;
+
+typedef struct {
+    cy_en_divider_types_t dividerType;
+    uint32_t dividerNum;
+} cy_pdl_sysclk_srf_peripclk_assign_div_in_t;
 
 typedef struct {
     cy_en_divider_types_t dividerType;
@@ -759,6 +771,68 @@ cy_rslt_t cy_pdl_sysclk_srf_perigroup_set_div_impl_s(mtb_srf_input_ns_t* inputs_
 
     return status;
 }
+
+#if defined(CY_IP_MXS22SRSS)
+#if defined(_CY_PDL_SYSCLK_PPC_SECURED_HF) && (_CY_PDL_SYSCLK_PPC_SECURED_HF)
+static bool cy_pdl_sysclk_srf_is_clkhf_write_allowed(uint32_t clkHfNum)
+{
+    for (uint32_t i = 0U; i < (uint32_t)(sizeof(mtb_pdl_sysclk_clkhf_srf_permissions) / sizeof(mtb_pdl_sysclk_clkhf_srf_permissions[0])); i++)
+    {
+        if (mtb_pdl_sysclk_clkhf_srf_permissions[i].sub_block == clkHfNum)
+        {
+            return mtb_pdl_sysclk_clkhf_srf_permissions[i].write_allowed;
+        }
+    }
+
+    return false;
+}
+#endif /* defined(_CY_PDL_SYSCLK_PPC_SECURED_HF) && (_CY_PDL_SYSCLK_PPC_SECURED_HF) */
+
+cy_rslt_t cy_pdl_sysclk_srf_perigroup_slave_init_impl_s(mtb_srf_input_ns_t* inputs_ns,
+                                                mtb_srf_output_ns_t* outputs_ns,
+                                                mtb_srf_invec_ns_t* inputs_ptr_ns,
+                                                uint8_t inputs_ptr_cnt_ns,
+                                                mtb_srf_outvec_ns_t* outputs_ptr_ns,
+                                                uint8_t outputs_ptr_cnt_ns)
+{
+    CY_UNUSED_PARAMETER(inputs_ptr_ns);
+    CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
+
+    CY_ASSERT_L2((inputs_ns->request).module_id == MTB_SRF_MODULE_PDL);
+    CY_ASSERT_L2((inputs_ns->request).op_id == CY_PDL_SYSCLK_OP_PERI_SLAVE_INIT);
+    CY_ASSERT_L2((inputs_ns->request).submodule_id == CY_PDL_SECURE_SUBMODULE_SYSCLK);
+
+    cy_rslt_t status;
+    cy_pdl_sysclk_srf_perigroup_slave_init_in_t input;
+    cy_pdl_sysclk_srf_status_out_t output;
+
+    uint32_t groupSel = (inputs_ns->request).sub_block;
+    uint32_t groupNum = (uint8_t)groupSel;
+    uint32_t periNum = (((inputs_ns->request).base == PERI0) ? 0U : 1U);
+
+    status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
+    if (status != CY_RSLT_SUCCESS)
+        return status;
+
+#if defined(_CY_PDL_SYSCLK_PPC_SECURED_HF) && (_CY_PDL_SYSCLK_PPC_SECURED_HF)
+    /* This API auto-enables CLK_HF when it is disabled. Don't allow this to bypass CLK_HF SRF permissions. */
+    if ((false == Cy_SysClk_ClkHfIsEnabled(input.clkHfNum)) && (false == cy_pdl_sysclk_srf_is_clkhf_write_allowed(input.clkHfNum)))
+    {
+        output.status = CY_SYSCLK_INVALID_STATE;
+        status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
+        return status;
+    }
+#endif /* defined(_CY_PDL_SYSCLK_PPC_SECURED_HF) && (_CY_PDL_SYSCLK_PPC_SECURED_HF) */
+
+    Cy_SysClk_PeriGroupSlaveInit(periNum, groupNum, input.slaveNum, input.clkHfNum);
+    output.status = CY_SYSCLK_SUCCESS;
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
+
+    return status;
+}
+#endif /* defined(CY_IP_MXS22SRSS) */
 #endif /* defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) */
 
 
@@ -919,6 +993,37 @@ cy_rslt_t cy_pdl_sysclk_srf_peripclk_get_assn_div_impl_s(mtb_srf_input_ns_t* inp
     en_clk_dst_t ipBlock = Cy_SysClk_PeriPclkMakeIpBlock(grpNum, instNum);
 
     output.assigned_div = Cy_SysClk_PeriPclkGetAssignedDivider(ipBlock);
+    status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
+
+    return status;
+}
+
+cy_rslt_t cy_pdl_sysclk_srf_peripclk_assign_div_impl_s(mtb_srf_input_ns_t* inputs_ns,
+                                                        mtb_srf_output_ns_t* outputs_ns,
+                                                        mtb_srf_invec_ns_t* inputs_ptr_ns,
+                                                        uint8_t inputs_ptr_cnt_ns,
+                                                        mtb_srf_outvec_ns_t* outputs_ptr_ns,
+                                                        uint8_t outputs_ptr_cnt_ns)
+{
+    CY_UNUSED_PARAMETER(inputs_ptr_ns);
+    CY_UNUSED_PARAMETER(inputs_ptr_cnt_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_ns);
+    CY_UNUSED_PARAMETER(outputs_ptr_cnt_ns);
+
+    CY_ASSERT_L2((inputs_ns->request).module_id == MTB_SRF_MODULE_PDL);
+    CY_ASSERT_L2((inputs_ns->request).op_id == CY_PDL_SYSCLK_OP_PERIPCLK_ASSIGN_DIV);
+    CY_ASSERT_L2((inputs_ns->request).submodule_id == CY_PDL_SECURE_SUBMODULE_SYSCLK);
+
+    cy_rslt_t status;
+    cy_pdl_sysclk_srf_peripclk_assign_div_in_t input;
+    cy_pdl_sysclk_srf_status_out_t output;
+    uint32_t grpNum = (inputs_ns->request).sub_block;
+    uint32_t instNum = (((inputs_ns->request).base == PERI0) ? 0U : 1U);
+    en_clk_dst_t ipBlock = Cy_SysClk_PeriPclkMakeIpBlock(grpNum, instNum);
+    status = mtb_srf_copy_input_value(&input, sizeof(input), inputs_ns);
+    if (status != CY_RSLT_SUCCESS)
+        return status;
+    output.status = Cy_SysClk_PeriPclkAssignDivider(ipBlock, input.dividerType, input.dividerNum);
     status = mtb_srf_copy_output_value(outputs_ns, &output, sizeof(output));
 
     return status;
@@ -1156,6 +1261,23 @@ mtb_srf_op_s_t _cy_pdl_sysclk_srf_operations[] =
         .allowed_rsc = mtb_pdl_sysclk_perigroup_srf_permissions,
         .num_allowed = (sizeof(mtb_pdl_sysclk_perigroup_srf_permissions)/sizeof(mtb_pdl_sysclk_perigroup_srf_permissions[0]))
     },
+
+    #if defined(CY_IP_MXS22SRSS)
+    {
+        .module_id = MTB_SRF_MODULE_PDL,
+        .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSCLK,
+        .op_id = CY_PDL_SYSCLK_OP_PERI_SLAVE_INIT,
+        .write_required = true,
+        .impl = cy_pdl_sysclk_srf_perigroup_slave_init_impl_s,
+        .input_values_len = sizeof(cy_pdl_sysclk_srf_perigroup_slave_init_in_t),
+        .output_values_len = sizeof(cy_pdl_sysclk_srf_status_out_t),
+        .input_len = {0, 0, 0},
+        .needs_copy = { false, false, false },
+        .output_len = {0, 0, 0},
+        .allowed_rsc = mtb_pdl_sysclk_perigroup_srf_permissions,
+        .num_allowed = (sizeof(mtb_pdl_sysclk_perigroup_srf_permissions)/sizeof(mtb_pdl_sysclk_perigroup_srf_permissions[0]))
+    },
+#endif /* defined(CY_IP_MXS22SRSS) */
 #endif /* defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) */
 #if defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK)
     {
@@ -1222,6 +1344,20 @@ mtb_srf_op_s_t _cy_pdl_sysclk_srf_operations[] =
         .impl = cy_pdl_sysclk_srf_peripclk_get_assn_div_impl_s,
         .input_values_len = 0U,
         .output_values_len = sizeof(cy_pdl_sysclk_srf_peripclk_get_assn_div_out_t),
+        .input_len = {0, 0, 0},
+        .needs_copy = { false, false, false },
+        .output_len = {0, 0, 0},
+        .allowed_rsc = mtb_pdl_sysclk_peri_group_div_srf_permissions,
+        .num_allowed = (sizeof(mtb_pdl_sysclk_peri_group_div_srf_permissions) / sizeof(mtb_pdl_sysclk_peri_group_div_srf_permissions[0]))
+    },
+    {
+        .module_id = MTB_SRF_MODULE_PDL,
+        .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSCLK,
+        .op_id = CY_PDL_SYSCLK_OP_PERIPCLK_ASSIGN_DIV,
+        .write_required = true,
+        .impl = cy_pdl_sysclk_srf_peripclk_assign_div_impl_s,
+        .input_values_len = sizeof(cy_pdl_sysclk_srf_peripclk_assign_div_in_t),
+        .output_values_len = sizeof(cy_pdl_sysclk_srf_status_out_t),
         .input_len = {0, 0, 0},
         .needs_copy = { false, false, false },
         .output_len = {0, 0, 0},
@@ -1683,6 +1819,63 @@ cy_en_sysclk_status_t
 
     CY_ASSERT_L1(instNum < PERI_INSTANCE_COUNT);
     CY_ASSERT_L1(grpNum < PERI_PCLK_GR_NUM(instNum));
+#endif
+
+#if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSCLK_ENABLE_SRF_INTEG) && \
+    (defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK))
+    /* If the PERI instance is marked secured, route this request through the SRF */
+    if(mtb_pdl_sysclk_peri_group_div_srf_secured[instNum])
+    {
+        mtb_srf_invec_ns_t* inVec = NULL;
+        mtb_srf_outvec_ns_t* outVec = NULL;
+        mtb_srf_output_ns_t* output = NULL;
+        cy_pdl_sysclk_srf_peripclk_assign_div_in_t input_args;
+        cy_pdl_sysclk_srf_status_out_t output_args;
+        input_args.dividerType = dividerType;
+        input_args.dividerNum = dividerNum;
+
+        cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, CY_PDL_SYSCLK_SRF_POOL_TIMEOUT);
+        CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
+        (void)result;
+
+        cy_pdl_invoke_srf_args invoke_args =
+        {
+            .inVec = inVec,
+            .outVec = outVec,
+            .output_ptr = &output,
+            .op_id = CY_PDL_SYSCLK_OP_PERIPCLK_ASSIGN_DIV,
+            .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSCLK,
+        #if defined (CY_IP_MXSPERI) || (defined (CY_IP_MXPERI) && (CY_IP_MXPERI_VERSION >= 3))
+            .base = (instNum == 0 ? PERI0 : PERI1),
+            .sub_block = grpNum,
+        #else
+            .base = NULL,
+            .sub_block = 0UL,
+        #endif
+            .input_base = (uint8_t*)&input_args,
+            .input_len = sizeof(input_args),
+            .output_base = (uint8_t*)&output_args,
+            .output_len = sizeof(output_args),
+            .invec_bases = NULL,
+            .invec_sizes = 0UL,
+            .outvec_bases = NULL,
+            .outvec_sizes = 0UL
+        };
+        result = _Cy_PDL_Invoke_SRF(&invoke_args);
+        CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
+
+        /* Output values are passed in by value. Make a copy before freeing the ioVec */
+        memcpy(&output_args, (&(output->output_values[0])), sizeof(output_args));
+
+        result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
+        CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
+        CY_UNUSED_PARAMETER(result);
+
+        return output_args.status;
+    }
+#else
+    CY_UNUSED_PARAMETER(grpNum);
+    CY_UNUSED_PARAMETER(instNum);
 #endif
     if (CY_SYSCLK_DIV_24_5_BIT >= dividerType)
     {
@@ -3021,6 +3214,56 @@ void Cy_SysClk_PeriGroupSlaveInit(uint32_t periNum, uint32_t groupNum, uint32_t 
     CY_ASSERT_L1(groupNum  < CY_PERI_GROUP_NR);
     CY_ASSERT_L1(clkHfNum < CY_SRSS_NUM_HFROOT);
     CY_ASSERT_L1(slaveNum < 32U);
+
+#if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSCLK_ENABLE_SRF_INTEG) && \
+    (defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP) && (_CY_PDL_SYSCLK_PPC_SECURED_PERI_GR_GROUP))
+    if((periNum == 0U && mtb_pdl_sysclk_peri0_group_srf_secured[groupNum]) || (periNum == 1U && mtb_pdl_sysclk_peri1_group_srf_secured[groupNum]))
+    {
+        mtb_srf_invec_ns_t* inVec = NULL;
+        mtb_srf_outvec_ns_t* outVec = NULL;
+        mtb_srf_output_ns_t* output = NULL;
+        cy_pdl_sysclk_srf_perigroup_slave_init_in_t input_args;
+        cy_pdl_sysclk_srf_status_out_t output_args;
+        uint32_t groupSel = (((uint32_t)periNum << PERI_GR_INST_NUM_Pos) & PERI_GR_INST_NUM_Msk) | (groupNum & CY_SYSCLK_PERI_GR_NUM_Msk);
+
+        input_args.slaveNum = slaveNum;
+        input_args.clkHfNum = clkHfNum;
+
+        cy_rslt_t result = mtb_srf_pool_allocate(&cy_pdl_srf_default_pool, &inVec, &outVec, CY_PDL_SYSCLK_SRF_POOL_TIMEOUT);
+        CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
+
+        cy_pdl_invoke_srf_args invoke_args =
+        {
+            .inVec = inVec,
+            .outVec = outVec,
+            .output_ptr = &output,
+            .op_id = CY_PDL_SYSCLK_OP_PERI_SLAVE_INIT,
+            .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSCLK,
+            .base = (periNum == 0U ? PERI0 : PERI1),
+            .sub_block = groupSel,
+            .input_base = (uint8_t*)&input_args,
+            .input_len = sizeof(input_args),
+            .output_base = (uint8_t*)&output_args,
+            .output_len = sizeof(output_args),
+            .invec_bases = NULL,
+            .invec_sizes = 0UL,
+            .outvec_bases = NULL,
+            .outvec_sizes = 0UL
+        };
+        result = _Cy_PDL_Invoke_SRF(&invoke_args);
+        CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
+
+        /* Output values are passed in by value. Make a copy before freeing the ioVec */
+        memcpy(&output_args, (&(output->output_values[0])), sizeof(output_args));
+
+        result = mtb_srf_pool_free(&cy_pdl_srf_default_pool, inVec, outVec);
+        CY_ASSERT_L2(result == CY_RSLT_SUCCESS);
+        CY_UNUSED_PARAMETER(result);
+
+        CY_ASSERT_L2(output_args.status == CY_SYSCLK_SUCCESS);
+        return;
+    }
+#endif
 
     if(false == Cy_SysClk_ClkHfIsEnabled(clkHfNum))
     {

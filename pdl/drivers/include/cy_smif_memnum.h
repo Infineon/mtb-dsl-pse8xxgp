@@ -55,7 +55,7 @@
 #include "cy_pdl_srf_common.h"
 #endif /* defined(CY_PDL_SMIF_ENABLE_SRF_INTEG) */
 
-#if defined (CY_IP_MXSMIF)
+#if (CY_IP_MXSMIF_VERSION == 4) || (CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6)
 
 #include <stdint.h>
 #include <stdbool.h>

@@ -8,13 +8,14 @@
     <Const id='PC_REGION_COUNT' value='792' />
     <Const id='PC_COUNT' value='8' />
     <Const id='CY_4KB' value='4096' />
+    <Const id='CY_8KB' value='8192' />
     <Const id='CY_128KB' value='131072' />
   </Constants>
 
   <FittingRules>
     <MappingRules>
-      <IpBlock name='mxsramc,mxs22rramc,mxsmif,mxsocmem' />
-      <Resource name='(mxsramc|mxrramc|smif|socmem)\.mpc' />
+      <IpBlock name='mxsramc,mxs22rramc,mxsmif,mxsocmem,mxpromc,flashc,ppca' />
+      <Resource name='(mxsramc|mxrramc|smif|socmem|mxpromc|flashc|(ppca\.cpuss_cnfg\.mxsramc))\.mpc' />
       <OperatingMode value='MCU' />
     </MappingRules>
   </FittingRules>
@@ -25,13 +26,17 @@
       <ExposedMember key='blockSize' paramId='blockSizeEnumUnified'/>
       <ExposedMember key='RegisterDefine' paramId='RegisterDefine'/>
       <ExposedMember key='RegisterDefineUnified' paramId='RegisterDefineUnified'/>
+      <ExposedMember key='rot_configurable' paramId='rot_configurable'/>
     </Implements>
   </BehaviorImplementation>
 
   <Parameters>
-    <ParamString id='block_name' name='block_name' group='' default='`${getBlockType(0)}`_`${getInstNumber(getBlockType(0))}`_`${getBlockType(1)}`_`${getInstNumber(getBlockType(1))}`' visible='false' editable='false' desc='' />
+    <ParamString id='block_name' name='block_name' group='' default='`${(getBlockType(0) eq "ppca") ? 
+    (getBlockType(0) . "_" . getInstNumber(getBlockType(0)) . "_" . getBlockType(1) . "_" . getInstNumber(getBlockType(1)) . "_" . getBlockType(2) . "_" . getInstNumber(getBlockType(2)) . "_" . getBlockType(3) . "_" . getInstNumber(getBlockType(3))) :
+    (getBlockType(0) . "_" . getInstNumber(getBlockType(0)) . "_" . getBlockType(1) . "_" . getInstNumber(getBlockType(1)))}`' visible='false' editable='false' desc='' />
     <ParamString id='blockSize' name='blockSize' group='' default='`${(lookupExpression("MPC.BLOCK_SIZE", 0))}`' visible='false' editable='false' desc='' />
 
+    <ParamBool id='isFlash' default='`${getBlockType(0) eq "flashc"}`' />
     <ParamBool id='isRram' default='`${getBlockType(0) eq "mxrramc"}`' />
     <ParamBool id='isSmif' default='`${getBlockType(0) eq "smif"}`' />
     <ParamBool id='isSmif0' default='`${(getBlockType(0) eq "smif")&amp;&amp;(getInstNumber(getBlockType(0)) eq 0)}`' />
@@ -39,23 +44,51 @@
     <ParamBool id='isSocmem' default='`${getBlockType(0) eq "socmem"}`' />
     <ParamBool id='isSram0' default='`${(getBlockType(0) eq "mxsramc")&amp;&amp;(getInstNumber(getBlockType(0)) eq 0)}`' />
     <ParamBool id='isSram1' default='`${(getBlockType(0) eq "mxsramc")&amp;&amp;(getInstNumber(getBlockType(0)) eq 1)}`' />
+    <ParamBool id='isPromc' default='`${(getBlockType(0) eq "mxpromc")&amp;&amp;(getInstNumber(getBlockType(0)) eq 0)}`' />
+    <ParamBool id='isPpcasram0' default='`${(getBlockType(0) eq "ppca")&amp;&amp;(getInstNumber(getBlockType(2)) eq 0)}`' />
+    <ParamBool id='isPpcasram1' default='`${(getBlockType(0) eq "ppca")&amp;&amp;(getInstNumber(getBlockType(2)) eq 1)}`' />
+    <ParamBool id='isPpcasram2' default='`${(getBlockType(0) eq "ppca")&amp;&amp;(getInstNumber(getBlockType(2)) eq 2)}`' />
+    <ParamBool id='isPpcasram3' default='`${(getBlockType(0) eq "ppca")&amp;&amp;(getInstNumber(getBlockType(2)) eq 3)}`' />
+    <ParamBool id='isPpcasram4' default='`${(getBlockType(0) eq "ppca")&amp;&amp;(getInstNumber(getBlockType(2)) eq 4)}`' />
+
+    <!-- Alignment requirement is not as strict in non-pse84 devices -->
+    <ParamBool id='checkAlignment' default='`${hasBlock("mxrramc[0].mpc[0]")}`' />
+
+    <!-- ROT Configurability (from device-db, defaults to true for BWC) -->
+    <ParamBool id='rot_configurable' name="rot_configurable"
+        default='`${lookupExpression("MPC.ROT_CONFIGURABLE", true)}`' visible='false' editable='false'
+        desc='Whether the ROT (PC + R/W) access for this MPC is runtime configurable. Defaults to true for BWC.' />
 
     <ParamString id='RegisterDefine' default='`${
+      (isFlash ? "(MPC_Type*)FLASHC_MPC0" :
       (isRram ? "(MPC_Type*)RRAMC0_MPC0" :
       (isSmif0 ? "(MPC_Type*)SMIF0_CACHE_BLOCK_CACHEBLK_AHB_MPC0" :
       (isSmif1 ? "(MPC_Type*)SMIF1_CACHE_BLOCK_CACHEBLK_AHB_MPC0" :
       (isSocmem ? "(MPC_Type*)SOCMEM_SRAM_MPC0" :
       (isSram0 ? "(MPC_Type*)RAMC0_MPC0" :
-      (isSram1 ? "(MPC_Type*)RAMC1_MPC0" : "NULL"
-      ))))))}`' />
+      (isSram1 ? "(MPC_Type*)RAMC1_MPC0" :
+      (isPromc ? "(PROMC_MPC_Type*)PROMC_MPC0" :
+      (isPpcasram0 ? "(MPC_Type*)PPCA_CPUSS_CNFG_RAMC0_MPC0" :
+      (isPpcasram1 ? "(MPC_Type*)PPCA_CPUSS_CNFG_RAMC1_MPC0" :
+      (isPpcasram2 ? "(MPC_Type*)PPCA_CPUSS_CNFG_RAMC2_MPC0" :
+      (isPpcasram3 ? "(MPC_Type*)PPCA_CPUSS_CNFG_RAMC3_MPC0" :
+      (isPpcasram4 ? "(MPC_Type*)PPCA_CPUSS_CNFG_RAMC4_MPC0" : "NULL"
+      ))))))))))))) }`' />
     <ParamString id='RegisterDefineUnified' default='`${
+      (isFlash ? "NULL" :
       (isRram ? "NULL" :
       (isSmif0 ? "(MPC_Type*)SMIF0_CORE_AXI_MPC0" :
       (isSmif1 ? "(MPC_Type*)SMIF1_CORE_AXI_MPC0" :
       (isSocmem ? "NULL" :
       (isSram0 ? "NULL" :
-      (isSram1 ? "NULL" : "NULL"
-      ))))))}`' />
+      (isSram1 ? "NULL" :
+      (isPromc ? "NULL" :
+      (isPpcasram0 ? "NULL" :
+      (isPpcasram1 ? "NULL" :
+      (isPpcasram2 ? "NULL" :
+      (isPpcasram3 ? "NULL" :
+      (isPpcasram4 ? "NULL" : "NULL"
+      ))))))))))))) }`' />
     <ParamString id='blockSizeEnumUnified' default='`${
                   blockSize == 0 ? "CY_MPC_SIZE_32B" :
                   blockSize == 1 ? "CY_MPC_SIZE_64B" :
@@ -93,25 +126,43 @@
     <Variable id='ReadBit$idx' value='`${($idx >= region_count * $PC_COUNT) ? 0 : getExposedMember(lookupExpression("domain_id" . ($idx / $PC_COUNT)), "pc" . ($idx % $PC_COUNT) . "read")}`' repeatCount='$PC_REGION_COUNT' />
     <Variable id='WriteBit$idx' value='`${($idx >= region_count * $PC_COUNT) ? 0 : getExposedMember(lookupExpression("domain_id" . ($idx / $PC_COUNT)), "pc" . ($idx % $PC_COUNT) . "write")}`' repeatCount='$PC_REGION_COUNT' />
     <Variable id='RwBits$idx' value='`${(ReadBit$idx ? 1 : 0) + (WriteBit$idx ? 2 : 0)}`' repeatCount='$PC_REGION_COUNT' />
-    <Variable id='AccessEnum$idx' value='`${isRram ? ((RwBits$idx == 0 ? "IFX_SE_MPC_ACCESS_DISABLED" : (RwBits$idx == 1 ? "IFX_SE_MPC_ACCESS_R" : (RwBits$idx == 2 ? "IFX_SE_MPC_ACCESS_W" : "IFX_SE_MPC_ACCESS_RW")))) : ((RwBits$idx == 0 ? "CY_MPC_ACCESS_DISABLED" : (RwBits$idx == 1 ? "CY_MPC_ACCESS_R" : (RwBits$idx == 2 ? "CY_MPC_ACCESS_W" : "CY_MPC_ACCESS_RW")))) }`' repeatCount='$PC_REGION_COUNT' />
+    <Variable id='AccessEnum$idx' value='`${(isRram) ? ((RwBits$idx == 0 ? "IFX_SE_MPC_ACCESS_DISABLED" : (RwBits$idx == 1 ? "IFX_SE_MPC_ACCESS_R" : (RwBits$idx == 2 ? "IFX_SE_MPC_ACCESS_W" : "IFX_SE_MPC_ACCESS_RW")))) : ((RwBits$idx == 0 ? "CY_MPC_ACCESS_DISABLED" : (RwBits$idx == 1 ? "CY_MPC_ACCESS_R" : (RwBits$idx == 2 ? "CY_MPC_ACCESS_W" : "CY_MPC_ACCESS_RW")))) }`' repeatCount='$PC_REGION_COUNT' />
     <Variable id='NSecureBit$idx' value='`${($idx >= region_count * $PC_COUNT) ? 0 : getExposedMember(lookupExpression("domain_id" . ($idx / $PC_COUNT)), "pc" . ($idx % $PC_COUNT) . "ns")}`' repeatCount='$PC_REGION_COUNT' />
-    <Variable id='SecureEnum$idx' value='`${isRram ? (NSecureBit$idx ? "IFX_SE_MPC_NON_SECURE" : "IFX_SE_MPC_SECURE") : (NSecureBit$idx ? "CY_MPC_NON_SECURE" : "CY_MPC_SECURE") }`' repeatCount='$PC_REGION_COUNT' />
+    <Variable id='SecureEnum$idx' value='`${(isRram) ? (NSecureBit$idx ? "IFX_SE_MPC_NON_SECURE" : "IFX_SE_MPC_SECURE") : (NSecureBit$idx ? "CY_MPC_NON_SECURE" : "CY_MPC_SECURE") }`' repeatCount='$PC_REGION_COUNT' />
     <Variable id='ExposedVarAccess' value='`${
-      (isRram ? "response0" :
-      (isSmif0 ? "response4" :
-      (isSmif1 ? "response5" :
-      (isSocmem ? "response1" :
-      (isSram0 ? "response2" :
-      (isSram1 ? "response3" : "UnknownMemory"
-      )))))) }`' />
-    <Variable id='BaseAddressesDefine' value='`${
+      (isFlash ? "responseFlash" :
+      (isRram ? "responseRRAM" :
+      (isSmif0 ? "responseSMIF0" :
+      (isSmif1 ? "responseSMIF1" :
+      (isSocmem ? "responseSOCMEM" :
+      (isSram0 ? "responseSRAM0" :
+      (isSram1 ? "responseSRAM1" :
+      (isPromc ? "responsePROMC" :
+      (isPpcasram0 ? "responsePPCASRAM0" :
+      (isPpcasram1 ? "responsePPCASRAM1" :
+      (isPpcasram2 ? "responsePPCASRAM2" :
+      (isPpcasram3 ? "responsePPCASRAM3" :
+      (isPpcasram4 ? "responsePPCASRAM4" : "UnknownMemory"
+      ))))))))))))) }`' />
+    <!-- Device-specific base addresses. If RRAM exists, interpret it as PSE84. Otherwise PSC3 -->
+    <Variable id='BaseAddressesDefine' value='`${ hasBlock("mxrramc[0].mpc[0]") ? (
       (isRram ? "0x22000000" :
       (isSmif0 ? "0x60000000" :
       (isSmif1 ? "0x64000000" :
       (isSocmem ? "0x26000000" :
       (isSram0 ? "0x24000000" :
       (isSram1 ? "0x24080000" : "NULL"
-      ))))))}`' />
+      )))))) ) : (
+      (isFlash ? "0x22000000" :
+      (isSram0 ? "0x24000000" :
+      (isSram1 ? "0x24010000" :
+      (isPromc ? "0x68140000" :
+      (isPpcasram0 ? "0x00000000" :
+      (isPpcasram1 ? "0x20000000" :
+      (isPpcasram2 ? "0x00000000" :
+      (isPpcasram3 ? "0x20000000" :
+      (isPpcasram4 ? "0x20040000" : "NULL"
+      ))))))))) )}`' />
     <Variable id='AccessResponse' value='`${isBlockUsed("vres[0].protection[0].mpc[0]") ? getExposedMember("vres[0].protection[0].mpc[0]", ExposedVarAccess) : "CY_MPC_RZWI"}`' />
 
     <!-- Compile the domain read/write/ns perms into one mask each-->
@@ -156,8 +207,8 @@
     <DRC type='ERROR' text="Invalid 'Range $idx' end offset. The value must be less than 0xFFFFE000. Use the Memory Regions tab to adjust the memory regions allocated to this MPC." condition='`${$idx &lt; region_count &amp;&amp; region_end$idx &gt; 4294959104}`' repeatCount='$REGION_COUNT' />
     <DRC type='ERROR' text="Invalid 'Range $idx' size. The range size must be greater than or equal to 0x00000000. Use the Memory Regions tab to adjust the memory regions allocated to this MPC." condition='`${$idx &lt; region_count &amp;&amp; region_size$idx &lt; 0}`' repeatCount='$REGION_COUNT' />
     <DRC type='ERROR' text='`${domain_id$idx}` is used but not enabled.' condition='`${$idx &lt; region_count &amp;&amp; isBlockUsed(domain_id$idx) == false}`' repeatCount='$REGION_COUNT' />
-    <DRC type='ERROR' text='The overall size of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain is not aligned to `${(isSmif ? "128KB" : "4KB")}` in `${physMemId}` memory. Please make adjustments to re-align the size of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain to a multiple of `${(isSmif ? "128KB" : "4KB")}`.' condition='`${(isSmif ? ((region_size$idx{region} % $CY_128KB) != 0) : ((region_size$idx{region} % $CY_4KB) != 0)) &amp;&amp; $idx &lt; region_count}`' repeatCount='$REGION_COUNT' repeatId='region' location="vres[0].memory[0]"/>
-    <DRC type='ERROR' text='The offset of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain is not aligned to `${(isSmif ? "128KB" : "4KB")}` in `${physMemId}` memory. Please make adjustments to re-align the offset of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain to a multiple of `${(isSmif ? "128KB" : "4KB")}`.' condition='`${(isSmif ? ((region_start$idx{region} % $CY_128KB) != 0) : ((region_start$idx{region} % $CY_4KB) != 0)) &amp;&amp; $idx &lt; region_count}`' repeatCount='$REGION_COUNT' repeatId='region' location="vres[0].memory[0]"/>
+    <DRC type='ERROR' text='The overall size of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain is not aligned to `${(isSmif ? "128KB" : (isSocmem ? "8KB" : "4KB"))}` in `${physMemId}` memory. Please make adjustments to re-align the size of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain to a multiple of `${(isSmif ? "128KB" : (isSocmem ? "8KB" : "4KB"))}`.' condition='`${checkAlignment &amp;&amp; (isSmif ? ((region_size$idx{region} % $CY_128KB) != 0) : (isSocmem ? ((region_size$idx{region} % $CY_8KB) != 0) : ((region_size$idx{region} % $CY_4KB) != 0))) &amp;&amp; $idx &lt; region_count}`' repeatCount='$REGION_COUNT' repeatId='region' location="vres[0].memory[0]"/>
+    <DRC type='ERROR' text='The offset of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain is not aligned to `${(isSmif ? "128KB" : (isSocmem ? "8KB" : "4KB"))}` in `${physMemId}` memory. Please make adjustments to re-align the offset of the memory regions associated with the `${getExposedMember(getBlockFromInstance(splitAt(region_domain_ids, $idx)), "displayName")}` domain to a multiple of `${(isSmif ? "128KB" : (isSocmem ? "8KB" : "4KB"))}`.' condition='`${checkAlignment &amp;&amp; (isSmif ? ((region_start$idx{region} % $CY_128KB) != 0) : (isSocmem ? ((region_start$idx{region} % $CY_8KB) != 0) : ((region_start$idx{region} % $CY_4KB) != 0))) &amp;&amp; $idx &lt; region_count}`' repeatCount='$REGION_COUNT' repeatId='region' location="vres[0].memory[0]"/>
   </DRCs>
 
   <!-- Generated firmware -->
@@ -166,7 +217,7 @@
 
     <ConfigDefine name='`${block_name}`_REGION_COUNT' value='`${(isSmif ? region_count * 2 : region_count)}`U' public='true' include='true' />
 
-    <ConfigArray name='`${block_name}`_srf_protection_range_s' type='mtb_srf_protection_range_s_t' const='true' public='true' include='`${(isBlockUsed("vres[0].memory[0]") &amp;&amp; (region_count &gt; 0))}`' arraySize='`${block_name}`_REGION_COUNT' guard='defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF)'>
+    <ConfigArray name='`${block_name}`_srf_protection_range_s' type='mtb_srf_protection_range_s_t' const='true' public='true' include='`${(isBlockUsed("vres[0].memory[0]") &amp;&amp; (region_count &gt; 0))}`' arraySize='`${block_name}`_REGION_COUNT' guard='defined(COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF) &amp;&amp; !defined(CY_SRF_DISABLE)'>
       <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${ ((region_count &gt; $idx{0}) &amp;&amp; (domain_reserved$idx{region} ne "true")) }`' repeatCount='$REGION_COUNT' repeatId='region' >
         <Member name='start' value='(void *) `${toHex(BaseAddressesDefine + region_start$idx{region}, 8)}` ' />
         <Member name='length'   value='`${region_size$idx{region}}`U' />

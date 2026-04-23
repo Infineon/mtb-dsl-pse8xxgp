@@ -9,7 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) 2022-2025, Cypress Semiconductor Corporation (an Infineon company) or
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * an affiliate of Cypress Semiconductor Corporation.
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -103,7 +104,7 @@
     <!-- Wakeup pins -->
     <ParamSignal port='hibernate_wakeup[0]' name='Hibernate Wakeup (0)' group='Wakeup Pins' visible='`${hasVisibleOption("hibernate_wakeup[0]")}`'
       desc='Reserve the hibernate_wakeup[0] pin to use it as the wakeup source from Hibernate power mode.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -113,7 +114,7 @@
 
     <ParamSignal port='hibernate_wakeup[1]' name='Hibernate Wakeup (1)' group='Wakeup Pins' visible='`${hasVisibleOption("hibernate_wakeup[1]")}`'
       desc='Reserve the hibernate_wakeup[1] pin to use it as the wakeup source from Hibernate power mode.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -123,7 +124,7 @@
 
     <ParamSignal port='hibernate_wakeup[2]' name='Hibernate Wakeup (2)' group='Wakeup Pins' visible='`${hasVisibleOption("hibernate_wakeup[2]")}`'
       desc='Reserve the hibernate_wakeup[2] pin to use it as the wakeup source from Hibernate power mode.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -133,7 +134,7 @@
 
     <ParamSignal port='hibernate_wakeup[3]' name='Hibernate Wakeup (3)' group='Wakeup Pins' visible='`${hasVisibleOption("hibernate_wakeup[3]")}`'
       desc='Reserve the hibernate_wakeup[3] pin to use it as the wakeup source from Hibernate power mode.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -143,7 +144,7 @@
 
     <ParamSignal port='pmic_wakeup_in[0]' name='PMIC Wakeup Input' group='Wakeup Pins' visible='`${pmicEnable}`'
       desc='Reserve the pmic_wakeup_in pin' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='`${pmicEnable}`' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${pmicEnable}`' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -153,7 +154,7 @@
 
     <ParamSignal port='pmic_wakeup_out[0]' name='PMIC Wakeup Output' group='Wakeup Pins' visible='`${pmicEnable}`'
       desc='Reserve the pmic_wakeup_out pin' canBeEmpty='`${!pmicEnable}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='`${pmicEnable}`' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${pmicEnable}`' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>

@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2022-2025 Cypress Semiconductor Corporation
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -63,7 +64,7 @@
     <ParamRange id='smif_ip_version' name='SMIF IP Version' group='System' default='`${getVersion()}`' min='4' max='6' resolution='1' visible='false' editable='false' desc='SMIF IP Version' />
 
     <ParamSignal port='spihb_clk[0]' name='SPI Clock' group='Clocks' visible='`${isSmifV4}`' desc='The Serial Clock (SCLK) to the slave devices' canBeEmpty='`${!isSmifV4}`'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -141,7 +142,7 @@
     <!-- SPI Data - SMIFv4 (which uses spihb_dataX[] naming convention) -->
     <Repeat count='8'>
       <ParamSignal port='spihb_data$idx[0]' name='SPI Data[$idx]' group='Data Lines' visible='`${(CHIP_TOP.DATA8_PRESENT == 1) &amp;&amp; hasVisibleOption("spihb_data$idx[0]")}`' desc='Data line $idx to be used by the QSPI block, must be used in conjunction with Data line `${$idx % 1 ? $idx - 1 : $idx + 1}`' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive&apos; or &apos;Pull Up&apos; with input buffer ON.'>
             <Choice>
               <Option value='CY_GPIO_DM_STRONG'/>
@@ -156,7 +157,7 @@
     <!-- SPI Data - SMIFv5 (which uses spihb_dataX_pad[] naming convention) -->
     <Repeat count='8'>
       <ParamSignal port='spihb_data$idx_pad[0]' name='SPI Data[$idx]' group='Data Lines' visible='`${(CHIP_TOP.DATA8_PRESENT == 1) &amp;&amp; hasVisibleOption("spihb_data$idx_pad[0]")}`' desc='Data line $idx to be used by the QSPI block, must be used in conjunction with Data line `${$idx % 1 ? $idx - 1 : $idx + 1}`' canBeEmpty='true'>
-        <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive&apos; or &apos;Pull Up&apos; with input buffer ON.'>
             <Choice>
               <Option value='CY_GPIO_DM_STRONG'/>
@@ -175,12 +176,12 @@
 
     <!-- CORE0 SPI Select -->
     <ParamSignal port='spihb_select0[0]' name='SPI Slave Select 0' group='Slave Select' visible='`${hasVisibleOption("spihb_select0[0]")}`' desc='Select signal 0 to specify which memory device to communicate with' canBeEmpty='true'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV5or6}`' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV5or6}`' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV4}`' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV4}`' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Up. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -189,13 +190,13 @@
     </ParamSignal>
     <ParamString id='ssel0Pin' name='ssel0Pin' group='Internal' default='`${getBlockFromSignal("spihb_select0[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='spihb_select1[0]' name='SPI Slave Select 1' group='Slave Select' visible='`${hasVisibleOption("spihb_select1[0]")}`' desc='Select signal 1 to specify which memory device to communicate with' canBeEmpty='true'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV5or6}`' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV5or6}`' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV4}`' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV4}`' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Up. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLUP' />
         </Parameter>
@@ -203,7 +204,7 @@
     </ParamSignal>
     <ParamString id='ssel1Pin' name='ssel1Pin' group='Internal' default='`${getBlockFromSignal("spihb_select1[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='spihb_select2[0]' name='SPI Slave Select 2' group='Slave Select' visible='`${hasVisibleOption("spihb_select2[0]")}`' desc='Select signal 2 to specify which memory device to communicate with' canBeEmpty='true'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -212,7 +213,7 @@
     </ParamSignal>
     <ParamString id='ssel2Pin' name='ssel2Pin' group='Internal' default='`${getBlockFromSignal("spihb_select2[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='spihb_select3[0]' name='SPI Slave Select 3' group='Slave Select' visible='`${hasVisibleOption("spihb_select3[0]")}`' desc='Select signal 3 to specify which memory device to communicate with' canBeEmpty='true'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -223,7 +224,7 @@
 
     <!-- CORE-0 RWDS -->
     <ParamSignal port='spihb_rwds[0]' name='SPI RWDS' group='RWDS' visible='`${hasVisibleOption("spihb_rwds[0]")}`' desc='Read write/Data strobe signal for higher accuracy return clock latency.' canBeEmpty='true'>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV5or6}`' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV5or6}`' >
         <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Resistive Pull-Down. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_PULLDOWN' />
         </Parameter>

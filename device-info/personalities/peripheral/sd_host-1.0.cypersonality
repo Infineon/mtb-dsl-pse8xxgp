@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation
+* (c) 2018-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -66,12 +67,12 @@
 
     <!--Inputs/Outputs-->
     <ParamSignal port='clk_card[0]' name='CLK' group='Inputs' visible='true' desc='The card clock pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -80,12 +81,12 @@
     </ParamSignal>
     <ParamString id='clkPin' name='clkPin' group='Internal' default='`${getBlockFromSignal("clk_card[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_cmd[0]' name='CMD' group='Inputs' visible='true' desc='The command/response pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -94,12 +95,12 @@
     </ParamSignal>
     <ParamString id='cmdPin' name='cmdPin' group='Internal' default='`${getBlockFromSignal("card_cmd[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_3to0[0]' name='DAT0' group='Inputs' visible='true' desc='The Data line [Bit 0] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -108,12 +109,12 @@
     </ParamSignal>
     <ParamString id='data0Pin' name='data0Pin' group='Internal' default='`${getBlockFromSignal("card_dat_3to0[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_3to0[1]' name='DAT1' group='Inputs' visible='`${(busWidth ne CY_SD_HOST_BUS_WIDTH_1_BIT)}`' desc='The Data line [Bit 1] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -122,12 +123,12 @@
     </ParamSignal>
     <ParamString id='data1Pin' name='data1Pin' group='Internal' default='`${getBlockFromSignal("card_dat_3to0[1]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_3to0[2]' name='DAT2' group='Inputs' visible='`${(busWidth ne CY_SD_HOST_BUS_WIDTH_1_BIT)}`' desc='The Data line [Bit 2] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -136,12 +137,12 @@
     </ParamSignal>
     <ParamString id='data2Pin' name='data2Pin' group='Internal' default='`${getBlockFromSignal("card_dat_3to0[2]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_3to0[3]' name='DAT3' group='Inputs' visible='`${(busWidth ne CY_SD_HOST_BUS_WIDTH_1_BIT)}`' desc='The Data line [Bit 3] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -150,12 +151,12 @@
     </ParamSignal>
     <ParamString id='data3Pin' name='data3Pin' group='Internal' default='`${getBlockFromSignal("card_dat_3to0[3]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_7to4[0]' name='DAT4' group='Inputs' visible='`${(cardType eq emmc) &amp;&amp; (InstNumber eq 1) &amp;&amp; (busWidth eq CY_SD_HOST_BUS_WIDTH_8_BIT)}`' desc='The Data line [Bit 4] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -164,12 +165,12 @@
     </ParamSignal>
     <ParamString id='data4Pin' name='data4Pin' group='Internal' default='`${getBlockFromSignal("card_dat_7to4[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_7to4[1]' name='DAT5' group='Inputs' visible='`${(cardType eq emmc) &amp;&amp; (InstNumber eq 1) &amp;&amp; (busWidth eq CY_SD_HOST_BUS_WIDTH_8_BIT)}`' desc='The Data line [Bit 5] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -178,12 +179,12 @@
     </ParamSignal>
     <ParamString id='data5Pin' name='data5Pin' group='Internal' default='`${getBlockFromSignal("card_dat_7to4[1]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_7to4[2]' name='DAT6' group='Inputs' visible='`${(cardType eq emmc) &amp;&amp; (InstNumber eq 1) &amp;&amp; (busWidth eq CY_SD_HOST_BUS_WIDTH_8_BIT)}`' desc='The Data line [Bit 6] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -192,12 +193,12 @@
     </ParamSignal>
     <ParamString id='data6Pin' name='data6Pin' group='Internal' default='`${getBlockFromSignal("card_dat_7to4[2]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_dat_7to4[3]' name='DAT7' group='Inputs' visible='`${(cardType eq emmc) &amp;&amp; (InstNumber eq 1) &amp;&amp; (busWidth eq CY_SD_HOST_BUS_WIDTH_8_BIT)}`' desc='The Data line [Bit 7] pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
@@ -207,12 +208,12 @@
     <ParamString id='data7Pin' name='data7Pin' group='Internal' default='`${getBlockFromSignal("card_dat_7to4[3]")}`' visible='false' editable='false' desc='' />
 
     <ParamSignal port='card_detect_n[0]' name='Card Detect' group='Inputs' visible='`${hasVisibleOption("card_detect_n[0]")}`' desc='The card detect pin. Note: You can use any GPIO custom pin for Card Detect. Add the SD Host driver Cy_SD_Host_IsCardConnected() function with the __WEAK type to your code. This function could read the value from any GPIO pin and return true when the card is connected. For more information see the Cy_SD_Host_IsCardConnected() function description.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -221,12 +222,12 @@
     </ParamSignal>
     <ParamString id='cardDetectPin' name='cardDetectPin' group='Internal' default='`${getBlockFromSignal("card_detect_n[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_emmc_reset_n[0]' name='eMMC Reset' group='Inputs' visible='`${(cardType eq emmc) &amp;&amp; (InstNumber eq 1)}`' desc='The eMMC reset pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -235,12 +236,12 @@
     </ParamSignal>
     <ParamString id='emmcRstPin' name='emmcRstPin' group='Internal' default='`${getBlockFromSignal("card_emmc_reset_n[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='led_ctrl[0]' name='Led Control' group='Inputs' visible='`${enableLedControl}`' desc='The LED control pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -249,12 +250,12 @@
     </ParamSignal>
     <ParamString id='ledCtrlPin' name='ledCtrlPin' group='Internal' default='`${getBlockFromSignal("led_ctrl[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_mech_write_prot[0]' name='Card Mechanical Write Protect' group='Inputs' visible='`${hasVisibleOption("card_mech_write_prot[0]")}`' desc='The card mechanical write protect pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -263,12 +264,12 @@
     </ParamSignal>
     <ParamString id='cardMechWriteProtPin' name='cardMechWriteProtPin' group='Internal' default='`${getBlockFromSignal("card_mech_write_prot[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='card_if_pwr_en[0]' name='Card if Power Enabled' group='Inputs' visible='`${hasVisibleOption("card_if_pwr_en[0]")}`' desc='The card if power enabled pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -277,12 +278,12 @@
     </ParamSignal>
     <ParamString id='cardPwrEnPin' name='cardPwrEnPin' group='Internal' default='`${getBlockFromSignal("card_if_pwr_en[0]")}`' visible='false' editable='false' desc='' />
     <ParamSignal port='io_volt_sel[0]' name='IO Volt Select' group='Inputs' visible='`${hasVisibleOption("io_volt_sel[0]")}`' desc='The io volt select pin.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>

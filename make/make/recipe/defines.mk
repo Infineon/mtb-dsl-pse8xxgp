@@ -6,8 +6,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2021-2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2021-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,6 +52,8 @@ ifeq ($(MTB_TYPE),PROJECT)
 _MTB_RECIPE__IS_MULTI_CORE_APPLICATION:=true
 endif
 
+_MTB_RECIPE__OPENOCD_CHIP_NAME:=cat1d
+
 #
 # List the supported toolchains
 #
@@ -89,6 +91,21 @@ MVE_SELECT?=MVE-I
 else
 MVE_SELECT?=
 endif
+endif
+
+ifeq ($(APPTYPE), ram)
+_MTB_RECIPE__APPTYPE_DIR:=ram
+else
+_MTB_RECIPE__APPTYPE_DIR:=flash
+endif
+
+#
+# Memory erasure message customization
+#
+ifeq ($(MTB_ERASE_EXT_MEM),)
+_MTB_RECIPE__ERASING_TARGET_MSG:="Erasing the target device's internal memory only..."
+else
+_MTB_RECIPE__ERASING_TARGET_MSG:="Erasing the target device's internal and external memories..."
 endif
 
 include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/defines_pse8xxgp.mk

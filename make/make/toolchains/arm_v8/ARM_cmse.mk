@@ -6,8 +6,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2023-2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2023-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,11 +32,16 @@ endif
 ifneq ($(filter SECURE,$(VCORE_ATTRS)),)
 MTB_TOOLCHAIN_ARM__CFLAGS+=-mcmse
 MTB_TOOLCHAIN_ARM__CXXFLAGS+=-mcmse
+_MTB_RECIPE_CMSIS__DSECURE=Secure
 
 ifneq ($(NSC_VENEER),)
 ifeq ($(NSC_VENEER),$(filter $(NSC_VENEER),$(wildcard $(NSC_VENEER))))
 MTB_TOOLCHAIN_ARM__LDFLAGS+=--import-cmse-lib-in $(NSC_VENEER)
 endif
 MTB_TOOLCHAIN_ARM__LDFLAGS+=--import-cmse-lib-out $(NSC_VENEER).tmp
-endif
-endif
+endif # ifneq ($(NSC_VENEER),)
+else ifneq ($(filter NON_SECURE,$(VCORE_ATTRS)),)
+_MTB_RECIPE_CMSIS__DSECURE=Non-Secure
+else
+_MTB_RECIPE_CMSIS__DSECURE=TZ-disabled
+endif # ifneq ($(filter SECURE,$(VCORE_ATTRS)),)

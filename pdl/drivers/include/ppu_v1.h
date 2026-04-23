@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2020-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2020-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 *
 * SPDX-License-Identifier: BSD-3-Clause
 *
@@ -32,7 +32,7 @@
 #include "cy_syslib.h"
 
 /*
- * Macro additions by Cypress Semiconductor Corporation
+ * Macro additions by Infineon Technologies AG
  */
 #define fwk_assert     CY_ASSERT
 #define FWK_SUCCESS    CY_RET_SUCCESS

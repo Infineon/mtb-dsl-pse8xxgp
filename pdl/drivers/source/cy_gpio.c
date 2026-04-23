@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2016-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -105,7 +105,7 @@ cy_en_gpio_status_t Cy_GPIO_Pin_Init(GPIO_PRT_Type *base, uint32_t pinNum, const
         CY_ASSERT_L2(CY_GPIO_IS_VOH_SEL_VALID(config->vohSel));
         CY_ASSERT_L2(CY_GPIO_IS_DRIVE_SEL_VALID(config->driveSel));
 
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
         CY_ASSERT_L2(CY_GPIO_IS_PULLUP_RES_VALID(config->pullUpRes));
 #endif /* CY_IP_MXS22IOSS, */
 
@@ -357,7 +357,7 @@ cy_en_gpio_status_t Cy_GPIO_Port_Init(GPIO_PRT_Type* base, const cy_stc_gpio_prt
         HSIOM_PRT_PORT_SEL0(baseHSIOM) = config->sel0Active;
         HSIOM_PRT_PORT_SEL1(baseHSIOM) = config->sel1Active;
         GPIO_PRT_OUT(base)             = config->out;
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
         GPIO_PRT_CFG_OUT3(base)    = config->cfgOut3;
         GPIO_PRT_CFG_RES(base)     = config->cfgRes;
 #endif /* CY_IP_MXS22IOSS */
@@ -500,7 +500,7 @@ CY_SECTION_ITCM_END
 #else
 CY_SECTION_RAMFUNC_END
 #endif /* CY_IP_MXS22IOSS */
-#if (defined (CY_IP_MXS40SIOSS) &&  ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || (CPUSS_CM33_0_SECEXT_PRESENT != 0))) || defined (CY_IP_MXS22IOSS) 
+#if (defined (CY_IP_MXS40SIOSS) &&  ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || (CPUSS_CM33_0_SECEXT_PRESENT != 0))) || defined (CY_IP_MXS22IOSS)
 /*******************************************************************************
 * Function Name: Cy_GPIO_Pin_SecFastInit
 ****************************************************************************//**
@@ -730,7 +730,6 @@ void Cy_GPIO_SetAmuxSplit(cy_en_amux_split_t switchCtrl, cy_en_gpio_amuxconnect_
         tmpReg = HSIOM_AMUX_SPLIT_CTL(switchCtrl) & GPIO_AMUXA_SPLITTER_MASK;
         HSIOM_AMUX_SPLIT_CTL(switchCtrl) =
         tmpReg | (((uint32_t) amuxConnect << HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_Pos) & GPIO_AMUXB_SPLITTER_MASK);
-        
     }
 }
 

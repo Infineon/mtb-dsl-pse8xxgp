@@ -97,20 +97,21 @@ $(document).ready(function(){initNavTree('group__group__sysclk__clk__peripheral.
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
 <p>There are multiple peripheral clock dividers that, in effect, create multiple separate peripheral clocks. </p>
-<p>The available dividers vary per device series. As an example, for the PSoC 63 series there are 29 dividers:</p>
+<p>The available dividers vary per device series. The PSoC™ Edge E84 MCU has 26 peripheral clock dividers:</p>
 <ul>
-<li>eight 8-bit dividers</li>
-<li>sixteen 16-bit dividers</li>
-<li>four fractional 16.5-bit dividers (16 integer bits, 5 fractional bits)</li>
-<li>one fractional 24.5-bit divider (24 integer bits, 5 fractional bits)</li>
+<li>Fourteen 8-bit dividers</li>
+<li>Five 16-bit integer dividers</li>
+<li>Six 16.5 fractional dividers (16 integer bits, five fractional bits)</li>
+<li><p class="startli">One 24.5 fractional divider (24 integer bits, five fractional bits)</p>
+<p class="startli">The 8-bit and 16-bit dividers are integer dividers. A divider value of 1 means the output frequency matches the input frequency (that is, there is no change). Otherwise the frequency is divided by the value of the divider. For example, if the input frequency is 50 MHz, and the divider is value 10, the output frequency is 5 MHz.</p>
+<p class="startli">The five fractional bits supports further precision in 1/32nd increments. For example, a divider with an integer value of 3 and a fractional value of 4 (4/32) results in a divider of 3.125. Fractional dividers are useful when a high-precision clock is required, for example, for a UART/SPI serial interface.</p>
+</li>
 </ul>
-<p>The 8-bit and 16-bit dividers are integer dividers. A divider value of 1 means the output frequency matches the input frequency (that is, there is no change). Otherwise the frequency is divided by the value of the divider. For example, if the input frequency is 50 MHz, and the divider is value 10, the output frequency is 5 MHz.</p>
-<p>The five fractional bits supports further precision in 1/32nd increments. For example, a divider with an integer value of 3 and a fractional value of 4 (4/32) results in a divider of 3.125. Fractional dividers are useful when a high-precision clock is required, for example, for a UART/SPI serial interface.</p>
-<div class="image">
-<img src="sysclk_peri_divs.png" alt=""/>
-</div>
-    <p>Each peripheral can connect to any one of the programmable dividers. A particular peripheral clock divider can drive multiple peripherals.</p>
-<p>The SysClk driver also supports phase aligning two peripheral clock dividers using <a class="el" href="group__group__sysclk__clk__peripheral__funcs.html#ga7d5e0e11b4bc0aa033fbc69c1f50fa6a" title="First disables a selected divider (Cy_SysClk_PeriphDisableDivider), then aligns that divider to anoth...">Cy_SysClk_PeriphEnablePhaseAlignDivider()</a>. Alignment works for both integer and fractional dividers. The divider to which a second divider is aligned must already be enabled. </p>
+<p><img src="sysclk_peri_divs_pse84.png" alt="" class="inline"/>    </p><ul>
+<li><p class="startli">Each peripheral can connect to any one of the programmable dividers. A particular peripheral clock divider can drive multiple peripherals.</p>
+<p class="startli">The SysClk driver also supports phase aligning two peripheral clock dividers using <a class="el" href="group__group__sysclk__clk__peripheral__funcs.html#ga7d5e0e11b4bc0aa033fbc69c1f50fa6a" title="First disables a selected divider (Cy_SysClk_PeriphDisableDivider), then aligns that divider to anoth...">Cy_SysClk_PeriphEnablePhaseAlignDivider()</a>. Alignment works for both integer and fractional dividers. The divider to which a second divider is aligned must already be enabled. </p>
+</li>
+</ul>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>

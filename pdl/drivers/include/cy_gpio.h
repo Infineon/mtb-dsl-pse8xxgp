@@ -219,7 +219,7 @@ typedef struct
     uint32_t cfgDriveSel1;   /**< Drive strength configuration for pins 4,5,6,7 */
     uint32_t nonSecMask;     /**< HSIOM non secure mask for port pins 0-7 */
 #endif /* CY_IP_MXS40SIOSS, CY_IP_MXS22IOSS */
- #if defined (CY_IP_MXS22IOSS) 
+ #if defined (CY_IP_MXS22IOSS)
     uint32_t cfgRes;         /**< Pull-up resistor configuration for port pins */
     uint32_t cfgOut3;        /**< Port pin extra drive mode \ref CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ */
 #endif /* CY_IP_MXS22IOSS */
@@ -285,7 +285,7 @@ typedef struct
 #define CY_GPIO_CFG_SLEW_EXT_MASK              (0x07UL)   /**< Single pin mask for slew rate in CFG SLEW EXT register */
 #define CY_GPIO_CFG_DRIVE_SEL_EXT_MASK         (0x1FUL)   /**< Single pin mask for drive strength in CFG DRIVE EXT register */
 #endif /* CY_IP_MXS40IOSS */
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
 #define CY_GPIO_CFG_RES_PULLUP_MODE_MASK       (0x0FUL)   /**< Single pin mask for Pull-up mode in CFG_RES register */
 #endif /* CY_IP_MXS22IOSS */
  
@@ -312,11 +312,11 @@ typedef struct
 #define CY_GPIO_INTR_CFG_OFFSET                (1UL)      /**< Offset for interrupt config */
 #define CY_GPIO_INTR_FILT_OFFSET               (18UL)     /**< Offset for filtered interrupt config */
 #define CY_GPIO_CFG_SIO_OFFSET                 (2UL)      /**< Offset for SIO config */
- #if defined (CY_IP_MXS40SIOSS) || defined (CY_IP_MXS22IOSS) 
+ #if defined (CY_IP_MXS40SIOSS) || defined (CY_IP_MXS22IOSS)
 #define CY_GPIO_CFG_SLEW_EXT_OFFSET            (2UL)      /**< Offset for CFG SLEW EXT */
 #define CY_GPIO_CFG_DRIVE_SEL_EXT_OFFSET       (3UL)      /**< Offset for CFG SLEW EXT */
 #endif /* CY_IP_MXS40SIOSS, CY_IP_MXS22IOSS */
- #if defined (CY_IP_MXS22IOSS) 
+ #if defined (CY_IP_MXS22IOSS)
 #define CY_GPIO_CFG_RES_PULLUP_MODE_OFFSET     (2UL)      /**< Offset for Pull-up mode */
 #endif /* CY_IP_MXS22IOSS,  */
  
@@ -336,11 +336,11 @@ typedef struct
                                                 GPIO_PRT_INTR_CFG_FLT_SEL_Msk)
 #define CY_GPIO_PRT_INT_MASK_MASK              (0x0000001FFUL)
 #define CY_GPIO_PRT_SEL_ACTIVE_MASK            (0x1FFFFFFFUL)
- #if defined (CY_IP_MXS22IOSS) 
+ #if defined (CY_IP_MXS22IOSS)
 #define CY_GPIO_PRT_CFG_RES_MASK               (0x77777777UL)
 #endif /* CY_IP_MXS22IOSS,  */
  #define GPIO_MAX_SPLIT_CELL_SEGMENTS           (9U)
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
 /* CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ is 0x80UL, but CFG_OUT3 register uses 0x8UL. */
 /* To correctly configure drive mode value in CFG_OUT3 register, CY_GPIO_EXT_DM_SHIFT is used to shift CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ. */
 #define CY_GPIO_EXT_DM_SHIFT                   (0x4UL)
@@ -352,7 +352,7 @@ typedef struct
 #define CY_GPIO_IS_VALUE_VALID(outVal)         (1UL >= (outVal))
 #define CY_GPIO_IS_PORT_VALUE_VALID(outVal)    (0U == ((outVal) & (uint32_t)~CY_GPIO_PRT_PINS_MASK))
 
-#if defined(CY_IP_MXS22IOSS) 
+#if defined(CY_IP_MXS22IOSS)
 #define CY_GPIO_IS_DM_VALID(driveMode)         (((0U == ((driveMode) & (uint32_t)~CY_GPIO_CFG_DM_MASK)) ||\
                                                ((driveMode) == CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ)) && \
                                                ((driveMode) != CY_GPIO_DM_INVALID_IN_OFF) && \
@@ -380,7 +380,7 @@ typedef struct
                                                 (CY_SIO_VOH_2_78       == (vrefSel)) || \
                                                 (CY_SIO_VOH_4_16       == (vrefSel)))
 
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
 #define CY_GPIO_IS_PULLUP_RES_VALID(PullUp)    ((CY_GPIO_PULLUP_RES_DISABLE   == (PullUp)) || \
                                                 (CY_GPIO_PULLUP_RES_570       == (PullUp)) || \
                                                 (CY_GPIO_PULLUP_RES_720       == (PullUp)) || \
@@ -521,7 +521,7 @@ typedef struct
 #define CY_GPIO_DM_OD_DRIVESHIGH               (0x0DUL)    /**< Open Drain, Drives High. Input buffer on */
 #define CY_GPIO_DM_STRONG                      (0x0EUL)    /**< Strong Drive. Input buffer on */
 #define CY_GPIO_DM_PULLUP_DOWN                 (0x0FUL)    /**< Resistive Pull-Up/Down. Input buffer on */
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
 #define CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ (0x80UL)    /**< Strong Drive/Resistive Pull-Up/High-Z based on data_out_en and data_out signals. It is applicable for I3C */
 #endif /* CY_IP_MXS22IOSS */
  /** \} */
@@ -550,7 +550,7 @@ typedef struct
 * \{
 * Constants to be used for setting the drive strength of the pin.
 */
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
 #define CY_GPIO_DRIVE_SEL_7     (0x07UL) /**< 7 drive selection: 8mA/16mA drive current (normal/high speed IO)*/
 #define CY_GPIO_DRIVE_SEL_6     (0x06UL) /**< 6 drive selection: 7mA/14mA drive current (normal/high speed IO)*/
 #define CY_GPIO_DRIVE_SEL_5     (0x05UL) /**< 5 drive selection: 6mA/12mA drive current (normal/high speed IO)*/
@@ -634,7 +634,7 @@ typedef struct
 #define CY_SIO_VOH_4_16                        (0x07UL) /**< Voh = 4.16 x Reference */
 /** \} */
 
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
 /**
 * \defgroup group_gpio_PullUpMode Pull-up mode
 * \{
@@ -675,7 +675,7 @@ __STATIC_INLINE void Cy_GPIO_SetHSIOM(GPIO_PRT_Type* base, uint32_t pinNum, en_h
 __STATIC_INLINE en_hsiom_sel_t Cy_GPIO_GetHSIOM(GPIO_PRT_Type* base, uint32_t pinNum);
 
 __STATIC_INLINE GPIO_PRT_Type* Cy_GPIO_PortToAddr(uint32_t portNum);
-#if (defined (CY_IP_MXS40SIOSS) && ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || (CPUSS_CM33_0_SECEXT_PRESENT != 0))) || defined (CY_IP_MXS22IOSS) 
+#if (defined (CY_IP_MXS40SIOSS) && ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || (CPUSS_CM33_0_SECEXT_PRESENT != 0))) || defined (CY_IP_MXS22IOSS)
 void Cy_GPIO_Pin_SecFastInit(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t driveMode, uint32_t outVal, en_hsiom_sel_t hsiom);
 __STATIC_INLINE void Cy_GPIO_SetHSIOM_SecPin(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value);
 __STATIC_INLINE uint32_t Cy_GPIO_GetHSIOM_SecPin(GPIO_PRT_Type* base, uint32_t pinNum);
@@ -697,6 +697,7 @@ __STATIC_INLINE uint32_t Cy_GPIO_ReadOut(GPIO_PRT_Type* base, uint32_t pinNum);
 __STATIC_INLINE void Cy_GPIO_Set(GPIO_PRT_Type* base, uint32_t pinNum);
 __STATIC_INLINE void Cy_GPIO_Clr(GPIO_PRT_Type* base, uint32_t pinNum);
 __STATIC_FORCEINLINE void Cy_GPIO_Inv(GPIO_PRT_Type* base, uint32_t pinNum);
+__STATIC_INLINE void Cy_GPIO_WriteDirectOut(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value);
 __STATIC_INLINE void Cy_GPIO_SetDrivemode(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value);
 __STATIC_INLINE uint32_t Cy_GPIO_GetDrivemode(GPIO_PRT_Type* base, uint32_t pinNum);
 __STATIC_INLINE void Cy_GPIO_SetVtrip(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value);
@@ -713,7 +714,7 @@ __STATIC_INLINE void Cy_GPIO_SetDriveSel(GPIO_PRT_Type* base, uint32_t pinNum, u
 __STATIC_INLINE uint32_t Cy_GPIO_GetDriveSel(GPIO_PRT_Type* base, uint32_t pinNum);
 
  
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
 void Cy_GPIO_SetPullupResistance(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value);
 uint32_t Cy_GPIO_GetPullupResistance(GPIO_PRT_Type* base, uint32_t pinNum);
 #endif /* CY_IP_MXS22IOSS,  */
@@ -758,7 +759,7 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetInterruptCause1(void);
 __STATIC_INLINE uint32_t Cy_GPIO_GetInterruptCause2(void);
 __STATIC_INLINE uint32_t Cy_GPIO_GetInterruptCause3(void);
 
-#if (defined (CY_IP_MXS40SIOSS) && (CPUSS_CM33_0_SECEXT_PRESENT != 0)) || defined (CY_IP_MXS22IOSS) 
+#if (defined (CY_IP_MXS40SIOSS) && (CPUSS_CM33_0_SECEXT_PRESENT != 0)) || defined (CY_IP_MXS22IOSS)
 __STATIC_INLINE uint32_t Cy_GPIO_GetSecureInterruptCause0(void);
 __STATIC_INLINE uint32_t Cy_GPIO_GetSecureInterruptCause1(void);
 __STATIC_INLINE uint32_t Cy_GPIO_GetSecureInterruptCause2(void);
@@ -768,7 +769,7 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetSecureInterruptCause3(void);
 /** \} group_gpio_functions_interrupt */
 
 /** \cond INTERNAL */
-#if defined (CY_IP_MXS40SIOSS) || (defined (CY_IP_MXS40IOSS) && (CY_IP_MXS40IOSS_VERSION > 2)) || defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS40SIOSS) || (defined (CY_IP_MXS40IOSS) && (CY_IP_MXS40IOSS_VERSION > 2)) || defined (CY_IP_MXS22IOSS)
 #define HSIOM_PRT_V1_Type HSIOM_PRT_Type
 #endif /* CY_IP_MXS40SIOSS, CY_IP_MXS22IOSS,  */
  /** \endcond */
@@ -778,7 +779,7 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetSecureInterruptCause3(void);
 * \{
 */
 
-#if (defined (CY_IP_MXS40SIOSS) && ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || (CPUSS_CM33_0_SECEXT_PRESENT != 0))) || defined (CY_IP_MXS22IOSS) 
+#if (defined (CY_IP_MXS40SIOSS) && ((IOSS_HSIOM_HSIOM_SEC_PORT_NR != 0) || (CPUSS_CM33_0_SECEXT_PRESENT != 0))) || defined (CY_IP_MXS22IOSS)
 /*******************************************************************************
 * Function Name: Cy_GPIO_SetHSIOM_SecPin
 ****************************************************************************//**
@@ -1256,6 +1257,44 @@ __STATIC_FORCEINLINE void Cy_GPIO_Inv(GPIO_PRT_Type* base, uint32_t pinNum)
 
 
 /*******************************************************************************
+* Function Name: Cy_GPIO_WriteDirectOut
+****************************************************************************//**
+*
+* Write a logic 0 or logic 1 state to the output driver by directly modifying
+* the port OUT register using a read-modify-write operation.
+*
+* Unlike \ref Cy_GPIO_Write which uses the OUT_SET/OUT_CLR registers for
+* atomic pin access, this function writes to the OUT register directly.
+* This is required for SMIF GPIO ports where the OUT_SET, OUT_CLR, and OUT_INV
+* registers are not functional.
+*
+* \note This function is not thread-safe. Concurrent writes to different pins
+* on the same port may cause data corruption. Use \ref Cy_GPIO_Write for
+* regular GPIO ports where OUT_SET/OUT_CLR are available.
+*
+* \param base
+* Pointer to the pin's port register base address
+*
+* \param pinNum
+* Position of the pin bit-field within the port register
+*
+* \param value
+* Logic level to drive out on the pin
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_GPIO_WriteDirectOut(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value)
+{
+    CY_ASSERT_L2(CY_GPIO_IS_PIN_VALID(pinNum));
+    CY_ASSERT_L2(CY_GPIO_IS_VALUE_VALID(value));
+
+    uint32_t out = GPIO_PRT_OUT(base);
+    out &= ~(CY_GPIO_OUT_MASK << pinNum);
+    out |= ((value & CY_GPIO_OUT_MASK) << pinNum);
+    GPIO_PRT_OUT(base) = out;
+}
+
+
+/*******************************************************************************
 * Function Name: Cy_GPIO_SetDrivemode
 ****************************************************************************//**
 *
@@ -1288,7 +1327,7 @@ __STATIC_INLINE void Cy_GPIO_SetDrivemode(GPIO_PRT_Type* base, uint32_t pinNum, 
     uint32_t tempReg;
     uint32_t pinLoc;
     uint32_t prtCfg;
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
     uint32_t prtCfg3;
     uint32_t tempRegCfg3;
 #endif
@@ -1301,7 +1340,7 @@ __STATIC_INLINE void Cy_GPIO_SetDrivemode(GPIO_PRT_Type* base, uint32_t pinNum, 
 
     tempReg = (GPIO_PRT_CFG(base) & ~(CY_GPIO_CFG_DM_MASK << pinLoc));
 
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
     tempRegCfg3 = (GPIO_PRT_CFG_OUT3(base) & ~(CY_GPIO_CFG_DM_MASK << pinLoc));
 
     if(CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ == value)
@@ -1318,7 +1357,7 @@ __STATIC_INLINE void Cy_GPIO_SetDrivemode(GPIO_PRT_Type* base, uint32_t pinNum, 
 #endif /* CY_IP_MXS22IOSS */
 
     GPIO_PRT_CFG(base) = prtCfg;
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
     GPIO_PRT_CFG_OUT3(base) = prtCfg3;
 #endif /* CY_IP_MXS22IOSS,  */
  }
@@ -1346,7 +1385,7 @@ __STATIC_INLINE void Cy_GPIO_SetDrivemode(GPIO_PRT_Type* base, uint32_t pinNum, 
 __STATIC_INLINE uint32_t Cy_GPIO_GetDrivemode(GPIO_PRT_Type* base, uint32_t pinNum)
 {
     uint32_t tempReg, ret;
-#if defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS22IOSS)
     uint32_t tempRegCfg3;
 #endif
  
@@ -1477,13 +1516,13 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetVtrip(GPIO_PRT_Type* base, uint32_t pinNum)
 __STATIC_INLINE void Cy_GPIO_SetSlewRate(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value)
 {
     uint32_t tempReg;
-#if defined (CY_IP_MXS40SIOSS) || defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS40SIOSS) || defined (CY_IP_MXS22IOSS)
     uint32_t pinLoc;
 #endif /* CY_IP_MXS40SIOSS, CY_IP_MXS22IOSS,  */
      CY_ASSERT_L2(CY_GPIO_IS_PIN_VALID(pinNum));
     CY_ASSERT_L2(CY_GPIO_IS_VALUE_VALID(value));
 
-#if defined (CY_IP_MXS40SIOSS) || defined (CY_IP_MXS22IOSS) 
+#if defined (CY_IP_MXS40SIOSS) || defined (CY_IP_MXS22IOSS)
     pinLoc = pinNum << CY_GPIO_CFG_SLEW_EXT_OFFSET;
     tempReg = (GPIO_PRT_SLEW_EXT(base) & ~(CY_GPIO_CFG_SLEW_EXT_MASK << pinLoc));
     GPIO_PRT_SLEW_EXT(base) = tempReg | ((value & CY_GPIO_CFG_SLEW_EXT_MASK) << pinLoc);
@@ -2405,7 +2444,7 @@ __STATIC_INLINE void Cy_GPIO_SetVddModeSel(cy_en_gpio_vdd_mode_t mode)
 }
 #endif  /* CY_IP_MXS22IOSS */
 
-#if (defined (CY_IP_MXS40SIOSS) && (CPUSS_CM33_0_SECEXT_PRESENT != 0)) || defined (CY_IP_MXS22IOSS) 
+#if (defined (CY_IP_MXS40SIOSS) && (CPUSS_CM33_0_SECEXT_PRESENT != 0)) || defined (CY_IP_MXS22IOSS)
 /*******************************************************************************
 * Function Name: Cy_GPIO_GetSecureInterruptCause0
 ****************************************************************************//**

@@ -9,7 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) 2022-2025, Cypress Semiconductor Corporation (an Infineon company) or
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * an affiliate of Cypress Semiconductor Corporation.
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -61,6 +62,7 @@
     <ConfigInclude value='cy_pra_cfg.h' include='`${is_psoc64}`' />
     <ConfigInclude value='cy_wdt.h' />
     <ConfigInclude value='cy_ble_clk.h' include='`${hasBlock("bless[0]")}`' />
+    <ConfigInclude value='cycfg_system.h' include='`${isMXS22}`' />
     <ConfigInclude value='cycfg_clock_types.h' />
 
     <ConfigDefine name='CY_CFG_SYSCLK_ECO_ERROR'   value='1' public='false' />
@@ -274,12 +276,14 @@
     <!-- Configure power options -->
     <ConfigInstruction value='init_cycfg_power();' purpose='INITIALIZE' include='`${!isMXS22}`' />
     <!-- Reset backup domain before CLK_BAK initialization -->
-    <ConfigInstruction value='#if (CY_CFG_PWR_VBACKUP_USING_VDDD)' purpose='INITIALIZE' include='`${isMXS22}`' />
-    <ConfigInstruction value='    if (0u == Cy_SysLib_GetResetReason() /* POR, XRES, or BOD */)' purpose='INITIALIZE' include='`${isMXS22}`' />
-    <ConfigInstruction value='    {' purpose='INITIALIZE' include='`${isMXS22}`' />
-    <ConfigInstruction value='        Cy_SysLib_ResetBackupDomain();' purpose='INITIALIZE' include='`${isMXS22}`' />
-    <ConfigInstruction value='    }' purpose='INITIALIZE' include='`${isMXS22}`' />
-    <ConfigInstruction value='#endif /* CY_CFG_PWR_VBACKUP_USING_VDDD */' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='#if defined(CY_CFG_PWR_ENABLED) &amp;&amp; defined(CORE_NAME_CM33_0)' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='    #if (defined(CY_CFG_PWR_VBACKUP_USING_VDDD) &amp;&amp; (CY_CFG_PWR_VBACKUP_USING_VDDD))' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='        if (0u == Cy_SysLib_GetResetReason() /* POR, XRES, or BOD */)' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='        {' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='            Cy_SysLib_ResetBackupDomain();' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='        }' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='    #endif /* (defined(CY_CFG_PWR_VBACKUP_USING_VDDD) &amp;&amp; (CY_CFG_PWR_VBACKUP_USING_VDDD)) */' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='#endif /* CY_CFG_PWR_ENABLED &amp;&amp; defined(CORE_NAME_CM33_0) */' purpose='INITIALIZE' include='`${isMXS22}`' />
     <ConfigInstruction value='' purpose='INITIALIZE' include='`${isMXS22}`' />
 
     <!-- Set up a temporary fail-safe bypass for the IHO/IMO to the active core -->
@@ -302,7 +306,7 @@
     <ConfigInstruction value='(void)Cy_BLE_EcoReset();' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].eco[0]") &amp;&amp; isMXS40}`' />
     <!-- TODO: Make sure this handles all types of PLL -->
     <ConfigInstruction value='for (uint32_t pll = CY_SRSS_NUM_PLL; pll > 0UL; --pll) /* PLL 1 is the first PLL. 0 is invalid. */' purpose='INITIALIZE' include='`${isMXS40}`' />
-    <ConfigInstruction value='for (uint32_t pll = (CY_SRSS_NUM_PLL - 1); pll > 0UL; --pll) /* PLL 1 is the first PLL. 0 is invalid. */' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='for (uint32_t pll = 0; pll &lt; (CY_SRSS_NUM_PLL); ++pll) /* PLL 0 is the first PLL. */' purpose='INITIALIZE' include='`${isMXS22}`' />
     <ConfigInstruction value='{' purpose='INITIALIZE' />
     <ConfigInstruction value='    (void)Cy_SysClk_PllDisable(pll);' purpose='INITIALIZE' />
     <ConfigInstruction value='}' purpose='INITIALIZE' />

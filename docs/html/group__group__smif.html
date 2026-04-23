@@ -248,7 +248,7 @@ SMIF Initialization</h2>
 <div class="line">    <span class="comment">/* Main configuration parameters*/</span></div>
 <div class="line"><span class="preprocessor">    #define NUMBER_OF_EXTERNAL_MEM      (2U)</span></div>
 <div class="line"><span class="preprocessor">    #define SMIF_PRIORITY               (1U)</span></div>
-<div class="line"><span class="preprocessor">    #define TIMEOUT_1_S                 (1000U)</span></div>
+<div class="line"><span class="preprocessor">    #define SMIF_TIMEOUT_1_MS           (1000U)  </span><span class="comment">/* 1 ms timeout for all blocking functions */</span><span class="preprocessor"></span></div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* SMIF interrupt initialization */</span></div>
 <div class="line"><span class="preprocessor">    #if defined (CY_DEVICE_CAT1A)</span></div>
@@ -300,7 +300,7 @@ SMIF Initialization</h2>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">/* SMIF initialization */</span></div>
-<div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a>(SMIF, &amp;tst_smifConfig, TIMEOUT_1_S, &amp;smifContext);</div>
+<div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a>(SMIF, &amp;tst_smifConfig, SMIF_TIMEOUT_1_MS, &amp;smifContext);</div>
 <div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga5428ca682fd56b837a1a3763fc2596b8">Cy_SMIF_Enable</a>(SMIF, &amp;smifContext);</div>
 <div class="line"> </div>
 <div class="ttc" id="agroup__group__smif__data__structures_html_aafd7927f913f7ce00475898ca8a032f8"><div class="ttname"><a href="group__group__smif__data__structures.html#aafd7927f913f7ce00475898ca8a032f8">cy_stc_smif_config_t::mode</a></div><div class="ttdeci">uint32_t mode</div><div class="ttdoc">Specifies the mode of operation cy_en_smif_mode_t.</div><div class="ttdef"><b>Definition:</b> cy_smif.h:964</div></div>
@@ -373,7 +373,7 @@ SMIF XIP Initialization</h2>
 <p>With SMIF V3 IP (and above), MMIO mode transactions are also allowed when the device is set to XIP mode. However, only blocking SMIF API's are expected to be used for erase or program operations as external flash will be busy for such operation and may not be available for XIP at that moment. User can make use of <a class="el" href="group__group__smif__mem__slot__functions.html#ga3754459e6dd69599c7646a03a7039136">Cy_SMIF_MemRead</a>, <a class="el" href="group__group__smif__mem__slot__functions.html#ga1906a54462e0cd85e6d5a6e6efc03c7a">Cy_SMIF_MemWrite</a>, <a class="el" href="group__group__smif__mem__slot__functions.html#ga0366724555c54f148c6bec37f084897c">Cy_SMIF_MemEraseSector</a> API's which ensure that user gets control only after completing the requested operation. This will ensure the transaction is complete and then switch back to XIP. In case user wishes to make use of low level API's like <a class="el" href="group__group__smif__low__level__functions.html#gaff84f79f1cb122fa25eb03f73b496e63">Cy_SMIF_TransmitCommand_Ext</a>, <a class="el" href="group__group__smif__low__level__functions.html#ga7c413cce1934b7d3e373f7f1e2270940">Cy_SMIF_TransmitData_Ext</a>, <a class="el" href="group__group__smif__low__level__functions.html#ga3be6006b4c0c72703db49623734eccd6">Cy_SMIF_SendDummyCycles_Ext</a> user has to ensure the code is not running already from XIP location and complete the operation before switching back to XIP mode of execution. Also, user has to bound his complete SMIF operation using <a class="el" href="group__group__syslib__functions.html#gae679f15a1702c159c105b596a8801105">Cy_SysLib_EnterCriticalSection</a> and <a class="el" href="group__group__syslib__functions.html#ga8c16343c075610b2888b0693f972b555">Cy_SysLib_ExitCriticalSection</a> so that there is no interruption for the operation due to any other interrupts.</p>
 <div class="fragment"><div class="line"> </div>
 <div class="line">    <span class="comment">/* SMIF IP initialization */</span></div>
-<div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a>(SMIF, &amp;tst_smifConfig, TIMEOUT_1_S, &amp;smifContext);</div>
+<div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a>(SMIF, &amp;tst_smifConfig, SMIF_TIMEOUT_1_MS, &amp;smifContext);</div>
 <div class="line">    <a class="code hl_function" href="group__group__smif__low__level__functions.html#ga1df033f6664a2b41cf044f2c4ec60817">Cy_SMIF_SetDataSelect</a>(SMIF, <a class="code hl_enumvalue" href="group__group__smif__enums.html#ggad776a0db9224477ab865254a32d9e312ae942102fb4b1a03a13ca8950b607520d">CY_SMIF_SLAVE_SELECT_0</a>, <a class="code hl_enumvalue" href="group__group__smif__enums.html#gga6d9ba2ef785b94cf542c573a51a0eb58a7544d58a69a1a2308ebd0cac9099cd24">CY_SMIF_DATA_SEL0</a>);</div>
 <div class="line">    <a class="code hl_function" href="group__group__smif__mem__slot__functions.html#ga6f38cc37ab0e6fcb97d2675d1ae11771">Cy_SMIF_MemInit</a>(SMIF, &amp;smifBlockConfig, &amp;smifContext);</div>
 <div class="line"> </div>

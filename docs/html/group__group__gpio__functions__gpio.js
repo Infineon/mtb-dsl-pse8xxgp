@@ -8,6 +8,7 @@ var group__group__gpio__functions__gpio =
     [ "Cy_GPIO_Set", "group__group__gpio__functions__gpio.html#ga068ac50b08ea0a8ecff8c4e67f62208f", null ],
     [ "Cy_GPIO_Clr", "group__group__gpio__functions__gpio.html#gacd73037c676059312d4dc794a32aec13", null ],
     [ "Cy_GPIO_Inv", "group__group__gpio__functions__gpio.html#ga35373fa4e131e73153422ef0138bb50b", null ],
+    [ "Cy_GPIO_WriteDirectOut", "group__group__gpio__functions__gpio.html#ga098d8fe85d0c6aca673da62e68eb0f32", null ],
     [ "Cy_GPIO_SetDrivemode", "group__group__gpio__functions__gpio.html#ga97e64dc8c45e7cd73e3012100d03b1fd", null ],
     [ "Cy_GPIO_GetDrivemode", "group__group__gpio__functions__gpio.html#gaedda162438c80e6455f47a738a5d391a", null ],
     [ "Cy_GPIO_SetVtrip", "group__group__gpio__functions__gpio.html#gad0b222c535e32dadcd0ac536ac25c01a", null ],

@@ -7,8 +7,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2025-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,7 +64,7 @@ $(_MTB_RECIPE__MEMCALC_CACHE): $(_MTB_RECIPE__TARG_FILE) | app
 	$(MTB__NOISE)echo
 
 memcalc: $(_MTB_RECIPE__MEMCALC_CACHE)
-	$(MTB__NOISE)cat $(_MTB_RECIPE__MEMCALC_CACHE)
+	$(MTB__NOISE)LC_ALL=C sed -e 's/\xC2\xA0/ /g' $(_MTB_RECIPE__MEMCALC_CACHE)
 else
 memcalc:
 	@:
@@ -81,22 +81,49 @@ endif
 _MTB_RECIPE__MEMREPORT_USAGE_OUT:=$(_MTB_RECIPE__MEMREPORT_OUT_DIR)/memreport.txt
 _MTB_RECIPE__MEMREPORT_JSON_OUT:=$(_MTB_RECIPE__MEMREPORT_OUT_DIR)/memreport.json
 
+# whether memcalc should run at the end of project build or application build. If non-empty, then run at project build time.
+_MTB_RECIPE__MEMCALC_PRJ_DEP:=
+
+ifneq (,$(MTB_IDE__TARG_FILE))
+# build within an IDE, so run memcalc at project build time.
+_MTB_RECIPE__MEMCALC_PRJ_DEP:=1
+endif
 ifeq (,$(MTB_APPLICATION_SUBPROJECTS))
-memcalc : application_memcalc
-application_memcalc : $(_MTB_RECIPE__TARG_FILE) | app
-# Just building the current project with build_proj. In this case run memory report on the current project's elf file.
-_MTB_RECIPE__MEMREPORT_ELF_FILES:=$(_MTB_RECIPE__TARG_FILE)
-else #ifeq (,$(MTB_APPLICATION_SUBPROJECTS))
+# building a single project directly with build_proj, so run memcalc at project build time.
+_MTB_RECIPE__MEMCALC_PRJ_DEP:=1
+endif
+
+ifneq (,$(_MTB_RECIPE__MEMCALC_PRJ_DEP))
+# In project build context run the memory report before signing and combining.
+# In this context unless all project have been built at least once signing and combine can fail.
+# Still want to display memory report for the current project.
+sign_combine_check_inputs memcalc : application_memcalc
+application_memcalc : $(_MTB_RECIPE__TARG_DEPENDENCY_FILE) | app
+# Just building the current project with build_proj or in an IDE. In this case run memory report on the current project's elf file.
+ifneq (,$(MTB_IDE__TARG_FILE))
+_MTB_RECIPE__MEMREPORT_ELF_FILES:=$(call mtb__path_normalize,$(MTB_IDE__TARG_FILE))
+_MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(notdir $(basename $(call mtb__path_normalize,$(MTB_IDE__TARG_FILE))))=$(call mtb__path_normalize,$(MTB_IDE__TARG_FILE))
+else
+ifeq (COMBINED,$(MTB_TYPE))
+_MTB_RECIPE__MEMREPORT_ELF_FILES:=$(_MTB_RECIPE__LAST_CONFIG_TARG_FILE)
+_MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(APPNAME)=$(_MTB_RECIPE__LAST_CONFIG_TARG_FILE)
+else
+_MTB_RECIPE__MEMREPORT_ELF_FILES:=$(_MTB_RECIPE__PRJ_HEX_DIR)/$(_MTB_RECIPE__PROJECT_DIR_NAME).$(MTB_RECIPE__SUFFIX_TARGET)
+_MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(_MTB_RECIPE__PROJECT_DIR_NAME)=$(_MTB_RECIPE__PRJ_HEX_DIR)/$(_MTB_RECIPE__PROJECT_DIR_NAME).$(MTB_RECIPE__SUFFIX_TARGET)
+endif #ifneq (COMBINED,$(MTB_TYPE))
+endif #ifneq (,$(MTB_IDE__TARG_FILE))
+else #ifneq (,$(_MTB_RECIPE__MEMCALC_PRJ_DEP))
 # Building the application. In this case run memory report on the entire application.
 application_postbuild: application_memcalc
 _MTB_RECIPE__MEMREPORT_ELF_FILES:=$(foreach project,$(MTB_APPLICATION_SUBPROJECTS),$(_MTB_RECIPE__PRJ_HEX_DIR)/$(project).$(MTB_RECIPE__SUFFIX_TARGET))
+_MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(foreach project,$(MTB_APPLICATION_SUBPROJECTS),$(project)=$(_MTB_RECIPE__PRJ_HEX_DIR)/$(project).$(MTB_RECIPE__SUFFIX_TARGET))
 ifeq ($(COMBINE_SIGN_JSON),)
 application_memcalc: $(_MTB_RECIPE__APP_HEX_FILE)
 else
 application_memcalc: sign_combine
-endif
+endif #ifeq ($(COMBINE_SIGN_JSON),)
 
-endif #ifeq (,$(MTB_APPLICATION_SUBPROJECTS))
+endif #ifneq (,$(_MTB_RECIPE__MEMCALC_PRJ_DEP))
 
 
 ifneq (,$(_MTB_RECIPE__START_FLASH))
@@ -105,12 +132,24 @@ _MTB_RECIPE__MEMCALC_LEGACY_ARGS+=--legacy_memory FLASH,$(_MTB_RECIPE__START_FLA
 endif
 endif
 
+ifneq ($(filter 2,$(_MTB_RECIPE__MEMREPORT_VERSION)),)
+_MTB_RECIPE__MEMREPORT_ELF_ARGS=$(foreach p,$(_MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS),--project_elf "$(p)")
+else
+_MTB_RECIPE__MEMREPORT_ELF_ARGS=$(foreach f,$(_MTB_RECIPE__MEMREPORT_ELF_FILES),--elf "$(f)")
+endif
+
 application_memcalc:
 ifneq (,$(_MTB_RECIPE__MEMREPORT_ELF_FILES))
-	$(MTB__NOISE)mkdir -p $(_MTB_RECIPE__MEMREPORT_OUT_DIR)
-	$(MTB__NOISE)$(CY_TOOL_memory_report_EXE_ABS) --bsp_dir $(SEARCH_TARGET_$(TARGET)) $(foreach f,$(_MTB_RECIPE__MEMREPORT_ELF_FILES),--elf $(f)) --out_usage $(_MTB_RECIPE__MEMREPORT_USAGE_OUT) --out_json $(_MTB_RECIPE__MEMREPORT_JSON_OUT) $(_MTB_RECIPE__MEMCALC_LEGACY_ARGS)
-	$(MTB__NOISE)cat $(_MTB_RECIPE__MEMREPORT_USAGE_OUT)
-endif
+# Check that all input ELF files exist; if any are missing, skip memory report but do not fail build
+	$(MTB__NOISE)missing_files="$(strip $(foreach f,$(_MTB_RECIPE__MEMREPORT_ELF_FILES),$(if $(wildcard $(f)),,$(call mtb__path_normalize,$(f)))))"; \
+	if [ -n "$$missing_files" ]; then \
+		echo "NOTE: Skipping memory report; missing .elf artifact(s): $$missing_files. Some projects may be libraries that only emit .a artifacts."; \
+	else \
+		mkdir -p "$(_MTB_RECIPE__MEMREPORT_OUT_DIR)" || { echo "Error: failed to create memreport output dir: $(_MTB_RECIPE__MEMREPORT_OUT_DIR)"; exit 1; }; \
+		$(CY_TOOL_memory_report_EXE_ABS) --bsp_dir "$(SEARCH_TARGET_$(TARGET))" $(_MTB_RECIPE__MEMREPORT_ELF_ARGS) --out_usage "$(_MTB_RECIPE__MEMREPORT_USAGE_OUT)" --out_json "$(_MTB_RECIPE__MEMREPORT_JSON_OUT)" $(_MTB_RECIPE__MEMCALC_LEGACY_ARGS); \
+		LC_ALL=C sed -e 's/\xC2\xA0/ /g' "$(_MTB_RECIPE__MEMREPORT_USAGE_OUT)"; \
+	fi
+endif #ifneq (,$(_MTB_RECIPE__MEMREPORT_ELF_FILES))
 
 endif #ifeq (,$(_MTB_RECIPE__MEMREPORT_VERSION))
 

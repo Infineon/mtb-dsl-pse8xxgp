@@ -6,8 +6,8 @@
 #
 ################################################################################
 # \copyright
-# (c) 2018-2025, Cypress Semiconductor Corporation (an Infineon company) or
-# an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# Copyright (c) 2018-2026, Infineon Technologies AG, or an affiliate of
+# Infineon Technologies AG. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -146,7 +146,9 @@ endif
 
 recipe_postbuild: $(_MTB_RECIPE__PROG_FILE)
 
+
 $(_MTB_RECIPE__PROG_FILE): $(_MTB_RECIPE__TARG_DEPENDENCY_FILE)
+ifeq (,$(filter $(VCORE_ATTRS),CRC_PPCA))
 ifeq ($(TOOLCHAIN),A_Clang)
 	$(_MTB_RECIPE__ACLANG_POSTBUILD)
 endif
@@ -162,6 +164,13 @@ endif
 ifeq ($(TOOLCHAIN),LLVM_ARM)
 	$(MTB_TOOLCHAIN_GCC_ARM__OBJCOPY) -O ihex $< $@
 endif
+else # (,$(filter $(VCORE_ATTRS),CRC_PPCA))
+	$(MTB__NOISE)echo "Calculating CRC32 and updating the binary...";
+	$(MTB_TOOLCHAIN_GCC_ARM__OBJCOPY) -O binary "$<" "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" --pad-to $(MTB_BSP__CRC_CALC_END_ADDR) --gap-fill 0x00
+	$(MTB__NOISE)$(CY_TOOL_srec_cat_EXE_ABS) "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary -crop $(MTB_BSP__CRC_CALC_START_ADDR) $(MTB_BSP__CRC_CALC_END_ADDR) -fill 0x00 $(MTB_BSP__CRC_CALC_START_ADDR) $(MTB_BSP__CRC_CALC_END_ADDR) -CRC32_Little_Endian $(MTB_BSP__CRC_CALC_END_ADDR) -o "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary
+	$(MTB__NOISE)$(CY_TOOL_srec_cat_EXE_ABS) "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary -offset $(MTB_BSP__CRC_CALC_START_ADDR) -o "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME)$(_MTB_RECIPE__PROG_FILE_SUFFIX).$(MTB_RECIPE__SUFFIX_PROGRAM)" -intel
+	$(MTB__NOISE)echo "CRC32 calculation complete...";
+endif
 
 cpy_recipe_trg:
 ifneq (,$(MTB_IDE__TARG_FILE))
@@ -174,7 +183,7 @@ endif
 # The second is when generating the combined hex file or fist stage build. In this case, we are not promoting and cannot depend on project_postbuild as that is only defined in second stage.
 _MTB_RECIPE__PROMOTE=false
 
-MTB_RECIPE__LAST_CONFIG_DIR:=$(MTB_TOOLS__OUTPUT_BASE_DIR)/last_config
+MTB_RECIPE__LAST_CONFIG_DIR:=build/last_config
 $(MTB_RECIPE__LAST_CONFIG_DIR):|
 	$(MTB__NOISE)mkdir -p $(MTB_RECIPE__LAST_CONFIG_DIR)
 
@@ -288,4 +297,4 @@ include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/memcalc.mk
 #
 # Identify the phony targets
 #
-.PHONY: sign_combine recipe_postbuild application_postbuild cpy_recipe_target
+.PHONY: sign_combine recipe_postbuild application_postbuild cpy_recipe_trg

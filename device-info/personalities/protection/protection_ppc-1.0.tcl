@@ -1,4 +1,5 @@
-# Copyright 2024-2025 Cypress Semiconductor Corporation
+# (c) 2024-2026, Infineon Technologies AG or an affiliate of
+# Infineon Technologies AG.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,12 +63,13 @@ for {set idx 0} {$idx < $regCnt} {incr idx} {
         set region [dict get $param_dict [format "reg%d_enum_name" $idx]]
 
         # Create dictionary of unique domains with their associated regions
-        # Filter out regions beforehand that initialization should not touch.
-        # Filter out registers if accessible by PC0. Also filtering out PPC block accesible only from secure world
+        # Filter out regions beforehand that initialization should not touch:
+        # Filter if peri 0 and access to PC0 or if PPC1_PPC_PPC_SECURE/PPC1_PPC_PPC_NONSECURE
+        # Regions that meet that criteria will break functionality if configured at runtime initialization
         set peri [dict get $param_dict "peri"]
         set pcMask [dict get $param_dict [format "reg%d_pcMask" $idx]]
 
-        set shouldFilter [expr { ( ( ($pcMask & 0x01) != 0 ) ) || ( $region eq "PROT_PERI1_PPC1_PPC_PPC_SECURE" || $region eq "PROT_PERI1_PPC1_PPC_PPC_NONSECURE" ) }]
+        set shouldFilter [expr { ( ($peri == 0) && ( ($pcMask & 0x01) != 0 ) ) || ( $region eq "PROT_PERI1_PPC1_PPC_PPC_SECURE" || $region eq "PROT_PERI1_PPC1_PPC_PPC_NONSECURE" ) }]
 
         if {$domain ne "" && $region ne "" && !$shouldFilter} {
             if {[info exists domainToRegions($domain)]} {

@@ -7,8 +7,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2020-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2020-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -95,7 +95,7 @@ uint32_t Cy_SysFault_GetPendingFault(FAULT_STRUCT_Type *base, cy_en_SysFault_Set
 
         case CY_SYSFAULT_SET2:
         {
-            retVal = _FLD2VAL(FAULT_STRUCT_PENDING1_SOURCE, FAULT_PENDING2(base));
+            retVal = _FLD2VAL(FAULT_STRUCT_PENDING2_SOURCE, FAULT_PENDING2(base));
         }
         break;
 

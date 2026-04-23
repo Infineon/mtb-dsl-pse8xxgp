@@ -111,7 +111,7 @@
         <ParamBool templateId='domain$idx{domainIndex}' id='pc$idx' default='`${((pc$idxDebuggerAccess) &amp;&amp; (((read_perm &amp; (0x1 &lt;&lt; $idx)) &gt; 0) || ((write_perm &amp; (0x1 &lt;&lt; $idx)) &gt; 0))) ? true : false}`' />
         <ParamBool templateId='domain$idx{domainIndex}' id='pc$idxread' default='`${((pc$idxDebuggerAccess) &amp;&amp; ((read_perm &amp; (0x1 &lt;&lt; $idx)) &gt; 0)) ? true : false}`' />
         <ParamBool templateId='domain$idx{domainIndex}' id='pc$idxwrite' default='`${((pc$idxDebuggerAccess) &amp;&amp; ((write_perm &amp; (0x1 &lt;&lt; $idx)) &gt; 0)) ? true : false}`' />
-        <ParamBool templateId='domain$idx{domainIndex}' id='pc$idxaccess' default='`${((ns_perm &amp; (0x1 &lt;&lt; $idx)) &gt; 0) ? false : true}`' />
+        <ParamBool templateId='domain$idx{domainIndex}' id='pc$idxaccess' default='`${((cmseAttribute eq "NON_SECURE") &amp;&amp; ((ns_perm &amp; (0x1 &lt;&lt; $idx)) &gt; 0)) ? false : true}`' />
         <ParamBool templateId='domain$idx{domainIndex}' id='pc$idxns' default='`${pc$idxaccess eq false}`' />
       </Repeat>
 
@@ -143,6 +143,64 @@
   </DRCs>
 
   <ConfigFirmware>
+    <ConfigInclude value='mtb_srf.h' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF) &amp;&amp; !defined(CY_SRF_DISABLE)' />
+
+    <ConfigArray name='mtb_srf_memory_protection_s' type='mtb_srf_memory_protection_s_t' const='true' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF) &amp;&amp; !defined(CY_SRF_DISABLE)'>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("flashc[0].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("flashc[0].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("flashc[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("flashc[0].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("mxrramc[0].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("mxrramc[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("smif[0].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("smif[0].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("smif[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("smif[0].mpc[0]")) * 2}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("smif[1].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("smif[1].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("smif[1].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("smif[1].mpc[0]")) * 2}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("socmem[0].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("socmem[0].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("socmem[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("socmem[0].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("mxsramc[0].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("mxsramc[0].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("mxsramc[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("mxsramc[0].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("mxsramc[1].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("mxsramc[1].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("mxsramc[1].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("mxsramc[1].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("mxpromc[0].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("mxpromc[0].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("mxpromc[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("mxpromc[0].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]"))}`U' />
+      </ConfigStruct>
+      <ConfigStruct name='empty' type='nested' const='true' public='true' include='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]") &amp;&amp; (splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]")) &gt; 0)}`' >
+        <Member name='ranges' value='`${getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "block_name") . "_srf_protection_range_s"}`' />
+        <Member name='size' value='`${splitCount(getMpcRegionStarts("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]"))}`U' />
+      </ConfigStruct>
+    </ConfigArray>
+
+    <ConfigVariable name='mtb_srf_protection_range_s_count' type='uint8_t' const='true' value='sizeof(mtb_srf_memory_protection_s) / sizeof(mtb_srf_memory_protection_s_t)' public='true' include='`${isBlockUsed("vres[0].memory[0]")}`' guard='defined (COMPONENT_SECURE_DEVICE) &amp;&amp; defined(COMPONENT_MW_MTB_SRF) &amp;&amp; !defined(CY_SRF_DISABLE)' />
   </ConfigFirmware>
   <PersonalityTemplate id="domain$idx" repeatCount="$MAX_DEFAULT_DOMAINS" valid='`${$idx &lt; getOrDefault(getCustomDataCount("/ProtectionDomain"), $INVALID_DEFAULT)}`'>
     <FittingRules>

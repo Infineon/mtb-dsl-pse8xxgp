@@ -201,7 +201,6 @@
 * \defgroup group_i3c_low_power_functions Low Power Callbacks
 * \}
 */
-
 #if !defined (CY_I3C_H)
 #define CY_I3C_H
 
@@ -1079,8 +1078,8 @@ typedef enum
 /** I2C Mode, SDR transfer speeds */
 typedef enum
 {
-    CY_I3C_FMP_I2C  = 0U,      /**< I2C mode transfer speed - Fast Mode Plus */
-    CY_I3C_FM_I2C   = 1U,      /**< I2C mode transfer speed - Fast Mode */
+    CY_I3C_FMP_I2C  = 1U,      /**< I2C mode transfer speed - Fast Mode Plus */
+    CY_I3C_FM_I2C   = 0U,      /**< I2C mode transfer speed - Fast Mode */
 }cy_en_i2c_data_speed_t;
 
 /** I3C buffer depths */
@@ -2357,7 +2356,6 @@ __STATIC_INLINE void Cy_I3C_SetTxEmptyThldLevel(I3C_CORE_Type const *base, uint3
 #endif /* CY_IP_MXI3C */
 
 #endif /* (CY_I3C_H) */
-
 /** \} group_i3c */
 
 /* [] END OF FILE */

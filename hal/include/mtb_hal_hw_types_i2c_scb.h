@@ -3,7 +3,7 @@
 *
 *********************************************************************************
 * \copyright
-* Copyright(c) 2024-2025 Infineon Technologies AG or an affiliate of
+* Copyright(c) 2024-2026 Infineon Technologies AG or an affiliate of
 * Infineon Technologies AG
 *
 * SPDX-License-Identifier: Apache-2.0
@@ -80,8 +80,8 @@
 /**
  * @brief I2C object
  *
- * Application code should not rely on the specific contents of this staruct.
- * They are considered an implementation detail which is subject to chnge
+ * Application code should not rely on the specific contents of this struct.
+ * They are considered an implementation detail which is subject to change
  * between platforms and/or HAL releases.
  */
 typedef struct

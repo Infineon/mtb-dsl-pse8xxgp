@@ -1,5 +1,12 @@
 var NAVTREEINDEX23 =
 {
+"group__group__scb__spi__data__structures.html#aa1b9fcfc4860b02fb7cd17fc49531cc3":[2,2,23,3,2,0,6],
+"group__group__scb__spi__data__structures.html#aacc86dbc09c7ca10d87a97938d4bb4a0":[2,2,23,3,2,0,22],
+"group__group__scb__spi__data__structures.html#aad9bb6b5bf1883ecb44ee09398903f47":[2,2,23,3,2,0,9],
+"group__group__scb__spi__data__structures.html#abd66f5fd0edb65771a1ce822db0d42d8":[2,2,23,3,2,0,12],
+"group__group__scb__spi__data__structures.html#ac6a475cbca4d11fc3c339007694e33c4":[2,2,23,3,2,0,5],
+"group__group__scb__spi__data__structures.html#ad34edde1bbeb56c4aa6c8a4449887897":[2,2,23,3,2,0,14],
+"group__group__scb__spi__data__structures.html#ade78bd095cdc2abc90389b653f072e94":[2,2,23,3,2,0,16],
 "group__group__scb__spi__data__structures.html#ae3ac7c7f20e280f4eb0a433bd0a5c0ca":[2,2,23,3,2,0,15],
 "group__group__scb__spi__data__structures.html#ga43b3b49890ed4fd9ba927c24970bff8e":[2,2,23,3,2,2],
 "group__group__scb__spi__data__structures.html#structcy__stc__scb__spi__config__t":[2,2,23,3,2,0],
@@ -242,12 +249,5 @@ var NAVTREEINDEX23 =
 "group__group__scb__uart__macros__irda__lp__ovs.html#gab4f68ff6fcd41b618af2312944f9470c":[2,2,23,4,0,0,5],
 "group__group__scb__uart__macros__irda__lp__ovs.html#gacf578fd7186adbc3216abd8d38a3aec8":[2,2,23,4,0,0,0],
 "group__group__scb__uart__macros__receive__status.html":[2,2,23,4,0,3],
-"group__group__scb__uart__macros__receive__status.html#ga213d91bc30fded00a3a5c3b8a3a96d84":[2,2,23,4,0,3,1],
-"group__group__scb__uart__macros__receive__status.html#ga5ddb60f6cf8432fb0e2bc15b1a353902":[2,2,23,4,0,3,0],
-"group__group__scb__uart__macros__receive__status.html#gabab74988473020abe0dae2cc861cdf26":[2,2,23,4,0,3,4],
-"group__group__scb__uart__macros__receive__status.html#gad7b10851c71b52b4a17b018f52d3154d":[2,2,23,4,0,3,3],
-"group__group__scb__uart__macros__receive__status.html#gaf716a74dfcc32ecbefe0dbff302677fc":[2,2,23,4,0,3,5],
-"group__group__scb__uart__macros__receive__status.html#gaf9abe86a752ec938ab197bd512bf6d22":[2,2,23,4,0,3,2],
-"group__group__scb__uart__macros__rx__fifo__status.html":[2,2,23,4,0,1],
-"group__group__scb__uart__macros__rx__fifo__status.html#ga2b72cda1727aaa447c0820ec971452a1":[2,2,23,4,0,1,5]
+"group__group__scb__uart__macros__receive__status.html#ga213d91bc30fded00a3a5c3b8a3a96d84":[2,2,23,4,0,3,1]
 };

@@ -12,9 +12,9 @@
   <Parameters>
     <ParamDoc id='doc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/page_prot_person.html#MPU_personality' linkText='Open MPU Documentation' visible='true' desc='Open MPU Documentation' />
 
-    <ParamRange id='base_addr' name='Start Address' group='' default='0x00000000' min='0' max='4294967264' resolution='32' visible='true' desc='Start address of MPU region region .' />
-    <ParamRange id='size' name='Size (bytes)' group='' default='`${toHex(1048576, 8)}`' min='31' max='4294967294' resolution='32' visible='true' desc='Size of MPU region region .' />
-    <ParamRange id='end_addr' name='End Address' group='' default='`${toHex((base_addr + size - 1), 8)}`' min='31' max='4294967294' resolution='32' visible='true' editable='false' desc='The End address of MPU region region .' />
+    <ParamRange id='base_addr' name='Start Address' group='' default='0x00000000' min='0' max='4294967264' resolution='32' visible='true' desc='Start address of MPU region.' />
+    <ParamRange id='size' name='Size (bytes)' group='' default='`${toHex(1048576, 8)}`' min='31' max='4294967294' resolution='32' visible='true' desc='Size of MPU region.' />
+    <ParamRange id='end_addr' name='End Address' group='' default='`${toHex((base_addr + size - 1), 8)}`' min='31' max='4294967294' resolution='32' visible='true' editable='false' desc='The End address of MPU region.' />
     <ParamBool id='privileged' name='Privileged Access Only' group='' default='false' visible='true' desc='Are these memory locations only accessible to privileged callers?' />
     <ParamBool id='writable' name='Writable' group='' default='true' visible='true' desc='Are these memory locations writable?' />
     <ParamBool id='executable' name='Executable' group='' default='false' visible='true' desc='Are these memory locations executable?' />

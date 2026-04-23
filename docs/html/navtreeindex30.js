@@ -1,5 +1,12 @@
 var NAVTREEINDEX30 =
 {
+"group__group__sysclk__clk__hf__enums.html#ggadfbf0caf87af7cd757648124fb17d1d4ac757511c07b990b8d671813c2c74010d":[2,2,29,10,2,1,12],
+"group__group__sysclk__clk__hf__enums.html#ggadfbf0caf87af7cd757648124fb17d1d4ac7e5d1d2e781eb3fde316528f6110f91":[2,2,29,10,2,1,10],
+"group__group__sysclk__clk__hf__enums.html#ggadfbf0caf87af7cd757648124fb17d1d4ad5dce0f746c516f7e87057329e52385f":[2,2,29,10,2,1,6],
+"group__group__sysclk__clk__hf__enums.html#ggadfbf0caf87af7cd757648124fb17d1d4ae4bbc554d81061e4e08c65bbbc241140":[2,2,29,10,2,1,16],
+"group__group__sysclk__clk__hf__enums.html#ggaf8d7cf42f04f1edafeba204ead24e6aca1b52da571ff68be36ca14b61b1d94ab7":[2,2,29,10,2,3,0],
+"group__group__sysclk__clk__hf__enums.html#ggaf8d7cf42f04f1edafeba204ead24e6aca66f23c81dbf4989a685f5cac30f09f1e":[2,2,29,10,2,3,1],
+"group__group__sysclk__clk__hf__funcs.html":[2,2,29,10,0],
 "group__group__sysclk__clk__hf__funcs.html#ga2d39c7e5111f9ba0738f032a98b4593e":[2,2,29,10,0,4],
 "group__group__sysclk__clk__hf__funcs.html#ga3b86beecfee7ea5361decab70bc7e4b3":[2,2,29,10,0,13],
 "group__group__sysclk__clk__hf__funcs.html#ga4053d66942358380e99583c0ef4d99a5":[2,2,29,10,0,14],
@@ -242,12 +249,5 @@ var NAVTREEINDEX30 =
 "group__group__sysclk__pll__structs.html#a0b9599c1ea0d0abefe32b272ef5e17e1":[2,2,29,5,1,1,7],
 "group__group__sysclk__pll__structs.html#a0e7587835728396505ce2f3cc91c224a":[2,2,29,5,1,2,32],
 "group__group__sysclk__pll__structs.html#a0f3f1db34de99017ff1026e9341115f6":[2,2,29,5,1,1,2],
-"group__group__sysclk__pll__structs.html#a13200eea948a561bde8486349e333e43":[2,2,29,5,1,1,16],
-"group__group__sysclk__pll__structs.html#a15121419c601cb438eb055b0ad983043":[2,2,29,5,1,2,19],
-"group__group__sysclk__pll__structs.html#a15cb653c8a5ba510762dec1bf59e5226":[2,2,29,5,1,1,22],
-"group__group__sysclk__pll__structs.html#a169e8c959c142babc49a0cdf5e528329":[2,2,29,5,1,2,15],
-"group__group__sysclk__pll__structs.html#a1c884c496ded8f3e390812b471cf55b7":[2,2,29,5,1,2,12],
-"group__group__sysclk__pll__structs.html#a275a2371308891194efd7d2a3cc92999":[2,2,29,5,1,2,5],
-"group__group__sysclk__pll__structs.html#a28fab45dc91ea11ae572d1be64117a5c":[2,2,29,5,1,2,25],
-"group__group__sysclk__pll__structs.html#a298368708777b65225ec1958fa18e3e8":[2,2,29,5,1,2,28]
+"group__group__sysclk__pll__structs.html#a13200eea948a561bde8486349e333e43":[2,2,29,5,1,1,16]
 };

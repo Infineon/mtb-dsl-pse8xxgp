@@ -7,7 +7,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2025 Cypress Semiconductor Corporation
+* (c) 2016-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +33,7 @@ static void Cy_Ms_Ctl_SetMscAcgResp(uint32_t *reg, uint32_t gate_mask, uint32_t 
 {
     uint32_t value = *reg;
     value &= ~(gate_mask | sec_mask);
-    if (gateResp == CY_MS_CTL_GATE_RESP_ERR) 
+    if (gateResp == CY_MS_CTL_GATE_RESP_ERR)
     {
         value |= ((1U << gate_pos) & gate_mask);
     }
@@ -46,7 +47,7 @@ static void Cy_Ms_Ctl_SetMscAcgResp(uint32_t *reg, uint32_t gate_mask, uint32_t 
 static uint32_t Cy_Ms_Ctl_SetBusMasterConfig(uint32_t value, bool privileged, bool nonSecure, uint32_t pcMask)
 {
     uint32_t reg_value = value;
-    
+
     if (privileged)
     {
         reg_value |= ((1U << MS_CTL_P_Pos) & MS_CTL_P_Msk);
@@ -55,7 +56,7 @@ static uint32_t Cy_Ms_Ctl_SetBusMasterConfig(uint32_t value, bool privileged, bo
     {
         reg_value &= (~((1U << MS_CTL_P_Pos) & MS_CTL_P_Msk));
     }
-    
+
     if (nonSecure)
     {
         reg_value |= ((1U << MS_CTL_NS_Pos) & MS_CTL_NS_Msk);

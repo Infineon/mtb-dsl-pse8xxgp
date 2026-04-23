@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2020-2025), Cypress Semiconductor Corporation (an Infineon company)
-* or an affiliate of Cypress Semiconductor Corporation.
+* (c) 2020-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
 *******************************************************************************/
 
 #include "cy_device.h"
-
 #if defined (CY_IP_MXI3C)
 
 #include "cy_i3c.h"
@@ -3050,7 +3049,11 @@ cy_en_i3c_status_t Cy_I3C_TargetGenerateIbi(I3C_CORE_Type *base, cy_stc_i3c_ibi_
 
             if(ibitype->payloadSize > 0U){
                 if(((uintptr_t)ibitype->payload % (uintptr_t)4U) == 0UL){     //checking 4 byte alignment
-                    value = (*(uint32_t *)ibitype->payload) & (~(0xFFFFFFFFUL << (ibitype->payloadSize*8U)));
+                    if(ibitype->payloadSize == 4U){
+                        value = *(uint32_t *)ibitype->payload;
+                    }else{
+                        value = (*(uint32_t *)ibitype->payload) & (~(0xFFFFFFFFUL << (ibitype->payloadSize*8U)));
+                    }
                 }else{
                     for(index = 0; index < ibitype->payloadSize; index++){
                         value |= *(ibitype->payload + index) << (index * 8U);
@@ -4360,11 +4363,15 @@ static uint32_t GetI3CDevAddrPos(I3C_CORE_Type *base, uint8_t dynamicAddress, cy
 *******************************************************************************/
 static uint32_t GetDATFreePos(I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
 {
-    uint32_t ret;
-    ret = FirstSetBit(context->i3cController.freePos) - 1UL;
+    uint32_t pos;
     CY_UNUSED_PARAMETER(base); /* Suppress a compiler warning about unused variables */
 
-    return ret;
+    pos = FirstSetBit(context->i3cController.freePos);
+    if ((pos == 0UL) || (pos > (uint32_t)CY_I3C_MAX_DEVS))
+    {
+        return 0UL;
+    }
+    return pos - 1UL;
 }
 
 /*******************************************************************************
@@ -7181,9 +7188,12 @@ static void TargetRespReadyStsHandle(I3C_CORE_Type *base, cy_stc_i3c_context_t *
     /* Handle the DEVCTRL CCC*/
     else if(CY_I3C_CCC_DEVCTRL == cccHeader)
     {
-        uint8_t data[6];
+        uint8_t data[6] = {0};
         uint8_t len = _FLD2VAL(I3C_CORE_TARGET_RESPONSE_QUEUE_PORT_DATA_LENGTH_LSB, respCmdPort);
-        Cy_I3C_TargetGetCCCData(base, (uint8_t*)&data, len, context);
+        if ((len == 0U) || (CY_I3C_SUCCESS != Cy_I3C_TargetGetCCCData(base, (uint8_t*)&data, len, context)))
+        {
+            return;
+        }
         bool isPECEnabled = context->PECEnabled;
         uint8_t addr = 0;
         cy_en_i3c_devctrl_addrMsk_t addrMask = (cy_en_i3c_devctrl_addrMsk_t)(data[0]>>5);

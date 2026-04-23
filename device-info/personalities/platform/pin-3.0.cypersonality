@@ -11,8 +11,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright (c) (2022-2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+(c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -57,29 +57,30 @@
     <ParamString id='driveModeExtension' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.DRIVEMODE_WIDTH", 0)}`' />
     <ParamRange id='pullUpResAvailable' default='`${lookupExpression("GPIO.GPIO_PORT_NR[3].GPIO_PRT.RES_CFG", 0)}`' min='-1' max='1' resolution='1' />
     <ParamString id='secExtAvailable' default='`${lookupExpression("GPIO.SECEXT", lookupExpression("SECEXT", -1))}`' />
+    <ParamString id='is_GPIO' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.OUT".pinNumber,1)}`' />
 
     <ParamChoice id='DriveModes' name='Drive Mode' group='General' default='CY_GPIO_DM_ANALOG' visible='true' editable='true' desc='The Drive Mode parameter configures the pin provide to one of the eight available pin drive modes. Please see the device DS for more details on each drive mode.' >
-      <Entry name='Strong Drive. Input buffer on'                                                    value='CY_GPIO_DM_STRONG'                       visible='true' />
-      <Entry name='Strong Drive. Input buffer off'                                                   value='CY_GPIO_DM_STRONG_IN_OFF'                visible='true' />
-      <Entry name='Open Drain, Drives Low. Input buffer off'                                         value='CY_GPIO_DM_OD_DRIVESLOW_IN_OFF'          visible='true' />
-      <Entry name='Open Drain, Drives High. Input buffer off'                                        value='CY_GPIO_DM_OD_DRIVESHIGH_IN_OFF'         visible='true' />
-      <Entry name='Open Drain, Drives Low. Input buffer on'                                          value='CY_GPIO_DM_OD_DRIVESLOW'                 visible='true' />
-      <Entry name='Open Drain, Drives High. Input buffer on'                                         value='CY_GPIO_DM_OD_DRIVESHIGH'                visible='true' />
-      <Entry name='Resistive Pull-Up. Input buffer off'                                              value='CY_GPIO_DM_PULLUP_IN_OFF'                visible='true' />
-      <Entry name='Resistive Pull-Down. Input buffer off'                                            value='CY_GPIO_DM_PULLDOWN_IN_OFF'              visible='true' />
-      <Entry name='Resistive Pull-Up/Down. Input buffer off'                                         value='CY_GPIO_DM_PULLUP_DOWN_IN_OFF'           visible='true' />
-      <Entry name='Resistive Pull-Up. Input buffer on'                                               value='CY_GPIO_DM_PULLUP'                       visible='true' />
-      <Entry name='Resistive Pull-Down. Input buffer on'                                             value='CY_GPIO_DM_PULLDOWN'                     visible='true' />
-      <Entry name='Resistive Pull-Up/Down. Input buffer on'                                          value='CY_GPIO_DM_PULLUP_DOWN'                  visible='true' />
+      <Entry name='Strong Drive. Input buffer on'                                                    value='CY_GPIO_DM_STRONG'                       visible='`${is_GPIO}`' />
+      <Entry name='Strong Drive. Input buffer off'                                                   value='CY_GPIO_DM_STRONG_IN_OFF'                visible='`${is_GPIO}`' />
+      <Entry name='Open Drain, Drives Low. Input buffer off'                                         value='CY_GPIO_DM_OD_DRIVESLOW_IN_OFF'          visible='`${is_GPIO}`' />
+      <Entry name='Open Drain, Drives High. Input buffer off'                                        value='CY_GPIO_DM_OD_DRIVESHIGH_IN_OFF'         visible='`${is_GPIO}`' />
+      <Entry name='Open Drain, Drives Low. Input buffer on'                                          value='CY_GPIO_DM_OD_DRIVESLOW'                 visible='`${is_GPIO}`' />
+      <Entry name='Open Drain, Drives High. Input buffer on'                                         value='CY_GPIO_DM_OD_DRIVESHIGH'                visible='`${is_GPIO}`' />
+      <Entry name='Resistive Pull-Up. Input buffer off'                                              value='CY_GPIO_DM_PULLUP_IN_OFF'                visible='`${is_GPIO}`' />
+      <Entry name='Resistive Pull-Down. Input buffer off'                                            value='CY_GPIO_DM_PULLDOWN_IN_OFF'              visible='`${is_GPIO}`' />
+      <Entry name='Resistive Pull-Up/Down. Input buffer off'                                         value='CY_GPIO_DM_PULLUP_DOWN_IN_OFF'           visible='`${is_GPIO}`' />
+      <Entry name='Resistive Pull-Up. Input buffer on'                                               value='CY_GPIO_DM_PULLUP'                       visible='`${is_GPIO}`' />
+      <Entry name='Resistive Pull-Down. Input buffer on'                                             value='CY_GPIO_DM_PULLDOWN'                     visible='`${is_GPIO}`' />
+      <Entry name='Resistive Pull-Up/Down. Input buffer on'                                          value='CY_GPIO_DM_PULLUP_DOWN'                  visible='`${is_GPIO}`' />
       <Entry name='Digital High-Z. Input buffer on'                                                  value='CY_GPIO_DM_HIGHZ'                        visible='true' />
       <Entry name='Analog High-Z. Input buffer off'                                                  value='CY_GPIO_DM_ANALOG'                       visible='true' />
-      <Entry name='Strong Drive/Resistive Pull-Up/High-Z'  value='CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ'  visible='`${(driveModeExtension eq 4)}`' />
+      <Entry name='Strong Drive/Resistive Pull-Up/High-Z'  value='CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ'  visible='`${(driveModeExtension eq 4) &amp;&amp; (is_GPIO)}`' />
     </ParamChoice>
-    <ParamChoice id='initialState' name='Initial Drive State' group='General' default='1' visible='true' editable='true' desc='This parameter specifies the pin-specific initial value written to the pin&apos;s OUT Register after a device reset/power-on.' >
+    <ParamChoice id='initialState' name='Initial Drive State' group='General' default='1' visible='`${is_GPIO}`' desc='This parameter specifies the pin-specific initial value written to the pin&apos;s OUT Register after a device reset/power-on.' >
       <Entry name='High (1)' value='1' visible='true' />
       <Entry name='Low (0)'  value='0' visible='true' />
     </ParamChoice>
-    <ParamChoice id='nonSec' name='Secure attribute' group='General' default='`${(is_mxs40sioss &amp;&amp; (secExtAvailable eq 1)) ? 0 : 1}`' visible='`${secExtAvailable eq 1}`' editable='true' desc='This parameter specifies the secure attribute for each pin of a port.' >
+    <ParamChoice id='nonSec' name='Secure attribute' group='General' default='`${(is_mxs40sioss &amp;&amp; (secExtAvailable eq 1)) ? 0 : 1}`' visible='`${secExtAvailable eq 1}`' desc='This parameter specifies the secure attribute for each pin of a port.' >
       <Entry name='Non-secure access (1)' value='1' visible='true' />
       <Entry name='Secure access (0)'  value='0' visible='true' />
     </ParamChoice>
@@ -88,11 +89,11 @@
     <ParamBool id='hasPullUpRes' default='`${pullUpResAvailable ? (lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.RES_CFG") &gt; 0) : 0}`' />
     <ParamBool id='hasIRQ' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.IRQ", 0) &gt; 0}`' />
     <!--Input-->
-    <ParamChoice id='vtrip' name='Threshold' group='Input' default='CY_GPIO_VTRIP_CMOS' visible='true' editable='true' desc='This parameter selects the threshold levels that define a logic high level (1) and a logic low level (0).' >
+    <ParamChoice id='vtrip' name='Threshold' group='Input' default='CY_GPIO_VTRIP_CMOS' visible='true' editable='`${!is_mxs22ioss}`' desc='This parameter selects the threshold levels that define a logic high level (1) and a logic low level (0).' >
       <Entry name='CMOS' value='CY_GPIO_VTRIP_CMOS' visible='true' />
       <Entry name='TTL'  value='CY_GPIO_VTRIP_TTL'  visible='true' />
     </ParamChoice>
-    <ParamChoice id='isrTrigger' name='Interrupt Trigger Type' group='Input' default='CY_GPIO_INTR_DISABLE' visible='`${hasIRQ}`' editable='true' desc='This parameter selects whether the pin can generate an interrupt and, if selected, the interrupt type.' >
+    <ParamChoice id='isrTrigger' name='Interrupt Trigger Type' group='Input' default='CY_GPIO_INTR_DISABLE' visible='`${hasIRQ}`' desc='This parameter selects whether the pin can generate an interrupt and, if selected, the interrupt type.' >
       <Entry name='None'         value='CY_GPIO_INTR_DISABLE' visible='true' />
       <Entry name='Rising Edge'  value='CY_GPIO_INTR_RISING'  visible='true' />
       <Entry name='Falling Edge' value='CY_GPIO_INTR_FALLING' visible='true' />
@@ -123,18 +124,18 @@
     </ParamChoice>
 
     <!--Output-->
-    <ParamChoice id='slewRate' name='Slew Rate' group='Output' default='CY_GPIO_SLEW_FAST' visible='true' editable='true' desc='The slew rate parameter determines the rise and fall ramp rate for the pin as it changes output logic levels.' >
+    <ParamChoice id='slewRate' name='Slew Rate' group='Output' default='CY_GPIO_SLEW_FAST' visible='`${is_GPIO}`'  desc='The slew rate parameter determines the rise and fall ramp rate for the pin as it changes output logic levels.' >
       <Entry name='Fast' value='CY_GPIO_SLEW_FAST' visible='true' />
       <Entry name='Slow' value='CY_GPIO_SLEW_SLOW' visible='true' />
     </ParamChoice>
-    <ParamBool id='extended_drive_sel' name='Extended Drive Strength' group='Output' default='false' visible='`${is_mxs22ioss}`' editable='`${is_mxs22ioss}`' desc='Extended Drive strength selection.' />
-    <ParamChoice id='driveStrength'  name='Drive Strength' group='Output' default='CY_GPIO_DRIVE_1_2' visible='`${!extended_drive_sel}`' editable='`${!extended_drive_sel}`' desc='Drive strength can be defined to select how much of the IO driver is enabled to provide additional control of the rising and falling edge slew rates.' >
+    <ParamBool id='extended_drive_sel' name='Extended Drive Strength' group='Output' default='false' visible='`${is_mxs22ioss &amp;&amp; is_GPIO}`' desc='Extended Drive strength selection.' />
+    <ParamChoice id='driveStrength'  name='Drive Strength' group='Output' default='CY_GPIO_DRIVE_1_2' visible='`${!extended_drive_sel &amp;&amp; is_GPIO}`' desc='Drive strength can be defined to select how much of the IO driver is enabled to provide additional control of the rising and falling edge slew rates.' >
       <Entry name='Full' value='CY_GPIO_DRIVE_FULL' visible='true' />
       <Entry name='1 / 2' value='CY_GPIO_DRIVE_1_2' visible='true' />
       <Entry name='1 / 4' value='CY_GPIO_DRIVE_1_4' visible='true' />
       <Entry name='1 / 8' value='CY_GPIO_DRIVE_1_8' visible='true' />
     </ParamChoice>
-    <ParamChoice id='extended_driveStrength'  name='Drive Strength' group='Output' default='CY_GPIO_DRIVE_SEL_3' visible='`${extended_drive_sel}`' editable='`${extended_drive_sel}`' desc='Drive strength can be defined to select how much of the IO driver is enabled to provide additional control of the rising and falling edge slew rates.' >
+    <ParamChoice id='extended_driveStrength'  name='Drive Strength' group='Output' default='CY_GPIO_DRIVE_SEL_3' visible='`${extended_drive_sel &amp;&amp; is_GPIO}`'  desc='Drive strength can be defined to select how much of the IO driver is enabled to provide additional control of the rising and falling edge slew rates.' >
       <Entry name='7 (Full)' value='CY_GPIO_DRIVE_SEL_7' visible='true' />
       <Entry name='6 (7 / 8)' value='CY_GPIO_DRIVE_SEL_6' visible='true' />
       <Entry name='5 (3 / 4)' value='CY_GPIO_DRIVE_SEL_5' visible='true' />
@@ -144,8 +145,8 @@
       <Entry name='1 (1 / 4)' value='CY_GPIO_DRIVE_SEL_1' visible='true' />
       <Entry name='0 (1 / 8)' value='CY_GPIO_DRIVE_SEL_0' visible='true' />
     </ParamChoice>
-    <ParamBool id='sioOutputBuffer'  name='SIO Output Buffer Regulated' group='Output' default='true' visible='`${hasSIO &amp;&amp; DigitalOutput}`' editable='true' desc='Selects the output buffer mode' />
-    <ParamChoice id='pullUpRes' name='Pull-up resistor' group='Output' default='CY_GPIO_PULLUP_RES_DISABLE' visible='`${pullUpResAvailable &amp;&amp; (DriveModes eq CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ)}`' editable='true' desc='The Pull-up resistor parameter configures the additional pull-up resistors.' >
+    <ParamBool id='sioOutputBuffer'  name='SIO Output Buffer Regulated' group='Output' default='true' visible='`${hasSIO &amp;&amp; DigitalOutput &amp;&amp; is_GPIO}`'  desc='Selects the output buffer mode' />
+    <ParamChoice id='pullUpRes' name='Pull-up resistor' group='Output' default='CY_GPIO_PULLUP_RES_DISABLE' visible='`${pullUpResAvailable &amp;&amp; (DriveModes eq CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ) &amp;&amp; is_GPIO}`'  desc='The Pull-up resistor parameter configures the additional pull-up resistors.' >
       <Entry name='Disable additional Pull-up resistors' value='CY_GPIO_PULLUP_RES_DISABLE' visible='true' />
       <Entry name='570Ω pull-up resistance'              value='CY_GPIO_PULLUP_RES_570'     visible='`${hasPullUpRes}`' />
       <Entry name='720Ω pull-up resistance'              value='CY_GPIO_PULLUP_RES_720'     visible='`${hasPullUpRes}`' />
@@ -155,7 +156,7 @@
       <Entry name='1800Ω pull-up resistance'             value='CY_GPIO_PULLUP_RES_1800'    visible='`${hasPullUpRes}`' />
       <Entry name='2800Ω pull-up resistance'             value='CY_GPIO_PULLUP_RES_2800'    visible='`${hasPullUpRes}`' />
     </ParamChoice>
-    <ParamChoice id='driveStrengthTrim' name='Drive Strength Trim' group='Output' default='CY_GPIO_DRIVE_STRENGTH_DEFAULT' visible='`${hasDriveStrengthTrim}`' editable='true' desc='The Drive Strength Trim parameter for HSIO_ENH and HSIO_ENH_PDIFF GPIO pins.'>
+    <ParamChoice id='driveStrengthTrim' name='Drive Strength Trim' group='Output' default='CY_GPIO_DRIVE_STRENGTH_DEFAULT' visible='`${hasDriveStrengthTrim &amp;&amp; is_GPIO}`' desc='The Drive Strength Trim parameter for HSIO_ENH and HSIO_ENH_PDIFF GPIO pins.'>
       <Entry name='50Ω, 3.3-V single memory (default) ' value='CY_GPIO_DRIVE_STRENGTH_DEFAULT' visible='true' />
       <Entry name='120Ω, 1.8-V memory (xSPI-400)' value='CY_GPIO_DRIVE_STRENGTH_120OHM' visible='true' />
       <Entry name='90Ω, 3.3-V memory (xSPI-266 / xSPI-200, SPI-SDR / SPI-DDR)' value='CY_GPIO_DRIVE_STRENGTH_90OHM' visible='true' />
@@ -195,6 +196,8 @@
     <Variable id='smifVersion' value='`${hasSmifConn &amp;&amp; hasExposedMember(smif, "smif_ip_version")  ? getExposedMember(smif, "smif_ip_version") : 6}`' />
     <Variable id='smifCore' value='`${ hasSmifConn ? ((smifVersion == 5) ? getInstFromLocation(findConnectedBlock("aux[0]", "smif.core"), "core") : getInstFromLocation(findConnectedBlock("aux[0]", "smif.core"), "smif")) : ""}`' />
     <Variable id='smifPortString' value='`${hasSmifConn ? ((smifVersion == 5) ? "(GPIO_PRT_Type*)SMIF0_CORE" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : "(GPIO_PRT_Type*)SMIF" . smifCore . "_CORE_SMIF_GPIO_SMIF_PRT0") : ""}`' />
+    <Variable id='smifNativePortString' value='`${hasSmifConn ? ((smifVersion == 5) ? "SMIF0_CORE" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : "SMIF" . smifCore . "_CORE_SMIF_GPIO_SMIF_PRT0") : ""}`' />
+    <Variable id='smifMmioSuffix' value='`${hasSmifConn ? ((smifCore eq "0") ? "0" : "0" . smifCore) : ""}`' />
   </Variables>
 
   <DRCs>
@@ -210,15 +213,18 @@
 
   <ConfigFirmware>
     <ConfigInclude value='cy_gpio.h' include='true' />
+    <ConfigInclude value='cy_sysclk.h' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' />
     <ConfigInclude value='cycfg_routing.h' include='`${hasDigitalOrAnalogConnection}`' />
 
     <ConfigDefine name='`${INST_NAME}`_PORT' value='`${hasSmifConn ? smifPortString : "GPIO_PRT". portNumber}`' public='true' include='true' />
+    <ConfigDefine name='`${INST_NAME}`_SMIF_PORT' value='`${smifPortString}`' public='true' include='`${hasSmifConn}`' />
+    <ConfigDefine name='`${INST_NAME}`_IOSS_PORT' value='GPIO_PRT`${portNumber}`' public='true' include='`${hasSmifConn}`' />
     <ConfigDefine name='`${INST_NAME}`_PORT_NUM' value='`${portNumber}`U' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_PIN' value='`${pinNumber}`U' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_NUM' value='`${pinNumber}`U' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_DRIVEMODE' value='`${DriveModes}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_INIT_DRIVESTATE' value='`${initialState}`' public='true' include='true' />
-    <ConfigDefine name='`${blockName . "_HSIOM"}`' value='`${hasSmifConn ? "HSIOM_SEL_ACT_15" : "HSIOM_SEL_GPIO"}`' public='true' include='true' preventOverride='true' />
+    <ConfigDefine name='`${blockName . "_HSIOM"}`' value='`${(hasSmifConn &amp;&amp; hasConnection("aux", 0)) ? "HSIOM_SEL_ACT_15" : "HSIOM_SEL_GPIO"}`' public='true' include='true' preventOverride='true' />
     <ConfigDefine name='`${INST_NAME}`_HSIOM' value='`${blockName . "_HSIOM"}`' public='true' include='`${!(INST_NAME eq blockName)}`' />
     <ConfigDefine name='`${INST_NAME}`_IRQ' value='`${(nonSec eq 1) ? "ioss_interrupts_" : "ioss_interrupts_sec_"}`gpio_`${portNumber}`_IRQn' public='true' include='`${hasIRQ &amp;&amp; !(is_mxs40ioss &amp;&amp; (ipVersion eq 3))}`' />
     <ConfigDefine name='`${INST_NAME}`_IRQ' value='`${(deepsleep eq 1) ? "ioss_interrupts_gpio_dpslp" : "ioss_interrupts_gpio_act"}`_`${portNumber}`_IRQn' public='true' include='`${hasIRQ &amp;&amp; (is_mxs40ioss &amp;&amp; (ipVersion eq 3))}`' />
@@ -243,7 +249,28 @@
       <Member name='nonSec' value='`${(secExtAvailable eq 1) ? nonSec : "1UL"}`' include='`${secExtAvailable ne -1}`'/>
     </ConfigStruct>
 
-    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_Pin_Init(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, &amp;`${INST_NAME}`_config);' include='`${(!skipConfigCodeGenExtClk) ? (!skipConfigCodeGen) : false}`' />
-    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetDriveSelTrim(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${driveStrengthTrim}`);' include='`${hasDriveStrengthTrim}`' />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_GROUP_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_SLAVE_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_CLK_HF_NR);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <!-- For SMIF pins used as GPIO (AUX not connected): release SMIF PHY claim by setting SMIF-side HSIOM to ACT_14 -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM(`${smifPortString}`, `${INST_NAME}`_PIN, HSIOM_SEL_ACT_14);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <!-- For non-SMIF pins (or SMIF peripheral mode with AUX connected): use Cy_GPIO_Pin_Init -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_Pin_Init(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, &amp;`${INST_NAME}`_config);' include='`${((!skipConfigCodeGenExtClk) ? (!skipConfigCodeGen) : false) &amp;&amp; !(hasSmifConn &amp;&amp; !hasConnection("aux", 0))}`' />
+    <!-- For SMIF pins used as GPIO (AUX not connected): Cy_GPIO_Pin_Init cannot be used because
+         SMIF GPIO ports lack CFG_SIO, CFG_IN/CFG_OUT and other extended registers.
+         Instead, configure only the registers that exist in the SMIF GPIO port: HSIOM, CFG, OUT. -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${INST_NAME}`_HSIOM);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetDrivemode(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${DriveModes}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <!-- SMIF GPIO: OUT_SET/OUT_CLR/OUT_INV are non-functional; must write OUT register directly -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_WriteDirectOut(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${initialState}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <!-- For SMIF GPIO pins: set the IOSS port security attribute (nonSec) BEFORE interrupt config.
+         Changing pin security attribute clears INTR_MASK, so this must come first.
+         Cy_GPIO_Pin_Init normally handles this, but since we skip it for SMIF GPIO, we must call it explicitly.
+         Cy_GPIO_SetHSIOM_SecPin is a no-op in NS builds (CY_PDL_TZ_ENABLED not defined); it only executes in the secure build. -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM_SecPin(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, `${nonSec}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (secExtAvailable eq 1)}`' />
+    <!-- For SMIF GPIO pins: interrupt config (INTR_CFG, INTR_MASK) must go through IOSS GPIO_PRT, not the SMIF port.
+         These must come AFTER SetHSIOM_SecPin because the security transition clears INTR_MASK. -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetInterruptEdge(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, `${isrTrigger}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (isrTrigger ne "CY_GPIO_INTR_DISABLE")}`' />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_ClearInterrupt(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (isrTrigger ne "CY_GPIO_INTR_DISABLE")}`' />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetInterruptMask(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, 1UL);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (isrTrigger ne "CY_GPIO_INTR_DISABLE")}`' />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetDriveSelTrim(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${driveStrengthTrim}`);' include='`${hasDriveStrengthTrim &amp;&amp; !(hasSmifConn &amp;&amp; !hasConnection("aux", 0))}`' />
   </ConfigFirmware>
 </PersonalityTemplate>

@@ -402,7 +402,7 @@ __STATIC_INLINE uint32_t Cy_Ms_Ctl_GetActivePCV1(en_ms_ctl_master_t busMaster)
 #endif
 
 #endif /* #if defined (CY_IP_M55APPCPUSS) */
- 
+
 #endif /* #if defined (CY_IP_M33SYSCPUSS) */
 
 /** \} group_ms_ctl */

@@ -3,7 +3,7 @@
 * \version 2.130
 *
 * \brief
-* Provides an API declaration of the Cypress SMIF driver.
+* Provides an API declaration of the Infineon SMIF driver.
 *
 ********************************************************************************
 * \copyright

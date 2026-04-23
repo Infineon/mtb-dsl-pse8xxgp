@@ -11,24 +11,6 @@ This release of the syspm-callbacks includes support for the following drivers:
 * SMIF
 * TCPWM
 
-### What Changed?
-#### v1.0.0
-* Initial release for PSE8xxGP support.
-
-
-### Supported Software and Tools
-This version of the syspm-callbacks was validated for compatibility with the following Software and Tools:
-
-| Software and Tools                        | Version |
-| :---                                      | :----:  |
-| ModusToolbox™ Software Environment        | 3.6.0   |
-| GCC Compiler                              | 14.2.1  |
-| IAR Compiler                              | 9.50.2  |
-| ARM Compiler                              | 6.22    |
-| LLVM ARM Compiler                         | 19.1.5  |
-
-Minimum required ModusToolbox™ Software Environment: v3.6
-
 ### More information
 Use the following links for more information, as needed:
 * [API Reference Guide](https://infineon.github.io/syspm-callbacks-pse8xxgp/html/modules.html)

@@ -8,7 +8,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2022-2025 Cypress Semiconductor Corporation
+* (c) 2022-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +24,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
-
 #include "cy_autanalog_ac.h"
 
 #ifdef CY_IP_MXS22LPPASS
@@ -272,5 +272,4 @@ cy_en_syspm_status_t Cy_AutAnalog_DeepSleepCallback(cy_stc_syspm_callback_params
 }
 
 #endif /* CY_IP_MXS22LPPASS */
-
 /* [] END OF FILE */

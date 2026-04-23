@@ -1,9 +1,23 @@
-# ModusToolbox™ PSE8xxGP Device Support Library 1.4.0
+# ModusToolbox™ PSE8xxGP Device Support Library 1.5.0
 ## What's Included?
 
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
-## Change log 
+## Change log
+### v1.5.0
+#### Driver updates
+* Added support for per channel channel quantization for Fully Connected layer
+* sysclk driver updates
+* New API added in GPIO Driver
+* SDHC Driver bit field parsing bug fix
+* Added HAL API to get max SDIO Clock Frequency
+#### Personality updates
+* Memory and protection personality updates
+* Pin Personality updates to support SMIF Data lines
+* ECO Personality fix computing gtrim value
+#### Miscellaneous updates
+* Documentation Updates
+* Bug Fixes
 ### v1.4.0
 * Protection personality bug fix
 * Fix recipe-make version

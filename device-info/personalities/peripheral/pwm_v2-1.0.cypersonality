@@ -10,7 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2018-2025 Cypress Semiconductor Corporation
+* (c) 2018-2026, Infineon Technologies AG or an affiliate of
+* Infineon Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -250,12 +251,12 @@
       <Entry name='Disabled' value='CY_TCPWM_INPUT_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='count[0]' name='Count Signal' group='Inputs' visible='`${((pPwmNePrs) &amp;&amp; (CountInput ne CY_TCPWM_INPUT_DISABLED))}`' desc='This digital input causes the PWM to count depending on how the it is configured.' canBeEmpty='`${CountInput eq CY_TCPWM_INPUT_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -270,12 +271,12 @@
       <Entry name='Disabled' value='CY_TCPWM_INPUT_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='stop[0]' name='Kill 0 Signal' group='Inputs' visible='`${Kill0Input ne CY_TCPWM_INPUT_DISABLED}`' desc='This digital input kills the PWM, based on the Kill0 Input selection.' canBeEmpty='`${Kill0Input eq CY_TCPWM_INPUT_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -290,12 +291,12 @@
       <Entry name='Disabled' value='CY_TCPWM_INPUT_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='reload[0]' name='Reload Signal' group='Inputs' visible='`${ReloadInput ne CY_TCPWM_INPUT_DISABLED}`' desc='This digital input triggers a reload of the PWM, and starts the PWM.' canBeEmpty='`${ReloadInput eq CY_TCPWM_INPUT_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -309,12 +310,12 @@
       <Entry name='Disabled' value='CY_TCPWM_INPUT_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='start[0]' name='Start Signal' group='Inputs' visible='`${StartInput ne CY_TCPWM_INPUT_DISABLED}`' desc='This digital input triggers a Start of the PWM.' canBeEmpty='`${StartInput eq CY_TCPWM_INPUT_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -328,12 +329,12 @@
       <Entry name='Disabled' value='CY_TCPWM_INPUT_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='capture0[0]' name='Swap Signal' group='Inputs' visible='`${SwapInput ne CY_TCPWM_INPUT_DISABLED}`' desc='This input latches a SWAP command. The swap doesn’t occur until the next Overflow/Underflow event.' canBeEmpty='`${SwapInput eq CY_TCPWM_INPUT_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -348,12 +349,12 @@
       <Entry name='Disabled' value='CY_TCPWM_INPUT_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='capture1[0]' name='Kill 1 Signal' group='Inputs' visible='`${Kill1Input ne CY_TCPWM_INPUT_DISABLED}`' desc='This digital input kills the PWM, based on the Kill1 Input selection.' canBeEmpty='`${Kill1Input eq CY_TCPWM_INPUT_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_HIGHZ' />
         </Parameter>
@@ -374,26 +375,26 @@
     </ParamChoice>
 
     <!--Outputs-->
-    <ParamSignal port='line[0]' name='PWM (line)' group='Outputs' visible='`${("mxs40tcpwm" ne getIpBlockName())}`' desc='PWM output' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+    <ParamSignal port='line[0]' name='PWM (line)' group='Outputs' visible='`${("mxs40tcpwm" ne getIpBlockName()) &amp;&amp; (hasVisibleOption("line[0]"))}`' desc='PWM output' canBeEmpty='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
-    <ParamSignal port='line_compl[0]' name='PWM_n (line_compl)' group='Outputs' visible='`${("mxs40tcpwm" ne getIpBlockName())}`' desc='Complimentary PWM output.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+    <ParamSignal port='line_compl[0]' name='PWM_n (line_compl)' group='Outputs' visible='`${("mxs40tcpwm" ne getIpBlockName()) &amp;&amp; (hasVisibleOption("line_compl[0]"))}`' desc='Complimentary PWM output.' canBeEmpty='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -402,12 +403,12 @@
     </ParamSignal>
 
     <ParamSignal port='tr_line[0]' name='PWM (line)' group='Outputs' visible='`${("mxs40tcpwm" eq getIpBlockName())}`' desc='PWM output' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -415,12 +416,12 @@
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
     <ParamSignal port='tr_line_compl[0]' name='PWM_n (line_compl)' group='Outputs' visible='`${("mxs40tcpwm" eq getIpBlockName())}`' desc='Complimentary PWM output.' canBeEmpty='true' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -440,12 +441,12 @@
       <Entry name='Disabled' value='CY_TCPWM_CNT_TRIGGER_ON_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='tr_out0[0]' name='Trigger 0 Signal' group='Trigger Outputs' visible='`${trigger0Event ne CY_TCPWM_CNT_TRIGGER_ON_DISABLED}`' desc='Signals to connect on Trigger 0 Event' canBeEmpty='`${trigger0Event eq CY_TCPWM_CNT_TRIGGER_ON_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
@@ -463,12 +464,12 @@
       <Entry name='Disabled' value='CY_TCPWM_CNT_TRIGGER_ON_DISABLED' visible='true' />
     </ParamChoice>
     <ParamSignal port='tr_out1[0]' name='Trigger 1 Signal' group='Trigger Outputs' visible='`${trigger1Event ne CY_TCPWM_CNT_TRIGGER_ON_DISABLED}`' desc='Signals to connect on Trigger 1 Event ' canBeEmpty='`${trigger1Event eq CY_TCPWM_CNT_TRIGGER_ON_DISABLED}`' >
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
-      <Constraint type='ACCEPT' targetLocation='ioss\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='INFO' reason='The pin Drive Mode parameter does not match expected.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>

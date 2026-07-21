@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_SPI)
+
+
+
 //" *SUSPEND-FORMATTING*"
 /**
  * \addtogroup group_hal_spi SPI (Serial Peripheral Interface)
@@ -48,7 +59,7 @@
  * \section section_spi_quickstart Quick Start
  *
  * Initialise a SPI controller or target interface using the PDL.
- * The data rate can be set using \ref mtb_hal_spi_set_frequency(). <br>
+ * The data rate can be set using mtb_hal_spi_set_frequency(). <br>
  * See \ref section_spi_snippets for code snippets to send or receive the data.
  *
  * \section section_spi_snippets Code snippets
@@ -59,25 +70,25 @@
  *
  * \subsection subsection_spi_snippet_2 Snippet 2: SPI controller - Single byte transfer operation (Read and Write)
  * The following code snippet initializes an SPI Controller interface using the PDL. The data rate
- * of transfer is set using \ref mtb_hal_spi_set_frequency(). The code snippet shows how to transfer
+ * of transfer is set using mtb_hal_spi_set_frequency(). The code snippet shows how to transfer
  * a single
- * byte of data using \ref mtb_hal_spi_put() and \ref mtb_hal_spi_get().
+ * byte of data using mtb_hal_spi_put() and mtb_hal_spi_get().
  * \snippet hal_spi.c snippet_mtb_hal_spi_controller_byte_operation
  *
  * \subsection subsection_spi_snippet_3 Snippet 3: SPI Target - Single byte transfer operation (Read and Write)
  * The following code snippet initializes an SPI Target interface using the PDL. The data rate of
- * transfer is set using \ref mtb_hal_spi_set_frequency. The code snippet shows how to transfer a
- * single byte of data using \ref mtb_hal_spi_put() and \ref mtb_hal_spi_get.
+ * transfer is set using mtb_hal_spi_set_frequency. The code snippet shows how to transfer a
+ * single byte of data using mtb_hal_spi_put() and mtb_hal_spi_get.
  * \snippet hal_spi.c snippet_mtb_hal_spi_target_byte_operation
  *
  * \subsection subsection_spi_snippet_4 Snippet 4: SPI Block Data transfer
- * The following snippet sends and receives an array of data in a single SPI transaction using \ref
+ * The following snippet sends and receives an array of data in a single SPI transaction using
  * mtb_hal_spi_transfer(). The example uses SPI controller to transmit 5 bytes of data and receive 5
  * bytes of data in a single transaction.
  * \snippet hal_spi.c snippet_mtb_hal_spi_block_data_transfer
  *
  * \subsection subsection_spi_snippet_5 Snippet 5: SPI Target - Write Block Data
- * The following snippet sends an array of data in a single SPI transaction using \ref
+ * The following snippet sends an array of data in a single SPI transaction using
  * mtb_hal_spi_target_write(). The example uses SPI target to transmit 5 bytes of data in a single
  * transaction with 50 ms timeout values.
  * \snippet hal_spi.c snippet_mtb_hal_spi_target_write_block_data
@@ -85,7 +96,7 @@
  * \subsection subsection_spi_snippet_6 Snippet 6: Interrupts on SPI events
  * SPI interrupt events (mtb_hal_spi_event_t) can be mapped to an interrupt and assigned to a
  * callback function. The callback function needs to be first registered and then the event needs to
- * be enabled. A callback function is registered using \ref mtb_hal_spi_register_callback to notify
+ * be enabled. A callback function is registered using mtb_hal_spi_register_callback() to notify
  * whenever the SPI transfer is complete.
  * \snippet hal_spi.c snippet_mtb_hal_spi_interrupt_callback_events
 
@@ -99,14 +110,7 @@
  *
  */
 //" *RESUME-FORMATTING*"
-#pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_SPI)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -127,6 +131,9 @@ extern "C" {
 /** Failed to Transfer SPI data */
 #define MTB_HAL_SPI_RSLT_TRANSFER_ERROR                   \
     (CY_RSLT_CREATE_EX(CY_RSLT_TYPE_ERROR, CY_RSLT_MODULE_ABSTRACTION_HAL, MTB_HAL_RSLT_MODULE_SPI, 2))
+/** Timeout error */
+#define MTB_HAL_SPI_RSLT_ERR_TIMEOUT                      \
+    (CY_RSLT_CREATE_EX(CY_RSLT_TYPE_ERROR, CY_RSLT_MODULE_ABSTRACTION_HAL, MTB_HAL_RSLT_MODULE_SPI, 3))
 
 /**
  * \}
@@ -230,6 +237,9 @@ cy_rslt_t mtb_hal_spi_controller_write(mtb_hal_spi_t* obj, const uint8_t* src_bu
 /** Wait for controller send data to RX buffer and store them to the user-defined buffer.
  * NOTE: If size of actual data is less then expected the function copy only available data.
  *
+ * NOTE: On timeout, \ref MTB_HAL_SPI_RSLT_ERR_TIMEOUT is returned even if partial data was
+ * received. The actual number of bytes received is returned via the size parameter.
+ *
  * @param[in]     obj        The SPI object
  * @param[in]     dst_buff   Pointer on memory to store the data from the target RX buffer.
  * @param[in,out] size       [in] The number of bytes to read, [out] number actually read.
@@ -320,6 +330,9 @@ cy_rslt_t mtb_hal_spi_process_interrupt(mtb_hal_spi_t* obj);
 /** Wait for controller send data to RX buffer and store them to the user-defined buffer.
  * NOTE: If this function will returt on the timeout or all data was read or SS line is de-asserted.
  *
+ * NOTE: On timeout, \ref MTB_HAL_SPI_RSLT_ERR_TIMEOUT is returned even if partial data was
+ * received. The actual number of bytes received is returned via the size parameter.
+ *
  * @param[in]     obj        The SPI object
  * @param[in]     dst_buff   Pointer on memory to store the data from the target RX buffer.
  * @param[in,out] size       [in] The number of bytes to read, [out] number actually read.
@@ -338,6 +351,6 @@ cy_rslt_t mtb_hal_spi_target_read_transaction(mtb_hal_spi_t* obj, uint8_t* dst_b
 #include MTB_HAL_SPI_IMPL_HEADER
 #endif /* MTB_HAL_SPI_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_SPI)
-
 /** \} group_hal_spi */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_SPI)

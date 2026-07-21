@@ -145,10 +145,10 @@
 #if !defined(CY_AUTANALOG_H)
 #define CY_AUTANALOG_H
 
+#include "cy_device.h"
+#if defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U)
 #include "cy_autanalog_common.h"
 #include "cy_autanalog_ac.h"
-
-#ifdef CY_IP_MXS22LPPASS
 
 #ifdef CY_IP_MXS22LPPASS_CTB
 #include "cy_autanalog_ctb.h"
@@ -857,9 +857,9 @@ __STATIC_INLINE uint32_t Cy_AutAnalog_GetInterruptStatusMasked(void)
 }
 #endif
 
-#endif /* CY_IP_MXS22LPPASS */
+#endif /* defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U) */
 
-#endif /** !defined(CY_AUTANALOG_H) */
+#endif /* !defined(CY_AUTANALOG_H) */
 
 /** \} group_autanalog */
 

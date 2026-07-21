@@ -9,9 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -56,10 +55,11 @@
 
     <ParamBool id='is_mxs22srssv1' name='is_mxs22srssv1' group="" default='`${(getVersion() eq 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v1' />
     <ParamBool id='is_mxs22srssv2_1' name='is_mxs22srssv2_1' group="" default='`${(getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v2.1' />
+    <ParamBool id='is_mxs22srssv2_2' name='is_mxs22srssv2_2' group="" default='`${(getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 2)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v2.2' />
     <ParamChoice id='actPwrMode' name='System Active Power Profile' group='General' default='POWER_PROFILE_LP' visible='true'
       desc='Selects the system operating power mode.'>
-      <Entry name='Power Profile - ULP   (Ultra Low Power Profile  - vccd = 0.7V, vccsram = 0.8V )' value='POWER_PROFILE_ULP' visible='`${is_mxs22srssv1}`' />
-      <Entry name='Power Profile - LP    (Low Power Profile - vccd = 0.8V, vccsram = 0.8V )' value='POWER_PROFILE_LP' visible='true' />
+      <Entry name='Power Profile - ULP   (Ultra Low Power Profile  - vccd = 0.7V, vccsram = 0.8V )' value='POWER_PROFILE_ULP' visible='`${is_mxs22srssv1 || is_mxs22srssv2_2}`' />
+      <Entry name='Power Profile - LP    (Low Power Profile - vccd = 0.8V, vccsram = 0.8V )' value='POWER_PROFILE_LP' visible='`${!is_mxs22srssv2_2}`' />
       <Entry name='Power Profile - HP    (High Performance Profile - vccd = 0.9V, vccsram = 0.9V )' value='POWER_PROFILE_HP' visible='true' />
     </ParamChoice>
 
@@ -72,7 +72,7 @@
     <ParamBool id='pmicEnable' default='false' visible='false' />
 
     <!-- Power domains -->
-    <ParamBool id='pd1Enable' name='PD1 power domain' group='Power domains' default='`${is_mxs22srssv1}`' visible='`${is_mxs22srssv1}`'
+    <ParamBool id='pd1Enable' name='PD1 power domain' group='Power domains' default='`${is_mxs22srssv1 || is_mxs22srssv2_2}`' visible='`${is_mxs22srssv1 || is_mxs22srssv2_2}`'
       desc='Enables or disables PD1 power domain. It is required for peripherals like SMIF, SOCMEM, TCM, CM55, U55.' />
 
     <!-- Idle Power modes -->
@@ -193,18 +193,10 @@
                                                coreBuckParam eq "0.9V High Power" ? "CY_SYSPM_CORE_BUCK_VOLTAGE_0_90V"   :
                                                                                    "CY_SYSPM_CORE_BUCK_VOLTAGE_0_80V"}`'/>
 
-    <Variable id='coreBuckModeMacro' value='`${coreBuckParam eq "0.8V High Power" ? "CY_SYSPM_CORE_BUCK_MODE_HP"   :
-                                                    coreBuckParam eq "0.7V High Power" ? "CY_SYSPM_CORE_BUCK_MODE_HP"   :
-                                                    coreBuckParam eq "0.9V High Power" ? "CY_SYSPM_CORE_BUCK_MODE_HP"   :
-                                                                                         "CY_SYSPM_CORE_BUCK_MODE_HP"}`'/>
-    <Variable id='sramLdoVoltage' value='`${actPwrMode eq POWER_PROFILE_LP    ? "0.8V"   :
-                                            actPwrMode eq POWER_PROFILE_ULP   ? "0.8V"   :
-                                            actPwrMode eq POWER_PROFILE_HP    ? "0.9V"   :
-                                                                                "0.8V"}`' />
-
-    <Variable id='sramLdoVoltMacro' value='`${sramLdoVoltage eq "0.8V Regulated"    ? "CY_SYSPM_SRAMLDO_VOLTAGE_0_80V"   :
-                                              sramLdoVoltage eq "0.9V Regulated"    ? "CY_SYSPM_SRAMLDO_VOLTAGE_0_90V"   :
-                                                                                      "CY_SYSPM_SRAMLDO_VOLTAGE_0_80V"}`' />
+    <!-- All supported Core Buck configurations use High Power mode only -->
+    <Variable id='coreBuckModeMacro' value='CY_SYSPM_CORE_BUCK_MODE_HP'/>
+    <Variable id='sramLdoVoltMacro' value='`${actPwrMode eq POWER_PROFILE_HP  ? "CY_SYSPM_SRAMLDO_VOLTAGE_0_90V" :
+                                                                                "CY_SYSPM_SRAMLDO_VOLTAGE_0_80V"}`' />
 
     <!-- In this context, "peripheral" means "not memory" and encompasses CPUs as well -->
     <Variable id='ppuModePeripheral' value='`${(idlePwrMode eq CY_CFG_PWR_MODE_ACTIVE)         ? "PPU_V1_MODE_ON"       :
@@ -232,9 +224,9 @@
   <!-- Generated firmware -->
   <ConfigFirmware>
     <ConfigInclude value='cy_syspm.h'/>
-    <ConfigInclude value='system_edge.h' include='`${pd1Enable}`' />
-    <ConfigInclude value='cy_sysclk.h' include='`${pd1Enable}`' />
-    <ConfigInclude value='cy_syspm_pdcm.h' include='`${pd1Enable}`' />
+    <ConfigInclude value='system_edge.h' include='`${pd1Enable || is_mxs22srssv2_2}`' />
+    <ConfigInclude value='cy_sysclk.h' include='`${pd1Enable || is_mxs22srssv2_2}`' />
+    <ConfigInclude value='cy_syspm_pdcm.h' include='`${pd1Enable || is_mxs22srssv2_2}`' />
     <ConfigDefine name='CY_CFG_PWR_MODE_LP'             public='true' value='0x01UL' />
     <ConfigDefine name='CY_CFG_PWR_MODE_ULP'            public='true' value='0x02UL' />
     <ConfigDefine name='CY_CFG_PWR_MODE_HP'             public='true' value='0x03UL' />
@@ -277,7 +269,7 @@
     <!-- The U55 is explicitly turned either on or off. It never goes into DeepSleep -->
     <ConfigDefine name='CY_CFG_PWR_PPU_U55'      public='true' value='PPU_V1_MODE_ON' />
 
-    <ConfigFunction signature='void init_cycfg_ns_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv1}`'>
+    <ConfigFunction signature='void init_cycfg_ns_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv1 || is_mxs22srssv2_2}`'>
       <Line value='/* Update global variables used by DeepSleep functions */' />
       <Line value='#if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP)' />
       <Line value='    Cy_SysPm_DeepSleepSetup(CY_SYSPM_MODE_DEEPSLEEP);' />
@@ -301,7 +293,7 @@
       <Line value='' />
     </ConfigFunction>
 
-    <ConfigFunction signature='void init_cycfg_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv1}`'>
+    <ConfigFunction signature='void init_cycfg_power(void)' public='true' replicateForAliases='false' include='`${is_mxs22srssv1 || is_mxs22srssv2_2}`'>
       <Line value='   Cy_SysPm_Init();' />
       <Line value='' />
       <Line value='   /* **System Active Power Mode Profile Configuration** */' />
@@ -339,7 +331,7 @@
       <Line value='                                 CY_MMIO_CM55_TCM_512K_SLAVE_NR, CY_MMIO_CM55_TCM_512K_CLK_HF_NR);' />
       <Line value='' />
       <Line value='           /* Clear SYSCPU and APPCPU power domain dependency set by boot code */' />
-      <Line value='           cy_pd_pdcm_clear_dependency(CY_PD_PDCM_APPCPU, CY_PD_PDCM_SYSCPU);' />
+      <Line value='           cy_pd_pdcm_clear_dependency(CY_PD_PDCM_APPCPU, CY_PD_PDCM_SYSCPU);' include='`${is_mxs22srssv1}`' />
       <Line value='' />
       <Line value='       #endif /* defined(CORE_NAME_CM33_0) &amp;&amp; defined(CY_PDL_TZ_ENABLED) */' />
       <Line value='   #endif /* (CY_CFG_PWR_PD1_DOMAIN) */' />
@@ -371,6 +363,7 @@
       <Line value='   /* **Wakeup pin `${$idx}` Configuration** */&#xA;        Cy_SysPm_SetHibernateWakeupSource(`${hibernate_wakeup_polarity_$idx}`);' include='`${hasConnection("hibernate_wakeup", $idx)}`' repeatCount='4'/>
       <Line value='' />
     </ConfigFunction>
+
     <ConfigInstruction purpose='INITIALIZE' value='init_cycfg_power();' include='true' guard='defined (CY_CFG_PWR_ENABLED) &amp;&amp; defined (CY_CFG_PWR_INIT)' />
   </ConfigFirmware>
 </PersonalityTemplate>

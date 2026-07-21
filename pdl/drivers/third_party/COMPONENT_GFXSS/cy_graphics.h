@@ -77,6 +77,53 @@
 * You can include cy_pdl.h to get access to all functions
 * and declarations in the PDL.
 *
+* \section group_graphics_section_async_dbi Interrupt-Driven DBI Frame Transfer
+*
+* For MIPI DSI command mode (DBI) displays, the GFXSS driver provides an
+* interrupt-driven frame transfer mechanism that eliminates CPU polling and
+* delay-based synchronization. The display frame is divided into slices that
+* fit within the DBI command size limit (\ref DBI_SCLICE_LIMIT_IN_BYTES =
+* 65536 bytes). Each slice is automatically chained by the DC interrupt
+* handler after the previous slice completes.
+*
+* The blocking API \ref Cy_GFXSS_Transfer_Frame uses a polling loop with
+* Cy_SysLib_Rtos_DelayUs() to wait for each slice. The non-blocking API
+* \ref Cy_GFXSS_Transfer_Frame_Async offloads this to the GFXSS_DC_IRQ
+* interrupt, freeing the CPU for other work during the transfer.
+*
+* \subsection group_graphics_subsection_async_te Tearing Effect (TE) Synchronization
+*
+* When TE is enabled on the panel (MIPI DCS command 0x35 set to a non-zero
+* mode), the driver sets CMD_MODE_CFG.TEAR_FX_EN in the DWC MIPI DSI Host.
+* This causes the DSI host to automatically perform a Bus Turn Around (BTA)
+* and wait for the panel's TE signal before transmitting the first DBI write
+* command. This provides hardware-level tear-free display updates without
+* requiring explicit TE interrupt handling in the application.
+*
+* \subsection group_graphics_subsection_async_usage Integration Steps
+*
+* -# Enable TE on the display panel during initialization (MIPI DCS command
+*    0x35, e.g. 0x02 for VSync + HSync mode).
+* -# Register a completion callback with
+*    \ref Cy_GFXSS_RegisterTransferCompleteCallback.
+*    - RTOS: the callback gives a semaphore.
+*    - Bare-metal: the callback sets a volatile flag.
+* -# Register an ISR for \b GFXSS_DC_IRQ that calls
+*    \ref Cy_GFXSS_DC_DBI_InterruptHandler().  The PDL internally invokes the
+*    registered callback when all slices are done.
+* -# In the display flush path, wait for the previous transfer to finish
+*    (semaphore take or flag poll), update the frame buffer pointer with
+*    \ref Cy_GFXSS_Set_FrameBuffer(), and call
+*    \ref Cy_GFXSS_Transfer_Frame_Async().
+*
+* \subsection group_graphics_subsection_async_snippet_rtos Code Example (FreeRTOS)
+*
+* \snippet graphics/snippet/main.c snippet_Cy_GFXSS_Async_Init_RTOS
+*
+* \subsection group_graphics_subsection_async_snippet_baremetal Code Example (Bare-Metal)
+*
+* \snippet graphics/snippet/main.c snippet_Cy_GFXSS_Async_Init_BareMetal
+*
 * \section group_graphics_section_more_information More Information
 *
 * For more information on the Graphics subsystem, refer to the technical reference
@@ -398,7 +445,48 @@ typedef struct {
     cy_en_gfx_disp_buffer_update_type_t      display_update_type; /**< Single / Dual / Split */
     uint32_t clockHz;     /**< The frequency of the clock connected to the GFXSS block in Hz. */
 }cy_stc_gfx_config_t;
- 
+
+/** Callback function type invoked from ISR when an async DBI frame transfer
+ *  completes.  The application can use this to signal an RTOS semaphore, set a
+ *  bare-metal volatile flag, or perform any other lightweight notification.
+ *
+ *  \note This callback executes in interrupt context.  Keep it short and
+ *        do not call blocking APIs from within the callback.
+ */
+typedef void (*cy_gfx_transfer_complete_callback_t)(void);
+
+/** Transfer phase for interrupt-driven DBI frame transfer */
+typedef enum {
+    CY_GFX_TRANSFER_IDLE,                /**< No transfer in progress */
+    CY_GFX_TRANSFER_PENDING_TE,          /**< Setup done, waiting for TE to start first slice */
+    CY_GFX_TRANSFER_SLICES,              /**< Transferring full slices */
+    CY_GFX_TRANSFER_REMAINDER,           /**< Transferring remainder slice */
+    CY_GFX_TRANSFER_COMPLETE             /**< Transfer complete, ready for next frame */
+} cy_en_gfx_transfer_phase_t;
+
+/** State for interrupt-driven DBI frame transfer */
+typedef struct {
+    volatile cy_en_gfx_transfer_phase_t  phase;                   /**< Current transfer phase */
+    uint32_t                 current_slice;                        /**< Current slice index */
+    uint32_t                 total_full_slices;                    /**< Total number of full slices */
+    uint32_t                 no_of_lines;                          /**< Lines per full slice */
+    uint32_t                 remainder_lines;                      /**< Lines in the last partial slice */
+    uint32_t                 line_stride;                          /**< Frame buffer line stride */
+    uint32_t                 line_stride_overlay;                  /**< Overlay0 line stride */
+    uint32_t                 line_stride_overlay1;                 /**< Overlay1 line stride */
+    uint32_t                 uv_stride;                            /**< YUV UV plane stride */
+    uint32_t                 uv_stride_overlay;                    /**< Overlay0 UV stride */
+    uint32_t                 horizontal_resolution;                /**< Display horizontal resolution */
+    uint32_t                 vertical_resolution;                  /**< End line of the active transfer window (display height for full-frame, end_line_offset for partial) */
+    uint32_t                 slice_base_line;                      /**< Start line of the active transfer window (0 for full-frame, start_line_offset for partial) */
+    float                    bytes_per_pixel_dc_output;            /**< DC output bytes per pixel */
+    uint8_t                  packet_col_address[5];                /**< CASET command packet */
+    uint8_t                  packet_row_address[5];                /**< RASET command packet */
+    bool                     is_yuv_gfx;                           /**< GFX layer uses YUV format */
+    bool                     is_yuv_ovl0;                          /**< Overlay0 uses YUV format */
+    cy_gfx_transfer_complete_callback_t  complete_callback;        /**< Optional callback invoked from ISR on transfer completion (can be NULL) */
+} cy_stc_gfx_transfer_state_t;
+
  /** The Graphics internal context data. The user must not modify it. */
 typedef struct
 {
@@ -409,6 +497,8 @@ typedef struct
     cy_stc_gfx_gpu_context_t     gpu_context;            /**< GPU configuration is optional */
 
     uint32_t clockHz;     /**< The frequency of the clock connected to the GFXSS block in Hz. */
+
+    cy_stc_gfx_transfer_state_t  transfer_state;      /**< Interrupt-driven DBI transfer state */
 
     /** \endcond */
 }cy_stc_gfx_context_t;
@@ -873,6 +963,190 @@ cy_en_gfx_status_t Cy_GFXSS_Disable_GPU( GFXSS_Type *base, cy_stc_gfx_context_t 
 cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context_t *context);
 
 /*******************************************************************************
+* Function Name: Cy_GFXSS_Transfer_Frame_Async
+****************************************************************************//**
+*
+* Initiates a non-blocking, interrupt-driven frame transfer in DBI command
+* mode. The function configures the DBI write period, slice geometry, and
+* transfer state, then kicks the first slice. Subsequent slices are chained
+* automatically by the DC interrupt handler
+* (\ref Cy_GFXSS_DC_DBI_InterruptHandler):
+*   - GCREGDISPLAYINTR.DISP0 fires when the DC finishes each slice.
+*   - The handler advances frame buffer pointers and kicks the next slice.
+*   - After the last slice completes the transfer phase becomes
+*     \ref CY_GFX_TRANSFER_COMPLETE.
+*
+* When the panel has TE enabled (MIPI DCS 0x35), the driver sets
+* CMD_MODE_CFG.TEAR_FX_EN so the MIPI DSI host gates the first DBI write
+* on the panel's TE signal, providing hardware tear-free synchronization.
+*
+* \pre The application must:
+*   - Call \ref Cy_GFXSS_Init to initialize the GFXSS.
+*   - Register an ISR for GFXSS_DC_IRQ that calls
+*     \ref Cy_GFXSS_DC_DBI_InterruptHandler.
+*   - Ensure the previous transfer is complete before calling this function
+*     (use \ref Cy_GFXSS_Is_Transfer_Complete or a semaphore).
+*
+* \param base
+* Pointer to the graphics sub system base address.
+*
+* \param context
+* Context information used by the driver.
+*
+* \return
+* \ref CY_GFX_SUCCESS on successful setup, \ref CY_GFX_BAD_PARAM if base or
+* context is NULL.
+*
+* \note This is the non-blocking counterpart of \ref Cy_GFXSS_Transfer_Frame.
+*       The blocking version uses Cy_SysLib_Rtos_DelayUs polling; this version
+*       relies entirely on the DC interrupt for slice chaining.
+*
+* \funcusage
+* \snippet graphics/snippet/main.c snippet_Cy_GFXSS_Transfer_Frame_Async
+*
+*******************************************************************************/
+cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame_Async(GFXSS_Type *base, cy_stc_gfx_context_t *context);
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_DC_DBI_InterruptHandler
+****************************************************************************//**
+*
+* DC interrupt handler for interrupt-driven DBI frame transfers.
+* Must be called from the application's GFXSS_DC_IRQ ISR.
+*
+* Reads GCREGDISPLAYINTR (read-to-clear) and checks the DISP0 bit which
+* fires when the DC finishes consuming the framebuffer for one DBI slice.
+* The handler then:
+*   - Advances frame buffer pointers for all active layers.
+*   - Kicks the next full slice, or reconfigures and kicks the remainder
+*     slice.
+*   - Disables TEAR_FX_EN and sets the transfer phase to
+*     \ref CY_GFX_TRANSFER_COMPLETE when all slices are done.
+*
+* After the transfer completes, the application should signal its
+* synchronization primitive (e.g. give a semaphore) so the display flush
+* context can proceed with the next frame.
+*
+* \param base
+* Pointer to the graphics sub system base address.
+*
+* \param context
+* Context information used by the driver.
+*
+* \funcusage
+* \snippet graphics/snippet/main.c snippet_Cy_GFXSS_DC_DBI_InterruptHandler
+*
+*******************************************************************************/
+void Cy_GFXSS_DC_DBI_InterruptHandler(GFXSS_Type *base, cy_stc_gfx_context_t *context);
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_MIPIDSI_TE_InterruptHandler
+****************************************************************************//**
+*
+* MIPI DSI TE interrupt handler for TE-synchronized DBI frame transfers.
+* Can be called from the application's GFXSS_MIPIDSI_IRQ ISR if the
+* application uses the PENDING_TE transfer phase.
+*
+* When the transfer phase is \ref CY_GFX_TRANSFER_PENDING_TE, receiving the
+* DBI_TE interrupt (panel vertical blanking signal via DSI BTA) kicks the
+* first DBI slice.
+*
+* \note When using \ref Cy_GFXSS_Transfer_Frame_Async, this handler is
+*       not required because the DSI host's CMD_MODE_CFG.TEAR_FX_EN bit
+*       provides hardware-level TE synchronization. This function is
+*       provided for custom transfer flows that need explicit TE gating.
+*
+* \param base
+* Pointer to the graphics sub system base address.
+*
+* \param context
+* Context information used by the driver.
+*
+*******************************************************************************/
+void Cy_GFXSS_MIPIDSI_TE_InterruptHandler(GFXSS_Type *base, cy_stc_gfx_context_t *context);
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_Is_Transfer_Complete
+****************************************************************************//**
+*
+* Check if an interrupt-driven frame transfer has completed.
+* Returns true when the transfer phase is \ref CY_GFX_TRANSFER_COMPLETE or
+* \ref CY_GFX_TRANSFER_IDLE (no transfer was started).
+*
+* Typically called from within the GFXSS_DC_IRQ ISR after
+* \ref Cy_GFXSS_DC_DBI_InterruptHandler to decide whether to signal
+* the display flush context.
+*
+* \param context
+* Context information used by the driver.
+*
+* \return
+* true if transfer is complete or idle, false if still in progress.
+*
+*******************************************************************************/
+__STATIC_INLINE bool Cy_GFXSS_Is_Transfer_Complete(cy_stc_gfx_context_t *context)
+{
+    return (context->transfer_state.phase == CY_GFX_TRANSFER_COMPLETE) ||
+           (context->transfer_state.phase == CY_GFX_TRANSFER_IDLE);
+}
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_Clear_MIPIDSI_Interrupt
+****************************************************************************//**
+*
+* Clear MIPI DSI interrupts.
+*
+* \param base
+* Holds the base address of the Graphics block registers.
+*
+* \param context
+* context information used by the driver.
+*
+*******************************************************************************/
+void Cy_GFXSS_Clear_MIPIDSI_Interrupt(GFXSS_Type *base, cy_stc_gfx_context_t *context);
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_Is_DC_DBI_Transfer_Active
+****************************************************************************//**
+*
+* Check if an interrupt-driven DBI transfer is currently in progress.
+*
+* \param context
+* context information used by the driver.
+*
+* \return
+* true if a transfer is in progress, false if idle or complete.
+*
+*******************************************************************************/
+bool Cy_GFXSS_Is_DC_DBI_Transfer_Active(cy_stc_gfx_context_t *context);
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_RegisterTransferCompleteCallback
+****************************************************************************//**
+*
+* Register a callback function that is invoked from ISR context when an
+* async DBI frame transfer completes.  This allows both RTOS and bare-metal
+* applications to be notified without polling.
+*
+* For RTOS applications the callback typically gives a semaphore.
+* For bare-metal applications it typically sets a volatile flag.
+*
+* Pass NULL to unregister a previously registered callback.
+*
+* \param context
+* Context information used by the driver.
+*
+* \param callback
+* Pointer to the callback function, or NULL to disable.
+*
+* \funcusage
+* \snippet graphics/snippet/main.c snippet_Cy_GFXSS_RegisterTransferCompleteCallback
+*
+*******************************************************************************/
+void Cy_GFXSS_RegisterTransferCompleteCallback(cy_stc_gfx_context_t *context,
+                                                cy_gfx_transfer_complete_callback_t callback);
+
+/*******************************************************************************
 * Function Name: Cy_GFXSS_TransferPartialFrame
 ****************************************************************************//**
 *
@@ -895,6 +1169,52 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
 *
 *******************************************************************************/
 cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t start_line_offset, uint32_t end_line_offset, cy_stc_gfx_context_t *context);
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_TransferPartialFrame_Async
+****************************************************************************//**
+*
+* Non-blocking, interrupt-driven partial frame transfer over DBI.
+*
+* Sends only the rows in the half-open range [start_line_offset, end_line_offset)
+* from the framebuffer to the panel, using full display width (CASET set to
+* 0..horizontal_resolution-1). The transfer is sliced internally to respect
+* DBI_SCLICE_LIMIT_IN_BYTES; subsequent slices are chained automatically by
+* the DC interrupt handler (\ref Cy_GFXSS_DC_DBI_InterruptHandler). The
+* registered transfer-complete callback (see
+* \ref Cy_GFXSS_RegisterTransferCompleteCallback) is invoked from ISR context
+* when the last slice has been issued.
+*
+* Tearing-effect (TE) acknowledgement is enabled before kicking the first
+* slice so the panel gates the transfer on its next vertical-blank, providing
+* tear-free updates without explicit TE interrupt handling.
+*
+* This API is the partial-window counterpart of \ref Cy_GFXSS_Transfer_Frame_Async
+* and the non-blocking counterpart of \ref Cy_GFXSS_TransferPartialFrame.
+*
+* \param base
+* Pointer to the graphics sub system base address.
+*
+* \param start_line_offset
+* First row (inclusive) of the partial window, 0 .. display_height-1.
+*
+* \param end_line_offset
+* One past the last row of the partial window, must be > start_line_offset
+* and <= display_height.
+*
+* \param context
+* Context information used by the driver. The framebuffer base address is
+* taken from \c context->dc_context.gfx_layer_config.buffer_address (set
+* previously via \ref Cy_GFXSS_Set_FrameBuffer).
+*
+* \return
+* CY_GFX_SUCCESS on success, CY_GFX_BAD_PARAM on invalid arguments.
+*
+*******************************************************************************/
+cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame_Async(GFXSS_Type *base,
+                                                       uint32_t start_line_offset,
+                                                       uint32_t end_line_offset,
+                                                       cy_stc_gfx_context_t *context);
 
 /*******************************************************************************
 * Function Name: Cy_GFXSS_Enable_GPU_Interrupt

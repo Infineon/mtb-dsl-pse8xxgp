@@ -100,19 +100,21 @@ $(document).ready(function(){initNavTree('group__group__scb__common__macros.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>
-<tr class="memitem:group__group__scb__common__macros__intr__cause"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__intr__cause.html">SCB Interrupt Causes</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__scb__common__macros__tx__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__tx__intr.html">TX Interrupt Statuses</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__scb__common__macros__rx__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__rx__intr.html">RX Interrupt Statuses</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__scb__common__macros__slave__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__slave__intr.html">Slave Interrupt Statuses</a></td></tr>
+<tr class="memitem:group__group__scb__common__macros__i2c__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__i2c__intr.html">I2C Interrupt Statuses</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__scb__common__macros__master__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__master__intr.html">Master Interrupt Statuses</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__scb__common__macros__i2c__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__i2c__intr.html">I2C Interrupt Statuses</a></td></tr>
+<tr class="memitem:group__group__scb__common__macros__rx__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__rx__intr.html">RX Interrupt Statuses</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__scb__common__macros__intr__cause"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__intr__cause.html">SCB Interrupt Causes</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__scb__common__macros__SpiIntrStatuses"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__SpiIntrStatuses.html">SPI Interrupt Statuses</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__scb__common__macros__slave__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__slave__intr.html">Slave Interrupt Statuses</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__scb__tgs__macros__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__tgs__macros__intr.html">TGS Interrupt Statuses</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__scb__common__macros__tx__intr"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros__tx__intr.html">TX Interrupt Statuses</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -122,7 +124,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga119c2bb900e3418638892acc64762524"><td class="mdescLeft">&#160;</td><td class="mdescRight">Driver major version. <br /></td></tr>
 <tr class="separator:ga119c2bb900e3418638892acc64762524"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga70d5fa77cf7e42bf5b5c19f0761454ed"><td class="memItemLeft" align="right" valign="top"><a id="ga70d5fa77cf7e42bf5b5c19f0761454ed" name="ga70d5fa77cf7e42bf5b5c19f0761454ed"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SCB_DRV_VERSION_MINOR</b>&#160;&#160;&#160;(30)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SCB_DRV_VERSION_MINOR</b>&#160;&#160;&#160;(40)</td></tr>
 <tr class="memdesc:ga70d5fa77cf7e42bf5b5c19f0761454ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Driver minor version. <br /></td></tr>
 <tr class="separator:ga70d5fa77cf7e42bf5b5c19f0761454ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab50a7b4a1b916c7ecfcc38ac8d5fdea0"><td class="memItemLeft" align="right" valign="top"><a id="gab50a7b4a1b916c7ecfcc38ac8d5fdea0" name="gab50a7b4a1b916c7ecfcc38ac8d5fdea0"></a>
@@ -149,6 +151,10 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SCB_UART_ID</b>&#160;&#160;&#160;(0x3UL &lt;&lt; <a class="el" href="group__group__scb__common__macros.html#ga3b69cded7913c23737b78d8728e7a3be">CY_SCB_SUB_MODE_Pos</a>)</td></tr>
 <tr class="memdesc:gac3e63ee1464db3c202e3474f54e1ab94"><td class="mdescLeft">&#160;</td><td class="mdescRight">UART mode identifier. <br /></td></tr>
 <tr class="separator:gac3e63ee1464db3c202e3474f54e1ab94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabe4dbce1541fd98e716a270d721f03d9"><td class="memItemLeft" align="right" valign="top"><a id="gabe4dbce1541fd98e716a270d721f03d9" name="gabe4dbce1541fd98e716a270d721f03d9"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SCB_TGS_ID</b>&#160;&#160;&#160;(0x4UL &lt;&lt; <a class="el" href="group__group__scb__common__macros.html#ga3b69cded7913c23737b78d8728e7a3be">CY_SCB_SUB_MODE_Pos</a>)</td></tr>
+<tr class="memdesc:gabe4dbce1541fd98e716a270d721f03d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">TGS identifier. <br /></td></tr>
+<tr class="separator:gabe4dbce1541fd98e716a270d721f03d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

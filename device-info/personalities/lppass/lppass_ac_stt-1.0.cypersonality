@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) (2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -272,17 +272,17 @@
       </ParamChoice>
 
       <ParamString id='conditionSrcInternalDesc' name='' group='State Control' desc='' visible='`${ (action != 0) &amp;&amp; (action != 1) &amp;&amp; (action != 7) &amp;&amp; (conditionSrc == 0) }`' editable='false'
-                   default='Autonomous Controller&apos;s internal sources'/>
+                   default='Autonomous Controller&apos;s internal sources: Block Ready (all enabled blocks powered up), Counter Done (loop counter expired), or True (unconditional)'/>
       <ParamString id='conditionSrcExternalDesc' name='' group='State Control' desc='' visible='`${ (action != 0) &amp;&amp; (action != 1) &amp;&amp; (action != 7) &amp;&amp; (conditionSrc == 1) }`' editable='false'
-                   default='External Blocks or the CPU'/>
+                   default='External trigger inputs 0-3 from other IP blocks or the CPU (firmware), or device power mode (Active / Deep-Sleep)'/>
       <ParamString id='conditionSrcSARADCDesc'   name='' group='State Control' desc='' visible='`${ (action != 0) &amp;&amp; (action != 1) &amp;&amp; (action != 7) &amp;&amp; (conditionSrc == 2) }`' editable='false'
-                   default='SAR ADC, FIR filters and FIFO'/>
+                   default='SAR ADC events: conversion done, end-of-scan, busy, FIR filter done, FIFO level/done, and range detect 0-3'/>
       <ParamString id='conditionSrcPTCompDesc'   name='' group='State Control' desc='' visible='`${ (action != 0) &amp;&amp; (action != 1) &amp;&amp; (action != 7) &amp;&amp; (conditionSrc == 3) }`' editable='false'
-                   default='PTComp comparators 0 and 1 or Post-processing 0 and 1'/>
+                   default='PTComp events: comparator 0/1 edge detect, post-processing 0/1 strobe and range detect'/>
       <ParamString id='conditionSrcDACDesc'      name='' group='State Control' desc='' visible='`${ (action != 0) &amp;&amp; (action != 1) &amp;&amp; (action != 7) &amp;&amp; (conditionSrc == 4) }`' editable='false'
-                   default='DAC 0 and 1'/>
+                   default='DAC events: DAC 0/1 epoch (waveform restart), strobe, and range detect 0-2'/>
       <ParamString id='conditionSrcCTBDesc'      name='' group='State Control' desc='' visible='`${ (action != 0) &amp;&amp; (action != 1) &amp;&amp; (action != 7) &amp;&amp; (conditionSrc == 5) }`' editable='false'
-                   default='CTB 0 and 1 comparators 0 and 1'/>
+                   default='CTB events: CTB 0/1 comparator 0/1 edge detect output'/>
 
       <ParamChoice
           group='State Control'
@@ -449,7 +449,7 @@
           default='`${(0 eq getInstNumber("state")) ? (isBlockUsed(resource_state_1) ? 1 : 0) : 0}`'
           editable='`${((action == 3) || (action == 4) || (action == 5) || (action == 6))}`'>
         <Entry name='State $idx' value='$idx'
-               visible='`${(isBlockUsed(resource_state_$idx) &amp;&amp; ($idx ne getInstNumber("state"))) || ((0 eq getInstNumber("state")) &amp;&amp; !(isBlockUsed(resource_state_1)) &amp;&amp; ($idx eq 0) &amp;&amp; !((action == 3) || (action == 4) || (action == 5) || (action == 6)))}`'
+               visible='`${(isBlockUsed(resource_state_$idx) &amp;&amp; ($idx ne getInstNumber("state"))) || ((0 eq getInstNumber("state")) &amp;&amp; !(isBlockUsed(resource_state_1)) &amp;&amp; ($idx eq 0))}`'
                repeatCount='64'/>
       </ParamChoice>
       <ParamRange id='writeCounter'
@@ -571,6 +571,36 @@
         <ParamString id='ptcStaticComp$idxPower' name='ptcStaticComp$idxPower' group='Internal' editable='false' visible='false' desc=''
                      default='`${ptcIsUsed ? getExposedMember(resource_ptc, "ptc_sta_comp$idxPower") : "CY_AUTANALOG_PTCOMP_COMP_PWR_OFF"}`' />
       </Repeat>
+
+      <!-- PTComp comparator unlock/enable is sticky across STT states.
+           Aggregate, per comparator, whether it is unlocked and enabled in any state so the
+           event-source DRCs do not false-fire when the comparator was enabled in a preceding
+           state and carried over into this state without being re-enabled. -->
+      <Repeat count='64'>
+        <ParamBool id='ptcComp0InState$idx' name='ptcComp0InState$idx' group='Internal' editable='false' visible='`${debug}`' desc=''
+                   default='`${isBlockUsed(resource_state_$idx) ? (getExposedMember(resource_state_$idx, "stt_ptcUnlock") &amp;&amp; getExposedMember(resource_state_$idx, "stt_ptc0Enable")) : false}`' />
+        <ParamBool id='ptcComp1InState$idx' name='ptcComp1InState$idx' group='Internal' editable='false' visible='`${debug}`' desc=''
+                   default='`${isBlockUsed(resource_state_$idx) ? (getExposedMember(resource_state_$idx, "stt_ptcUnlock") &amp;&amp; getExposedMember(resource_state_$idx, "stt_ptc1Enable")) : false}`' />
+      </Repeat>
+
+      <ParamBool id='ptcComp0EnabledAnyState' name='ptcComp0EnabledAnyState' group='Internal' editable='false' visible='`${debug}`' desc=''
+                 default='`${ptcComp0InState0  || ptcComp0InState1  || ptcComp0InState2  || ptcComp0InState3  || ptcComp0InState4  || ptcComp0InState5  || ptcComp0InState6  || ptcComp0InState7  ||
+                            ptcComp0InState8  || ptcComp0InState9  || ptcComp0InState10 || ptcComp0InState11 || ptcComp0InState12 || ptcComp0InState13 || ptcComp0InState14 || ptcComp0InState15 ||
+                            ptcComp0InState16 || ptcComp0InState17 || ptcComp0InState18 || ptcComp0InState19 || ptcComp0InState20 || ptcComp0InState21 || ptcComp0InState22 || ptcComp0InState23 ||
+                            ptcComp0InState24 || ptcComp0InState25 || ptcComp0InState26 || ptcComp0InState27 || ptcComp0InState28 || ptcComp0InState29 || ptcComp0InState30 || ptcComp0InState31 ||
+                            ptcComp0InState32 || ptcComp0InState33 || ptcComp0InState34 || ptcComp0InState35 || ptcComp0InState36 || ptcComp0InState37 || ptcComp0InState38 || ptcComp0InState39 ||
+                            ptcComp0InState40 || ptcComp0InState41 || ptcComp0InState42 || ptcComp0InState43 || ptcComp0InState44 || ptcComp0InState45 || ptcComp0InState46 || ptcComp0InState47 ||
+                            ptcComp0InState48 || ptcComp0InState49 || ptcComp0InState50 || ptcComp0InState51 || ptcComp0InState52 || ptcComp0InState53 || ptcComp0InState54 || ptcComp0InState55 ||
+                            ptcComp0InState56 || ptcComp0InState57 || ptcComp0InState58 || ptcComp0InState59 || ptcComp0InState60 || ptcComp0InState61 || ptcComp0InState62 || ptcComp0InState63}`' />
+      <ParamBool id='ptcComp1EnabledAnyState' name='ptcComp1EnabledAnyState' group='Internal' editable='false' visible='`${debug}`' desc=''
+                 default='`${ptcComp1InState0  || ptcComp1InState1  || ptcComp1InState2  || ptcComp1InState3  || ptcComp1InState4  || ptcComp1InState5  || ptcComp1InState6  || ptcComp1InState7  ||
+                            ptcComp1InState8  || ptcComp1InState9  || ptcComp1InState10 || ptcComp1InState11 || ptcComp1InState12 || ptcComp1InState13 || ptcComp1InState14 || ptcComp1InState15 ||
+                            ptcComp1InState16 || ptcComp1InState17 || ptcComp1InState18 || ptcComp1InState19 || ptcComp1InState20 || ptcComp1InState21 || ptcComp1InState22 || ptcComp1InState23 ||
+                            ptcComp1InState24 || ptcComp1InState25 || ptcComp1InState26 || ptcComp1InState27 || ptcComp1InState28 || ptcComp1InState29 || ptcComp1InState30 || ptcComp1InState31 ||
+                            ptcComp1InState32 || ptcComp1InState33 || ptcComp1InState34 || ptcComp1InState35 || ptcComp1InState36 || ptcComp1InState37 || ptcComp1InState38 || ptcComp1InState39 ||
+                            ptcComp1InState40 || ptcComp1InState41 || ptcComp1InState42 || ptcComp1InState43 || ptcComp1InState44 || ptcComp1InState45 || ptcComp1InState46 || ptcComp1InState47 ||
+                            ptcComp1InState48 || ptcComp1InState49 || ptcComp1InState50 || ptcComp1InState51 || ptcComp1InState52 || ptcComp1InState53 || ptcComp1InState54 || ptcComp1InState55 ||
+                            ptcComp1InState56 || ptcComp1InState57 || ptcComp1InState58 || ptcComp1InState59 || ptcComp1InState60 || ptcComp1InState61 || ptcComp1InState62 || ptcComp1InState63}`' />
 
       <ParamBool id='stateUnlockPtComp'
                  name='Unlock PTComp'
@@ -831,9 +861,9 @@
     <DRC type='ERROR' text='Enable and configure Autonomous Controller.' condition='`${!isBlockUsed(resource_ac)}`' >
       <FixIt action='ENABLE_BLOCK' target='`${resource_ac}`' value='lppass_ac-1.0' valid='true' />
     </DRC>
-    <DRC type='ERROR'
-         text='The State 0 option is not valid for State 0 as Branching state.'
-         condition='`${(0 eq getInstNumber("state")) &amp;&amp; ((action == 3) || (action == 4) || (action == 5) || (action == 6)) &amp;&amp; (branchingState eq 0)}`'
+    <DRC type='WARNING'
+         text='Branching to the current state (State 0) creates an infinite loop. Enable additional states for proper branching.'
+         condition='`${(0 eq getInstNumber("state")) &amp;&amp; ((action == 3) || (action == 4) || (action == 5) || (action == 6)) &amp;&amp; (branchingState eq 0) &amp;&amp; !(isBlockUsed(resource_state_1))}`'
          paramId='branchingState' />
     <DRC type='ERROR'
          text='Enable the next state `${(curState + 1)}` if &apos;Go to Next State&apos; is selected for the Action field.'
@@ -949,6 +979,23 @@
                                    ctb1opamp$idxGain eq CY_AUTANALOG_STT_CTB_OA_GAIN_16_00 ? 16.00 :
                                    ctb1opamp$idxGain eq CY_AUTANALOG_STT_CTB_OA_GAIN_21_33 ? 21.33 :
                                    ctb1opamp$idxGain eq CY_AUTANALOG_STT_CTB_OA_GAIN_32_00 ? 32.00 : 1.00))}`' />
+
+    <!-- DRC for PTC comparator condition without proper configuration. -->
+    <!-- Comparator enable is sticky across STT states, so accept it being
+         enabled in any state (ptcComp$idxEnabledAnyState) rather than only the current state. -->
+    <DRC type='ERROR'
+         text='The Comparator $idx in PTComp used as event source in State Transition Table should be unlocked and enabled in at least one state, and edge detection should be enabled in the static configuration.'
+         repeatCount='2'
+         condition='`${!(action == 0 || action == 1 || action == 7) &amp;&amp; (conditionSrc == 3) &amp;&amp; isBlockUsed(resource_ptc) &amp;&amp;
+                      (condition eq "CY_AUTANALOG_STT_AC_CONDITION_PTCOMP_CMP" . $idx) &amp;&amp;
+                      (!ptcComp$idxEnabledAnyState || ptcStaticComp$idxPower eq "CY_AUTANALOG_PTCOMP_COMP_PWR_OFF" || getExposedMember(resource_ptc, "ptc_sta_comp$idxEdgeDetect") eq "CY_AUTANALOG_PTCOMP_COMP_INT_DISABLED")}`' />
+
+    <DRC type='ERROR'
+         text='The Comparator $idx post-processing in PTComp used as event source should be unlocked and enabled in at least one state.'
+         repeatCount='2'
+         condition='`${!(action == 0 || action == 1 || action == 7) &amp;&amp; (conditionSrc == 3) &amp;&amp; isBlockUsed(resource_ptc) &amp;&amp;
+                      ((condition eq "CY_AUTANALOG_STT_AC_CONDITION_PTCOMP_STROBE" . $idx) || (condition eq "CY_AUTANALOG_STT_AC_CONDITION_PTCOMP_RANGE" . $idx)) &amp;&amp;
+                      (!ptcComp$idxEnabledAnyState || ptcStaticComp$idxPower eq "CY_AUTANALOG_PTCOMP_COMP_PWR_OFF")}`' />
   </DRCs>
 
   <ConfigFirmware/>

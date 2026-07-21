@@ -122,6 +122,7 @@
 #define CY_AUTANALOG_PTC_H
 
 #include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 
 #ifdef CY_IP_MXS22LPPASS_PTC
 
@@ -605,6 +606,7 @@ __STATIC_INLINE bool Cy_AutAnalog_PTComp_Read(uint8_t ptcompIdx, uint8_t compIdx
 #endif /* CY_IP_MXS22LPPASS_PTC */
 
 #endif /** !defined(CY_AUTANALOG_PTC_H) */
+#endif
 
 /** \} group_autanalog_ptcomp */
 

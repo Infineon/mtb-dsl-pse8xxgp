@@ -139,20 +139,144 @@ $(document).ready(function(){initNavTree('group__group__graphics.html',''); init
 <li>Shutdown and Color Mode control for DPI displays.</li>
 </ul>
 <p>The functions and other declarations used in this driver are in cy_graphics.h. You can include cy_pdl.h to get access to all functions and declarations in the PDL.</p>
-<h1><a class="anchor" id="group_graphics_section_more_information"></a>
+<h1><a class="anchor" id="group_graphics_section_async_dbi"></a>
+Interrupt-Driven DBI Frame Transfer</h1>
+<p>For MIPI DSI command mode (DBI) displays, the GFXSS driver provides an interrupt-driven frame transfer mechanism that eliminates CPU polling and delay-based synchronization. The display frame is divided into slices that fit within the DBI command size limit (<a class="el" href="group__group__graphics__macros.html#gae28543c6838a6fb9d3ef519b6548870d">DBI_SCLICE_LIMIT_IN_BYTES</a> = 65536 bytes). Each slice is automatically chained by the DC interrupt handler after the previous slice completes.</p>
+<p>The blocking API <a class="el" href="group__group__graphics__functions.html#gaff6bce72f0a3214b8527d90155b1f4f4">Cy_GFXSS_Transfer_Frame</a> uses a polling loop with <a class="el" href="group__group__syslib__functions.html#ga2688a50431e6083a707290f3ad91356a" title="The function is same as Cy_SysLib_DelayUs.">Cy_SysLib_Rtos_DelayUs()</a> to wait for each slice. The non-blocking API <a class="el" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a> offloads this to the GFXSS_DC_IRQ interrupt, freeing the CPU for other work during the transfer.</p>
+<h2><a class="anchor" id="group_graphics_subsection_async_te"></a>
+Tearing Effect (TE) Synchronization</h2>
+<p>When TE is enabled on the panel (MIPI DCS command 0x35 set to a non-zero mode), the driver sets CMD_MODE_CFG.TEAR_FX_EN in the DWC MIPI DSI Host. This causes the DSI host to automatically perform a Bus Turn Around (BTA) and wait for the panel's TE signal before transmitting the first DBI write command. This provides hardware-level tear-free display updates without requiring explicit TE interrupt handling in the application.</p>
+<h2><a class="anchor" id="group_graphics_subsection_async_usage"></a>
+Integration Steps</h2>
+<ol type="1">
+<li>Enable TE on the display panel during initialization (MIPI DCS command 0x35, e.g. 0x02 for VSync + HSync mode).</li>
+<li>Register a completion callback with <a class="el" href="group__group__graphics__functions.html#gac6ce151ed021cb7fb3a0e75822b6ca75">Cy_GFXSS_RegisterTransferCompleteCallback</a>.<ul>
+<li>RTOS: the callback gives a semaphore.</li>
+<li>Bare-metal: the callback sets a volatile flag.</li>
+</ul>
+</li>
+<li>Register an ISR for <b>GFXSS_DC_IRQ</b> that calls <a class="el" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler()</a>. The PDL internally invokes the registered callback when all slices are done.</li>
+<li>In the display flush path, wait for the previous transfer to finish (semaphore take or flag poll), update the frame buffer pointer with <a class="el" href="group__group__graphics__functions.html#gae280da51ca33a7335bf3493655183cf1">Cy_GFXSS_Set_FrameBuffer()</a>, and call <a class="el" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async()</a>.</li>
+</ol>
+<h2><a class="anchor" id="group_graphics_subsection_async_snippet_rtos"></a>
+Code Example (FreeRTOS)</h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cy_graphics.h&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;FreeRTOS.h&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;semphr.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> SemaphoreHandle_t frame_tx_sem;</div>
+<div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> gfx_context_rtos;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Callback invoked from ISR when all DBI slices complete */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> on_transfer_complete_rtos(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    BaseType_t woken = pdFALSE;</div>
+<div class="line">    xSemaphoreGiveFromISR(frame_tx_sem, &amp;woken);</div>
+<div class="line">    portYIELD_FROM_ISR(woken);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ISR: DC interrupt handler for DBI slice completion */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> dc_dbi_irq_handler_rtos(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS, &amp;gfx_context_rtos);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> display_async_init_rtos(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    frame_tx_sem = xSemaphoreCreateBinary();</div>
+<div class="line">    xSemaphoreGive(frame_tx_sem);  <span class="comment">/* Available for the first flush */</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">/* Register completion callback (PDL calls it from ISR context) */</span></div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#gac6ce151ed021cb7fb3a0e75822b6ca75">Cy_GFXSS_RegisterTransferCompleteCallback</a>(&amp;gfx_context_rtos,</div>
+<div class="line">                                              on_transfer_complete_rtos);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a> dc_dbi_cfg = {</div>
+<div class="line">        .<a class="code hl_variable" href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">intrSrc</a>      = GFXSS_DC_IRQ,</div>
+<div class="line">        .intrPriority = 3U</div>
+<div class="line">    };</div>
+<div class="line">    <a class="code hl_function" href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a>(&amp;dc_dbi_cfg, dc_dbi_irq_handler_rtos);</div>
+<div class="line">    NVIC_EnableIRQ(GFXSS_DC_IRQ);</div>
+<div class="line">    NVIC_ClearPendingIRQ(GFXSS_DC_IRQ);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Display flush callback (LVGL / custom framework) */</span></div>
+<div class="line"><span class="keywordtype">void</span> disp_flush_rtos(lv_display_t *disp, <span class="keyword">const</span> lv_area_t *area, uint8_t *px_map)</div>
+<div class="line">{</div>
+<div class="line">    (void)area;</div>
+<div class="line">    xSemaphoreTake(frame_tx_sem, portMAX_DELAY);</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#gae280da51ca33a7335bf3493655183cf1">Cy_GFXSS_Set_FrameBuffer</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS,</div>
+<div class="line">                             (uint32_t*)px_map, &amp;gfx_context_rtos);</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS, &amp;gfx_context_rtos);</div>
+<div class="line">    lv_disp_flush_ready(disp);</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__group__graphics__data__structures_html_structcy__stc__gfx__context__t"><div class="ttname"><a href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a></div><div class="ttdoc">The Graphics internal context data.</div><div class="ttdef"><b>Definition:</b> cy_graphics.h:492</div></div>
+<div class="ttc" id="agroup__group__graphics__functions_html_ga59b664a7598b0ed0bc6a143e641a8e03"><div class="ttname"><a href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a></div><div class="ttdeci">cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame_Async(GFXSS_Type *base, cy_stc_gfx_context_t *context)</div><div class="ttdoc">Initiates a non-blocking, interrupt-driven frame transfer in DBI command mode.</div><div class="ttdef"><b>Definition:</b> cy_graphics.c:1445</div></div>
+<div class="ttc" id="agroup__group__graphics__functions_html_ga7526b65bb4a2e68703d39a23ee780c44"><div class="ttname"><a href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a></div><div class="ttdeci">void Cy_GFXSS_DC_DBI_InterruptHandler(GFXSS_Type *base, cy_stc_gfx_context_t *context)</div><div class="ttdoc">DC interrupt handler for interrupt-driven DBI frame transfers.</div><div class="ttdef"><b>Definition:</b> cy_graphics.c:1690</div></div>
+<div class="ttc" id="agroup__group__graphics__functions_html_gac6ce151ed021cb7fb3a0e75822b6ca75"><div class="ttname"><a href="group__group__graphics__functions.html#gac6ce151ed021cb7fb3a0e75822b6ca75">Cy_GFXSS_RegisterTransferCompleteCallback</a></div><div class="ttdeci">void Cy_GFXSS_RegisterTransferCompleteCallback(cy_stc_gfx_context_t *context, cy_gfx_transfer_complete_callback_t callback)</div><div class="ttdoc">Register a callback function that is invoked from ISR context when an async DBI frame transfer comple...</div><div class="ttdef"><b>Definition:</b> cy_graphics.c:1809</div></div>
+<div class="ttc" id="agroup__group__graphics__functions_html_gae280da51ca33a7335bf3493655183cf1"><div class="ttname"><a href="group__group__graphics__functions.html#gae280da51ca33a7335bf3493655183cf1">Cy_GFXSS_Set_FrameBuffer</a></div><div class="ttdeci">cy_en_gfx_status_t Cy_GFXSS_Set_FrameBuffer(GFXSS_Type *base, uint32_t *gfx_layer_buffer, cy_stc_gfx_context_t *context)</div><div class="ttdoc">Sets Video/Graphics layer buffer address.</div><div class="ttdef"><b>Definition:</b> cy_graphics.c:812</div></div>
+<div class="ttc" id="agroup__group__sysint__data__structures_html_a6da08d81da65a7f93d3e4c46a4b8d950"><div class="ttname"><a href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">cy_stc_sysint_t::intrSrc</a></div><div class="ttdeci">IRQn_Type intrSrc</div><div class="ttdoc">Interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:229</div></div>
+<div class="ttc" id="agroup__group__sysint__data__structures_html_structcy__stc__sysint__t"><div class="ttname"><a href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a></div><div class="ttdoc">Initialization configuration structure for a single interrupt channel.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:227</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_gab2ff6820a898e9af3f780000054eea5d"><div class="ttname"><a href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a></div><div class="ttdeci">cy_en_sysint_status_t Cy_SysInt_Init(const cy_stc_sysint_t *config, cy_israddress userIsr)</div><div class="ttdoc">Initializes the referenced interrupt by setting the priority and the interrupt vector.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:82</div></div>
+<div class="ttc" id="astructGFXSS__Type_html"><div class="ttname"><a href="structGFXSS__Type.html">GFXSS_Type</a></div><div class="ttdoc">GFXSS.</div><div class="ttdef"><b>Definition:</b> cyip_gfxss.h:550</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="group_graphics_subsection_async_snippet_baremetal"></a>
+Code Example (Bare-Metal)</h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;cy_graphics.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keywordtype">bool</span> frame_tx_done = <span class="keyword">true</span>;</div>
+<div class="line"><span class="keyword">static</span> <a class="code hl_struct" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> gfx_context_bm;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Callback invoked from ISR when all DBI slices complete */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> on_transfer_complete_bm(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    frame_tx_done = <span class="keyword">true</span>;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ISR: DC interrupt handler for DBI slice completion */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> dc_dbi_irq_handler_bm(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS, &amp;gfx_context_bm);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> display_async_init_bm(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">/* Register completion callback */</span></div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#gac6ce151ed021cb7fb3a0e75822b6ca75">Cy_GFXSS_RegisterTransferCompleteCallback</a>(&amp;gfx_context_bm,</div>
+<div class="line">                                              on_transfer_complete_bm);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a> dc_dbi_cfg = {</div>
+<div class="line">        .<a class="code hl_variable" href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">intrSrc</a>      = GFXSS_DC_IRQ,</div>
+<div class="line">        .intrPriority = 3U</div>
+<div class="line">    };</div>
+<div class="line">    <a class="code hl_function" href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a>(&amp;dc_dbi_cfg, dc_dbi_irq_handler_bm);</div>
+<div class="line">    NVIC_EnableIRQ(GFXSS_DC_IRQ);</div>
+<div class="line">    NVIC_ClearPendingIRQ(GFXSS_DC_IRQ);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Display flush (polling-based for bare-metal main loop) */</span></div>
+<div class="line"><span class="keywordtype">void</span> disp_flush_bm(uint8_t *px_map)</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">/* Wait for previous transfer (WFI sleeps CPU between interrupts) */</span></div>
+<div class="line">    <span class="keywordflow">while</span> (!frame_tx_done) { __WFI(); }</div>
+<div class="line">    frame_tx_done = <span class="keyword">false</span>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#gae280da51ca33a7335bf3493655183cf1">Cy_GFXSS_Set_FrameBuffer</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS,</div>
+<div class="line">                             (uint32_t*)px_map, &amp;gfx_context_bm);</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS, &amp;gfx_context_bm);</div>
+<div class="line">}</div>
+</div><!-- fragment --><h1><a class="anchor" id="group_graphics_section_more_information"></a>
 More Information</h1>
 <p>For more information on the Graphics subsystem, refer to the technical reference manual (TRM). </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>
-<tr class="memitem:group__group__graphics__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__macros.html">Macros</a></td></tr>
+<tr class="memitem:group__group__graphics__data__structures"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__data__structures.html">Data Structures</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__graphics__enums"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__enums.html">Enumerated Types</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__graphics__functions"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html">Functions</a></td></tr>
 <tr class="memdesc:group__group__graphics__functions"><td class="mdescLeft">&#160;</td><td class="mdescRight">Following section describes the functions available in graphics subsystem. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__graphics__data__structures"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__data__structures.html">Data Structures</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__graphics__enums"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__enums.html">Enumerated Types</a></td></tr>
+<tr class="memitem:group__group__graphics__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__macros.html">Macros</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

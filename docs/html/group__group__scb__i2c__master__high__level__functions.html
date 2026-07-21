@@ -198,6 +198,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This function requests the master to abort write operation by generating a Stop condition. </p>
+<p>The function does not wait until this action is completed. Therefore next write operation can be initiated only after the <a class="el" href="group__group__scb__i2c__macros__master__status.html#ga412fef33336fb22c95f342ccf2485a0a">CY_SCB_I2C_MASTER_BUSY</a> is cleared. useTxFifo xferPending masterState after Write Abort TRUE TRUE CY_SCB_I2C_MASTER_STOP TRUE FALSE CY_SCB_I2C_MASTER_STOP FALSE TRUE CY_SCB_I2C_MASTER_STOP FALSE FALSE CY_SCB_I2C_MASTER_STOP</p>
 <p>The function does not wait until this action is completed. Therefore next write operation can be initiated only after the <a class="el" href="group__group__scb__i2c__macros__master__status.html#ga412fef33336fb22c95f342ccf2485a0a">CY_SCB_I2C_MASTER_BUSY</a> is cleared.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

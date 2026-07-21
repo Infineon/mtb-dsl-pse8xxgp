@@ -26,6 +26,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+#include "mtb_hal_gpio.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_ADC)
+
+
+
 //" *SUSPEND-FORMATTING*"
 /**
  * \addtogroup group_hal_adc ADC (Analog to Digital Converter)
@@ -44,7 +56,7 @@
  *   3. Set up the HAL ADC using mtb_hal_adc_setup by passing the HAL ADC
  *      object and the pre-initialized ADC structures.
  *
- * \note \ref mtb_hal_adc_read_u16 always returns a 16 bit value in the range
+ * \note mtb_hal_adc_read_u16() always returns a 16 bit value in the range
  * 0x0000-0xFFFF. If the underlying hardware does not support 16 bit resolution the
  * value is scaled linearly to cover the full 16 bits.
  *
@@ -59,15 +71,7 @@
  * \snippet hal_adc.c snippet_mtb_hal_read_latest
  */
 //" *RESUME-FORMATTING*"
-#pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-#include "mtb_hal_gpio.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_ADC)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -215,6 +219,6 @@ cy_rslt_t mtb_hal_adc_read_filtered(const mtb_hal_adc_channel_t* obj, mtb_hal_ad
 #include MTB_HAL_ADC_IMPL_HEADER
 #endif /* MTB_HAL_ADC_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_ADC)
-
 /** \} group_hal_adc */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_ADC)

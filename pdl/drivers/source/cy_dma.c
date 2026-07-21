@@ -152,7 +152,7 @@ cy_en_dma_status_t Cy_DMA_Descriptor_Init(cy_stc_dma_descriptor_t * descriptor, 
                     _VAL2FLD(CY_DMA_CTL_SRC_INCR, config->srcXincrement) |
                     _VAL2FLD(CY_DMA_CTL_DST_INCR, config->dstXincrement) |
     /* Convert the data count from the user's range (1-256) into the machine range (0-255). */
-                    _VAL2FLD(CY_DMA_CTL_COUNT, config->xCount - 1UL);
+                    _VAL2FLD(CY_DMA_CTL_COUNT, (config->xCount > 0UL) ? (config->xCount - 1UL) : 0UL);
                 /* offset varies based on the descriptor type */
                 descriptor->yCtl = (uint32_t)config->nextDescriptor;
                 ret = CY_DMA_SUCCESS;
@@ -170,20 +170,20 @@ cy_en_dma_status_t Cy_DMA_Descriptor_Init(cy_stc_dma_descriptor_t * descriptor, 
                     _VAL2FLD(CY_DMA_CTL_SRC_INCR, config->srcXincrement) |
                     _VAL2FLD(CY_DMA_CTL_DST_INCR, config->dstXincrement) |
     /* Convert the data count from the user's range (1-256) into the machine range (0-255). */
-                    _VAL2FLD(CY_DMA_CTL_COUNT, config->xCount - 1UL);
+                    _VAL2FLD(CY_DMA_CTL_COUNT, (config->xCount > 0UL) ? (config->xCount - 1UL) : 0UL);
 
                 descriptor->yCtl =
                     _VAL2FLD(CY_DMA_CTL_SRC_INCR, config->srcYincrement) |
                     _VAL2FLD(CY_DMA_CTL_DST_INCR, config->dstYincrement) |
     /* Convert the data count from the user's range (1-256) into the machine range (0-255). */
-                    _VAL2FLD(CY_DMA_CTL_COUNT, config->yCount - 1UL);
+                    _VAL2FLD(CY_DMA_CTL_COUNT, (config->yCount > 0UL) ? (config->yCount - 1UL) : 0UL);
 
                 descriptor->nextPtr = (uint32_t)config->nextDescriptor;
                 ret = CY_DMA_SUCCESS;
                 break;
 
             case CY_DMA_CRC_TRANSFER:
-                CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 14.3','CY_DW_CRC is available for all CAT1B devices.');
+                CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 14.3','CY_DW_CRC is available for all PSC devices.');
                 if (CY_DW_CRC != 0UL)
                 {
                     CY_ASSERT_L2(CY_DMA_IS_LOOP_INCR_VALID(config->srcXincrement));
@@ -192,7 +192,7 @@ cy_en_dma_status_t Cy_DMA_Descriptor_Init(cy_stc_dma_descriptor_t * descriptor, 
                     descriptor->xCtl =
                         _VAL2FLD(CY_DMA_CTL_SRC_INCR, config->srcXincrement) |
         /* Convert the data count from the user's range (1-256) into the machine range (0-255). */
-                        _VAL2FLD(CY_DMA_CTL_COUNT, config->xCount - 1UL);
+                        _VAL2FLD(CY_DMA_CTL_COUNT, (config->xCount > 0UL) ? (config->xCount - 1UL) : 0UL);
                     /* offset varies based on the descriptor type */
                     descriptor->yCtl = (uint32_t)config->nextDescriptor;
                     ret = CY_DMA_SUCCESS;
@@ -436,7 +436,7 @@ void Cy_DMA_Descriptor_SetDescriptorType(cy_stc_dma_descriptor_t * descriptor, c
 {
     CY_ASSERT_L3(CY_DMA_IS_TYPE_VALID(descriptorType));
     CY_ASSERT_L1(descriptor);
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 14.3','CY_DW_CRC is available for all CAT1B devices.');
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 14.3','CY_DW_CRC is available for all PSC devices.');
     if ((CY_DMA_CRC_TRANSFER != descriptorType) || (CY_DW_CRC == 1UL))
     {
         if (descriptorType != Cy_DMA_Descriptor_GetDescriptorType(descriptor)) /* Do not perform if the type is not changed */

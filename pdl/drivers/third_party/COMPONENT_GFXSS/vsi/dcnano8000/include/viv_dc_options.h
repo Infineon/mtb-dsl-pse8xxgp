@@ -46,13 +46,6 @@
 /* Overlay source capture path */
 #define OVERLAY_SOURCE_PATH "/root/overlay_source.txt"
 
-/* For /dev/mem
- * define physical base address & available memory size
- * please change to the appropriate value according to the env
- */
-#define MEM_BASE 0x00000000
-#define MEM_SIZE 0x00000000
-
 #define ALLOC_RESERVED_MEM_IN_KERNEL 1
 
 #ifndef _BAREMETAL

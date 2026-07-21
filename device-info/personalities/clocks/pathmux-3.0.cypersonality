@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -47,7 +47,7 @@
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__path__src.html' linkText='Open Clock Path Source Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
-    <ParamString id='clockInst' default='`${getInstNumber("pathmux")}`' />
+    <ParamString id='clockInst' default='`${getInstNumber("pathmux")}`' desc='Instance number of the clock path used in generated configuration' />
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${("mxs22srss" eq getIpBlockName()) ? iho : imo}`' visible='true' desc='The clock source for Clock Path `${clockInst}`'>
       <Entry name='IMO'    value='imo'    visible='`${hasBlock("srss[0].clock[0].imo[0]")}`'/>
       <Entry name='ECO'    value='eco'    visible='`${hasBlock("srss[0].clock[0].eco[0]")}`'/>
@@ -61,27 +61,18 @@
       <Entry name='WCO'    value='wco'    visible='`${hasBlock("srss[0].clock[0].wco[0]")}`'/>
       <Entry name='IHO'    value='iho'    visible='`${hasBlock("srss[0].clock[0].iho[0]")}`'/>
     </ParamChoice>
-    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' />
-    <ParamString id='sourceClockRsc' default='`${sourceClock eq ilo1 ? "srss[0].clock[0].ilo[1]" : sourceClock eq ilo0 ? "srss[0].clock[0].ilo[0]" : "srss[0].clock[0]." . sourceClock . "[0]"}`' />
+    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' desc='Human-readable display name of the selected source clock' />
+    <ParamString id='sourceClockRsc' default='`${sourceClock eq ilo1 ? "srss[0].clock[0].ilo[1]" : sourceClock eq ilo0 ? "srss[0].clock[0].ilo[0]" : "srss[0].clock[0]." . sourceClock . "[0]"}`' desc='Resource path of the selected clock path source' />
 
-    <ParamString id='frequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+    <ParamString id='frequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Clock path frequency taken from the selected source clock' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
 
     <!-- If the frequency is less than one MHz, display its value in kHz -->
     <ParamString id='frequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(frequency,accuracy)}`' visible='true' editable='false' desc='The Clock Path frequency provided by the chosen clock source' />
   </Parameters>
 
   <Variables>
-    <Variable id='sourceClockApiName' value='`${sourceClock eq imo      ? "IMO" :
-                                                sourceClock eq eco      ? "ECO" :
-                                                sourceClock eq ext      ? "EXT" :
-                                                sourceClock eq althf    ? "ALTHF" :
-                                                sourceClock eq ilo      ? "ILO" :
-                                                sourceClock eq pilo     ? "PILO" :
-                                                sourceClock eq iho      ? "IHO" :
-                                                sourceClock eq wco      ? "WCO" :
-                                                sourceClock eq ilo0     ? "ILO0" :
-                                                                          "ILO1"}`' />
+    <Variable id='sourceClockApiName' value='`${toUpper(sourceClock)}`' />
 
     <Variable id='sourceClockNumber' value='`${sourceClock eq imo    ? 0 :
                                                sourceClock eq eco    ? 1 :

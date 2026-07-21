@@ -246,10 +246,15 @@ typedef struct {
 
 /** Full MPC settings structure */
 typedef struct {
-    const cy_stc_mpc_regions_t* regions;         /**< Pointer to the regions array */
-    uint8_t                     region_count;    /**< Regions array size */
-    const cy_stc_mpc_rot_cfg_t* cfg;             /**< Pointer to the settings array */
-    uint8_t                     cfg_count;       /**< Settings array size  */
+    const cy_stc_mpc_regions_t* regions;                 /**< Pointer to the regions array */
+    uint8_t                     region_count;            /**< Regions array size */
+    const cy_stc_mpc_rot_cfg_t* cfg;                     /**< Pointer to the settings array */
+    uint8_t                     cfg_count;               /**< Settings array size */
+#if defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)
+    const cy_stc_mpc_regions_t* locked_rot_regions;      /**< Pointer to the locked ROT regions array */
+    uint8_t                     locked_rot_region_count; /**< Locked ROT regions array size */
+    const cy_stc_mpc_cfg_t*     locked_rot_cfg;          /**< Pointer to the locked ROT S/NS setting */
+#endif /* defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED) */
 } cy_stc_mpc_unified_t;
 
 /** \} group_mpc_data_structures */

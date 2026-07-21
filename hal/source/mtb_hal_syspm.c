@@ -231,6 +231,9 @@ void _mtb_hal_syspm_ensure_cb_registered_lptimer(void)
         newly_registered = Cy_SysPm_RegisterCallback(&cb_sleep);
         CY_ASSERT(newly_registered);
 
+        newly_registered = _mtb_hal_syspm_ensure_cb_registered_hibram_lptimer();
+        CY_ASSERT(newly_registered);
+
         CY_UNUSED_PARAMETER(newly_registered);
     }
     mtb_hal_system_critical_section_exit(intr_status);
@@ -332,7 +335,10 @@ void mtb_hal_syspm_lock_deepsleep(void)
     _mtb_hal_syspm_ensure_cb_registered_dslock();
     CY_ASSERT(_mtb_hal_syspm_deepsleep_lock != USHRT_MAX);
     uint32_t intr_status = mtb_hal_system_critical_section_enter();
-    _mtb_hal_syspm_deepsleep_lock++;
+    if (_mtb_hal_syspm_deepsleep_lock < USHRT_MAX)
+    {
+        _mtb_hal_syspm_deepsleep_lock++;
+    }
     mtb_hal_system_critical_section_exit(intr_status);
 }
 
@@ -344,7 +350,10 @@ void mtb_hal_syspm_unlock_deepsleep(void)
 {
     CY_ASSERT(_mtb_hal_syspm_deepsleep_lock != 0U);
     uint32_t intr_status = mtb_hal_system_critical_section_enter();
-    _mtb_hal_syspm_deepsleep_lock--;
+    if (_mtb_hal_syspm_deepsleep_lock > 0U)
+    {
+        _mtb_hal_syspm_deepsleep_lock--;
+    }
     mtb_hal_system_critical_section_exit(intr_status);
 }
 
@@ -354,7 +363,7 @@ void mtb_hal_syspm_unlock_deepsleep(void)
 //--------------------------------------------------------------------------------------------------
 cy_rslt_t mtb_hal_syspm_deepsleep(void)
 {
-    if (_mtb_hal_syspm_deepsleep_lock != 0)
+    if (_mtb_hal_syspm_deepsleep_lock != 0U)
     {
         return MTB_HAL_SYSPM_RSLT_DEEPSLEEP_LOCKED;
     }
@@ -406,7 +415,7 @@ cy_rslt_t _mtb_hal_syspm_tickless_sleep_deepsleep(mtb_hal_lptimer_t* obj, uint32
 {
     cy_rslt_t result = CY_RSLT_SUCCESS;
 
-    if ((deep_sleep == true) && (_mtb_hal_syspm_deepsleep_lock != 0))
+    if ((deep_sleep == true) && (_mtb_hal_syspm_deepsleep_lock != 0U))
     {
         return MTB_HAL_SYSPM_RSLT_DEEPSLEEP_LOCKED;
     }

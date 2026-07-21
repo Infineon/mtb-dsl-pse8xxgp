@@ -273,6 +273,8 @@
 #if !defined(CY_AUTANALOG_CTB_H)
 #define CY_AUTANALOG_CTB_H
 
+#include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 #include "cy_autanalog_common.h"
 
 #ifdef CY_IP_MXS22LPPASS_CTB
@@ -862,6 +864,7 @@ __STATIC_INLINE bool Cy_AutAnalog_CTB_Comp_Read(uint8_t ctbIdx, uint8_t compIdx)
 #endif /* CY_IP_MXS22LPPASS_CTB */
 
 #endif /** !defined(CY_AUTANALOG_CTB_H) */
+#endif
 
 /** \} group_autanalog_ctb */
 

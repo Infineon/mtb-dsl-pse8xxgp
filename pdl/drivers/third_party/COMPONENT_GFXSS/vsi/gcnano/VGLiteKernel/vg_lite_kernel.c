@@ -1212,6 +1212,16 @@ static vg_lite_error_t do_flexa_stop_frame(vg_lite_kernel_flexa_info_t * data)
 }
 #endif
 
+#if gcFEATURE_VG_MESH_FOR_FRAME
+static vg_lite_error_t do_target_mesh_set(vg_lite_kernel_mesh_info_t* data)
+{
+
+    vg_lite_hal_poke(0x0520, data->mesh_size);
+
+    return VG_LITE_SUCCESS;
+}
+#endif
+
 static vg_lite_error_t do_query_mem(vg_lite_kernel_mem_t * data)
 {
     vg_lite_error_t error = VG_LITE_SUCCESS;
@@ -1327,8 +1337,10 @@ vg_lite_error_t record_running_time(void)
 
 #ifdef __linux__
     end_time = jiffies;
-    period_time = end_time - start_time;
+    period_time = jiffies_to_msecs(end_time - start_time);
     total_time += period_time;
+    //printk("GPU hardware running period time: %ld ms\n", period_time);
+    //printk("GPU hardware running total time: %ld ms\n", total_time);
 
 #else
     gettimeofday(&end_time, NULL);
@@ -1426,7 +1438,11 @@ vg_lite_error_t vg_lite_kernel(vg_lite_kernel_command_t command, void * data)
             /* Write register value. */
             return do_flexa_set_background_address(data);
 #endif
+#if gcFEATURE_VG_MESH_FOR_FRAME
+        case VG_LITE_TARGET_MESH_SET:
+            return do_target_mesh_set(data);
 
+#endif
         case VG_LITE_QUERY_MEM:
             return do_query_mem(data);
 

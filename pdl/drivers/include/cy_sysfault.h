@@ -105,7 +105,9 @@ extern "C" {
 
 #if defined (CY_IP_MXS22SRSS)
 #define cy_en_SysFault_source_t en_sysfault_source_t
+#if (CY_IP_MXS22RRAMC_VERSION <= 1)
 #define CY_SYSFAULT_NO_FAULT (((uint8_t)M33SYSCPUSS_RRAMC_MMIO_PC_LOCK_FAULT) + 1U)
+#endif
 #endif
 
 
@@ -141,7 +143,6 @@ extern "C" {
                                                        ((pendingFault) == CY_SYSFAULT_SET2))
 #if defined (CY_IP_MXS40SSRSS)
 #define cy_en_SysFault_source_t en_sysfault_source_t
-#define CY_SYSFAULT_NO_FAULT (((uint8_t)SRSS_FAULT_SSV) + 1U)
 #endif
 
 /** \endcond */

@@ -171,9 +171,33 @@ Functions</h2></td></tr>
 <tr class="memitem:gaff6bce72f0a3214b8527d90155b1f4f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__graphics__enums.html#ga43fc913d67a2f9c2dffae26701a16cc6">cy_en_gfx_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#gaff6bce72f0a3214b8527d90155b1f4f4">Cy_GFXSS_Transfer_Frame</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base, <a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
 <tr class="memdesc:gaff6bce72f0a3214b8527d90155b1f4f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer frame to display in DBI command mode.  <br /></td></tr>
 <tr class="separator:gaff6bce72f0a3214b8527d90155b1f4f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59b664a7598b0ed0bc6a143e641a8e03"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__graphics__enums.html#ga43fc913d67a2f9c2dffae26701a16cc6">cy_en_gfx_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base, <a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
+<tr class="memdesc:ga59b664a7598b0ed0bc6a143e641a8e03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initiates a non-blocking, interrupt-driven frame transfer in DBI command mode.  <br /></td></tr>
+<tr class="separator:ga59b664a7598b0ed0bc6a143e641a8e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7526b65bb4a2e68703d39a23ee780c44"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base, <a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
+<tr class="memdesc:ga7526b65bb4a2e68703d39a23ee780c44"><td class="mdescLeft">&#160;</td><td class="mdescRight">DC interrupt handler for interrupt-driven DBI frame transfers.  <br /></td></tr>
+<tr class="separator:ga7526b65bb4a2e68703d39a23ee780c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga41f32fb36541f05e60711515523529fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#ga41f32fb36541f05e60711515523529fc">Cy_GFXSS_MIPIDSI_TE_InterruptHandler</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base, <a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
+<tr class="memdesc:ga41f32fb36541f05e60711515523529fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">MIPI DSI TE interrupt handler for TE-synchronized DBI frame transfers.  <br /></td></tr>
+<tr class="separator:ga41f32fb36541f05e60711515523529fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7080f9a5c523e4f298d55386fb5a78bf"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#ga7080f9a5c523e4f298d55386fb5a78bf">Cy_GFXSS_Is_Transfer_Complete</a> (<a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
+<tr class="memdesc:ga7080f9a5c523e4f298d55386fb5a78bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if an interrupt-driven frame transfer has completed.  <br /></td></tr>
+<tr class="separator:ga7080f9a5c523e4f298d55386fb5a78bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6c8c831867fd775c43fd816c483e0d55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#ga6c8c831867fd775c43fd816c483e0d55">Cy_GFXSS_Clear_MIPIDSI_Interrupt</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base, <a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
+<tr class="memdesc:ga6c8c831867fd775c43fd816c483e0d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear MIPI DSI interrupts.  <br /></td></tr>
+<tr class="separator:ga6c8c831867fd775c43fd816c483e0d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc8d0e3bb9296ca41b4e9d3db278a63c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#gacc8d0e3bb9296ca41b4e9d3db278a63c">Cy_GFXSS_Is_DC_DBI_Transfer_Active</a> (<a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
+<tr class="memdesc:gacc8d0e3bb9296ca41b4e9d3db278a63c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if an interrupt-driven DBI transfer is currently in progress.  <br /></td></tr>
+<tr class="separator:gacc8d0e3bb9296ca41b4e9d3db278a63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac6ce151ed021cb7fb3a0e75822b6ca75"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#gac6ce151ed021cb7fb3a0e75822b6ca75">Cy_GFXSS_RegisterTransferCompleteCallback</a> (<a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context, <a class="el" href="group__group__graphics__data__structures.html#gac02a86e130c05490ca2d6670c5a40570">cy_gfx_transfer_complete_callback_t</a> callback)</td></tr>
+<tr class="memdesc:gac6ce151ed021cb7fb3a0e75822b6ca75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback function that is invoked from ISR context when an async DBI frame transfer completes.  <br /></td></tr>
+<tr class="separator:gac6ce151ed021cb7fb3a0e75822b6ca75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae0433a5151e706051b205a75876e4ffe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__graphics__enums.html#ga43fc913d67a2f9c2dffae26701a16cc6">cy_en_gfx_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#gae0433a5151e706051b205a75876e4ffe">Cy_GFXSS_TransferPartialFrame</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base, uint32_t start_line_offset, uint32_t end_line_offset, <a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
 <tr class="memdesc:gae0433a5151e706051b205a75876e4ffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer partial frame to display in DBI command mode.  <br /></td></tr>
 <tr class="separator:gae0433a5151e706051b205a75876e4ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga05bad46fe635bf1ae310e468875d2283"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__graphics__enums.html#ga43fc913d67a2f9c2dffae26701a16cc6">cy_en_gfx_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#ga05bad46fe635bf1ae310e468875d2283">Cy_GFXSS_TransferPartialFrame_Async</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base, uint32_t start_line_offset, uint32_t end_line_offset, <a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *context)</td></tr>
+<tr class="memdesc:ga05bad46fe635bf1ae310e468875d2283"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking, interrupt-driven partial frame transfer over DBI.  <br /></td></tr>
+<tr class="separator:ga05bad46fe635bf1ae310e468875d2283"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga54aa0c21ce3892c9c7e9c2482f54bf1d"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__functions.html#ga54aa0c21ce3892c9c7e9c2482f54bf1d">Cy_GFXSS_Enable_GPU_Interrupt</a> (<a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *base)</td></tr>
 <tr class="memdesc:ga54aa0c21ce3892c9c7e9c2482f54bf1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables GPU interrupt.  <br /></td></tr>
 <tr class="separator:ga54aa0c21ce3892c9c7e9c2482f54bf1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1095,6 +1119,315 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ga59b664a7598b0ed0bc6a143e641a8e03" name="ga59b664a7598b0ed0bc6a143e641a8e03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga59b664a7598b0ed0bc6a143e641a8e03">&#9670;&#160;</a></span>Cy_GFXSS_Transfer_Frame_Async()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__graphics__enums.html#ga43fc913d67a2f9c2dffae26701a16cc6">cy_en_gfx_status_t</a> Cy_GFXSS_Transfer_Frame_Async </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initiates a non-blocking, interrupt-driven frame transfer in DBI command mode. </p>
+<p>The function configures the DBI write period, slice geometry, and transfer state, then kicks the first slice. Subsequent slices are chained automatically by the DC interrupt handler (<a class="el" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a>):</p><ul>
+<li>GCREGDISPLAYINTR.DISP0 fires when the DC finishes each slice.</li>
+<li>The handler advances frame buffer pointers and kicks the next slice.</li>
+<li>After the last slice completes the transfer phase becomes <a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a47cd7d785e397da0aa18485b30a9524e">CY_GFX_TRANSFER_COMPLETE</a>.</li>
+</ul>
+<p>When the panel has TE enabled (MIPI DCS 0x35), the driver sets CMD_MODE_CFG.TEAR_FX_EN so the MIPI DSI host gates the first DBI write on the panel's TE signal, providing hardware tear-free synchronization.</p>
+<dl class="section pre"><dt>Precondition</dt><dd>The application must:<ul>
+<li>Call <a class="el" href="group__group__graphics__functions.html#ga6278eb17de568039710ee15ade1cf580">Cy_GFXSS_Init</a> to initialize the GFXSS.</li>
+<li>Register an ISR for GFXSS_DC_IRQ that calls <a class="el" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a>.</li>
+<li>Ensure the previous transfer is complete before calling this function (use <a class="el" href="group__group__graphics__functions.html#ga7080f9a5c523e4f298d55386fb5a78bf">Cy_GFXSS_Is_Transfer_Complete</a> or a semaphore).</li>
+</ul>
+</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the graphics sub system base address.</td></tr>
+    <tr><td class="paramname">context</td><td>Context information used by the driver.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__graphics__enums.html#gga43fc913d67a2f9c2dffae26701a16cc6af8f159f140527adad72e9b827de73435">CY_GFX_SUCCESS</a> on successful setup, <a class="el" href="group__group__graphics__enums.html#gga43fc913d67a2f9c2dffae26701a16cc6ae62bca560bd557b5b9474850cac32a2b">CY_GFX_BAD_PARAM</a> if base or context is NULL.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This is the non-blocking counterpart of <a class="el" href="group__group__graphics__functions.html#gaff6bce72f0a3214b8527d90155b1f4f4">Cy_GFXSS_Transfer_Frame</a>. The blocking version uses Cy_SysLib_Rtos_DelayUs polling; this version relies entirely on the DC interrupt for slice chaining.</dd></dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line">    <span class="comment">/* Typical usage inside an LVGL flush callback: */</span></div>
+<div class="line">    xSemaphoreTake(frame_tx_sem_local, portMAX_DELAY);</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#gae280da51ca33a7335bf3493655183cf1">Cy_GFXSS_Set_FrameBuffer</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS, (uint32_t*)buf, &amp;gfx_context);</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS, &amp;gfx_context);</div>
+<div class="line">    lv_disp_flush_ready(disp);</div>
+<div class="ttc" id="agroup__group__graphics__functions_html_ga59b664a7598b0ed0bc6a143e641a8e03"><div class="ttname"><a href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a></div><div class="ttdeci">cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame_Async(GFXSS_Type *base, cy_stc_gfx_context_t *context)</div><div class="ttdoc">Initiates a non-blocking, interrupt-driven frame transfer in DBI command mode.</div><div class="ttdef"><b>Definition:</b> cy_graphics.c:1445</div></div>
+<div class="ttc" id="agroup__group__graphics__functions_html_gae280da51ca33a7335bf3493655183cf1"><div class="ttname"><a href="group__group__graphics__functions.html#gae280da51ca33a7335bf3493655183cf1">Cy_GFXSS_Set_FrameBuffer</a></div><div class="ttdeci">cy_en_gfx_status_t Cy_GFXSS_Set_FrameBuffer(GFXSS_Type *base, uint32_t *gfx_layer_buffer, cy_stc_gfx_context_t *context)</div><div class="ttdoc">Sets Video/Graphics layer buffer address.</div><div class="ttdef"><b>Definition:</b> cy_graphics.c:812</div></div>
+<div class="ttc" id="astructGFXSS__Type_html"><div class="ttname"><a href="structGFXSS__Type.html">GFXSS_Type</a></div><div class="ttdoc">GFXSS.</div><div class="ttdef"><b>Definition:</b> cyip_gfxss.h:550</div></div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga7526b65bb4a2e68703d39a23ee780c44" name="ga7526b65bb4a2e68703d39a23ee780c44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7526b65bb4a2e68703d39a23ee780c44">&#9670;&#160;</a></span>Cy_GFXSS_DC_DBI_InterruptHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cy_GFXSS_DC_DBI_InterruptHandler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>DC interrupt handler for interrupt-driven DBI frame transfers. </p>
+<p>Must be called from the application's GFXSS_DC_IRQ ISR.</p>
+<p>Reads GCREGDISPLAYINTR (read-to-clear) and checks the DISP0 bit which fires when the DC finishes consuming the framebuffer for one DBI slice. The handler then:</p><ul>
+<li>Advances frame buffer pointers for all active layers.</li>
+<li>Kicks the next full slice, or reconfigures and kicks the remainder slice.</li>
+<li>Disables TEAR_FX_EN and sets the transfer phase to <a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a47cd7d785e397da0aa18485b30a9524e">CY_GFX_TRANSFER_COMPLETE</a> when all slices are done.</li>
+</ul>
+<p>After the transfer completes, the application should signal its synchronization primitive (e.g. give a semaphore) so the display flush context can proceed with the next frame.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the graphics sub system base address.</td></tr>
+    <tr><td class="paramname">context</td><td>Context information used by the driver.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"><span class="comment">/* Application ISR registered for GFXSS_DC_IRQ: */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> snippet_dc_dbi_irq_handler(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code hl_function" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a>((<a class="code hl_struct" href="structGFXSS__Type.html">GFXSS_Type</a>*)GFXSS, &amp;gfx_context);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (<a class="code hl_function" href="group__group__graphics__functions.html#ga7080f9a5c523e4f298d55386fb5a78bf">Cy_GFXSS_Is_Transfer_Complete</a>(&amp;gfx_context))</div>
+<div class="line">    {</div>
+<div class="line">        BaseType_t woken = pdFALSE;</div>
+<div class="line">        xSemaphoreGiveFromISR(frame_tx_sem_isr, &amp;woken);</div>
+<div class="line">        portYIELD_FROM_ISR(woken);</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__group__graphics__functions_html_ga7080f9a5c523e4f298d55386fb5a78bf"><div class="ttname"><a href="group__group__graphics__functions.html#ga7080f9a5c523e4f298d55386fb5a78bf">Cy_GFXSS_Is_Transfer_Complete</a></div><div class="ttdeci">__STATIC_INLINE bool Cy_GFXSS_Is_Transfer_Complete(cy_stc_gfx_context_t *context)</div><div class="ttdoc">Check if an interrupt-driven frame transfer has completed.</div><div class="ttdef"><b>Definition:</b> cy_graphics.h:1087</div></div>
+<div class="ttc" id="agroup__group__graphics__functions_html_ga7526b65bb4a2e68703d39a23ee780c44"><div class="ttname"><a href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a></div><div class="ttdeci">void Cy_GFXSS_DC_DBI_InterruptHandler(GFXSS_Type *base, cy_stc_gfx_context_t *context)</div><div class="ttdoc">DC interrupt handler for interrupt-driven DBI frame transfers.</div><div class="ttdef"><b>Definition:</b> cy_graphics.c:1690</div></div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga41f32fb36541f05e60711515523529fc" name="ga41f32fb36541f05e60711515523529fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga41f32fb36541f05e60711515523529fc">&#9670;&#160;</a></span>Cy_GFXSS_MIPIDSI_TE_InterruptHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cy_GFXSS_MIPIDSI_TE_InterruptHandler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>MIPI DSI TE interrupt handler for TE-synchronized DBI frame transfers. </p>
+<p>Can be called from the application's GFXSS_MIPIDSI_IRQ ISR if the application uses the PENDING_TE transfer phase.</p>
+<p>When the transfer phase is <a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a724e9b09e61237c51f9869fabd468d6c">CY_GFX_TRANSFER_PENDING_TE</a>, receiving the DBI_TE interrupt (panel vertical blanking signal via DSI BTA) kicks the first DBI slice.</p>
+<dl class="section note"><dt>Note</dt><dd>When using <a class="el" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a>, this handler is not required because the DSI host's CMD_MODE_CFG.TEAR_FX_EN bit provides hardware-level TE synchronization. This function is provided for custom transfer flows that need explicit TE gating.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the graphics sub system base address.</td></tr>
+    <tr><td class="paramname">context</td><td>Context information used by the driver. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga7080f9a5c523e4f298d55386fb5a78bf" name="ga7080f9a5c523e4f298d55386fb5a78bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7080f9a5c523e4f298d55386fb5a78bf">&#9670;&#160;</a></span>Cy_GFXSS_Is_Transfer_Complete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE bool Cy_GFXSS_Is_Transfer_Complete </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if an interrupt-driven frame transfer has completed. </p>
+<p>Returns true when the transfer phase is <a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a47cd7d785e397da0aa18485b30a9524e">CY_GFX_TRANSFER_COMPLETE</a> or <a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a95bcd9215ae940fb20c55d885b97903b">CY_GFX_TRANSFER_IDLE</a> (no transfer was started).</p>
+<p>Typically called from within the GFXSS_DC_IRQ ISR after <a class="el" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a> to decide whether to signal the display flush context.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>Context information used by the driver.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if transfer is complete or idle, false if still in progress. </dd></dl>
+
+</div>
+</div>
+<a id="ga6c8c831867fd775c43fd816c483e0d55" name="ga6c8c831867fd775c43fd816c483e0d55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6c8c831867fd775c43fd816c483e0d55">&#9670;&#160;</a></span>Cy_GFXSS_Clear_MIPIDSI_Interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cy_GFXSS_Clear_MIPIDSI_Interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clear MIPI DSI interrupts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Holds the base address of the Graphics block registers.</td></tr>
+    <tr><td class="paramname">context</td><td>context information used by the driver. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gacc8d0e3bb9296ca41b4e9d3db278a63c" name="gacc8d0e3bb9296ca41b4e9d3db278a63c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacc8d0e3bb9296ca41b4e9d3db278a63c">&#9670;&#160;</a></span>Cy_GFXSS_Is_DC_DBI_Transfer_Active()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Cy_GFXSS_Is_DC_DBI_Transfer_Active </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if an interrupt-driven DBI transfer is currently in progress. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>context information used by the driver.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if a transfer is in progress, false if idle or complete. </dd></dl>
+
+</div>
+</div>
+<a id="gac6ce151ed021cb7fb3a0e75822b6ca75" name="gac6ce151ed021cb7fb3a0e75822b6ca75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac6ce151ed021cb7fb3a0e75822b6ca75">&#9670;&#160;</a></span>Cy_GFXSS_RegisterTransferCompleteCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cy_GFXSS_RegisterTransferCompleteCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#gac02a86e130c05490ca2d6670c5a40570">cy_gfx_transfer_complete_callback_t</a>&#160;</td>
+          <td class="paramname"><em>callback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Register a callback function that is invoked from ISR context when an async DBI frame transfer completes. </p>
+<p>This allows both RTOS and bare-metal applications to be notified without polling.</p>
+<p>For RTOS applications the callback typically gives a semaphore. For bare-metal applications it typically sets a volatile flag.</p>
+<p>Pass NULL to unregister a previously registered callback.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>Context information used by the driver.</td></tr>
+    <tr><td class="paramname">callback</td><td>Pointer to the callback function, or NULL to disable.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Function Usage</dt><dd><div class="fragment"><div class="line"><span class="comment">/* ---- RTOS example (FreeRTOS) ---- */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> on_transfer_complete_rtos_reg(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    BaseType_t woken = pdFALSE;</div>
+<div class="line">    xSemaphoreGiveFromISR(frame_tx_sem_reg, &amp;woken);</div>
+<div class="line">    portYIELD_FROM_ISR(woken);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* ---- Bare-metal example ---- */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> on_transfer_complete_bm_reg(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    frame_tx_done_reg = <span class="keyword">true</span>;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Common registration (called once during init): */</span></div>
+<div class="line"><span class="comment">/* Cy_GFXSS_RegisterTransferCompleteCallback(&amp;gfx_context, on_transfer_complete_rtos_reg); */</span></div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
 <a id="gae0433a5151e706051b205a75876e4ffe" name="gae0433a5151e706051b205a75876e4ffe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae0433a5151e706051b205a75876e4ffe">&#9670;&#160;</a></span>Cy_GFXSS_TransferPartialFrame()</h2>
 
@@ -1144,6 +1477,61 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SUCESS/TIMEOUT status. </dd></dl>
+
+</div>
+</div>
+<a id="ga05bad46fe635bf1ae310e468875d2283" name="ga05bad46fe635bf1ae310e468875d2283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga05bad46fe635bf1ae310e468875d2283">&#9670;&#160;</a></span>Cy_GFXSS_TransferPartialFrame_Async()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__graphics__enums.html#ga43fc913d67a2f9c2dffae26701a16cc6">cy_en_gfx_status_t</a> Cy_GFXSS_TransferPartialFrame_Async </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structGFXSS__Type.html">GFXSS_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>start_line_offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>end_line_offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Non-blocking, interrupt-driven partial frame transfer over DBI. </p>
+<p>Sends only the rows in the half-open range [start_line_offset, end_line_offset) from the framebuffer to the panel, using full display width (CASET set to 0..horizontal_resolution-1). The transfer is sliced internally to respect DBI_SCLICE_LIMIT_IN_BYTES; subsequent slices are chained automatically by the DC interrupt handler (<a class="el" href="group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44">Cy_GFXSS_DC_DBI_InterruptHandler</a>). The registered transfer-complete callback (see <a class="el" href="group__group__graphics__functions.html#gac6ce151ed021cb7fb3a0e75822b6ca75">Cy_GFXSS_RegisterTransferCompleteCallback</a>) is invoked from ISR context when the last slice has been issued.</p>
+<p>Tearing-effect (TE) acknowledgement is enabled before kicking the first slice so the panel gates the transfer on its next vertical-blank, providing tear-free updates without explicit TE interrupt handling.</p>
+<p>This API is the partial-window counterpart of <a class="el" href="group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03">Cy_GFXSS_Transfer_Frame_Async</a> and the non-blocking counterpart of <a class="el" href="group__group__graphics__functions.html#gae0433a5151e706051b205a75876e4ffe">Cy_GFXSS_TransferPartialFrame</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to the graphics sub system base address.</td></tr>
+    <tr><td class="paramname">start_line_offset</td><td>First row (inclusive) of the partial window, 0 .. display_height-1.</td></tr>
+    <tr><td class="paramname">end_line_offset</td><td>One past the last row of the partial window, must be &gt; start_line_offset and &lt;= display_height.</td></tr>
+    <tr><td class="paramname">context</td><td>Context information used by the driver. The framebuffer base address is taken from <code>context-&gt;dc_context.gfx_layer_config.buffer_address</code> (set previously via <a class="el" href="group__group__graphics__functions.html#gae280da51ca33a7335bf3493655183cf1">Cy_GFXSS_Set_FrameBuffer</a>).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>CY_GFX_SUCCESS on success, CY_GFX_BAD_PARAM on invalid arguments. </dd></dl>
 
 </div>
 </div>

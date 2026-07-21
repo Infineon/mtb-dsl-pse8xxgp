@@ -26,7 +26,7 @@
 #include "cy_device.h"
 #include "cy_sysclk.h"
 
-#if defined (CY_IP_MXS22SRSS)
+#if defined (CY_IP_MXS22SRSS)&& (CY_IP_MXS22SRSS_VERSION <2 )
 
 #include "cy_syspm.h"
 #include "cy_syspm_ppu.h"
@@ -192,6 +192,7 @@ typedef struct {
 #endif
 
 #if defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
+#if defined(CY_IP_MXCM55)
 __WEAK mtb_srf_permission_s_t mtb_pdl_syspm_srf_cm55_permissions[] =
 {
     {
@@ -200,6 +201,7 @@ __WEAK mtb_srf_permission_s_t mtb_pdl_syspm_srf_cm55_permissions[] =
         .write_allowed = true,
     },
 };
+#endif /* defined(CY_IP_MXCM55) */
 
 __WEAK mtb_srf_permission_s_t mtb_pdl_syspm_srf_pwrmode_permissions[] =
 {
@@ -361,6 +363,7 @@ cy_rslt_t cy_pdl_syspm_srf_islpmready_impl_s(mtb_srf_input_ns_t* inputs_ns,
     return status;
 }
 
+#if defined(CY_IP_MXCM55)
 cy_rslt_t cy_pdl_syspm_srf_syscm55enable_impl_s(mtb_srf_input_ns_t* inputs_ns,
                                             mtb_srf_output_ns_t* outputs_ns,
                                             mtb_srf_invec_ns_t* inputs_ptr_ns,
@@ -438,6 +441,7 @@ cy_rslt_t cy_pdl_syspm_srf_syscm55disable_impl_s(mtb_srf_input_ns_t* inputs_ns,
     Cy_SysCM55Disable();
     return (cy_rslt_t)CY_RSLT_SUCCESS;
 }
+#endif /* defined(CY_IP_MXCM55) */
 
 cy_rslt_t cy_pdl_syspm_srf_systransinitiate_impl_s(mtb_srf_input_ns_t* inputs_ns,
                                             mtb_srf_output_ns_t* outputs_ns,
@@ -568,6 +572,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .allowed_rsc = NULL,
         .num_allowed = 0UL,
     },
+#if defined(CY_IP_MXCM55)
     {
         .module_id = MTB_SRF_MODULE_PDL,
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
@@ -610,6 +615,7 @@ mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[] =
         .allowed_rsc = NULL,
         .num_allowed = 0UL,
     },
+#endif /* defined(CY_IP_MXCM55) */
     {
         .module_id = MTB_SRF_MODULE_PDL,
         .submodule_id = CY_PDL_SECURE_SUBMODULE_SYSPM,
@@ -1995,8 +2001,9 @@ cy_en_syspm_status_t Cy_SysPm_SramLdoStatus(void)
 {
     cy_en_syspm_status_t retVal = CY_SYSPM_TIMEOUT;
     uint32_t syspmCbuckRetry = CY_SYSPM_CBUCK_BUSY_RETRY_COUNT;
+    uint32_t expectedDoneVal = _FLD2VAL(SRSS_PWR_SRAMLDO_CTL_SRAMLDO_EN, SRSS_PWR_SRAMLDO_CTL);
 
-    while((_FLD2VAL(SRSS_PWR_CBUCK_STATUS_SRAMLDO_DONE, SRSS_PWR_CBUCK_STATUS) == 0U) && (syspmCbuckRetry != 0U))
+    while((_FLD2VAL(SRSS_PWR_CBUCK_STATUS_SRAMLDO_DONE, SRSS_PWR_CBUCK_STATUS) != expectedDoneVal) && (syspmCbuckRetry != 0U))
     {
         syspmCbuckRetry--;
         Cy_SysLib_DelayUs(CY_SYSPM_CBUCK_BUSY_RETRY_DELAY_US);
@@ -2013,6 +2020,10 @@ cy_en_syspm_status_t Cy_SysPm_SramLdoStatus(void)
 
 cy_en_syspm_status_t Cy_SysPm_SramLdoConfigure(cy_stc_syspm_sramldo_params_t *sramLdoParam)
 {
+    cy_en_syspm_status_t retVal = CY_SYSPM_TIMEOUT;
+    uint32_t syspmCbuckRetry = CY_SYSPM_CBUCK_BUSY_RETRY_COUNT;
+    uint32_t expectedDoneVal = sramLdoParam->sramLdoEnable ? 1U : 0U;
+
     CY_ASSERT_L2(CY_SYSPM_IS_SRAMLDO_VOLTAGE_VALID(sramLdoParam->sramLdoVoltSel));
 
     CY_REG32_CLR_SET(SRSS_PWR_SRAMLDO_CTL, SRSS_PWR_SRAMLDO_CTL_SRAMLDO_EN, (sramLdoParam->sramLdoEnable ? 1U : 0U));
@@ -2021,7 +2032,19 @@ cy_en_syspm_status_t Cy_SysPm_SramLdoConfigure(cy_stc_syspm_sramldo_params_t *sr
 
     CY_REG32_CLR_SET(SRSS_PWR_SRAMLDO_CTL, SRSS_PWR_SRAMLDO_CTL_SRAMLDO_VOUT, sramLdoParam->sramLdoVoltSel);
 
-    return Cy_SysPm_SramLdoStatus();
+    /* Per IP BROS, SRAMLDO_DONE is SET when enabled and CLEARED when disabled */
+    while((_FLD2VAL(SRSS_PWR_CBUCK_STATUS_SRAMLDO_DONE, SRSS_PWR_CBUCK_STATUS) != expectedDoneVal) && (syspmCbuckRetry != 0U))
+    {
+        syspmCbuckRetry--;
+        Cy_SysLib_DelayUs(CY_SYSPM_CBUCK_BUSY_RETRY_DELAY_US);
+    }
+
+    if(syspmCbuckRetry != 0UL)
+    {
+        retVal = CY_SYSPM_SUCCESS;
+    }
+
+    return retVal;
 }
 
 cy_en_syspm_status_t Cy_SysPm_MiscLdoStatus(void)
@@ -3586,6 +3609,67 @@ uint32_t Cy_SysPm_ReadStatus(void)
     }
 
     return pmStatus;
+}
+
+void Cy_SysPm_BackupWordStore(uint32_t wordIndex, uint32_t *wordSrcPointer, uint32_t wordSize)
+{
+    CY_ASSERT_L3(CY_SYSPM_IS_WORD_INDEX_VALID(wordIndex));
+    CY_ASSERT_L3(CY_SYSPM_IS_WORD_SIZE_VALID(wordSize + wordIndex));
+
+    while(wordSize != 0UL)
+    {
+        if(wordIndex < CY_SRSS_BACKUP_BREG1_START_POS)
+        {
+            BACKUP_BREG_SET0[wordIndex] = *wordSrcPointer;
+        }
+        else if(wordIndex < CY_SRSS_BACKUP_BREG2_START_POS)
+        {
+            BACKUP_BREG_SET1[wordIndex - CY_SRSS_BACKUP_BREG1_START_POS] = *wordSrcPointer;
+        }
+        else if(wordIndex < CY_SRSS_BACKUP_BREG3_START_POS)
+        {
+            BACKUP_BREG_SET2[wordIndex - CY_SRSS_BACKUP_BREG2_START_POS] = *wordSrcPointer;
+        }
+        else
+        {
+            BACKUP_BREG_SET3[wordIndex - CY_SRSS_BACKUP_BREG3_START_POS] = *wordSrcPointer;
+        }
+
+        wordIndex++;
+        wordSrcPointer++;
+        wordSize--;
+    }
+}
+
+void Cy_SysPm_BackupWordReStore(uint32_t wordIndex, uint32_t *wordDstPointer, uint32_t wordSize)
+{
+    CY_ASSERT_L3(CY_SYSPM_IS_WORD_INDEX_VALID(wordIndex));
+    CY_ASSERT_L3(CY_SYSPM_IS_WORD_SIZE_VALID(wordSize + wordIndex));
+
+    while(wordSize != 0UL)
+    {
+
+        if(wordIndex < CY_SRSS_BACKUP_BREG1_START_POS)
+        {
+            *wordDstPointer = BACKUP_BREG_SET0[wordIndex];
+        }
+        else if(wordIndex < CY_SRSS_BACKUP_BREG2_START_POS)
+        {
+            *wordDstPointer = BACKUP_BREG_SET1[wordIndex - CY_SRSS_BACKUP_BREG1_START_POS];
+        }
+        else if(wordIndex < CY_SRSS_BACKUP_BREG3_START_POS)
+        {
+            *wordDstPointer = BACKUP_BREG_SET2[wordIndex - CY_SRSS_BACKUP_BREG2_START_POS];
+        }
+        else
+        {
+            *wordDstPointer = BACKUP_BREG_SET3[wordIndex - CY_SRSS_BACKUP_BREG3_START_POS];
+        }
+
+        wordIndex++;
+        wordDstPointer++;
+        wordSize--;
+    }
 }
 
 #endif /* CY_IP_MXS22SRSS */

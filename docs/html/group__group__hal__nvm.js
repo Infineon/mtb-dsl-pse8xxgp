@@ -26,5 +26,9 @@ var group__group__hal__nvm =
     [ "mtb_hal_nvm_erase", "group__group__hal__nvm.html#ga13baf4216ead141362b679bd28010410", null ],
     [ "mtb_hal_nvm_write", "group__group__hal__nvm.html#ga53d4f68eb314bbb6994bffa6087b1258", null ],
     [ "mtb_hal_nvm_program", "group__group__hal__nvm.html#ga8cdcebb8414ed7e4ee053951909cc22b", null ],
+    [ "mtb_hal_nvm_erase_nb", "group__group__hal__nvm.html#ga98eb415e0130562eb643d25dffbd540d", null ],
+    [ "mtb_hal_nvm_write_nb", "group__group__hal__nvm.html#gaad4231370356352b28b596bfa36463c4", null ],
+    [ "mtb_hal_nvm_program_nb", "group__group__hal__nvm.html#ga0a80eabbf566e2ae86e3be4c75adead3", null ],
+    [ "mtb_hal_nvm_is_operation_complete", "group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796", null ],
     [ "mtb_hal_nvm_get_region_for_address", "group__group__hal__nvm.html#gafb0fe80c7f3b8babd580cf8b238e43c5", null ]
 ];

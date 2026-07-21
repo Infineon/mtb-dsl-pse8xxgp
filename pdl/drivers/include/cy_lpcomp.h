@@ -66,7 +66,7 @@
 * High Impedance Analog drive mode is for the inputs and
 * Strong drive mode - for the output.
 * Use the Cy_LPComp_SetInputs() function to connect the comparator inputs
-* to the dedicated IO pins or Vref:
+* to the dedicated IO pins, AMUXBUSA/AMUXBUSB or Vref:
 * \image html lpcomp_inputs.png
 *
 * 4) Power on the comparator using the Cy_LPComp_Enable() function.
@@ -133,7 +133,7 @@
 
 #include "cy_device.h"
 
-#if defined (CY_IP_MXS22LPCOMP)
+#if defined (CY_IP_MXLPCOMP) || defined (CY_IP_MXS22LPCOMP) || defined (CY_IP_MXS40LPCOMP)
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -144,6 +144,14 @@
 extern "C"
 {
 #endif
+
+/* Deprecated macros - will be removed in future release */
+
+#define Cy_LPComp_Init_Ext  Cy_LPComp_Init
+#define Cy_LPComp_Enable_Ext    Cy_LPComp_Enable
+#define Cy_LPComp_Disable_Ext   Cy_LPComp_Disable
+#define Cy_LPComp_SetInterruptTriggerMode_Ext   Cy_LPComp_SetInterruptTriggerMode
+#define Cy_LPComp_SetPower_Ext  Cy_LPComp_SetPower
 
 /**
 * \addtogroup group_lpcomp_macros
@@ -207,6 +215,16 @@ extern "C"
 
 #define CY_LPCOMP_CMP1_OUTPUT_CONFIG_Msk           (LPCOMP_CMP1_CTRL_DSI_BYPASS1_Msk | \
                                                     LPCOMP_CMP1_CTRL_DSI_LEVEL1_Msk)
+
+#define CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SL_SR_Pos HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SL_Pos
+
+#define CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SL_SR_Msk (HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SL_Msk | \
+                                                     HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SR_Msk)
+
+#define CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_SR_Pos HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_Pos
+
+#define CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_SR_Msk (HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_Msk | \
+                                                     HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SR_Msk)
 
 #define CY_LPCOMP_REF_CONNECTED                     (1u)
 
@@ -276,6 +294,8 @@ typedef enum
 typedef enum
 {
     CY_LPCOMP_SW_GPIO       = 0x01u,  /**< The low-power comparator input connects to GPIO pin. */
+    CY_LPCOMP_SW_AMUXBUSA   = 0x02u,  /**< The low-power comparator input connects to AMUXBUSA. */
+    CY_LPCOMP_SW_AMUXBUSB   = 0x04u,  /**< The low-power comparator input connects to AMUXBUSB. */
     CY_LPCOMP_SW_LOCAL_VREF = 0x08u   /**< The low-power comparator input connects to local VREF. */
 } cy_en_lpcomp_inputs_t;
 
@@ -287,6 +307,7 @@ typedef enum
     CY_LPCOMP_TRIMM_ERR = CY_LPCOMP_ID | CY_PDL_STATUS_ERROR | 0x02u,     /**< Read trimmings fails */
 } cy_en_lpcomp_status_t;
 
+#if defined (CY_IP_MXS22LPCOMP)
 /** The low-power comparator trim polarity. */
 typedef enum
 {
@@ -314,6 +335,7 @@ typedef enum
     CY_LPCOMP_TRIM_14mV = 0x0EUL,   /**< The low-power comparator trim value 14mV. */
     CY_LPCOMP_TRIM_15mV = 0x0FUL    /**< The low-power comparator trim value 15mV. */
 } cy_en_lpcomp_trim_magnitude_t;
+#endif
 
 /** \} group_lpcomp_enums */
 
@@ -335,6 +357,7 @@ typedef struct {
     cy_en_lpcomp_int_t intType;      /**< Sets the low-power comparator interrupt mode */
 } cy_stc_lpcomp_config_t;
 
+#if defined (CY_IP_MXS22LPCOMP)
 /** The low-power comparator trim structure. */
 typedef struct
 {
@@ -342,6 +365,7 @@ typedef struct
     cy_en_lpcomp_trim_polarity_t polarity;    /**< Defines the low-power comparator trim polarity */
     cy_en_lpcomp_trim_magnitude_t magnitude;  /**< Defines the low-power comparator trim magnitude */
 } cy_en_lpcomp_trim_t;
+#endif
 
 /** The low-power comparator context structure, used to improve thread-safe implementation of the PDL. */
 typedef struct {
@@ -373,13 +397,21 @@ typedef struct {
                                                   ((power) == CY_LPCOMP_MODE_ULP) || \
                                                   ((power) == CY_LPCOMP_MODE_LP) || \
                                                   ((power) == CY_LPCOMP_MODE_NORMAL))
-#define CY_LPCOMP_IS_INTR_VALID(intr)            (0UL == ((intr) & ~CY_LPCOMP_INTR_Msk))
-#define CY_LPCOMP_IS_INPUT_P_VALID(input)         ((input) == CY_LPCOMP_SW_GPIO)
+#define CY_LPCOMP_IS_INTR_VALID(intr)            (((intr) == CY_LPCOMP_COMP0) || \
+                                                  ((intr) == CY_LPCOMP_COMP1) || \
+                                                  ((intr) == (CY_LPCOMP_COMP0 | CY_LPCOMP_COMP1)))
+#define CY_LPCOMP_IS_INPUT_P_VALID(input)        (((input) == CY_LPCOMP_SW_GPIO) || \
+                                                  ((input) == CY_LPCOMP_SW_AMUXBUSA) || \
+                                                  ((input) == CY_LPCOMP_SW_AMUXBUSB))
 #define CY_LPCOMP_IS_INPUT_N_VALID(input)        (((input) == CY_LPCOMP_SW_GPIO) || \
+                                                  ((input) == CY_LPCOMP_SW_AMUXBUSA) || \
+                                                  ((input) == CY_LPCOMP_SW_AMUXBUSB) || \
                                                   ((input) == CY_LPCOMP_SW_LOCAL_VREF))
-#define CY_LPCOMP_IS_TRIM_VALID(trim)            (((((trim)->polarity) == CY_LPCOMP_TRIM_NEGATIVE) || \
-                                                  (((trim)->polarity) == CY_LPCOMP_TRIM_POSITIVE)) && \
-                                                  (((trim)->magnitude) <= CY_LPCOMP_TRIM_15mV))
+#if defined (CY_IP_MXS22LPCOMP)
+#define CY_LPCOMP_IS_TRIM_VALID(trim)          (((((trim)->polarity) == CY_LPCOMP_TRIM_NEGATIVE) || \
+                                                 (((trim)->polarity) == CY_LPCOMP_TRIM_POSITIVE)) && \
+                                                 (((trim)->magnitude) <= CY_LPCOMP_TRIM_15mV))
+#endif
 /** \endcond */
 
 /**
@@ -414,8 +446,10 @@ __STATIC_INLINE uint32_t Cy_LPComp_GetInterruptMask(LPCOMP_Type const * base);
 __STATIC_INLINE void Cy_LPComp_SetInterruptMask(LPCOMP_Type* base, uint32_t interrupt);
 __STATIC_INLINE uint32_t Cy_LPComp_GetInterruptStatusMasked(LPCOMP_Type const * base);
 __STATIC_INLINE void Cy_LPComp_ConnectULPReference(LPCOMP_Type *base, cy_en_lpcomp_channel_t channel);
+#if defined (CY_IP_MXS22LPCOMP)
 void Cy_LPComp_GetTrim(LPCOMP_Type const * base, cy_en_lpcomp_channel_t channel, cy_en_lpcomp_trim_t * trim);
 void Cy_LPComp_SetTrim(LPCOMP_Type * base, cy_en_lpcomp_channel_t channel, const cy_en_lpcomp_trim_t * trim);
+#endif
 
 /** \addtogroup group_lpcomp_functions_syspm_callback
 * The driver supports the SysPm callback for Deep Sleep and Hibernate transition.
@@ -721,7 +755,7 @@ __STATIC_INLINE void Cy_LPComp_ConnectULPReference(LPCOMP_Type *base, cy_en_lpco
 }
 #endif
 
-#endif /* CY_IP_MXS22LPCOMP */
+#endif /* CY_IP_MXLPCOMP, CY_IP_MXS22LPCOMP, and CY_IP_MXS40LPCOMP */
 
 #endif /* CY_LPCOMP_PDL_H */
 

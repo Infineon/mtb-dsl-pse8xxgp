@@ -23,6 +23,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 #include <string.h>
 #include "cy_autanalog_sar.h"
 
@@ -1200,4 +1202,5 @@ void Cy_AutAnalog_SAR_LoadDieTempTrimmCoeff(uint32_t dieTrimmMultiplierHS, uint3
 }
 
 #endif /* CY_IP_MXS22LPPASS_SAR */
+#endif
 /* [] END OF FILE */

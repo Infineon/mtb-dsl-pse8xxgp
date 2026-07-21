@@ -103,6 +103,11 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structcy__stc__tcpwm__pwm__config__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__tcpwm__data__structures__pwm.html#structcy__stc__tcpwm__pwm__config__t">cy_stc_tcpwm_pwm_config_t</a></td></tr>
 <tr class="memdesc:structcy__stc__tcpwm__pwm__config__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">PWM configuration structure.  <a href="group__group__tcpwm__data__structures__pwm.html#structcy__stc__tcpwm__pwm__config__t">More...</a><br /></td></tr>
 <tr class="separator:structcy__stc__tcpwm__pwm__config__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:unionCy__TCPWM__DeadTime"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__tcpwm__data__structures__pwm.html#unionCy__TCPWM__DeadTime">Cy_TCPWM_DeadTime</a></td></tr>
+<tr class="memdesc:unionCy__TCPWM__DeadTime"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dead time union.  <a href="group__group__tcpwm__data__structures__pwm.html#unionCy__TCPWM__DeadTime">More...</a><br /></td></tr>
+<tr class="separator:unionCy__TCPWM__DeadTime"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structCy__TCPWM__DeadTime_8____unnamed29____"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__tcpwm__data__structures__pwm.html#structCy__TCPWM__DeadTime_8____unnamed29____">Cy_TCPWM_DeadTime.__unnamed29__</a></td></tr>
+<tr class="separator:structCy__TCPWM__DeadTime_8____unnamed29____"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -567,6 +572,20 @@ gf_depth</td>
 <td class="fielddoc">
 Glitch filter depth value. </td></tr>
 <tr><td class="fieldtype">
+<a id="affceac062bdd5223ea81b7645b7bab95" name="affceac062bdd5223ea81b7645b7bab95"></a>bool</td>
+<td class="fieldname">
+cc0_parallel_path_enable</td>
+<td class="fielddoc">
+Enables parallel data path for CC0. <p>This will bypass CC0 and CC0_BUFF registers. AHB access to CC0 and CC0_BUFF is also disabled in this case. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a5b39d72969f5fb293dc6575f7a870081" name="a5b39d72969f5fb293dc6575f7a870081"></a>bool</td>
+<td class="fieldname">
+cc1_parallel_path_enable</td>
+<td class="fielddoc">
+Enables parallel data path for CC1. <p>This will bypass CC1 and CC1_BUFF registers. AHB access to CC1 and CC1_BUFF is also disabled in this case. </p>
+</td></tr>
+<tr><td class="fieldtype">
 <a id="aec22a72f237c8ad78eb7fa85818a4af0" name="aec22a72f237c8ad78eb7fa85818a4af0"></a>bool</td>
 <td class="fieldname">
 pwm_tc_sync_kill_dt</td>
@@ -579,6 +598,118 @@ PWM output get suppressed at next tc event after kill input is active. <p>If dea
 pwm_sync_kill_dt</td>
 <td class="fielddoc">
 PWM output line_out get suppressed immediately whereas line_compl_out get suppressed after dead time when kill input is active. </td></tr>
+<tr><td class="fieldtype">
+<a id="a65f9a164620363fa75eac28a87aee5ea" name="a65f9a164620363fa75eac28a87aee5ea"></a>bool</td>
+<td class="fieldname">
+debug_freeze_enable</td>
+<td class="fielddoc">
+Specifies the counter behavior in debug mode. </td></tr>
+<tr><td class="fieldtype">
+<a id="a9d7d000bc686c74cc6df5df5705c0868" name="a9d7d000bc686c74cc6df5df5705c0868"></a>bool</td>
+<td class="fieldname">
+debug_suspend_enable</td>
+<td class="fielddoc">
+Specifies the counter behavior in debug mode when suspend is enabled. </td></tr>
+<tr><td class="fieldtype">
+<a id="a35bd7fab8f3f5b211851713449aea167" name="a35bd7fab8f3f5b211851713449aea167"></a>uint8_t</td>
+<td class="fieldname">
+upDownMode</td>
+<td class="fielddoc">
+Custom alignment counter direction/mode: 0 = Count Up, 1 = Count Down, 2/3 = Count Up/Down. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a78d4fcef965acbb67821fd2d3ccb3dcf" name="a78d4fcef965acbb67821fd2d3ccb3dcf"></a>uint32_t</td>
+<td class="fieldname">
+initialCountVal</td>
+<td class="fielddoc">
+Custom alignment initial counter value loaded when the counter starts. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a006986df22cd26697690eeb935b6cb0d" name="a006986df22cd26697690eeb935b6cb0d"></a>uint8_t</td>
+<td class="fieldname">
+cc0MatchMode</td>
+<td class="fielddoc">
+Custom alignment output line action on a Compare 0 (CC0) match: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a56238b382fcdc092a9fa1cfdaa735552" name="a56238b382fcdc092a9fa1cfdaa735552"></a>uint8_t</td>
+<td class="fieldname">
+cc1MatchMode</td>
+<td class="fielddoc">
+Custom alignment output line action on a Compare 1 (CC1) match: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a> and the counter supports CC1. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a92f470198a5227a4c629dbc5d42dca25" name="a92f470198a5227a4c629dbc5d42dca25"></a>uint8_t</td>
+<td class="fieldname">
+overflowMode</td>
+<td class="fielddoc">
+Custom alignment output line action on a counter overflow: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae9e87696b19fb526f5bcc39c077922ea" name="ae9e87696b19fb526f5bcc39c077922ea"></a>uint8_t</td>
+<td class="fieldname">
+underflowMode</td>
+<td class="fielddoc">
+Custom alignment output line action on a counter underflow: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="unionCy__TCPWM__DeadTime" id="unionCy__TCPWM__DeadTime"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#unionCy__TCPWM__DeadTime">&#9670;&#160;</a></span>Cy_TCPWM_DeadTime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">union Cy_TCPWM_DeadTime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a70628cb2d301f9683dccde9943cebbd0" name="a70628cb2d301f9683dccde9943cebbd0"></a>struct <a class="el" href="group__group__tcpwm__data__structures__pwm.html#structCy__TCPWM__DeadTime_8____unnamed29____">Cy_TCPWM_DeadTime.__unnamed29__</a></td>
+<td class="fieldname">
+__unnamed__</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a904d1913149faa91937b48618acf5671" name="a904d1913149faa91937b48618acf5671"></a>uint32_t</td>
+<td class="fieldname">
+u</td>
+<td class="fielddoc">
+The dead time value. </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structCy__TCPWM__DeadTime_8____unnamed29____" id="structCy__TCPWM__DeadTime_8____unnamed29____"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structCy__TCPWM__DeadTime_8____unnamed29____">&#9670;&#160;</a></span>Cy_TCPWM_DeadTime.__unnamed29__</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct Cy_TCPWM_DeadTime.__unnamed29__</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a92c5db87d50031104a817fb18fe615cf" name="a92c5db87d50031104a817fb18fe615cf"></a>uint16_t</td>
+<td class="fieldname">
+deadTime</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aac4193413af8b31df47cf00c552bdab4" name="aac4193413af8b31df47cf00c552bdab4"></a>uint16_t</td>
+<td class="fieldname">
+deadTimeN</td>
+<td class="fielddoc">
+</td></tr>
 </table>
 
 </div>

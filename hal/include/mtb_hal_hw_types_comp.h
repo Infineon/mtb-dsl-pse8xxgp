@@ -81,26 +81,26 @@ typedef enum
  */
 typedef struct
 {
-    mtb_hal_comp_type_t comp_type;
+    mtb_hal_comp_type_t comp_type; /**< Type of comparator */
     union
     {
         #if defined(_MTB_HAL_DRIVER_AVAILABLE_COMP_LP)
         struct
         {
-            _mtb_hal_lpcomp_base_t*   base_lpcomp;
-            _mtb_hal_lpcomp_channel_t channel_lpcomp;
+            _mtb_hal_lpcomp_base_t*   base_lpcomp; /**< LP comparator base address */
+            _mtb_hal_lpcomp_channel_t channel_lpcomp; /**< LP comparator channel */
         };
         #endif
         #if defined(_MTB_HAL_DRIVER_AVAILABLE_COMP_CSG)
-        _mtb_hal_csg_slice_t      slice_csg;
+        _mtb_hal_csg_slice_t      slice_csg; /**< CSG slice */
         #endif
         #if defined(_MTB_HAL_DRIVER_AVAILABLE_COMP_DCSG)
-        _mtb_hal_dcsg_base_t*     base_dcsg_slice;
+        _mtb_hal_dcsg_base_t*     base_dcsg_slice; /**< DCSG base address */
         #endif
     };
 
-    _mtb_hal_event_callback_data_t      callback_data;
-    uint32_t                            callback_event;
+    _mtb_hal_event_callback_data_t      callback_data; /**< Callback data */
+    uint32_t                            callback_event; /**< Callback event mask */
 } mtb_hal_comp_t;
 
 /**
@@ -113,25 +113,25 @@ typedef struct
  */
 typedef struct
 {
-    mtb_hal_comp_type_t resource_type;
-    uint8_t             channel_num;
+    mtb_hal_comp_type_t resource_type; /**< Comparator resource type */
+    uint8_t             channel_num; /**< Channel number */
     union
     {
         #if defined(_MTB_HAL_DRIVER_AVAILABLE_COMP_CSG)
         /* No base address required for HPPASS */
-        const _mtb_hal_csg_pdl_config_t* hppass_config;       /* Contains SAR instance within it */
+        const _mtb_hal_csg_pdl_config_t* hppass_config; /**< HPPASS configuration (contains SAR instance) */
         #endif
         #if defined(_MTB_HAL_DRIVER_AVAILABLE_COMP_LP)
-        const _mtb_hal_lpcomp_pdl_config_t* lpcomp;
+        const _mtb_hal_lpcomp_pdl_config_t* lpcomp; /**< LP comparator PDL configuration */
         #endif
     };
     union
     {
         #if defined(_MTB_HAL_DRIVER_AVAILABLE_COMP_DCSG)
-        _mtb_hal_dcsg_base_t* dcsg_base;
+        _mtb_hal_dcsg_base_t* dcsg_base; /**< DCSG base address */
         #endif
         #if defined(_MTB_HAL_DRIVER_AVAILABLE_COMP_LP)
-        _mtb_hal_lpcomp_base_t* lpcomp_base;
+        _mtb_hal_lpcomp_base_t* lpcomp_base; /**< LP comparator base address */
         #endif
     };
 } mtb_hal_comp_configurator_t;

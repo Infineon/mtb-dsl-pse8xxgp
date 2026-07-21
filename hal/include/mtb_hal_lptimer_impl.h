@@ -33,14 +33,16 @@
 #if defined(CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION >= 2) && defined(SRSS_NUM_WDT_A) && \
     (SRSS_NUM_WDT_A > 1)
 #include "mtb_hal_lptimer_mxwdt.h"
-#elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || ((SRSS_NUM_MCWDT_B) > 0)
+#elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || (((SRSS_NUM_MCWDT_B) > 0) && \
+    (SRSS_WDT_B_PRESENT != 0))
 #include "mtb_hal_lptimer_mcwdt_b.h"
 #elif defined(CY_IP_MXS40SRSS) || defined(CY_IP_MXS40SSRSS) || defined(CY_IP_MXS28SRSS) || \
     defined(CY_IP_MXS22SRSS)
 #include "mtb_hal_lptimer_mcwdt.h"
 #elif defined(CY_IP_M0S8WCO)
 #include "mtb_hal_lptimer_m0s8wo.h"
-#endif
+#endif // if defined(CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION >= 2) && defined(SRSS_NUM_WDT_A)
+// && (SRSS_NUM_WDT_A > 1)
 
 #if defined(__cplusplus)
 extern "C" {

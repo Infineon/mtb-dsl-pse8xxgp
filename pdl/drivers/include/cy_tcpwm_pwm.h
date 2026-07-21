@@ -252,10 +252,52 @@ typedef struct cy_stc_tcpwm_pwm_config
     uint16_t    deadTimeClocksBuff_linecompl_out;     /**< The number of dead time-clocks for line compl out if PWM with dead time is chosen */
     bool        glitch_filter_enable;   /**< Enables Glitch filter for input triggers. */
     cy_en_gf_depth_value_t gf_depth;    /**< Glitch filter depth value. */
+    bool        cc0_parallel_path_enable;   /**< Enables parallel data path for CC0. This will bypass CC0 and CC0_BUFF registers. AHB access to CC0 and CC0_BUFF is also disabled in this case.*/
+    bool        cc1_parallel_path_enable;   /**< Enables parallel data path for CC1. This will bypass CC1 and CC1_BUFF registers. AHB access to CC1 and CC1_BUFF is also disabled in this case.*/
+#if defined (CY_IP_MXS40TCPWM_VERSION_MINOR) && (CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U)
+    bool        dc_enable;              /**< Enable/Disable External Trigger Event Mode for duty cycle control */
+    uint32_t    dc_inputMode;           /**< Configures how the duty cycle control input behaves. See \ref group_tcpwm_input_modes */
+    uint8_t     duty_cycle_input;       /**< Selects one of the input as the external trigger to control Duty Cycle. The inputs are device-specific. See \ref group_tcpwm_input_selection */
+    bool        mask_enable;            /**< Enable/Disable External Mask */
+    uint32_t    mask_inputMode;         /**< Configures how the mask input behaves. See \ref group_tcpwm_input_modes */
+    uint8_t     mask_input;             /**< Selects one of the input as mask input signal. The inputs are device-specific. See \ref group_tcpwm_input_selection */
+#endif /* CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U) */
     bool        pwm_tc_sync_kill_dt;    /**< PWM output get suppressed at next tc event after kill input is active. If deadtime is enabled, output get suppressed after the tc event + deadtime. */
     bool        pwm_sync_kill_dt;       /**< PWM output line_out get suppressed immediately whereas line_compl_out get suppressed after dead time when kill input is active. */
+    bool        debug_freeze_enable;    /**< Specifies the counter behavior in debug mode. */
+    bool        debug_suspend_enable;   /**< Specifies the counter behavior in debug mode when suspend is enabled. */
+    /** Custom alignment counter direction/mode: 0 = Count Up, 1 = Count Down, 2/3 = Count Up/Down.
+        Applied only when \ref cy_stc_tcpwm_pwm_config_t::pwmAlignment is \ref CY_TCPWM_PWM_CUSTOM_ALIGN. */
+    uint8_t     upDownMode;
+    /** Custom alignment initial counter value loaded when the counter starts.
+        Applied only when \ref cy_stc_tcpwm_pwm_config_t::pwmAlignment is \ref CY_TCPWM_PWM_CUSTOM_ALIGN. */
+    uint32_t    initialCountVal;
+    /** Custom alignment output line action on a Compare 0 (CC0) match: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change.
+        Applied only when \ref cy_stc_tcpwm_pwm_config_t::pwmAlignment is \ref CY_TCPWM_PWM_CUSTOM_ALIGN. */
+    uint8_t     cc0MatchMode;
+    /** Custom alignment output line action on a Compare 1 (CC1) match: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change.
+        Applied only when \ref cy_stc_tcpwm_pwm_config_t::pwmAlignment is \ref CY_TCPWM_PWM_CUSTOM_ALIGN and the counter supports CC1. */
+    uint8_t     cc1MatchMode;
+    /** Custom alignment output line action on a counter overflow: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change.
+        Applied only when \ref cy_stc_tcpwm_pwm_config_t::pwmAlignment is \ref CY_TCPWM_PWM_CUSTOM_ALIGN. */
+    uint8_t     overflowMode;
+    /** Custom alignment output line action on a counter underflow: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change.
+        Applied only when \ref cy_stc_tcpwm_pwm_config_t::pwmAlignment is \ref CY_TCPWM_PWM_CUSTOM_ALIGN. */
+    uint8_t     underflowMode;
+
 #endif /* defined (CY_IP_MXS40TCPWM) || defined (CY_DOXYGEN) */
 }cy_stc_tcpwm_pwm_config_t;
+
+/** Dead time union */
+typedef union Cy_TCPWM_DeadTime
+{
+    struct
+    {
+        uint16_t deadTime;
+        uint16_t deadTimeN;
+    };
+    uint32_t u; /**< The dead time value. */
+} Cy_TCPWM_DeadTime;
 /** \} group_tcpwm_data_structures_pwm */
 
 /**
@@ -282,14 +324,15 @@ typedef struct cy_stc_tcpwm_pwm_config
 * Sets the alignment of the PWM.
 * \{
 */
-#define CY_TCPWM_PWM_LEFT_ALIGN                         (0U)     /**< PWM is left aligned, meaning it starts high */
-#define CY_TCPWM_PWM_RIGHT_ALIGN                        (1U)        /**< PWM is right aligned, meaning it starts low */
-/** PWM is centered aligned, terminal count only occurs on underflow */
-#define CY_TCPWM_PWM_CENTER_ALIGN                       (2U)
-/** PWM is asymmetrically aligned, terminal count occurs on overflow and underflow */
-#define CY_TCPWM_PWM_ASYMMETRIC_ALIGN                   (3U)
-#define CY_TCPWM_PWM_ASYMMETRIC_CC0_CC1_ALIGN           (4U) /**< PWM is asymmetrically aligned, line pulse period is equal to CC1-CC0 */
-#define CY_TCPWM_PWM_CENTER_ASYMMETRIC_CC0_CC1_ALIGN    (5U) /**< PWM is asymmetrically aligned, TBD */
+#define CY_TCPWM_PWM_LEFT_ALIGN                         (0U) /**< PWM is left aligned, meaning it starts high */
+#define CY_TCPWM_PWM_RIGHT_ALIGN                        (1U) /**< PWM is right aligned, meaning it starts low */
+#define CY_TCPWM_PWM_CENTER_ALIGN                       (2U) /**< PWM is center aligned. Line pulse width is equal to 2 x (PERIOD - CC0) */
+#define CY_TCPWM_PWM_ASYMMETRIC_ALIGN                   (3U) /**< PWM is asymmetrically aligned with CC0 match. Line pulse width is equal to 2 x PERIOD - CC0 - CC0_buff */
+#define CY_TCPWM_PWM_ASYMMETRIC_CC0_CC1_ALIGN           (4U) /**< PWM is asymmetrically aligned with CC0 and CC1 match. Line pulse width is equal to CC1-CC0 */
+#define CY_TCPWM_PWM_CENTER_ASYMMETRIC_CC0_CC1_ALIGN    (5U) /**< PWM is center asymmetrically aligned with CC0 and CC1 match. Line pulse width is equal to 2 x PERIOD - CC0 - CC1 */
+#define CY_TCPWM_PWM_CENTER_TIMEBASED_ALIGN             (6U) /**< PWM is time based mode, center aligned without CC0 match. Line pulse width is equal to PERIOD */
+#define CY_TCPWM_PWM_CENTER_EXTERNAL_EVENT_ALIGN        (7U) /**< PWM is external event mode. Same as time based mode, but line pulse width can be optionally defined by External Trigger Event */
+#define CY_TCPWM_PWM_CUSTOM_ALIGN                       (8U) /**< PWM is custom aligned. The count direction, counter init value and per-event line actions (CC0/overflow/underflow/CC1 match) are programmed explicitly. See \ref cy_stc_tcpwm_pwm_config_t */
 /** \} group_tcpwm_pwm_alignment */
 
 /** \defgroup group_tcpwm_pwm_kill_modes PWM kill modes
@@ -450,6 +493,15 @@ typedef struct cy_stc_tcpwm_pwm_config
                                                 _VAL2FLD(TCPWM_GRP_CNT_V2_TR_PWM_CTRL_UNDERFLOW_MODE, CY_TCPWM_PWM_TR_CTRL2_CLEAR) | \
                                                 _VAL2FLD(TCPWM_GRP_CNT_V2_TR_PWM_CTRL_CC1_MATCH_MODE, CY_TCPWM_PWM_TR_CTRL2_CLEAR))
 
+/** The configuration of PWM output signal for time based mode, center aligned without CC0 match (tcpwm_ver2 only)*/
+#define CY_TCPWM_PWM_MODE_CNTR_TIME_WO_CC0   (_VAL2FLD(TCPWM_GRP_CNT_V2_TR_PWM_CTRL_CC0_MATCH_MODE, CY_TCPWM_PWM_TR_CTRL2_NO_CHANGE) | \
+                                                _VAL2FLD(TCPWM_GRP_CNT_V2_TR_PWM_CTRL_OVERFLOW_MODE, CY_TCPWM_PWM_TR_CTRL2_CLEAR) | \
+                                                _VAL2FLD(TCPWM_GRP_CNT_V2_TR_PWM_CTRL_UNDERFLOW_MODE, CY_TCPWM_PWM_TR_CTRL2_SET) | \
+                                                _VAL2FLD(TCPWM_GRP_CNT_V2_TR_PWM_CTRL_CC1_MATCH_MODE, CY_TCPWM_PWM_TR_CTRL2_NO_CHANGE))
+
+/** The configuration of PWM output signal for external event mode, center aligned without CC0 match. (tcpwm_ver2 only)*/
+#define CY_TCPWM_PWM_MODE_CNTR_EXT_EVT  (CY_TCPWM_PWM_MODE_CNTR_TIME_WO_CC0)
+
 #define CY_TCPWM_PWM_MODE_CNTR_ASYMM_CC0_CC1_MATCH    ((TCPWM_GRP_CNT_V2_CTRL_CC0_MATCH_UP_EN_Msk) | \
                                                        (TCPWM_GRP_CNT_V2_CTRL_CC1_MATCH_DOWN_EN_Msk))
 #endif
@@ -501,6 +553,45 @@ __STATIC_INLINE void Cy_TCPWM_PWM_PWMDeadTimeBuff (TCPWM_Type const *base, uint3
 __STATIC_INLINE void Cy_TCPWM_PWM_PWMDeadTimeBuffN (TCPWM_Type const *base, uint32_t cntNum, uint32_t deadTime);
 __STATIC_INLINE void Cy_TCPWM_PWM_SetDTBuff (TCPWM_Type const *base, uint32_t cntNum, uint32_t deadTime);
 #endif /* defined (CY_IP_MXS40TCPWM) || defined (CY_DOXYGEN) */
+#if (CY_IP_MXTCPWM_VERSION >= 2U) || defined (CY_DOXYGEN)
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Enable(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Disable(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetStatus(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare0Val(TCPWM_GRP_CNT_Type *base, uint32_t compare0);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare0Val(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare0BufVal(TCPWM_GRP_CNT_Type *base, uint32_t compareBuf0);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare0BufVal(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare1Val(TCPWM_GRP_CNT_Type *base, uint32_t compare1);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare1Val(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare1BufVal(TCPWM_GRP_CNT_Type *base, uint32_t compareBuf1);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare1BufVal(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableCompare0Swap(TCPWM_GRP_CNT_Type *base, bool enable);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableCompare1Swap(TCPWM_GRP_CNT_Type *base, bool enable);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCounter(TCPWM_GRP_CNT_Type *base, uint32_t count);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCounter(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetPeriod0(TCPWM_GRP_CNT_Type *base, uint32_t period0);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetPeriod0(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetPeriod1(TCPWM_GRP_CNT_Type *base, uint32_t period1);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetPeriod1(TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnablePeriodSwap(TCPWM_GRP_CNT_Type *base, bool enable);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetDtCounter (TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_LineOutStatus (TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_LineOutnStatus (TCPWM_GRP_CNT_Type *base);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_PWMDeadTime (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetDT (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Configure_LineSelect(TCPWM_GRP_CNT_Type *base, cy_en_line_select_config_t line_out_val, cy_en_line_select_config_t line_compl_value);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Configure_LineSelectBuff(TCPWM_GRP_CNT_Type *base, cy_en_line_select_config_t line_out_val, cy_en_line_select_config_t line_compl_value);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableLineSelectSwap(TCPWM_GRP_CNT_Type *base, bool enable);
+#endif
+#if defined (CY_IP_MXS40TCPWM) || defined (CY_DOXYGEN)
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableSwap(TCPWM_GRP_CNT_Type *base, bool enable);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Set_KillLinePolarity(TCPWM_GRP_CNT_Type *base, cy_en_kill_line_polarity_t kill_line_polarity);
+cy_en_tcpwm_status_t Cy_TCPWM_PWM_CNT_Configure_Dithering(TCPWM_GRP_CNT_Type *base, cy_en_tcpwm_dithering_t  mode, uint8_t period, uint8_t duty, cy_en_dithering_limiter_t limiter);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_PWMDeadTimeBuff (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime);
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetDTBuff (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime);
+#endif /* defined (CY_IP_MXS40TCPWM) || defined (CY_DOXYGEN) */
+
+
 /*******************************************************************************
 * Function Name: Cy_TCPWM_PWM_Enable
 ****************************************************************************//**
@@ -588,13 +679,17 @@ __STATIC_INLINE uint32_t Cy_TCPWM_PWM_GetStatus(TCPWM_Type const *base, uint32_t
 #else
     status = TCPWM_GRP_CNT_STATUS(base, TCPWM_GRP_CNT_GET_GRP(cntNum), cntNum);
 
-#if (CY_IP_MXTCPWM_VERSION >= 3U)
+#if defined (CY_IP_MXS40TCPWM)
     uint32_t tempStatus = _FLD2VAL(TCPWM_GRP_CNT_V2_STATUS_RUNNING, status);
     /* Generates proper up counting status. Is not generated by HW */
     tempStatus = (((~_FLD2VAL(TCPWM_GRP_CNT_STATUS_DOWN, status)) & tempStatus) << CY_TCPWM_CNT_STATUS_UP_POS) |
                   (_FLD2VAL(TCPWM_GRP_CNT_STATUS_DOWN, status) & tempStatus);
     tempStatus |= ((_FLD2VAL(TCPWM_GRP_CNT_STATUS_CC0_READ_MISS, status) << CY_TCPWM_CNT_STATUS_CC0_READ_MISS_POS) |
                   (_FLD2VAL(TCPWM_GRP_CNT_STATUS_CC1_READ_MISS, status) << CY_TCPWM_CNT_STATUS_CC1_READ_MISS_POS) |
+#if defined (CY_IP_MXS40TCPWM_VERSION_MINOR) && (CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U)
+                  (_FLD2VAL(TCPWM_GRP_CNT_STATUS_TR_DC, status) << TCPWM_GRP_CNT_STATUS_TR_DC_Pos) |
+                  (_FLD2VAL(TCPWM_GRP_CNT_STATUS_TR_MASK, status) << TCPWM_GRP_CNT_STATUS_TR_MASK_Pos) |
+#endif
                   (_FLD2VAL(TCPWM_GRP_CNT_STATUS_KILL_STATUS, status) << CY_TCPWM_CNT_STATUS_KILL_POS));
 
     /* For backward compatibility, we set TCPWM_CNT_STATUS_RUNNING_Pos with TCPWM_GRP_CNT_V2_STATUS_RUNNING */
@@ -606,7 +701,7 @@ __STATIC_INLINE uint32_t Cy_TCPWM_PWM_GetStatus(TCPWM_Type const *base, uint32_t
             CY_TCPWM_CNT_STATUS_UP_POS);
     /* For backward compatibility, we set TCPWM_CNT_STATUS_RUNNING_Pos with TCPWM_GRP_CNT_V2_STATUS_RUNNING */
     status |= (_FLD2VAL(TCPWM_GRP_CNT_V2_STATUS_RUNNING, status) << TCPWM_CNT_STATUS_RUNNING_Pos);
-#endif /* (CY_IP_MXTCPWM_VERSION >= 3U) */
+#endif /* defined (CY_IP_MXS40TCPWM) */
 
 #endif
 
@@ -981,14 +1076,9 @@ __STATIC_INLINE uint32_t Cy_TCPWM_PWM_GetPeriod0(TCPWM_Type const *base, uint32_
 * \snippet tcpwm/pwm/snippet/main.c snippet_Cy_TCPWM_PWM_SetPeriod1
 *
 *******************************************************************************/
-__STATIC_INLINE void Cy_TCPWM_PWM_SetPeriod1(TCPWM_Type *base, uint32_t cntNum,  uint32_t period1)
+__STATIC_INLINE void Cy_TCPWM_PWM_SetPeriod1(TCPWM_Type *base, uint32_t cntNum, uint32_t period1)
 {
-#if (CY_IP_MXTCPWM_VERSION == 1U)
-
-        TCPWM_CNT_PERIOD_BUFF(base, cntNum) = period1;
-#else
-        TCPWM_GRP_CNT_PERIOD_BUFF(base, TCPWM_GRP_CNT_GET_GRP(cntNum), cntNum) = period1;
-#endif
+    Cy_TCPWM_Block_SetPeriodBuf(base, cntNum, period1);
 }
 
 
@@ -1013,16 +1103,7 @@ __STATIC_INLINE void Cy_TCPWM_PWM_SetPeriod1(TCPWM_Type *base, uint32_t cntNum, 
 *******************************************************************************/
 __STATIC_INLINE uint32_t Cy_TCPWM_PWM_GetPeriod1(TCPWM_Type const *base, uint32_t cntNum)
 {
-    uint32_t result;
-
-#if (CY_IP_MXTCPWM_VERSION == 1U)
-
-        result = TCPWM_CNT_PERIOD_BUFF(base, cntNum);
-#else
-        result = TCPWM_GRP_CNT_PERIOD_BUFF(base, TCPWM_GRP_CNT_GET_GRP(cntNum), cntNum);
-#endif
-
-    return result;
+    return Cy_TCPWM_Block_GetPeriodBuf(base, cntNum);
 }
 
 
@@ -1483,6 +1564,805 @@ __STATIC_INLINE void Cy_TCPWM_PWM_SetDTBuff (TCPWM_Type const *base, uint32_t cn
     uint32_t grp = TCPWM_GRP_CNT_GET_GRP(cntNum);
     TCPWM_GRP_CNT_DT_BUFF(base, grp, cntNum) = deadTime;
 }
+#endif
+
+#if (CY_IP_MXTCPWM_VERSION >= 2U) || defined (CY_DOXYGEN)
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_Enable
+****************************************************************************//**
+*
+* Enables the counter in the TCPWM block for the PWM operation.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Enable(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->CTRL |= _VAL2FLD(TCPWM_GRP_CNT_V2_CTRL_ENABLED, 1U);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_Disable
+****************************************************************************//**
+*
+* Disables the counter in the TCPWM block.
+*
+* \ref Cy_TCPWM_TriggerStopOrKill or \ref Cy_TCPWM_TriggerStopOrKill_Single
+* function.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Disable(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->CTRL &= ~TCPWM_GRP_CNT_V2_CTRL_ENABLED_Msk;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetStatus
+****************************************************************************//**
+*
+* Returns the status of the PWM whether it is running or not. In case the
+* PWM is running, status will also provide information on counting up/down. This
+* is useful when the PWM Alignment mode set to Center/Asymmetric Alignments.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* The status. See \ref group_tcpwm_pwm_status. The status value is not the same as in TCPWM status register.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetStatus(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return(base->STATUS);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetCompare0Val
+****************************************************************************//**
+*
+* Sets the compare value for Compare 0 when the compare mode enabled.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param compare0
+* The Compare 0 value.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare0Val(TCPWM_GRP_CNT_Type *base, uint32_t compare0)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->CC0 = compare0;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetCompare0Val
+****************************************************************************//**
+*
+* Returns compare 0 value.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* Compare 0 value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare0Val(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return base->CC0;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetCompare0BufVal
+****************************************************************************//**
+*
+* Sets the buffered compare value for Compare 0 when the compare mode enabled.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param compareBuf0
+* The buffered Compare 0 value.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare0BufVal(TCPWM_GRP_CNT_Type *base, uint32_t compareBuf0)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->CC0_BUFF = compareBuf0;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetCompare0BufVal
+****************************************************************************//**
+*
+* Returns the buffered compare 0 value.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* Buffered compare 0 value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare0BufVal(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return base->CC0_BUFF;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetCompare1Val
+****************************************************************************//**
+*
+* Sets the compare value for Compare 1 when the compare mode enabled.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param compare1
+* The Compare1 value.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare1Val(TCPWM_GRP_CNT_Type *base, uint32_t compare1)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->CC1 = compare1;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetCompare1Val
+****************************************************************************//**
+*
+* Returns compare 1 value.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* Compare 1 value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare1Val(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return base->CC1;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetCompare1BufVal
+****************************************************************************//**
+*
+* Sets the buffered compare value for Compare1 when the compare mode enabled.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param compareBuf1
+* The buffered Compare 1 value.
+*
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCompare1BufVal(TCPWM_GRP_CNT_Type *base, uint32_t compareBuf1)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->CC1_BUFF = compareBuf1;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetCompare1BufVal
+****************************************************************************//**
+*
+* Returns the buffered compare 1 value.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* Buffered compare 1 value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCompare1BufVal(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return base->CC1_BUFF;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_EnableCompare0Swap
+****************************************************************************//**
+*
+* Enables the comparison swap of compare 0 and compareBuf 0 on OV and/or UN,
+* depending on the PWM alignment.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param enable
+* true = swap enabled; false = swap disabled
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableCompare0Swap(TCPWM_GRP_CNT_Type *base, bool enable)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (enable)
+    {
+        base->CTRL |= TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_CC0_Msk;
+    }
+    else
+    {
+         base->CTRL &= TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_CC0_Msk;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_EnableCompare1Swap
+****************************************************************************//**
+*
+* Enables the comparison swap of compare1 and compareBuf1 on OV and/or UN,
+* depending on the PWM alignment.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param enable
+* true = swap enabled; false = swap disabled
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableCompare1Swap(TCPWM_GRP_CNT_Type *base, bool enable)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (enable)
+    {
+        base->CTRL |= TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_CC1_Msk;
+    }
+    else
+    {
+        base->CTRL &= TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_CC1_Msk;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetCounter
+****************************************************************************//**
+*
+* Sets the value of the counter.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param count
+* The value to write into the counter.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetCounter(TCPWM_GRP_CNT_Type *base, uint32_t count)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->COUNTER = count;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetCounter
+****************************************************************************//**
+*
+* Returns the value in the counter.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* The current counter value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetCounter(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return base->COUNTER;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetPeriod0
+****************************************************************************//**
+*
+* Sets the value of the period register.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param period0
+* The value to write into a period.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetPeriod0(TCPWM_GRP_CNT_Type *base, uint32_t period0)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->PERIOD = period0;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetPeriod0
+****************************************************************************//**
+*
+* Returns the value in the period register.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* The current period value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetPeriod0(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return base->PERIOD;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetPeriod1
+****************************************************************************//**
+*
+* Sets the value of the period register. In pseudo random mode period 1 sets
+* which taps are enabled.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param period1
+* The value to write into a period 1.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetPeriod1(TCPWM_GRP_CNT_Type *base, uint32_t period1)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->PERIOD_BUFF = period1;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetPeriod1
+****************************************************************************//**
+*
+* Returns the value in the period register.
+*
+* \param base
+* The pointer to a COUNTER PWM instance.
+*
+* \return
+* The current period value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetPeriod1(TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    return base->PERIOD_BUFF;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_EnablePeriodSwap
+****************************************************************************//**
+*
+* Enables a period swap on OV and/or UN, depending on the PWM alignment
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param enable
+* true = swap enabled; false = swap disabled
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnablePeriodSwap(TCPWM_GRP_CNT_Type *base, bool enable)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (enable)
+    {
+        base->CTRL |= TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_PERIOD_Msk;
+    }
+    else
+    {
+        base->CTRL &= TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_PERIOD_Msk;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_GetDtCounter
+****************************************************************************//**
+*
+* Returns the dead time count when the PWM is configured in dead time mode
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* The dead time counter.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_GetDtCounter (TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    uint32_t result = 0UL;
+
+    result = base->STATUS;
+    result = (result & (TCPWM_GRP_CNT_V2_STATUS_DT_CNT_L_Msk | TCPWM_GRP_CNT_V2_STATUS_DT_CNT_H_Msk)) >> TCPWM_GRP_CNT_V2_STATUS_DT_CNT_L_Pos;
+
+    return result;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_LineOutStatus
+****************************************************************************//**
+*
+* Returns the current level of the selected pwm output line.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* The current pwm output line level.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_LineOutStatus (TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+    uint32_t status = 0UL;
+
+    status = base->STATUS & TCPWM_GRP_CNT_V2_STATUS_LINE_OUT_Msk;
+    return status;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_LineOutnStatus
+****************************************************************************//**
+*
+* Returns the current level of the selected pwm output line.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \return
+* The current pwm output line level.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_TCPWM_PWM_CNT_LineOutnStatus (TCPWM_GRP_CNT_Type *base)
+{
+    CY_ASSERT_L1(NULL!=base);
+    uint32_t status = 0UL;
+
+    status = base->STATUS & TCPWM_GRP_CNT_V2_STATUS_LINE_COMPL_OUT_Msk;
+    return status;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_PWMDeadTime
+****************************************************************************//**
+*
+* Writes the dead time value for PWM. This is the number of clock cycles of dead time to activate Line Out
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param deadTime
+* The dead time value.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_PWMDeadTime (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->DT = (uint32_t) deadTime.u;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetDT
+****************************************************************************//**
+*
+* Writes the dead time value for PWM. This is the number of clock cycles of dead time to activate Line Out and  Line Compliment Out
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param deadTime
+* The dead time value for both Line Out and Line Compliment Out.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetDT (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->DT = deadTime.u;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_Configure_LineSelect
+****************************************************************************//**
+*
+* Configures the source for the output signal "line_out"  and "line_compl_out"
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param line_out_val
+* Source for the lie out signal \ref cy_en_line_select_config_t
+*
+* \param line_compl_value
+* Source for the lie compl out signal \ref cy_en_line_select_config_t
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Configure_LineSelect(TCPWM_GRP_CNT_Type *base, cy_en_line_select_config_t line_out_val, cy_en_line_select_config_t line_compl_value)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->LINE_SEL = (_VAL2FLD(TCPWM_GRP_CNT_V2_LINE_SEL_OUT_SEL, line_out_val) |
+                                                 _VAL2FLD(TCPWM_GRP_CNT_V2_LINE_SEL_COMPL_OUT_SEL, line_compl_value));
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_Configure_LineSelectBuff
+****************************************************************************//**
+*
+* Buffer for LINE SELCT. Can be exchanged with Line Select values on a terminal count event with an actively pending switch event.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param line_out_val
+* Source for the lie out signal \ref cy_en_line_select_config_t
+*
+* \param line_compl_value
+* Source for the lie compl out signal \ref cy_en_line_select_config_t
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Configure_LineSelectBuff(TCPWM_GRP_CNT_Type *base, cy_en_line_select_config_t line_out_val, cy_en_line_select_config_t line_compl_value)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->LINE_SEL_BUFF =  (_VAL2FLD(TCPWM_GRP_CNT_V2_LINE_SEL_BUFF_OUT_SEL, line_out_val) |
+                                                 _VAL2FLD(TCPWM_GRP_CNT_V2_LINE_SEL_BUFF_COMPL_OUT_SEL, line_compl_value));
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_EnableLineSelectSwap
+****************************************************************************//**
+*
+* Enables a Line Select swap on OV and/or UN, depending on the PWM alignment
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param enable
+* true = swap enabled; false = swap disabled
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableLineSelectSwap(TCPWM_GRP_CNT_Type *base, bool enable)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (enable)
+    {
+        base->CTRL |= TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_LINE_SEL_Msk;
+    }
+    else
+    {
+        base->CTRL &= ~TCPWM_GRP_CNT_V2_CTRL_AUTO_RELOAD_LINE_SEL_Msk;
+    }
+}
+#endif
+
+#if defined (CY_IP_MXS40TCPWM) || defined (CY_DOXYGEN)
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_EnableSwap
+****************************************************************************//**
+*
+* Enables/disables swapping mechanism between CC0 and buffered CC0, CC1 and buffered CC1, PERIOD and buffered PERIOD, DT and buffered DT.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param enable
+* true = swap enabled; false = swap disabled
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_EnableSwap(TCPWM_GRP_CNT_Type *base, bool enable)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (enable)
+    {
+        base->CTRL |= TCPWM_GRP_CNT_V3_CTRL_SWAP_ENABLED_Msk;
+    }
+    else
+    {
+        base->CTRL &= ~TCPWM_GRP_CNT_V3_CTRL_SWAP_ENABLED_Msk;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_Set_KillLinePolarity
+****************************************************************************//**
+*
+* Configures the source for the output signal "line_out"  and "line_compl_out"
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param kill_line_polarity
+* Kill Line polarity value \ref cy_en_kill_line_polarity_t
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Set_KillLinePolarity(TCPWM_GRP_CNT_Type *base, cy_en_kill_line_polarity_t kill_line_polarity)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (CY_TCPWM_LINEOUT_AND_LINECMPOUT_IS_LOW == kill_line_polarity)
+    {
+        base->CTRL &= ~TCPWM_GRP_CNT_CTRL_KILL_LINE_POLARITY_Msk;
+    }
+    else
+    {
+        base->CTRL |= TCPWM_GRP_CNT_CTRL_KILL_LINE_POLARITY_Msk;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_PWMDeadTimeBuff
+****************************************************************************//**
+*
+* Writes the dead time buffered value for PWM. This is the number of clock cycles of dead time to activate Line Out
+* Data from DT_BUFF will be shallow transferred to DT (when swap enable is disabled) on a terminal count event with an actively pending switch event.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param deadTime
+* The dead time value.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_PWMDeadTimeBuff (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->DT_BUFF = (uint32_t) deadTime.u;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_SetDTBuff
+****************************************************************************//**
+*
+* Writes the dead time buffered value for PWM. This is the number of clock cycles of dead time to activate Line Out and  Line Compliment Out
+* Data from DT_BUFF will be shallow transferred to DT (when swap enable is disabled) on a terminal count event with an actively pending switch event.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param deadTime
+* The dead time value for both Line Out and Line Compliment Out.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_SetDTBuff (TCPWM_GRP_CNT_Type *base, Cy_TCPWM_DeadTime deadTime)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    base->DT_BUFF = (uint32_t) deadTime.u;
+}
+
+
+
+#endif /* defined (CY_IP_MXS40TCPWM) */
+
+#if defined (CY_IP_MXS40TCPWM_VERSION_MINOR) && (CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U)
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_DC_Control_Enable
+****************************************************************************//**
+*
+* Enables/disables External Trigger Event Mode for duty cycle control.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param enable
+* true = External DC control enabled; false = External DC control disabled
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_DC_Control_Enable(TCPWM_GRP_CNT_Type *base, bool enable)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (enable)
+    {
+        base->CTRL2 |= TCPWM_GRP_CNT_CTRL2_DC_EN_Msk;
+    }
+    else
+    {
+        base->CTRL2 &= ~TCPWM_GRP_CNT_CTRL2_DC_EN_Msk;
+    }
+}
+
+/*******************************************************************************
+* Function Name: Cy_TCPWM_PWM_CNT_Mask_Enable
+****************************************************************************//**
+*
+* Enables/disables External Mask Enable mode.
+*
+* \param base
+* The pointer to a TCPWM instance.
+*
+* \param enable
+* true = External mask enabled; false = External mask disabled
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_TCPWM_PWM_CNT_Mask_Enable(TCPWM_GRP_CNT_Type *base, bool enable)
+{
+    CY_ASSERT_L1(NULL!=base);
+
+    if (enable)
+    {
+        base->CTRL2 |= TCPWM_GRP_CNT_CTRL2_MASK_EN_Msk;
+    }
+    else
+    {
+        base->CTRL2 &= ~TCPWM_GRP_CNT_CTRL2_MASK_EN_Msk;
+    }
+}
+
 
 #endif /* defined (CY_IP_MXS40TCPWM) */
 

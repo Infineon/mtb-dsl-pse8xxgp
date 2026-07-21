@@ -553,6 +553,28 @@ typedef struct cy_stc_scb_spi_config
 #endif /* CY_IP_MXSCB_VERSION */
 
     /**
+    * Enables EZ mode (Easy mode) for SPI slave operation.
+    * When enabled, the SCB FIFO is replaced by a 512-byte addressable
+    * dual-port memory buffer (EZ data buffer). The first byte of each SPI
+    * transaction is used as the buffer address, subsequent bytes are
+    * data read/written at that address with auto-increment.
+    */
+    bool        enableEzMode;
+
+    /**
+    * Enables externally clocked operation mode for SPI slave.
+    * When enabled, the slave operates using the master's SCLK instead of the
+    * internal clock (clk_scb). This allows the slave to continue communication
+    * even when the device is in Deep Sleep mode.
+    * Only Motorola submode (all CPOL/CPHA combinations) is supported.
+    * \note EC_OP_MODE requires EZ mode. \ref enableEzMode is automatically
+    * set when this option is enabled.
+    * \note Only SCB instances with SPI_S_EC=1 support externally clocked mode
+    * (typically SCB0 only). \ref enableWakeFromSleep must also be enabled.
+    */
+    bool        enableExternalClock;
+
+    /**
     * When set, the slave will wake the device when the slave select line
     * becomes active.
     * Note that not all SCBs support this mode. Consult the device

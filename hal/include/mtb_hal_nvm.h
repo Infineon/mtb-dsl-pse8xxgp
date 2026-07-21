@@ -27,6 +27,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include "mtb_hal_general_types.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_NVM)
+
+
+
 
 /**
  * \addtogroup group_hal_nvm NVM (Onboard Non-Volatile Memory)
@@ -60,8 +72,8 @@
  * * Supports Blocking or Non-Blocking erase(if applicable), program, and write
  * \section hal_nvm_code_snippet Code Snippets
  * \subsection subsection_nvm_use_case_1 Snippet 1: Get NVM Characteristics
- * Following code snippet demonstrates how to fetch NVM characteristics. Refer \ref
- * mtb_hal_nvm_info_t for more information.
+ * Following code snippet demonstrates how to fetch NVM characteristics. Refer
+ * #mtb_hal_nvm_info_t for more information.
  * \snippet hal_nvm.c snippet_mtb_hal_nvm_get_nvm_info
  *
  * \subsection subsection_nvm_use_case_2 Snippet 2: Blocking NVM Erase-Write and Read
@@ -71,17 +83,24 @@
  * completed. It then verifies the NVM data by comparing the NVM data with the
  * written data.
  * \snippet hal_nvm.c snippet_mtb_hal_nvm_blocking_mode_nvmwrite
+ *
+ * \subsection subsection_nvm_use_case_3 Snippet 3: Non-blocking NVM Erase-Write and Read
+ * Following code snippet demonstrates non-blocking NVM write.
+ * It uses a constant array with a size equaling the size of one NVM row/block.
+ * It uses non-blocking NVM write operation which to not block the caller.
+ * It then verifies the NVM data by comparing the NVM data with the
+ * written data.
+ * \note When using non-blocking NVM operations:
+ * * Interrupts must be enabled.
+ * * NVM memory have to be initialized and configured properly before starting
+ * the non-blocking operation.
+ * * The user must ensure that the CPU is not in critical section for the duration
+ * of the non-blocking NVM operation, otherwise NVM operation will not happen and
+ * the operation complete mtb_hal_nvm_is_operation_complete() will always return false.
+ *
+ * \snippet hal_nvm.c snippet_mtb_hal_nvm_non_blocking_mode_nvmwrite
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include "mtb_hal_general_types.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_NVM)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -146,7 +165,7 @@ typedef struct
 
 /** Get details about the NVM memory regions such as NVM type, start address, size,
    is_erase_required, and erase values etc.
- * Refer \ref mtb_hal_nvm_info_t, mtb_hal_nvm_region_info_t for more information.
+ * Refer #mtb_hal_nvm_info_t, mtb_hal_nvm_region_info_t for more information.
  *
  * @param[in]  obj  The NVM object.
  * @param[out] info The NVM characteristic info.
@@ -217,6 +236,66 @@ cy_rslt_t mtb_hal_nvm_write(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t
  */
 cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data);
 
+/** Erase one block of NVM starting at the given address (non-blocking). The address must be at
+   block boundary.
+ * This function starts the erase operation and returns immediately. Use
+ * mtb_hal_nvm_is_operation_complete() to check completion.
+ *
+ * @see mtb_hal_nvm_get_info() to get the NVM characteristics for legal address values, is erase
+ * required/applicable, and the erase block size(if applicable).
+ *
+ * @param[in] obj The NVM object
+ * @param[in] address The block address to be erased
+ * @return The status of the erase request. Returns \ref CY_RSLT_SUCCESS on successful operation
+ * start.
+ */
+cy_rslt_t mtb_hal_nvm_erase_nb(mtb_hal_nvm_t* obj, uint32_t address);
+
+/** Write new data into the block starting at the given address (non-blocking). The address must be
+   at block boundary.
+ * This function starts the write operation and returns immediately. Use
+ * mtb_hal_nvm_is_operation_complete() to check completion.
+ *
+ * @see mtb_hal_nvm_get_info() to get the NVM characteristics for legal address values and
+ * the write block size. The provided data buffer must be at least as large as the NVM
+ * block_size.
+ * @note Generally the \p data to be written must be located in the SRAM memory region.
+ *
+ * @param[in] obj The NVM object
+ * @param[in] address The address of the block to be written
+ * @param[in] data The data buffer to be written to the NVM block
+ * @return The status of the write request. Returns \ref CY_RSLT_SUCCESS on successful operation
+ * start.
+ */
+cy_rslt_t mtb_hal_nvm_write_nb(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data);
+
+/** Program one block with the provided data starting at the given address (non-blocking). The
+   address must be
+ * at block boundary. This function starts the program operation and returns immediately. Use
+ * mtb_hal_nvm_is_operation_complete() to check completion.
+ *
+ * @note This function does not erase the block prior to writing. The block must be erased
+ * first via a separate call to erase.
+ * @see mtb_hal_nvm_get_info() to get the NVM characteristics for legal address values and
+ * the total block size. The provided data buffer must be at least as large as the NVM
+ * block_size.
+ * @note Generally the \p data to be programmed must be located in the SRAM memory region.
+ *
+ * @param[in] obj The NVM object
+ * @param[in] address The address of the block to be programmed
+ * @param[in] data The data buffer to be programmed to the NVM block
+ * @return The status of the program request. Returns \ref CY_RSLT_SUCCESS on successful operation
+ * start.
+ */
+cy_rslt_t mtb_hal_nvm_program_nb(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data);
+
+/** Check if a non-blocking NVM operation is complete.
+ *
+ * @param[in] obj The NVM object
+ * @return True if operation is complete and false if still in progress.
+ */
+bool mtb_hal_nvm_is_operation_complete(mtb_hal_nvm_t* obj);
+
 /** Find the nvm region based on given address and length.
  * If "length is zero and address is not in any nvm region" or
  * if "length is not zero and address is not in any nvm region" or
@@ -240,6 +319,6 @@ const mtb_hal_nvm_region_info_t* mtb_hal_nvm_get_region_for_address(mtb_hal_nvm_
 #include MTB_HAL_NVM_IMPL_HEADER
 #endif /* MTB_HAL_NVM_IMPL_HEADER */
 
-#endif //defined(MTB_HAL_DRIVER_AVAILABLE_NVM)
-
 /** \} group_hal_nvm */
+
+#endif //defined(MTB_HAL_DRIVER_AVAILABLE_NVM)

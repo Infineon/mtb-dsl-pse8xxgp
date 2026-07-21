@@ -36,7 +36,6 @@
 #include "vg_lite_options.h"
 
 #define DUMP_CAPTURE                            0
-#define DUMP_COMMAND_CAPTURE                    0
 #define DUMP_INIT_COMMAND                       0
 #define DUMP_API                                0
 #define DUMP_LAST_CAPTURE                       0
@@ -55,7 +54,6 @@
      to overwrite the default command buffer size.
 ***/
 #define VG_LITE_COMMAND_BUFFER_SIZE (32 << 10)
-#define VG_LITE_SINGLE_COMMAND_BUFFER_SIZE (64 << 10) /* For only using one command buffer. */
 
 #define CMDBUF_BUFFER(context)      (context).command_buffer[(context).command_buffer_current]
 #define CMDBUF_INDEX(context)       (context).command_buffer_current
@@ -114,10 +112,26 @@
 #define MAT(Matrix, Row, Column)    (GET_MATRIX_VALUES(Matrix)[Row * MATRIX_ROWS + Column])
 #define PI                          3.141592653589793238462643383279502f
 
-#if !gcFEATURE_VG_MATH_PRECISION_FIX && (CHIPID == 0x555)
+#if !gcFEATURE_VG_MATH_PRECISION_FIX && ((CHIPID == 0x555) || gcFEATURE_VG_BOUNDARY_FILTER_BYPASS)
 #define VG_SW_BLIT_PRECISION_OPT 1
 #else 
 #define VG_SW_BLIT_PRECISION_OPT 0
+#endif
+
+#if (!gcFEATURE_VG_SPLIT_PATH || !gcFEATURE_VG_PARALLEL_PATHS || !gcFEATURE_VG_512_PARALLEL_PATHS || !gcFEATURE_VG_512_HALF_SPLIT)
+#define VG_SW_SPLIT_PATH_SUPPORT   1
+#else
+#define VG_SW_SPLIT_PATH_SUPPORT   0
+#endif
+
+#ifndef gcFEATURE_VG_24BIT_PLANAR_SW
+#define gcFEATURE_VG_24BIT_PLANAR_SW 0
+#endif
+
+#if (CHIPID == 0X555) || (CHIPID == 0X355)
+#define VG_PRE_UPLOAD_PATH_SUPPORT 0
+#else
+#define VG_PRE_UPLOAD_PATH_SUPPORT 1
 #endif
 
 /* Driver implementation internal structures.
@@ -139,6 +153,7 @@ typedef struct vg_lite_tess_buffer
     vg_lite_uint32_t            tessbuf_size;          /*! Buffer size for tessellation buffer */
     vg_lite_uint32_t            countbuf_size;         /*! Buffer size for VG count buffer */
     vg_lite_uint32_t            tess_w_h;              /*! Combination of buffer width and height. */
+    vg_lite_uint32_t            tess_x_y;              /*! Combination of buffer origin x and y. */
     /* gc355 Specific fields below */
     vg_lite_uint32_t            L1_phyaddr;            /*! L1 physical address. */
     vg_lite_uint32_t            L2_phyaddr;            /*! L2 physical address. */
@@ -148,6 +163,15 @@ typedef struct vg_lite_tess_buffer
     vg_lite_uint32_t            L2_size;               /*! L2 size for tessellation buffer */
     vg_lite_uint32_t            tess_stride;           /*! Stride for tessellation buffer */
 } vg_lite_tess_buffer_t;
+
+typedef struct vg_lite_cache_cmd_info
+{
+    uint32_t                           fb_command_offset_start;
+    uint32_t                           fb_command_offset_end;
+    uint32_t                           special_register_offset_start;
+    uint32_t                           special_register_address;
+    struct vg_lite_cache_cmd_info     *next;
+} vg_lite_cache_cmd_info;
 
 typedef struct vg_lite_context {
     vg_lite_kernel_context_t    context;
@@ -172,7 +196,7 @@ typedef struct vg_lite_context {
     uint32_t                    scissor_dirty;
     int32_t                     scissor[4];                 /* Scissor area: x, y, right, bottom. */
     vg_lite_buffer_t            *scissor_layer;
-
+    int32_t                    scissor_layer_range[4];
     uint32_t                    src_alpha_mode;
     uint32_t                    src_alpha_value;
     uint32_t                    dst_alpha_mode;
@@ -193,6 +217,7 @@ typedef struct vg_lite_context {
     uint8_t                     custom_cmdbuf;
     uint8_t                     custom_tessbuf;
     uint32_t                    enable_mask;
+    vg_lite_buffer_t            *mask_layer;
     uint32_t                    matrix_enable;
     uint32_t                    tess_width;
     uint32_t                    tess_height;
@@ -213,21 +238,40 @@ typedef struct vg_lite_context {
     size_t                      Physical;
     uint32_t                    last_command_size;
     vg_lite_frame_flag_t        frame_flag;
+    uint8_t                     mesh_mode;
+    uint32_t                    mesh_size;
+    uint8_t                     mesh_dirty;
 
     uint32_t                    backup_fb_command_flag;
     uint8_t                    *fb_command_buffer;
     uint32_t                    fb_command_buffer_physical;
     uint32_t                    fb_command_buffer_size;
     uint32_t                    fb_command_offset;
+    uint32_t                    fb_command_buffer_index;    
     uint32_t                    fb_finish_flag;
+    vg_lite_cache_cmd_info     *fb_command_buffer_start;
+    vg_lite_cache_cmd_info     *fb_command_buffer_end;
+
+    uint32_t                    split_path;
 } vg_lite_context_t;
 
 typedef struct vg_lite_ftable {
     uint32_t                    ftable[gcFEATURE_COUNT];
 } vg_lite_ftable_t;
 
+typedef struct vg_factor_config {
+    uint32_t factor_src_alpha;
+    uint32_t factor_src_color;
+    uint32_t factor_dst_alpha;
+    uint32_t factor_dst_color;
+    uint32_t final_equation_opcode;
+    uint32_t dstchannelmode;
+    uint32_t srcchannelmode;
+}vg_factor_config_t;
+
 extern vg_lite_context_t        s_context;
 extern vg_lite_ftable_t         s_ftable;
+extern vg_lite_char             dump_api_flag;
 
 extern vg_lite_error_t set_render_target(vg_lite_buffer_t* target);
 extern vg_lite_error_t push_state(vg_lite_context_t* context, uint32_t address, uint32_t data);
@@ -251,6 +295,8 @@ extern vg_lite_void calculate_step_value(vg_lite_filter_t filter, vg_lite_matrix
 
 extern vg_lite_float_t _calc_decnano_compress_ratio(vg_lite_buffer_format_t format, vg_lite_compress_mode_t compress_mode);
 
+extern vg_lite_buffer_format_t convert_24bit_format(vg_lite_buffer_format_t format);
+
 #if defined(__ZEPHYR__)
 extern void * vg_lite_os_fopen(const char *__restrict path, const char *__restrict mode);
 extern int vg_lite_os_fclose(void * fp);
@@ -260,14 +306,14 @@ extern int vg_lite_os_fseek(void * fp, long offset, int whence);
 extern int vg_lite_os_fflush(void *fp);
 extern int vg_lite_os_fprintf(void *__restrict fp, const char *__restrict format, ...);
 extern int vg_lite_os_getpid(void);
-#else
-// extern int   vg_lite_os_fseek(FILE* Stream, long Offset, int Origin);
-// extern FILE* vg_lite_os_fopen(char const* FileName, char const* Mode);
-// extern long  vg_lite_os_ftell(FILE* Stream);
-// extern size_t vg_lite_os_fread(void* Buffer, size_t ElementSize, size_t ElementCount, FILE* Stream);
-// extern size_t vg_lite_os_fwrite(void const* Buffer, size_t ElementSize, size_t ElementCount, FILE* Stream);
-// extern int    vg_lite_os_close(FILE* Stream);
-// extern int    vg_lite_os_fflush(FILE* fp);
+#elif defined(_WINDLL) || defined(__linux__)
+extern int   vg_lite_os_fseek(FILE* Stream, long Offset, int Origin);
+extern FILE* vg_lite_os_fopen(char const* FileName, char const* Mode);
+extern long  vg_lite_os_ftell(FILE* Stream);
+extern size_t vg_lite_os_fread(void* Buffer, size_t ElementSize, size_t ElementCount, FILE* Stream);
+extern size_t vg_lite_os_fwrite(void const* Buffer, size_t ElementSize, size_t ElementCount, FILE* Stream);
+extern int    vg_lite_os_close(FILE* Stream);
+extern int    vg_lite_os_fflush(FILE* fp);
 #endif
 
 /**************************** Dump command, image ********************************************/
@@ -299,8 +345,8 @@ char filename[30];
 #if DUMP_LAST_CAPTURE
 void _SetDumpFileInfo();
 vg_lite_error_t vglitefDumpBuffer_single(char* Tag, size_t Physical, void* Logical, size_t Offset, size_t Bytes);
-#define vglitemDUMP_single                             vglitefDump
-#define vglitemDUMP_BUFFER_single                     vglitefDumpBuffer_single
+#define vglitemDUMP_single                      vglitefDump
+#define vglitemDUMP_BUFFER_single               vglitefDumpBuffer_single
 #endif 
 #if DUMP_CAPTURE
 void _SetDumpFileInfo();
@@ -308,11 +354,6 @@ vg_lite_error_t vglitefDump(char* String, ...);
 vg_lite_error_t vglitefDumpBuffer(char* Tag, size_t Physical, void* Logical, size_t Offset, size_t Bytes);
 #define vglitemDUMP                             vglitefDump
 #define vglitemDUMP_BUFFER                      vglitefDumpBuffer
-#else
-static inline void __dummy_dump(char* Message, ...) {}
-static inline void __dummy_dump_buffer(char* Tag, size_t Physical, void* Logical, size_t Offset, size_t Bytes) {}
-#define vglitemDUMP                             __dummy_dump
-#define vglitemDUMP_BUFFER                      __dummy_dump_buffer
 #endif
 
 /**********************************************************************************************/

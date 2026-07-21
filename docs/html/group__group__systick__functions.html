@@ -332,7 +332,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SysTick_Clear</b> 
 <p>Changing the SysTick clock source and/or its frequency will change the interrupt interval and <a class="el" href="group__group__systick__functions.html#ga1825a0f6b0f66b0219f4940003e35ca7" title="Sets the value the counter is set to on a startup and after it reaches zero.">Cy_SysTick_SetReload()</a> should be called to compensate this change.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">clockSource</td><td><a class="el" href="group__group__systick__data__structures.html#ga466b1e8fe4278011eab77a691ce2b8f9">cy_en_systick_clock_source_t</a> Clock source. For the PSoC 64 devices, passing any other value than CY_SYSTICK_CLOCK_SOURCE_CLK_CPU will not affect clock source and it will be as <a class="el" href="group__group__systick__functions.html#ga6d72adec7b58994ff9097bb4a301fa95">Cy_SysTick_GetClockSource()</a> reports. </td></tr>
+    <tr><td class="paramname">clockSource</td><td><a class="el" href="group__group__systick__data__structures.html#ga466b1e8fe4278011eab77a691ce2b8f9">cy_en_systick_clock_source_t</a> Clock source. For the PSOC 64 devices, passing any other value than CY_SYSTICK_CLOCK_SOURCE_CLK_CPU will not affect clock source and it will be as <a class="el" href="group__group__systick__functions.html#ga6d72adec7b58994ff9097bb4a301fa95">Cy_SysTick_GetClockSource()</a> reports. </td></tr>
   </table>
   </dd>
 </dl>

@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,8 +43,8 @@
     <ParamRange  id="gfxssClkHz" name="gfxssClkHz" group="Internal" default="`${getExposedMember(sourceClock, &quot;frequency&quot;)}`" min="1" max="400000000" resolution="1" visible="false" editable="false" desc="gfxss clock frequency in Hz" />
 
     <!-- Internal Variables -->
-	  <ParamRange id="max_display_width" name="Max Width" group="hidden" default="1024" min="1" max="1024" resolution="1" visible="false" editable="false" desc="Maximum Width that hardware supports." />
-    <ParamRange id="max_display_height" name="Max Height" group="hidden" default="768" min="1" max="768" resolution="1" visible="false" editable="false" desc="Maximum Height that hardware supports." />
+	  <ParamRange id="max_display_width" name="Max Width" group="hidden" default="1920" min="1" max="1920" resolution="1" visible="false" editable="false" desc="Maximum Width that hardware supports." />
+    <ParamRange id="max_display_height" name="Max Height" group="hidden" default="1080" min="1" max="1080" resolution="1" visible="false" editable="false" desc="Maximum Height that hardware supports." />
 
     <!-- General -->
     <ParamBool id="gpu_enabled" name="Enable GPU" group="General" default="true" visible="true" editable="true" desc="Enable hardware acceleration for composition." />
@@ -95,12 +95,12 @@
     </ParamChoice>
     <ParamRange  id="color_depth" name="color depth" group="Internal" default="`${(format eq vivD24) ? 24 : ((format eq vivD18CFG2) ? 18 : 16)}`" min="0" max="60" resolution="1" visible="false" editable="false" desc="Color Depth." />
 
-    <ParamRange  id="hsync_width" name="HSync Width" group="General" default="0" min="0" max="1024" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="HSync Width." />
-    <ParamRange  id="hfp" name="HFP" group="General" default="0" min="0" max="1024" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Horizontal Front Porch." />
-    <ParamRange  id="hbp" name="HBP" group="General" default="0" min="0" max="1024" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Horizontal Back Porch." />
-    <ParamRange  id="vsync_width" name="VSync Width" group="General" default="0" min="0" max="768" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Vsync Width." />
-    <ParamRange  id="vfp" name="VFP" group="General" default="0" min="0" max="768" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Vertical Front Porch." />
-    <ParamRange  id="vbp" name="VBP" group="General" default="0" min="0" max="768" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Vertical Back Porch." />
+    <ParamRange  id="hsync_width" name="HSync Width" group="General" default="0" min="0" max="1920" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="HSync Width." />
+    <ParamRange  id="hfp" name="HFP" group="General" default="0" min="0" max="1920" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Horizontal Front Porch." />
+    <ParamRange  id="hbp" name="HBP" group="General" default="0" min="0" max="1920" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Horizontal Back Porch." />
+    <ParamRange  id="vsync_width" name="VSync Width" group="General" default="0" min="0" max="1080" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Vsync Width." />
+    <ParamRange  id="vfp" name="VFP" group="General" default="0" min="0" max="1080" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Vertical Front Porch." />
+    <ParamRange  id="vbp" name="VBP" group="General" default="0" min="0" max="1080" resolution="1" visible="`${(display_type eq GFX_DISP_TYPE_DSI_DPI)}`" editable="true" desc="Vertical Back Porch." />
 
     <!--DSI/DPHY configuration-->
     <ParamRange  id="no_of_dsi_lines" name="Number of DSI Lanes" group="DSI/DPHY configuration" default="2" min="1" max="2" resolution="1" visible="`${((display_type eq GFX_DISP_TYPE_DSI_DPI) || (display_type eq GFX_DISP_TYPE_DSI_DBI))}`" editable="`${((display_type eq GFX_DISP_TYPE_DSI_DPI) || (display_type eq GFX_DISP_TYPE_DSI_DBI))}`" desc="Number of DSI Lanes." />

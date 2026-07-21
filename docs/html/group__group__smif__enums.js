@@ -127,7 +127,8 @@ var group__group__smif__enums =
       [ "CY_SMIF_XIP_ERROR", "group__group__smif__enums.html#ggaf65a7e26c18fcd3d3469eb083f78bb85adbc0b53673418c07d69b1e8d4a331ce3", null ],
       [ "CY_SMIF_CMD_ERROR", "group__group__smif__enums.html#ggaf65a7e26c18fcd3d3469eb083f78bb85a7385a012941af6158767403c3304353d", null ],
       [ "CY_SMIF_TX_ERROR", "group__group__smif__enums.html#ggaf65a7e26c18fcd3d3469eb083f78bb85a9ce663b8fb0a4357f7b7f361bc0a78fa", null ],
-      [ "CY_SMIF_RX_ERROR", "group__group__smif__enums.html#ggaf65a7e26c18fcd3d3469eb083f78bb85a5ac9e4cfbbe113ba3bef3f66b1238ae8", null ]
+      [ "CY_SMIF_RX_ERROR", "group__group__smif__enums.html#ggaf65a7e26c18fcd3d3469eb083f78bb85a5ac9e4cfbbe113ba3bef3f66b1238ae8", null ],
+      [ "CY_SMIF_CRYPTO_ERROR", "group__group__smif__enums.html#ggaf65a7e26c18fcd3d3469eb083f78bb85ab6f24bc9501e60cefe6e60058b606f81", null ]
     ] ],
     [ "cy_en_smif_status_t", "group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41", [
       [ "CY_SMIF_SUCCESS", "group__group__smif__enums.html#gga75fb83c49239ece738cfba778165cb41af59dcc9751976e423239cac212df16cc", null ],

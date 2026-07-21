@@ -294,8 +294,17 @@ extern "C" {
 #define CY_TCPWM_CNT_TRIGGER_ON_CC0_OR_CC1_MATCH   (6U)
 #endif /* defined (CY_IP_MXS40TCPWM) || defined (CY_DOXYGEN) */
 
+#if (defined CY_IP_MXS40TCPWM_VERSION_MINOR && CY_IP_MXS40TCPWM_VERSION_MINOR >=1 )
+/** PWM signal for masking the PWM output on another counter */
+#define CY_TCPWM_PWM_SIGNAL_MASK_OUT        (7U)
+/** Complimentary PWM signal for masking the PWM output on another counter */
+#define CY_TCPWM_PWM_SIGNAL_MASK_CMPL_OUT   (8U)
+/** Output trigger disabled */
+#define CY_TCPWM_CNT_TRIGGER_ON_DISABLED    (9U)
+#else
 /** Output trigger disabled */
 #define CY_TCPWM_CNT_TRIGGER_ON_DISABLED    (7U)
+#endif /* (defined CY_IP_MXS40TCPWM_VERSION_MINOR && CY_IP_MXS40TCPWM_VERSION_MINOR >=1 ) */
 /** \} group_tcpwm_output_trigger_modes */
 
 /**
@@ -382,7 +391,11 @@ typedef enum
     CY_TCPWM_INPUT_TR_COUNT           = 0x03U,  /**< Count */
     CY_TCPWM_INPUT_TR_INDEX_OR_SWAP   = 0x04U,  /**< Index/Swap */
     CY_TCPWM_INPUT_TR_CAPTURE0        = 0x04U,  /**< Capture 0 */
-    CY_TCPWM_INPUT_TR_CAPTURE1        = 0x05U   /**< Capture 1 */
+    CY_TCPWM_INPUT_TR_CAPTURE1        = 0x05U,  /**< Capture 1 */
+#if defined (CY_IP_MXS40TCPWM_VERSION_MINOR) && (CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U)
+    CY_TCPWM_INPUT_TR_DC_CONTROL      = 0x06U,  /**< Duty Cycle Control */
+    CY_TCPWM_INPUT_TR_MASK            = 0x07U,  /**< Mask input signal */
+#endif /* defined (CY_IP_MXS40TCPWM_VERSION_MINOR) && (CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U) */
 } cy_en_tcpwm_trigselect_t;
 
 /** TCPWM output Triggers */
@@ -394,7 +407,7 @@ typedef enum
     CY_TCPWM_OUTPUT_TR_CC0_MATCH      = 0x03U,  /**< Compare Match 0 Event */
     CY_TCPWM_OUTPUT_TR_CC1_MATCH      = 0x04U,  /**< Compare Match 1 Event */
     CY_TCPWM_OUTPUT_TR_LINE_OUT       = 0x05U,  /**< PWM Output Signal Line Out */
-    CY_TCPWM_OUTPUT_TR_DISABLED       = 0x07U   /**< Trigger Out Disabled */
+    CY_TCPWM_OUTPUT_TR_DISABLED       = 0x09U ,  /**< Trigger Out Disabled */
 } cy_en_tcpwm_output_trigselect_t;
 
 /** TCPWM status definitions */
@@ -443,7 +456,9 @@ __STATIC_INLINE uint32_t Cy_TCPWM_Block_GetCC0BufVal(TCPWM_Type const  *base, ui
 __STATIC_INLINE uint32_t Cy_TCPWM_Block_GetCounter(TCPWM_Type const  *base, uint32_t cntNum);
 __STATIC_INLINE void Cy_TCPWM_Block_SetCounter(TCPWM_Type *base, uint32_t cntNum, uint32_t count);
 __STATIC_INLINE void Cy_TCPWM_Block_SetPeriod(TCPWM_Type *base, uint32_t cntNum,  uint32_t period);
+__STATIC_INLINE void Cy_TCPWM_Block_SetPeriodBuf(TCPWM_Type *base, uint32_t cntNum,  uint32_t period);
 __STATIC_INLINE uint32_t Cy_TCPWM_Block_GetPeriod(TCPWM_Type const *base, uint32_t cntNum);
+__STATIC_INLINE uint32_t Cy_TCPWM_Block_GetPeriodBuf(TCPWM_Type const *base, uint32_t cntNum);
 __STATIC_INLINE void Cy_TCPWM_Block_SetCC0BufVal(TCPWM_Type *base, uint32_t cntNum,  uint32_t compare1);
 __STATIC_INLINE void Cy_TCPWM_Block_SetCC0Val(TCPWM_Type *base, uint32_t cntNum,  uint32_t compare0);
 __STATIC_INLINE void Cy_TCPWM_Block_EnableCompare0Swap(TCPWM_Type *base, uint32_t cntNum,  bool enable);
@@ -511,6 +526,15 @@ __STATIC_INLINE void Cy_TCPWM_Block_SetPeriod(TCPWM_Type *base, uint32_t cntNum,
         TCPWM_GRP_CNT_PERIOD(base, TCPWM_GRP_CNT_GET_GRP(cntNum), cntNum) = period;
 #endif
 }
+__STATIC_INLINE void Cy_TCPWM_Block_SetPeriodBuf(TCPWM_Type *base, uint32_t cntNum,  uint32_t period)
+{
+#if     (CY_IP_MXTCPWM_VERSION == 1U)
+
+        TCPWM_CNT_PERIOD_BUFF(base, cntNum) = period;
+#else
+        TCPWM_GRP_CNT_PERIOD_BUFF(base, TCPWM_GRP_CNT_GET_GRP(cntNum), cntNum) = period;
+#endif
+}
 __STATIC_INLINE uint32_t Cy_TCPWM_Block_GetPeriod(TCPWM_Type const *base, uint32_t cntNum)
 {
     uint32_t result;
@@ -521,6 +545,17 @@ __STATIC_INLINE uint32_t Cy_TCPWM_Block_GetPeriod(TCPWM_Type const *base, uint32
 #else
         result = TCPWM_GRP_CNT_PERIOD(base, TCPWM_GRP_CNT_GET_GRP(cntNum), cntNum);
 #endif
+    return result;
+}
+__STATIC_INLINE uint32_t Cy_TCPWM_Block_GetPeriodBuf(TCPWM_Type const *base, uint32_t cntNum)
+{
+    uint32_t result;
+#if     (CY_IP_MXTCPWM_VERSION == 1U)
+        result = TCPWM_CNT_PERIOD_BUFF(base, cntNum);
+#else
+        result = TCPWM_GRP_CNT_PERIOD_BUFF(base, TCPWM_GRP_CNT_GET_GRP(cntNum), cntNum);
+#endif
+
     return result;
 }
 __STATIC_INLINE void Cy_TCPWM_Block_SetCC0BufVal(TCPWM_Type *base, uint32_t cntNum,  uint32_t compare1)
@@ -1173,6 +1208,26 @@ __STATIC_INLINE void Cy_TCPWM_InputTriggerSetup (TCPWM_Type *base, uint32 cntNum
             TCPWM_GRP_CNT_TR_IN_EDGE_SEL(base, grp, cntNum) |= _VAL2FLD(TCPWM_GRP_CNT_V2_TR_IN_EDGE_SEL_CAPTURE0_EDGE, edgeSelect);
             break;
 
+#if defined (CY_IP_MXS40TCPWM_VERSION_MINOR) && (CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U)
+        case CY_TCPWM_INPUT_TR_DC_CONTROL:
+            /* Clear input trigger settings first */
+            TCPWM_GRP_CNT_TR_IN_SEL1(base, grp, cntNum) &= ~TCPWM_GRP_CNT_TR_IN_SEL1_DC_SEL_Msk;
+            TCPWM_GRP_CNT_TR_IN_EDGE_SEL(base, grp, cntNum) &= ~TCPWM_GRP_CNT_TR_IN_EDGE_SEL_DC_EDGE_Msk;
+
+            /* Write new settings */
+            TCPWM_GRP_CNT_TR_IN_SEL1(base, grp, cntNum) |= _VAL2FLD(TCPWM_GRP_CNT_TR_IN_SEL1_DC_SEL, triggerSignal);
+            TCPWM_GRP_CNT_TR_IN_EDGE_SEL(base, grp, cntNum) |= _VAL2FLD(TCPWM_GRP_CNT_TR_IN_EDGE_SEL_DC_EDGE, edgeSelect);
+            break;
+        case CY_TCPWM_INPUT_TR_MASK:
+            /* Clear input trigger settings first */
+            TCPWM_GRP_CNT_TR_IN_SEL1(base, grp, cntNum) &= ~TCPWM_GRP_CNT_TR_IN_SEL1_MASK_SEL_Msk;
+            TCPWM_GRP_CNT_TR_IN_EDGE_SEL(base, grp, cntNum) &= ~TCPWM_GRP_CNT_TR_IN_EDGE_SEL_MASK_EDGE_Msk;
+
+            /* Write new settings */
+            TCPWM_GRP_CNT_TR_IN_SEL1(base, grp, cntNum) |= _VAL2FLD(TCPWM_GRP_CNT_TR_IN_SEL1_MASK_SEL, triggerSignal);
+            TCPWM_GRP_CNT_TR_IN_EDGE_SEL(base, grp, cntNum) |= _VAL2FLD(TCPWM_GRP_CNT_TR_IN_EDGE_SEL_MASK_EDGE, edgeSelect);
+            break;
+#endif /* defined (CY_IP_MXS40TCPWM_VERSION_MINOR) && (CY_IP_MXS40TCPWM_VERSION_MINOR >= 1U) */
         case CY_TCPWM_INPUT_TR_CAPTURE1:
         #if (CY_TCPWM_CC1_RUNTIME_CHECK)
             if (TCPWM_GRP_CC1(base, grp))

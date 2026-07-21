@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdbool.h>
+#include <stdint.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_DMA)
+
+
+
 
 /**
  * \addtogroup group_hal_dma DMA (Direct Memory Access)
@@ -49,13 +60,13 @@
  * The operational flow of the driver is listed below. This shows the basic order in which each of
  * the functions would generally be called.
  * -# Initialize: Inititialize the DMA descriptor and channel
- * -# Setup: Set up the HAL DMA object with the pre-initialized DMA HW \ref mtb_hal_dma_setup
+ * -# Setup: Set up the HAL DMA object with the pre-initialized DMA HW mtb_hal_dma_setup()
  * -# Enable the DMA channel and the DMA HW
  * -# Configure and Enable the DMA interrupt
- * -# Configure: \ref mtb_hal_dma_set_src_addr, \ref mtb_hal_dma_set_dst_addr, \ref
- * mtb_hal_dma_set_length
- * -# Enable the event and callback: \ref mtb_hal_dma_register_callback, \ref
- * mtb_hal_dma_enable_event
+ * -# Configure: mtb_hal_dma_set_src_addr(), mtb_hal_dma_set_dst_addr(),
+ * mtb_hal_dma_set_length()
+ * -# Enable the event and callback: mtb_hal_dma_register_callback(),
+ * mtb_hal_dma_enable_event()
  *
  * \note In case of DMA being used by other peripheral drivers, initialize and set up the DMA
  * before the peripheral driver is initialized and setup
@@ -71,7 +82,7 @@
  * \subsection subsection_dma_snippet_1 Snippet 1: Simple DMA initialization and transfer
  * The following snippet initializes a DMA channel and uses it to transfer a a single block of
  * memory.
- * \ref mtb_hal_dma_set_src_addr, \ref mtb_hal_dma_set_dst_addr, \ref mtb_hal_dma_set_length can be
+ * mtb_hal_dma_set_src_addr(), mtb_hal_dma_set_dst_addr(), mtb_hal_dma_set_length() can be
  * used after DMA initialization to handle a variety of memory layouts.
  *
  * \snippet hal_dma.c snippet_mtb_hal_dma_simple_init
@@ -80,8 +91,8 @@
  * \subsection subsection_dma_snippet_2 Snippet 2: Interrupts and triggering DMA transfers
  * DMA events like transfer complete or error events can be used to trigger a callback function.
  * <br>
- * This snippet  uses \ref mtb_hal_dma_enable_event() to enable the transfer complete event
- * to trigger the callback function registered by \ref mtb_hal_dma_register_callback().
+ * This snippet  uses mtb_hal_dma_enable_event() to enable the transfer complete event
+ * to trigger the callback function registered by mtb_hal_dma_register_callback().
  *
  * \snippet hal_dma.c snippet_mtb_hal_dma_events
  *
@@ -97,8 +108,8 @@
  *
  * The following snippet initializes a DMA channel and uses it to transfer a single block from one
  * cacheable memory to another cacheable memory. Cleaning D-cache of DMA descriptor is done by
- * calling \ref mtb_hal_dma_set_src_addr, \ref mtb_hal_dma_set_dst_addr, \ref mtb_hal_dma_set_length
- * and \ref mtb_hal_dma_setup. Cleaning D-cache of source's buffer and Invalidating D-cahe of
+ * calling mtb_hal_dma_set_src_addr(), mtb_hal_dma_set_dst_addr(), mtb_hal_dma_set_length()
+ * and mtb_hal_dma_setup(). Cleaning D-cache of source's buffer and Invalidating D-cahe of
  * destination's buffer should be done explicitly.
  *
  * Refer to \ref DCACHE_Management for more information.
@@ -106,14 +117,6 @@
  * \snippet hal_dma.c snippet_mtb_hal_dma_with_dcache
  */
 
-#pragma once
-
-#include <stdbool.h>
-#include <stdint.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_DMA)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -145,8 +148,8 @@ extern "C" {
  * \}
  */
 
-/** Flags enum of DMA events. Multiple events can be enabled via \ref mtb_hal_dma_enable_event and
- * the callback from \ref mtb_hal_dma_register_callback will be run to notify. */
+/** Flags enum of DMA events. Multiple events can be enabled via mtb_hal_dma_enable_event() and
+ * the callback from mtb_hal_dma_register_callback() will be run to notify. */
 typedef enum
 {
     MTB_HAL_DMA_NO_INTR             = 0,      //!< No interrupt
@@ -302,6 +305,6 @@ uint32_t mtb_hal_dma_get_max_elements_per_burst(mtb_hal_dma_t* obj);
 #include MTB_HAL_DMA_IMPL_HEADER
 #endif /* MTB_HAL_DMA_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_DMA)
-
 /** \} group_hal_dma */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_DMA)

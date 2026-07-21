@@ -23,7 +23,7 @@
 *******************************************************************************/
 
 #include "cy_device.h"
-#if defined (CY_IP_MXI3C)
+#if defined (CY_IP_MXI3C) || defined (CY_IP_MXS40SI3C)
 
 #include "cy_i3c.h"
 
@@ -84,7 +84,7 @@ static void ControllerHandleIBIInterrupt(I3C_CORE_Type *base, cy_stc_i3c_context
 static void RearrangeAddrTable(I3C_CORE_Type *base, uint8_t devIndex, cy_stc_i3c_context_t *context);
 static cy_en_i3c_status_t CCCTargetAddressValidation(uint8_t address, bool unicastOnly, cy_stc_i3c_context_t *context);
 static cy_en_i3c_status_t ControllerHandleCCCResponse(I3C_CORE_Type *base, uint32_t *resp, cy_stc_i3c_context_t *context);
-#if CY_IP_MXI3C_VERSION_MINOR == 1u
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
 static cy_en_i3c_status_t setxtime_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *cccCmd, cy_stc_i3c_context_t *context);
 static cy_en_i3c_status_t getxtime_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *cccCmd, cy_stc_i3c_context_t *context);
 static void TargetRespReadyStsHandle(I3C_CORE_Type *base, cy_stc_i3c_context_t *context);
@@ -93,7 +93,7 @@ static void TargetHandleDataTransmit(I3C_CORE_Type *base, cy_stc_i3c_context_t *
 static cy_en_i3c_status_t Cy_I3C_ConfigureVendorCCC(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t* cccCmd, uint8_t num);
 cy_en_i3c_status_t EnableIbiPayload(I3C_CORE_Type *base, uint8_t targetAddress, cy_stc_i3c_context_t *context);
 cy_en_i3c_status_t DisableIbiPayload(I3C_CORE_Type *base, uint8_t targetAddress, cy_stc_i3c_context_t *context);
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 static cy_en_i3c_status_t SecondaryControllerInit(I3C_CORE_Type *base, bool isController, cy_stc_i3c_context_t *context);
 static cy_en_i3c_status_t I3C_Check_Timeout(uint32_t *timeout);
 static cy_en_syspm_status_t Cy_I3C_DeepSleepCallback_After(cy_stc_syspm_callback_params_t *callbackParams);
@@ -243,10 +243,10 @@ cy_en_i3c_status_t Cy_I3C_Init(I3C_CORE_Type *base, cy_stc_i3c_config_t const *c
                                          _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_RESP_BUF_THLD, config->respQueueThld) |
                                          _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_IBI_STATUS_THLD, config->ibiQueueThld);
 
-        #if CY_IP_MXI3C_VERSION_MINOR == 1u
+        #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
         CY_ASSERT_L2(CY_IS_I3C_IBI_DATA_THLD_VALID(config->ibiDataThld));
         I3C_CORE_QUEUE_THLD_CTRL(base) |= _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_IBI_DATA_THLD, config->ibiDataThld);
-        #endif
+        #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 
         Cy_I3C_SetInterruptMask(base, CY_I3C_INTR_IBI_BUFFER_THLD_STS);
         Cy_I3C_SetInterruptStatusMask(base, CY_I3C_INTR_IBI_BUFFER_THLD_STS);
@@ -257,7 +257,7 @@ cy_en_i3c_status_t Cy_I3C_Init(I3C_CORE_Type *base, cy_stc_i3c_config_t const *c
 
     else
     {
-        #if CY_IP_MXI3C_VERSION_MINOR == 1u
+        #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
          /* Setting the device operation mode to Target - 1U */
          I3C_CORE_DEVICE_CTRL_EXTENDED(base) = _VAL2FLD(I3C_CORE_DEVICE_CTRL_EXTENDED_DEV_OPERATION_MODE, I3C_CORE_DEVICE_CTRL_EXTENDED_DEV_OPERATION_MODE_TARGET);
 
@@ -315,7 +315,7 @@ cy_en_i3c_status_t Cy_I3C_Init(I3C_CORE_Type *base, cy_stc_i3c_config_t const *c
 
         context->resetMode = CY_I3C_PERIPHERAL_RESET;
         context->i3cSclRate = config->i3cSclRate;
-        #endif
+        #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
     }
 
     I3C_CORE_DATA_BUFFER_THLD_CTRL(base) = _VAL2FLD(I3C_CORE_DATA_BUFFER_THLD_CTRL_RX_BUF_THLD, config->rxBufThld) |
@@ -451,7 +451,7 @@ cy_en_i3c_status_t Cy_I3C_ControllerAttachI2CDevice(I3C_CORE_Type *base, cy_stc_
     Cy_I3C_UpdateI2CDevInList(i2cDevice, pos, context);
 
     /* Update the free position index of the device address table */
-    (i3cController->freePos) = ~ (CY_I3C_BIT(pos));
+    (i3cController->freePos) &= ~(CY_I3C_BIT(pos));
     (i3cController->devCount)++;
     (i3cController->i2cDeviceCount)++;
 
@@ -694,7 +694,7 @@ void Cy_I3C_Enable(I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
     uint32_t interruptState;
     I3C_CORE_DEVICE_CTRL(base) |= _VAL2FLD(I3C_CORE_DEVICE_CTRL_ENABLE, 1);
 
-#if CY_IP_MXI3C_VERSION_MINOR == 0u
+#if defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 0U)
     uint32_t timeout = MAX_I3C_TRANSACTION_TIMEOUT;
     cy_en_i3c_status_t retStatus;
     do
@@ -709,7 +709,7 @@ void Cy_I3C_Enable(I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
         base->EXT_CMD_REG_2 |= _VAL2FLD(I3C_CORE_EXT_CMD_REG_3_DL_LSB, 1U) | _VAL2FLD(I3C_CORE_EXT_CMD_REG_3_DEFINING_BYTE, 0U) | _VAL2FLD(I3C_CORE_EXT_CMD_REG_3_CCC_TYPE, CY_I3C_CCC_RSTACT(false));
         base->EXT_CMD_REG_3 |= _VAL2FLD(I3C_CORE_EXT_CMD_REG_3_DL_LSB, 1U) | _VAL2FLD(I3C_CORE_EXT_CMD_REG_3_DEFINING_BYTE, 1U) | _VAL2FLD(I3C_CORE_EXT_CMD_REG_3_CCC_TYPE, CY_I3C_CCC_RSTACT(false));
     }
-#endif
+#endif /* defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 0U) */
 
     interruptState = Cy_SysLib_EnterCriticalSection();
     context->Enabled = true;
@@ -1142,7 +1142,7 @@ cy_en_i3c_status_t Cy_I3C_SendCCCCmd(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *
                 retStatus = setmrwl_ccc(base, cccCmd, context);
                 break;
             }
-        #if CY_IP_MXI3C_VERSION_MINOR == 1u
+        #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
         case CY_I3C_CCC_SETXTIME(true):
         case CY_I3C_CCC_SETXTIME(false):
             {
@@ -1154,7 +1154,7 @@ cy_en_i3c_status_t Cy_I3C_SendCCCCmd(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *
                 retStatus = getxtime_ccc(base, cccCmd, context);
                 break;
             }
-        #endif
+        #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
         case CY_I3C_CCC_SETNEWDA:
             {
                 retStatus = setnewda_ccc(base, cccCmd, context);
@@ -1292,7 +1292,7 @@ cy_en_i3c_status_t Cy_I3C_DisableDeviceIbi(I3C_CORE_Type *base, cy_stc_i3c_devic
         return retStatus;
     }
 
-    #if CY_IP_MXI3C_VERSION_MINOR == 0u
+    #if defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 0U)
     uint32_t bitpos = CY_I3C_IBI_TIR_REQ_ID(i3cDevice->dynamicAddress);
     I3C_CORE_IBI_TIR_REQ_REJECT(base) |= ((1UL) << bitpos); /* Setting the corresponding bit to 1: 1 -> Nack the TIR from the corresponding device */
     I3C_CORE_IBI_CR_REQ_REJECT(base) |= ((1UL) << bitpos); /* Setting the corresponding bit to 1: 1 -> Nack the MR from the corresponding device */
@@ -1305,7 +1305,7 @@ cy_en_i3c_status_t Cy_I3C_DisableDeviceIbi(I3C_CORE_Type *base, cy_stc_i3c_devic
     value |= (I3C_CORE_DEV_ADDR_TABLE_LOC1_TIR_REJECT_Msk | I3C_CORE_DEV_ADDR_TABLE_LOC1_CR_REJECT_Msk);
     Cy_I3C_WriteIntoDeviceAddressTable(base, pos, value);
 
-    #endif
+    #endif /* defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 0U) */
 
     /* Sending ENEC command */
     i3cCccENEC.events = (uint8_t)(CY_I3C_CCC_EVENT_SIR | CY_I3C_CCC_EVENT_MR);
@@ -1352,14 +1352,14 @@ cy_en_i3c_status_t Cy_I3C_EnableDeviceIbi(I3C_CORE_Type *base, cy_stc_i3c_device
     cy_stc_i3c_ccc_cmd_t cmd = {0};
     cy_stc_i3c_ccc_events_t i3cCccENEC;
     cy_stc_i3c_ccc_payload_t payload;
-
+    
     retStatus = CCCTargetAddressValidation(i3cDevice->dynamicAddress, true, context);
     if(retStatus != CY_I3C_SUCCESS)
     {
         return retStatus;
     }
 
-    #if CY_IP_MXI3C_VERSION_MINOR == 0u
+    #if defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 0U)
     uint32_t bitpos = CY_I3C_IBI_TIR_REQ_ID(i3cDevice->dynamicAddress);
     I3C_CORE_IBI_TIR_REQ_REJECT(base) &= ~((1UL) << bitpos); /* Setting the corresponding bit to 0: 0 -> Ack the TIR from the corresponding device */
     I3C_CORE_IBI_CR_REQ_REJECT(base) &= ~((1UL) << bitpos); /* Setting the corresponding bit to 0: 0 -> Ack the MR from the corresponding device */
@@ -1371,7 +1371,7 @@ cy_en_i3c_status_t Cy_I3C_EnableDeviceIbi(I3C_CORE_Type *base, cy_stc_i3c_device
     value &= ~(I3C_CORE_DEV_ADDR_TABLE_LOC1_TIR_REJECT_Msk | I3C_CORE_DEV_ADDR_TABLE_LOC1_CR_REJECT_Msk);
     Cy_I3C_WriteIntoDeviceAddressTable(base, pos, value);
 
-    #endif
+    #endif /* defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 0U) */
 
     /* Sending DISEC command */
     i3cCccENEC.events = (uint8_t)(CY_I3C_CCC_EVENT_SIR | CY_I3C_CCC_EVENT_MR);
@@ -2448,11 +2448,11 @@ cy_en_i3c_status_t Cy_I3C_ControllerStartEntDaa(I3C_CORE_Type *base, cy_stc_i3c_
         Cy_I3C_ReadFromDevCharTable(base, index, &i3cDev);
         SetAddrslotStatus(i3cDev.dynamicAddress, CY_I3C_ADDR_SLOT_I3C_DEV, context);
         (void)RetrieveI3CDeviceInfo(base, &i3cDev, false, context);
-#if CY_IP_MXI3C_VERSION_MINOR == 1u
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
         if(i3cDev.ibipayloadSize > 0U){
             EnableIbiPayload(base, i3cDev.dynamicAddress, context);
         }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
         i3cDev.staticAddress = 0U;
         Cy_I3C_UpdateI3CDevInList(&i3cDev, pos, context);
         i3cController->freePos &= ~(CY_I3C_BIT(pos));
@@ -2496,6 +2496,11 @@ cy_en_i3c_status_t Cy_I3C_ControllerStartEntDaa(I3C_CORE_Type *base, cy_stc_i3c_
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_SetDASA(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *cccCmd, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == cccCmd) || (NULL == context))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     uint8_t pos, dynAddr;
     cy_en_i3c_status_t retStatus;
     cy_stc_i3c_controller_t *i3cController = &(context->i3cController);
@@ -2528,14 +2533,14 @@ cy_en_i3c_status_t Cy_I3C_SetDASA(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *ccc
     i3cDevice.staticAddress = cccCmd->address;
     SetAddrslotStatus(dynAddr, CY_I3C_ADDR_SLOT_I3C_DEV, context);
     (void)RetrieveI3CDeviceInfo(base, &i3cDevice, true, context);
-#if CY_IP_MXI3C_VERSION_MINOR == 1u
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
     if(i3cDevice.ibipayloadSize > 0U){
         EnableIbiPayload(base, dynAddr, context);
     }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
     Cy_I3C_UpdateI3CDevInList(&i3cDevice, pos, context);
 
-    (i3cController->freePos) =  ~ (CY_I3C_BIT(pos));
+    (i3cController->freePos) &= ~(CY_I3C_BIT(pos));
     (i3cController->devCount)++;
 
     return CY_I3C_SUCCESS;
@@ -2573,6 +2578,11 @@ cy_en_i3c_status_t Cy_I3C_SetDASA(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *ccc
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_SetAASA(I3C_CORE_Type *base, cy_stc_i3c_device_t *i3cDevice, uint8_t i3cDeviceCount, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == i3cDevice) || (NULL == context))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     uint8_t pos, dynAddr, index, parity;
     cy_en_i3c_status_t retStatus;
     uint32_t value;
@@ -2613,11 +2623,11 @@ cy_en_i3c_status_t Cy_I3C_SetAASA(I3C_CORE_Type *base, cy_stc_i3c_device_t *i3cD
         /* Maintaining a local list of i3c devices */
         SetAddrslotStatus(i3cDevice->dynamicAddress, CY_I3C_ADDR_SLOT_I3C_DEV, context);
         (void)RetrieveI3CDeviceInfo(base, i3cDevice, true, context);
-#if CY_IP_MXI3C_VERSION_MINOR == 1u
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
         if(i3cDevice->ibipayloadSize > 0U){
             EnableIbiPayload(base, i3cDevice->dynamicAddress, context);
         }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
         Cy_I3C_UpdateI3CDevInList(i3cDevice, pos, context);
         i3cController->freePos &= ~(CY_I3C_BIT(pos));
         i3cDevice++;
@@ -2745,9 +2755,9 @@ void Cy_I3C_Interrupt (I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
     else
     {
         /* Execute a transfer as a Target */
-        #if CY_IP_MXI3C_VERSION_MINOR == 1u
+        #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
         Cy_I3C_TargetInterrupt(base, context);
-        #endif
+        #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
     }
 }
 
@@ -2846,7 +2856,7 @@ void Cy_I3C_RegisterIbiCallback (I3C_CORE_Type const *base, cy_cb_i3c_handle_ibi
 * To remove the callback, pass NULL as the pointer to the callback function.
 *
 *******************************************************************************/
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) || defined(CY_DOXYGEN)
 void Cy_I3C_RegisterCCCRespCallback(I3C_CORE_Type const *base, cy_cb_i3c_handle_ccc_response_t callback, cy_stc_i3c_context_t *context)
 {
     CY_ASSERT_L1(NULL != base);
@@ -2886,6 +2896,11 @@ void Cy_I3C_RegisterCCCRespCallback(I3C_CORE_Type const *base, cy_cb_i3c_handle_
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_TargetGetCCCData(I3C_CORE_Type *base, uint8_t *buffer, uint32_t size, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == buffer))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     CY_UNUSED_PARAMETER(context); /* Suppress a compiler warning about unused variables */
     uint32_t maxEntries =  ((CY_I3C_FIFO_SIZE / 4UL) - Cy_I3C_GetFreeEntriesInRxFifo(base)) * 4U;
     if (maxEntries < size){
@@ -3266,7 +3281,7 @@ uint32_t Cy_I3C_TargetGetWriteTransferCount (I3C_CORE_Type const *base, cy_stc_i
 
     return (context->targetRxBufferCnt);
 }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 
 /*******************************************************************************
 * Function Name: Cy_I3C_DeliverControllership
@@ -3379,7 +3394,7 @@ cy_en_i3c_status_t Cy_I3C_DeliverControllership(I3C_CORE_Type *base, uint8_t Sec
 * I3C supports only Primary Controller mode in PSE84A0. Secondary controller mode and Target mode are supported in PSE84B0.
 *
 *******************************************************************************/
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) || defined(CY_DOXYGEN)
 cy_en_i3c_status_t Cy_I3C_RequestControllership(I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
 {
     if((NULL == base) || (NULL == context))
@@ -3405,7 +3420,7 @@ cy_en_i3c_status_t Cy_I3C_RequestControllership(I3C_CORE_Type *base, cy_stc_i3c_
 
     return retStatus;
 }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 /*******************************************************************************
 * Function Name: SecondaryControllerInit
 ****************************************************************************//**
@@ -3477,7 +3492,7 @@ static cy_en_i3c_status_t SecondaryControllerInit(I3C_CORE_Type *base, bool isCo
 
         I3C_CORE_DEVICE_CTRL(base) |= _VAL2FLD(I3C_CORE_DEVICE_CTRL_IBA_INCLUDE, context->dsConfig.ibaInclude ? 1UL : 0UL) |
                                      _VAL2FLD(I3C_CORE_DEVICE_CTRL_HOT_JOIN_CTRL, context->dsConfig.hotJoinCtrl ? 1UL : 0UL);
-
+        
         I3C_CORE_BUS_FREE_AVAIL_TIMING(base) |= _VAL2FLD(I3C_CORE_BUS_FREE_AVAIL_TIMING_BUS_FREE_TIME, context->dsConfig.busFreeTime);
 
         I3C_CORE_SDA_HOLD_SWITCH_DLY_TIMING(base) = _VAL2FLD(I3C_CORE_SDA_HOLD_SWITCH_DLY_TIMING_SDA_TX_HOLD, context->dsConfig.sdaHoldTime);
@@ -3486,10 +3501,10 @@ static cy_en_i3c_status_t SecondaryControllerInit(I3C_CORE_Type *base, bool isCo
                                         _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_RESP_BUF_THLD, context->dsConfig.respQueueThld) |
                                         _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_IBI_STATUS_THLD, context->dsConfig.ibiQueueThld);
 
-        #if CY_IP_MXI3C_VERSION_MINOR == 1u
+        #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
         CY_ASSERT_L2(CY_IS_I3C_IBI_DATA_THLD_VALID(context->dsConfig.ibiDataThld));
         I3C_CORE_QUEUE_THLD_CTRL(base) |= _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_IBI_DATA_THLD, context->dsConfig.ibiDataThld);
-        #endif
+        #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
         Cy_I3C_SetInterruptMask(base, CY_I3C_INTR_IBI_BUFFER_THLD_STS);
         Cy_I3C_SetInterruptStatusMask(base, CY_I3C_INTR_IBI_BUFFER_THLD_STS);
 
@@ -3512,11 +3527,11 @@ static cy_en_i3c_status_t SecondaryControllerInit(I3C_CORE_Type *base, bool isCo
                     _VAL2FLD(I3C_CORE_DEV_ADDR_TABLE_LOC10_LEGACY_I2C_DEVICE, i2c);
             dynamicAddress &= ~(parity << 7U);
 
-            #if CY_IP_MXI3C_VERSION_MINOR == 1u
+            #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
             if((bool)(bcr & CY_I3C_CORE_BCR_IBI_PAYLOAD_Msk)){
                 value |= I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_WITH_DATA_Msk;
             }
-            #endif
+            #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
             Cy_I3C_WriteIntoDeviceAddressTable(base, idx, value);
 
             if(0UL != i2c)
@@ -3528,7 +3543,7 @@ static cy_en_i3c_status_t SecondaryControllerInit(I3C_CORE_Type *base, bool isCo
 
                 Cy_I3C_UpdateI2CDevInList(&i2cDevice, idx, context);
 
-                (i3cController->freePos) = ~ (CY_I3C_BIT(idx));
+                (i3cController->freePos) &= ~(CY_I3C_BIT(idx));
                 (i3cController->devCount)++;
                 (i3cController->i2cDeviceCount)++;
             }
@@ -3589,9 +3604,12 @@ static cy_en_i3c_status_t SecondaryControllerInit(I3C_CORE_Type *base, bool isCo
 * I3C supports only Primary Controller mode in PSE84A0. Secondary controller mode and Target mode are supported in PSE84B0.
 *
 *******************************************************************************/
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) || defined(CY_DOXYGEN)
 void Cy_I3C_TargetInterrupt (I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
 {
+    CY_ASSERT_L1(NULL != base);
+    CY_ASSERT_L1(NULL != context);
+
     uint32_t intrCause;
     intrCause = Cy_I3C_GetInterruptStatus(base);
 
@@ -3723,7 +3741,7 @@ void Cy_I3C_TargetInterrupt (I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
         Cy_I3C_ClearInterrupt(base, CY_I3C_INTR_TGT_RST_PATTERN_DET_STS);
     }
 }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 
 /*******************************************************************************
 * Function Name: Cy_I3C_ControllerInterrupt
@@ -3744,6 +3762,9 @@ void Cy_I3C_TargetInterrupt (I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
 *******************************************************************************/
 void Cy_I3C_ControllerInterrupt (I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
 {
+    CY_ASSERT_L1(NULL != base);
+    CY_ASSERT_L1(NULL != context);
+
     uint32_t intrCause;
     cy_en_i3c_status_t retStatus = CY_I3C_CONTROLLER_NOT_READY;
     uint32_t timeout = MAX_I3C_TRANSACTION_TIMEOUT;
@@ -3896,10 +3917,10 @@ static cy_en_syspm_status_t Cy_I3C_DeepSleepCallback_After(cy_stc_syspm_callback
                                              _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_RESP_BUF_THLD, locConfig->respQueueThld) |
                                              _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_IBI_STATUS_THLD, locConfig->ibiQueueThld);
 
-
-            #if CY_IP_MXI3C_VERSION_MINOR == 1u
+            
+            #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
             I3C_CORE_QUEUE_THLD_CTRL(locBase) |= _VAL2FLD(I3C_CORE_QUEUE_THLD_CTRL_IBI_DATA_THLD, locConfig->ibiDataThld);
-            #endif
+            #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
             I3C_CORE_DATA_BUFFER_THLD_CTRL(locBase) = _VAL2FLD(I3C_CORE_DATA_BUFFER_THLD_CTRL_RX_BUF_THLD, locConfig->rxBufThld) |
                                                     _VAL2FLD(I3C_CORE_DATA_BUFFER_THLD_CTRL_TX_EMPTY_BUF_THLD, locConfig->txEmptyBufThld) |
                                                     _VAL2FLD(I3C_CORE_DATA_BUFFER_THLD_CTRL_RX_START_THLD, locConfig->rxBufStartThld) |
@@ -3917,11 +3938,11 @@ static cy_en_syspm_status_t Cy_I3C_DeepSleepCallback_After(cy_stc_syspm_callback
                     parity = even_parity(dynamicAddress);
                     dynamicAddress |= (parity << 7U);
                     value = _VAL2FLD(I3C_CORE_DEV_ADDR_TABLE_LOC1_DEV_DYNAMIC_ADDR, dynamicAddress) | _VAL2FLD(I3C_CORE_DEV_ADDR_TABLE_LOC1_DEV_STATIC_ADDR, staticAddress);
-                    #if CY_IP_MXI3C_VERSION_MINOR == 1u
+                    #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
                     if((bool)(locContext->devList[index].i3cDevice.bcr & CY_I3C_CORE_BCR_IBI_PAYLOAD_Msk)){
                         value |= I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_WITH_DATA_Msk;
                     }
-                    #endif
+                    #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
                 }
 
                 Cy_I3C_WriteIntoDeviceAddressTable(locBase, index, value);
@@ -3933,7 +3954,7 @@ static cy_en_syspm_status_t Cy_I3C_DeepSleepCallback_After(cy_stc_syspm_callback
 
         case CY_I3C_SECONDARY_CONTROLLER:
         case CY_I3C_TARGET:
-            #if CY_IP_MXI3C_VERSION_MINOR == 1u
+            #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
             /* Setting the device operation mode to Target - 1U */
             I3C_CORE_DEVICE_CTRL_EXTENDED(locBase) = _VAL2FLD(I3C_CORE_DEVICE_CTRL_EXTENDED_DEV_OPERATION_MODE, I3C_CORE_DEVICE_CTRL_EXTENDED_DEV_OPERATION_MODE_TARGET);
 
@@ -3965,7 +3986,7 @@ static cy_en_syspm_status_t Cy_I3C_DeepSleepCallback_After(cy_stc_syspm_callback
                                                    _VAL2FLD(I3C_CORE_DATA_BUFFER_THLD_CTRL_RX_START_THLD, locConfig->rxBufStartThld) |
                                                    _VAL2FLD(I3C_CORE_DATA_BUFFER_THLD_CTRL_TX_START_THLD, locConfig->txBufStartThld);
 
-            #endif
+            #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
         result = CY_SYSPM_SUCCESS;
         break;
 
@@ -5238,7 +5259,7 @@ static cy_en_i3c_status_t setmrwl_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t 
 * in this structure.
 *
 *******************************************************************************/
-#if CY_IP_MXI3C_VERSION_MINOR == 1u
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
 static cy_en_i3c_status_t setxtime_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t *cccCmd, cy_stc_i3c_context_t *context)
 {
     cy_en_i3c_status_t retStatus;
@@ -5378,7 +5399,7 @@ static cy_en_i3c_status_t getxtime_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t
 
     return CY_I3C_SUCCESS;
 }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 /*******************************************************************************
 *  Function Name: setda_ccc
 ****************************************************************************//**
@@ -6424,13 +6445,13 @@ static cy_en_i3c_status_t devctrl_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t 
                 devList->i3cDevice.PECEnabled = isPECEnabled;          /* setting PEC in context i3cdevice */
                 pos = (uint8_t)GetI3CDevAddrPos(base, devList->i3cDevice.dynamicAddress, context);
                 value = Cy_I3C_ReadFromDeviceAddressTable(base, pos);
-                #if CY_IP_MXI3C_VERSION_MINOR == 1u
+                #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
                 if(isPECEnabled){                                    /* setting PEC enabled in DAT */
                     value |= I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_PEC_EN_Msk;
                 }else{
                     value &= ~I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_PEC_EN_Msk;
                 }
-                #endif
+                #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
                 Cy_I3C_WriteIntoDeviceAddressTable(base, pos, value);
             }
             devList++;
@@ -6444,18 +6465,18 @@ static cy_en_i3c_status_t devctrl_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t 
                 devList->i3cDevice.PECEnabled = isPECEnabled;          /* setting PEC in context i3cdevice*/
                 pos = (uint8_t)GetI3CDevAddrPos(base, devList->i3cDevice.dynamicAddress, context);
                 value = Cy_I3C_ReadFromDeviceAddressTable(base, pos);
-                #if CY_IP_MXI3C_VERSION_MINOR == 1u
+                #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
                 if(isPECEnabled){                                    /* setting PEC enabled in DAT*/
                     value |= I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_PEC_EN_Msk;
                 }else{
                     value &= ~I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_PEC_EN_Msk;
                 }
-                #endif
+                #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
                 Cy_I3C_WriteIntoDeviceAddressTable(base, pos, value);
             }
             devList++;
         }
-    }else
+    }else 
     if(data.addrMask == UNICAST_CMD){            /*unicast condition*/
         for(idx = 0U; idx < (Cy_I3C_GetI3CDeviceCount(base, context)); idx++)
         {
@@ -6464,13 +6485,13 @@ static cy_en_i3c_status_t devctrl_ccc(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t 
                 devList->i3cDevice.PECEnabled = isPECEnabled;          /*setting PEC in context i3cdevice*/
                 pos = (uint8_t)GetI3CDevAddrPos(base, devList->i3cDevice.dynamicAddress, context);
                 value = Cy_I3C_ReadFromDeviceAddressTable(base, pos);
-                #if CY_IP_MXI3C_VERSION_MINOR == 1u
+                #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
                 if(isPECEnabled){                                    /*setting PEC enabled in DAT*/
                     value |= I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_PEC_EN_Msk;
                 }else{
                     value &= ~I3C_CORE_DEV_ADDR_TABLE_LOC1_IBI_PEC_EN_Msk;
                 }
-                #endif
+                #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
                 Cy_I3C_WriteIntoDeviceAddressTable(base, pos, value);
                 break;
             }
@@ -7044,7 +7065,7 @@ static cy_en_i3c_status_t ControllerHandleCCCResponse(I3C_CORE_Type *base, uint3
 * in this structure.
 *
 *******************************************************************************/
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) || defined(CY_DOXYGEN)
 static void TargetRespReadyStsHandle(I3C_CORE_Type *base, cy_stc_i3c_context_t *context)
 {
     uint32_t respCmdPort;
@@ -7313,7 +7334,7 @@ static void TargetHandleDataTransmit(I3C_CORE_Type *base, cy_stc_i3c_context_t *
         Cy_I3C_SetInterruptMask(base, (~CY_I3C_INTR_TX_BUFFER_THLD_STS & Cy_I3C_GetInterruptMask(base)));
     }
 }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 
 /******************************************************************************
 * Function Name: I3C_Check_Timeout
@@ -7363,6 +7384,11 @@ static cy_en_i3c_status_t I3C_Check_Timeout(uint32_t *timeout)
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_SoftReset(I3C_CORE_Type const *base)
 {
+    if(NULL == base)
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     cy_en_i3c_status_t retStatus = CY_I3C_SUCCESS;
     uint32_t timeout = MAX_I3C_TRANSACTION_TIMEOUT;
 
@@ -7406,21 +7432,26 @@ cy_en_i3c_status_t Cy_I3C_SoftReset(I3C_CORE_Type const *base)
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_Reset(I3C_CORE_Type *base, cy_stc_i3c_config_t const *config, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == config) || (NULL == context))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     cy_en_i3c_status_t retStatus = CY_I3C_SUCCESS;
 
     retStatus = Cy_I3C_SoftReset(base);
     if (retStatus != CY_I3C_SUCCESS){
         return retStatus;
     }
-
-    #if CY_IP_MXI3C_VERSION_MINOR == 1u
+    
+    #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
     cy_en_i3c_status_t addressStatus = CY_I3C_SUCCESS;
     uint8_t addr = 0;
     if(CY_I3C_TARGET == context->i3cMode)
     {
         addressStatus = Cy_I3C_TargetGetDynamicAddress(base, &addr, context);
     }
-    #endif
+    #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 
     if(CY_I3C_CONTROLLER == context->i3cMode){
         context->i3cController.devCount = 0UL;
@@ -7430,13 +7461,13 @@ cy_en_i3c_status_t Cy_I3C_Reset(I3C_CORE_Type *base, cy_stc_i3c_config_t const *
 
     retStatus = Cy_I3C_Init(base, config, context);
 
-    #if CY_IP_MXI3C_VERSION_MINOR == 1u
+    #if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C)
     if(CY_I3C_TARGET == context->i3cMode && addressStatus == CY_I3C_SUCCESS && retStatus == CY_I3C_SUCCESS)
     {
         I3C_CORE_DEVICE_ADDR(base) |= _VAL2FLD(I3C_CORE_DEVICE_ADDR_DYNAMIC_ADDR, addr) |
                                                I3C_CORE_DEVICE_ADDR_DYNAMIC_ADDR_VALID_Msk;
     }
-    #endif
+    #endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 
     Cy_I3C_Enable(base, context);
 
@@ -7470,6 +7501,11 @@ cy_en_i3c_status_t Cy_I3C_Reset(I3C_CORE_Type *base, cy_stc_i3c_config_t const *
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_ControllerWriteDMA(I3C_CORE_Type *base, uint8_t targetAddress, uint32_t Datalength, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == context))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     cy_stc_i3c_ccc_t cmd;
     uint8_t pos = 0U;
     cy_stc_i3c_controller_devlist_t *i3cDeviceList;
@@ -7547,6 +7583,11 @@ cy_en_i3c_status_t Cy_I3C_ControllerWriteDMA(I3C_CORE_Type *base, uint8_t target
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_ControllerReadDMA(I3C_CORE_Type *base, uint8_t targetAddress, uint32_t Datalength, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == context))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     cy_stc_i3c_ccc_t cmd;
     uint8_t pos = 0U;
     cy_stc_i3c_controller_devlist_t *i3cDeviceList;
@@ -7624,9 +7665,14 @@ cy_en_i3c_status_t Cy_I3C_ControllerReadDMA(I3C_CORE_Type *base, uint8_t targetA
 * reset successful status - CY_I3C_BAD_PARAM / CY_I3C_SUCCESS.
 *
 *******************************************************************************/
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) || defined(CY_DOXYGEN)
 cy_en_i3c_status_t Cy_I3C_GetIbiPayload(I3C_CORE_Type *base, uint8_t *buffer, uint32_t size, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == buffer))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     uint32_t index, buffer_index = 0UL;
     uint32_t value = 0UL;
     uint32_t wd_size = 0UL, byte_size = 0UL;
@@ -7812,7 +7858,7 @@ bool CY_I3C_isIbiPayloadEnabled(I3C_CORE_Type *base, uint8_t targetAddress, cy_s
 * configuration status - CY_I3C_TIMEOUT / CY_I3C_SUCCESS.
 *
 *******************************************************************************/
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) || defined(CY_DOXYGEN)
 static cy_en_i3c_status_t Cy_I3C_ConfigureVendorCCC(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t* cccCmd, uint8_t num)
 {
     cy_en_i3c_status_t retStatus = CY_I3C_SUCCESS;
@@ -7885,6 +7931,11 @@ static cy_en_i3c_status_t Cy_I3C_ConfigureVendorCCC(I3C_CORE_Type *base, cy_stc_
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_ConfigureVendorCCC0(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t* cccCmd, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == cccCmd))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     cy_en_i3c_status_t retStatus = Cy_I3C_ConfigureVendorCCC(base, cccCmd, 0U);
 
     CY_UNUSED_PARAMETER(context); /* Suppress a compiler warning about unused variables */
@@ -7915,12 +7966,17 @@ cy_en_i3c_status_t Cy_I3C_ConfigureVendorCCC0(I3C_CORE_Type *base, cy_stc_i3c_cc
 *******************************************************************************/
 cy_en_i3c_status_t Cy_I3C_ConfigureVendorCCC1(I3C_CORE_Type *base, cy_stc_i3c_ccc_cmd_t* cccCmd, cy_stc_i3c_context_t *context)
 {
+    if((NULL == base) || (NULL == cccCmd))
+    {
+        return CY_I3C_BAD_PARAM;
+    }
+
     cy_en_i3c_status_t retStatus = Cy_I3C_ConfigureVendorCCC(base, cccCmd, 1U);
 
     CY_UNUSED_PARAMETER(context); /* Suppress a compiler warning about unused variables */
     return retStatus;
 }
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || defined (CY_IP_MXS40SI3C) */
 CY_MISRA_BLOCK_END('MISRA C-2012 Rule 14.3')
 
 #if defined(__cplusplus)

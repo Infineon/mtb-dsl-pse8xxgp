@@ -120,8 +120,8 @@ Code snippets</h1>
 <h2><a class="anchor" id="subsection_pwm_snippet_1"></a>
 Snippet 1: Simple PWM initialization and output to pin</h2>
 <p>The clock parameter <b>clk</b> is optional and need not be provided (NULL), to generate and use an available clock resource with a default frequency. <br  />
- The clock frequency and the duty cycle is set using <a class="el" href="group__group__hal__pwm.html#ga6b6eb38f34e050cb2a70fc6cac6dbd5b">mtb_hal_pwm_set_period</a>. <br  />
- <a class="el" href="group__group__hal__pwm.html#ga535c3d326fcaf0db0db0eb0f00b65e69">mtb_hal_pwm_start</a> starts the PWM output on the pin.</p>
+ The clock frequency and the duty cycle is set using <a class="el" href="group__group__hal__pwm.html#ga6b6eb38f34e050cb2a70fc6cac6dbd5b" title="Set the number of microseconds for the PWM period &amp; pulse width.">mtb_hal_pwm_set_period()</a>. <br  />
+ <a class="el" href="group__group__hal__pwm.html#ga535c3d326fcaf0db0db0eb0f00b65e69" title="Starts the PWM generation and outputs on pin and compl_pin.">mtb_hal_pwm_start()</a> starts the PWM output on the pin.</p>
 <div class="fragment"><div class="line">    <a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>        rslt;</div>
 <div class="line">    <a class="code hl_struct" href="group__group__hal__availability.html#structmtb__hal__pwm__t">mtb_hal_pwm_t</a>    pwm_obj;</div>
 <div class="line">    <span class="comment">// Specify the clock source</span></div>
@@ -150,7 +150,7 @@ Snippet 1: Simple PWM initialization and output to pin</h2>
 <div class="ttc" id="astructmtb__hal__clock__t_html"><div class="ttname"><a href="structmtb__hal__clock__t.html">mtb_hal_clock_t</a></div><div class="ttdoc">Clock object Application shall provide implementations for the functions needed by the clock object.</div><div class="ttdef"><b>Definition:</b> mtb_hal_hw_types_clock_srss.h:80</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_pwm_snippet_2"></a>
 Snippet 2: Starting and stopping the PWM output</h2>
-<p><a class="el" href="group__group__hal__pwm.html#ga535c3d326fcaf0db0db0eb0f00b65e69">mtb_hal_pwm_start</a> and <a class="el" href="group__group__hal__pwm.html#ga0b1948095c72045ae3f5e291443fac94">mtb_hal_pwm_stop</a> functions can be used after PWM initialization to start and stop the PWM output.</p>
+<p><a class="el" href="group__group__hal__pwm.html#ga535c3d326fcaf0db0db0eb0f00b65e69" title="Starts the PWM generation and outputs on pin and compl_pin.">mtb_hal_pwm_start()</a> and <a class="el" href="group__group__hal__pwm.html#ga0b1948095c72045ae3f5e291443fac94" title="Stops the PWM generation and outputs on pin and compl_pin.">mtb_hal_pwm_stop()</a> functions can be used after PWM initialization to start and stop the PWM output.</p>
 <div class="fragment"><div class="line">    <a class="code hl_struct" href="group__group__hal__availability.html#structmtb__hal__pwm__t">mtb_hal_pwm_t</a> pwm_obj;</div>
 <div class="line">    <span class="comment">// Specify the clock source</span></div>
 <div class="line">    <a class="code hl_struct" href="structmtb__hal__clock__t.html">mtb_hal_clock_t</a> pwm_clock;</div>
@@ -182,7 +182,7 @@ Snippet 2: Starting and stopping the PWM output</h2>
 <div class="line">        <a class="code hl_function" href="group__group__hal__system.html#ga17d686e00a410c8309b7d644065f6456">mtb_hal_system_delay_ms</a>(5000);</div>
 <div class="line">    }</div>
 <div class="ttc" id="agroup__group__hal__pwm_html_ga0b1948095c72045ae3f5e291443fac94"><div class="ttname"><a href="group__group__hal__pwm.html#ga0b1948095c72045ae3f5e291443fac94">mtb_hal_pwm_stop</a></div><div class="ttdeci">cy_rslt_t mtb_hal_pwm_stop(mtb_hal_pwm_t *obj)</div><div class="ttdoc">Stops the PWM generation and outputs on pin and compl_pin.</div><div class="ttdef"><b>Definition:</b> mtb_hal_pwm.c:141</div></div>
-<div class="ttc" id="agroup__group__hal__system_html_ga17d686e00a410c8309b7d644065f6456"><div class="ttname"><a href="group__group__hal__system.html#ga17d686e00a410c8309b7d644065f6456">mtb_hal_system_delay_ms</a></div><div class="ttdeci">cy_rslt_t mtb_hal_system_delay_ms(uint32_t milliseconds)</div><div class="ttdoc">Requests that the current operation delays for at least the specified length of time.</div><div class="ttdef"><b>Definition:</b> mtb_hal_system.c:63</div></div>
+<div class="ttc" id="agroup__group__hal__system_html_ga17d686e00a410c8309b7d644065f6456"><div class="ttname"><a href="group__group__hal__system.html#ga17d686e00a410c8309b7d644065f6456">mtb_hal_system_delay_ms</a></div><div class="ttdeci">cy_rslt_t mtb_hal_system_delay_ms(uint32_t milliseconds)</div><div class="ttdoc">Requests that the current operation delays for at least the specified length of time.</div><div class="ttdef"><b>Definition:</b> mtb_hal_system.c:62</div></div>
 <div class="ttc" id="agroup__group__result_html_gaf58fac450d9fff4472f03ad68f6e546e"><div class="ttname"><a href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a></div><div class="ttdeci">#define CY_RSLT_SUCCESS</div><div class="ttdoc">cy_rslt_t return value indicating success</div><div class="ttdef"><b>Definition:</b> cy_result.h:486</div></div>
 </div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>

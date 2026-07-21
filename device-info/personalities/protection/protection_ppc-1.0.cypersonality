@@ -151,7 +151,7 @@
     <DRC type='INFO' condition='`${isSupported &amp;&amp; !isCustom}`' text='The current &apos;Protection Level&apos; disables register-level PPC support. If more fine grain control is required, update the level to custom. Note: doing so will disable all system-level consistency checking for PPC settings.'>
       <FixIt action='SET_PARAM' target='$PROTECTION_LOC.type' value='SECURE_CUSTOM' valid='true' />
     </DRC>
-    <DRC type='INFO' condition='`${isSupported &amp;&amp; isCustom}`' text='The current &apos;Protection Level&apos; supports register-level PPC configurator. This means that no error checking is performed for consistency across connected peripheral settings. To get system-level consistency checking for PPC settings, switch to &apos;Secure Services+Peripherls&apos;.'>
+    <DRC type='INFO' condition='`${isSupported &amp;&amp; isCustom}`' text='The current &apos;Protection Level&apos; supports register-level PPC configurator. This means that no error checking is performed for consistency across connected peripheral settings. To get system-level consistency checking for PPC settings, switch to &apos;Secure Services+Peripherals&apos;.'>
       <FixIt action='SET_PARAM' target='$PROTECTION_LOC.type' value='SECURE_PERIPHERALS' valid='true' />
     </DRC>
   </DRCs>

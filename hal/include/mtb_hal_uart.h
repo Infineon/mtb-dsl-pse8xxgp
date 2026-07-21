@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_UART)
+
+
+
 
 /**
  * \addtogroup group_hal_uart UART (Universal Asynchronous Receiver-Transmitter)
@@ -49,7 +60,7 @@
  *
  * Flow control can be configured by providing cts / rts pins in the device configurator or
  * through manually generated structures.In case CTS flow control enablement status needs to be
- * changed, \ref mtb_hal_uart_enable_cts_flow_control function
+ * changed, mtb_hal_uart_enable_cts_flow_control() function
  * can be used.
  *
  * \note RTS flow control line is deasserted by the receiver when the number of bytes in the
@@ -87,7 +98,7 @@
  *   3. Allocate the memory for the HAL UART object
  *   4. Set up the HAL UART using mtb_hal_uart_setup by passing the HAL UART
  *      object and the pre-initialized UART Structures.
- *   5. Set up the interrupt handler and arrange for \ref mtb_hal_uart_process_interrupt
+ *   5. Set up the interrupt handler and arrange for mtb_hal_uart_process_interrupt()
  *      to be invoked from the interrupt handler if UART events need to be handled
  *   6. Config the UART for async transfers using mtb_hal_uart_config_async if
  *      async transfers are needed. This needs to be done before invoking any
@@ -101,8 +112,8 @@
  ********************************************************************************
  * The following snippet sets up the UART block.
  *
- * The snippet also shows how to use \ref mtb_hal_uart_write, \ref mtb_hal_uart_put, \ref
- * mtb_hal_uart_read API.
+ * The snippet also shows how to use mtb_hal_uart_write(), mtb_hal_uart_put(),
+ * mtb_hal_uart_read() API.
  *
  * \snippet hal_uart.c snippet_mtb_hal_uart_init
  *
@@ -117,14 +128,6 @@
  *
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_UART)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -480,6 +483,6 @@ cy_rslt_t mtb_hal_uart_write_string(mtb_hal_uart_t* obj, const char* tx);
 #include MTB_HAL_UART_IMPL_HEADER
 #endif /* MTB_HAL_UART_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_UART)
-
 /** \} group_hal_uart */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_UART)

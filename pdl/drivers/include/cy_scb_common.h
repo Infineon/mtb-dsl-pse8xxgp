@@ -42,6 +42,7 @@
 * \defgroup group_scb_ezi2c  EZI2C (SCB)
 * \defgroup group_scb_i2c    I2C (SCB)
 * \defgroup group_scb_spi    SPI (SCB)
+* \defgroup group_scb_spi_ez EZSPI (SCB)
 * \defgroup group_scb_uart   UART (SCB)
 * \} */
 
@@ -77,11 +78,42 @@
 *******************************************************************************
 * \section group_scb_common_configuration Configuration Considerations
 ********************************************************************************
-* This is not a driver and it does not require configuration.
+* Common API is divided into general, interrupt, and TGS types. General and
+* interrupt functions do not have separate configurations and are meant to be
+* used in an already initialized SCB block.
+*
+* \note
+* SCB3 instance is used as an example for all code snippets. Modify the code
+* to match your design.
+*
+********************************************************************************
+* \subsection group_scb_tgs_config Configure TGS
+********************************************************************************
+* The Timeout Generation Support block is a free-running down counter that
+* triggers a timeout event once the count value reaches 0. There are 3 signals to
+* control it. A reload signal will reload the counter with the reload count value.
+* A gate signal will pause the counter for the specified duration for that signal.
+* A stop signal will stop the counter.
+* To set up the TGS block, provide the configuration parameters in the
+* \ref cy_stc_scb_tgs_config_t structure and the counter number to use.
+* Initialize the block by calling the \ref Cy_SCB_TGSx_Init function, providing a
+* pointer to the populated \ref cy_stc_scb_tgs_config_t structure. Enable it
+* by calling the \ref Cy_SCB_TGSx_Enable function.
+*
+* \snippet scb/snippet/main.c TGS_CFG
+*
+********************************************************************************
 *
 * \defgroup group_scb_common_macros Macros
 * \defgroup group_scb_common_functions Functions
+* \{
+* \defgroup group_scb_common_general_functions General
+* \defgroup group_scb_common_interrupt_functions Interrupt
+* \defgroup group_scb_tgs_functions TGS
+* \}
 * \defgroup group_scb_common_data_structures Data Structures
+* \defgroup group_scb_tgs_data_structures TGS Data Structures
+* \defgroup group_scb_tgs_enums TGS Enumerated Types
 *
 */
 
@@ -104,102 +136,6 @@ extern "C" {
 
 
 /*******************************************************************************
-*                            Function Prototypes
-*******************************************************************************/
-
-/**
-* \addtogroup group_scb_common_functions
-* \{
-*/
-__STATIC_FORCEINLINE uint32_t Cy_SCB_ReadRxFifo    (CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_SetRxFifoLevel(CySCB_Type *base, uint32_t level);
-__STATIC_INLINE uint32_t Cy_SCB_GetNumInRxFifo(CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetRxSrValid  (CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearRxFifo   (CySCB_Type *base);
-
-__STATIC_FORCEINLINE void     Cy_SCB_WriteTxFifo   (CySCB_Type *base, uint32_t data);
-__STATIC_INLINE void     Cy_SCB_SetTxFifoLevel(CySCB_Type *base, uint32_t level);
-__STATIC_INLINE uint32_t Cy_SCB_GetNumInTxFifo(CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetTxSrValid  (CySCB_Type const *base);
-__STATIC_INLINE bool     Cy_SCB_IsTxComplete  (CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearTxFifo   (CySCB_Type *base);
-
-__STATIC_INLINE void     Cy_SCB_SetByteMode(CySCB_Type *base, bool byteMode);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetInterruptCause(CySCB_Type const *base);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetRxInterruptStatus(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_SetRxInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE uint32_t Cy_SCB_GetRxInterruptMask  (CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetRxInterruptStatusMasked(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearRxInterrupt    (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE void     Cy_SCB_SetRxInterrupt      (CySCB_Type *base, uint32_t interruptMask);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetTxInterruptStatus(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_SetTxInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE uint32_t Cy_SCB_GetTxInterruptMask  (CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetTxInterruptStatusMasked(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearTxInterrupt    (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE void     Cy_SCB_SetTxInterrupt      (CySCB_Type *base, uint32_t interruptMask);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetMasterInterruptStatus(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_SetMasterInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE uint32_t Cy_SCB_GetMasterInterruptMask  (CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetMasterInterruptStatusMasked(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearMasterInterrupt    (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE void     Cy_SCB_SetMasterInterrupt      (CySCB_Type *base, uint32_t interruptMask);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetSlaveInterruptStatus(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_SetSlaveInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE uint32_t Cy_SCB_GetSlaveInterruptMask  (CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetSlaveInterruptStatusMasked(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearSlaveInterrupt    (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE void     Cy_SCB_SetSlaveInterrupt      (CySCB_Type *base, uint32_t interruptMask);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetI2CInterruptStatus(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_SetI2CInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE uint32_t Cy_SCB_GetI2CInterruptMask  (CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetI2CInterruptStatusMasked(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearI2CInterrupt    (CySCB_Type *base, uint32_t interruptMask);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetSpiInterruptStatus(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_SetSpiInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
-__STATIC_INLINE uint32_t Cy_SCB_GetSpiInterruptMask  (CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetSpiInterruptStatusMasked(CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_ClearSpiInterrupt    (CySCB_Type *base, uint32_t interruptMask);
-
-
-/*******************************************************************************
-*                         Internal Function Prototypes
-*******************************************************************************/
-
-/** \cond INTERNAL */
-void     Cy_SCB_ReadArrayNoCheck  (CySCB_Type const *base, void *buffer, uint32_t size);
-uint32_t Cy_SCB_ReadArray         (CySCB_Type const *base, void *buffer, uint32_t size);
-void     Cy_SCB_ReadArrayBlocking (CySCB_Type const *base, void *buffer, uint32_t size);
-uint32_t Cy_SCB_Write             (CySCB_Type *base, uint32_t data);
-void     Cy_SCB_WriteArrayNoCheck (CySCB_Type *base, void *buffer, uint32_t size);
-uint32_t Cy_SCB_WriteArray        (CySCB_Type *base, void *buffer, uint32_t size);
-void     Cy_SCB_WriteArrayBlocking(CySCB_Type *base, void *buffer, uint32_t size);
-void     Cy_SCB_WriteString       (CySCB_Type *base, char_t const string[]);
-void     Cy_SCB_WriteDefaultArrayNoCheck(CySCB_Type *base, uint32_t txData, uint32_t size);
-uint32_t Cy_SCB_WriteDefaultArray (CySCB_Type *base, uint32_t txData, uint32_t size);
-
-__STATIC_INLINE uint32_t Cy_SCB_GetFifoSize (CySCB_Type const *base);
-__STATIC_INLINE void     Cy_SCB_FwBlockReset(CySCB_Type *base);
-__STATIC_INLINE bool     Cy_SCB_IsRxDataWidthByte(CySCB_Type const *base);
-__STATIC_INLINE bool     Cy_SCB_IsTxDataWidthByte(CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_GetRxFifoLevel   (CySCB_Type const *base);
-#if((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=2)) || defined (CY_IP_MXS22SCB))
-__STATIC_INLINE uint32_t Cy_SCB_Get_RxDataWidth(CySCB_Type const *base);
-__STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
-#endif /* CY_IP_MXSCB_VERSION */
-/** \endcond */
-
-/** \} group_scb_common_functions */
-
-
-/*******************************************************************************
 *                        API Constants
 *******************************************************************************/
 
@@ -212,7 +148,7 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 #define CY_SCB_DRV_VERSION_MAJOR    (3)
 
 /** Driver minor version */
-#define CY_SCB_DRV_VERSION_MINOR    (30)
+#define CY_SCB_DRV_VERSION_MINOR    (40)
 
 /** SCB driver identifier */
 #define CY_SCB_ID           CY_PDL_DRV_ID(0x2AU)
@@ -231,6 +167,9 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 
 /** UART mode identifier */
 #define CY_SCB_UART_ID      (0x3UL << CY_SCB_SUB_MODE_Pos)
+
+/** TGS identifier */
+#define CY_SCB_TGS_ID       (0x4UL << CY_SCB_SUB_MODE_Pos)
 
 /**
 * \defgroup group_scb_common_macros_intr_cause SCB Interrupt Causes
@@ -253,6 +192,11 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 
 /** Interrupt from SPI externally clocked interrupt sources */
 #define CY_SCB_SPI_INTR    SCB_INTR_CAUSE_SPI_EC_Msk
+
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+/** Interrupt from TGS interrupt sources */
+#define CY_SCB_TGS_INTR    SCB_INTR_CAUSE_TGS_Msk 
+#endif
 /** \} group_scb_common_macros_intr_cause */
 
 /**
@@ -360,6 +304,16 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 /** The I2C slave bus error (detection of unexpected Start or Stop condition) */
 #define CY_SCB_SLAVE_INTR_I2C_BUS_ERROR     SCB_INTR_S_I2C_BUS_ERROR_Msk
 
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+
+/** The I2C slave received a Restart condition */
+#define CY_SCB_SLAVE_INTR_I2C_RESTART       SCB_INTR_S_I2C_RESTART_Msk
+
+/** The I2C slave received a Stop condition */
+#define CY_SCB_SLAVE_INTR_I2C_STOP_ANY      SCB_INTR_S_I2C_STOP_ANY_Msk
+
+#endif /* ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN)) */
+
 /**
 * The SPI slave select line is deselected at an expected time during an
 * SPI transfer.
@@ -416,6 +370,22 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 #define CY_SCB_SPI_INTR_WAKEUP     SCB_INTR_SPI_EC_WAKE_UP_Msk
 /** \} group_scb_common_macros_SpiIntrStatuses */
 
+/**
+* \defgroup group_scb_tgs_macros_intr TGS Interrupt Statuses
+* \{
+*/
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+/** Timeout counter 0 underflowed */
+#define CY_SCB_TGS_INTR_0_UNDERFLOW         SCB_INTR_TGS_MASKED_TGS0_Msk
+
+/** Timeout counter 1 underflowed */
+#define CY_SCB_TGS_INTR_1_UNDERFLOW         SCB_INTR_TGS_MASKED_TGS1_Msk
+
+/** Timeout counter 2 underflowed */
+#define CY_SCB_TGS_INTR_2_UNDERFLOW         SCB_INTR_TGS_MASKED_TGS2_Msk
+
+#endif /* ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN)) */
+/** \} group_scb_tgs_macros_intr */
 
 /*******************************************************************************
 *                           Internal Constants
@@ -566,10 +536,18 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
                                  CY_SCB_RX_INTR_UART_BREAK_DETECT)
 
 
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+#define CY_SCB_SLAVE_INTR_MASK  (CY_SCB_SLAVE_INTR_I2C_ARB_LOST   | CY_SCB_SLAVE_INTR_I2C_NACK | CY_SCB_SLAVE_INTR_I2C_ACK   | \
+                                 CY_SCB_SLAVE_INTR_I2C_WRITE_STOP | CY_SCB_SLAVE_INTR_I2C_STOP | CY_SCB_SLAVE_INTR_I2C_START | \
+                                 CY_SCB_SLAVE_INTR_I2C_ADDR_MATCH | CY_SCB_SLAVE_INTR_I2C_GENERAL_ADDR                       | \
+                                 CY_SCB_SLAVE_INTR_I2C_BUS_ERROR  | CY_SCB_SLAVE_INTR_I2C_RESTART                            | \
+                                 CY_SCB_SLAVE_INTR_I2C_STOP_ANY   | CY_SCB_SLAVE_INTR_SPI_BUS_ERROR)
+#else
 #define CY_SCB_SLAVE_INTR_MASK  (CY_SCB_SLAVE_INTR_I2C_ARB_LOST   | CY_SCB_SLAVE_INTR_I2C_NACK | CY_SCB_SLAVE_INTR_I2C_ACK   | \
                                  CY_SCB_SLAVE_INTR_I2C_WRITE_STOP | CY_SCB_SLAVE_INTR_I2C_STOP | CY_SCB_SLAVE_INTR_I2C_START | \
                                  CY_SCB_SLAVE_INTR_I2C_ADDR_MATCH | CY_SCB_SLAVE_INTR_I2C_GENERAL_ADDR                       | \
                                  CY_SCB_SLAVE_INTR_I2C_BUS_ERROR  | CY_SCB_SLAVE_INTR_SPI_BUS_ERROR)
+#endif /* ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN)) */
 
 #define CY_SCB_MASTER_INTR_MASK (CY_SCB_MASTER_INTR_I2C_ARB_LOST  | CY_SCB_MASTER_INTR_I2C_NACK | \
                                  CY_SCB_MASTER_INTR_I2C_ACK       | CY_SCB_MASTER_INTR_I2C_STOP | \
@@ -578,6 +556,11 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 #define CY_SCB_I2C_INTR_MASK    CY_SCB_I2C_INTR_WAKEUP
 
 #define CY_SCB_SPI_INTR_MASK    CY_SCB_SPI_INTR_WAKEUP
+
+#if (defined (CY_IP_MXSCB) || defined (CY_IP_MXS22SCB) && defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))
+#define CY_SCB_TGS_INTR_MASK  (CY_SCB_TGS_INTR_0_UNDERFLOW | CY_SCB_TGS_INTR_1_UNDERFLOW | CY_SCB_TGS_INTR_2_UNDERFLOW)
+#define CY_SCB_TGS_CNT_MAX   3u
+#endif
 
 #if((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=2)) || defined (CY_IP_MXS22SCB))
 #define CY_SCB_IS_MEMWIDTH_VALID(memwidth)          ((memwidth) <= CY_SCB_MEM_WIDTH_WORD)
@@ -589,9 +572,248 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 #define CY_SCB_IS_I2C_ADDR_VALID(addr)              ( (0U == ((addr) & 0x80U)) )
 #define CY_SCB_IS_BUFFER_VALID(buffer, size)        ( (NULL != (buffer)) && ((size) > 0UL) )
 #define CY_SCB_IS_I2C_BUFFER_VALID(buffer, size)    ( (0UL == (size)) ? true : (NULL != (buffer)) )
+
+#define CY_SCB_IS_TGS_VALID(cnt)                    ((cnt) < CY_SCB_TGS_CNT_MAX)
 /** \endcond */
 
 /** \} group_scb_common_macros */
+
+
+/*******************************************************************************
+*                            Enumerated Types
+*******************************************************************************/
+
+/**
+* \addtogroup group_scb_tgs_enums
+* \{
+*/
+
+/** TGS status codes */
+typedef enum
+{
+    /** Operation completed successfully */
+    CY_SCB_TGS_SUCCESS = 0U,
+
+    /** One or more of input parameters are invalid */
+    CY_SCB_TGS_BAD_PARAM = (CY_SCB_ID | CY_PDL_STATUS_ERROR | CY_SCB_TGS_ID | 1U),
+} cy_en_scb_tgs_status_t;
+
+/** \} group_scb_tgs_enums */
+
+
+/*******************************************************************************
+*                              Type Definitions
+*******************************************************************************/
+
+/**
+* \addtogroup group_scb_tgs_data_structures
+* \{
+*/
+
+/** TGS configuration structure */
+typedef struct cy_stc_scb_tgs_config
+{
+    /** Initial count value */
+    uint32_t count;
+
+    /** Counter reload value */
+    uint32_t reload;
+
+    /** Reload the counter on data transmission out of TX FIFO */
+    bool reloadTx;
+
+    /** Reload the counter on data reception into RX FIFO */
+    bool reloadRx;
+
+    /** Reload the counter on falling edge of I2C SCL or SPI SCLK */
+    bool reloadClkFall;
+
+    /** Reload the counter on rising edge of I2C SCL or SPI SCLK */
+    bool reloadClkRise;
+
+    /** Reload the counter on falling edge of UART start bit */
+    bool reloadUartStart;
+
+    /** Reload the counter on falling edge of SPI select (only single supported) */
+    bool reloadSpiSel;
+
+    /** Reload the counter on I2C start/restart condition */
+    bool reloadI2cStart;
+
+    /** Reload the counter on transmitted/received I2C ACK on the rising edge of SCL */
+    bool reloadI2cAckRise;
+
+    /** Reload the counter on transmitted/received I2C ACK on the falling edge of SCL */
+    bool reloadI2cAckFall;
+
+    /** Reload the counter on transition from DeepSleep to Active power mode */
+    bool reloadWakeup;
+
+    /** Gate/Pause the counter while I2C SCL or SPI SCLK is high */
+    bool gateClkHigh;
+
+    /** Gate/Pause the counter while I2C SCL or SPI SCLK is low */
+    bool gateClkLow;
+
+    /** Gate/Pause the counter during active communication frame */
+    bool gateFrame;
+
+    /** Gate/Pause the counter outside of active communication frame */
+    bool gateFrameN;
+
+    /** Stop the counter on falling edge of I2C SCL or SPI SCLK */
+    bool stopClkFall;
+
+    /** Stop the counter on rising edge of I2C SCL or SPI SCLK */
+    bool stopClkRise;
+
+    /** Stop the counter on UART stop bit or RX frame error */
+    bool stopUartStop;
+
+    /** Stop the counter on rising edge of SPI select (only single supported) */
+    bool stopSpiSel;
+
+    /** Stop the counter on I2C stop condition */
+    bool stopI2cStop;
+
+    /** Direction of UART triggers (TX=0, RX=1) */
+    bool uartDirection;
+
+    /** Communication and FIFO reset on timer expiration */
+    bool enableReset;
+
+} cy_stc_scb_tgs_config_t;
+/** \} group_scb_tgs_data_structures */
+
+
+/*******************************************************************************
+*                            Function Prototypes
+*******************************************************************************/
+
+/**
+* \addtogroup group_scb_common_general_functions
+* \{
+*/
+__STATIC_FORCEINLINE uint32_t Cy_SCB_ReadRxFifo    (CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetRxFifoLevel(CySCB_Type *base, uint32_t level);
+__STATIC_INLINE uint32_t Cy_SCB_GetNumInRxFifo(CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetRxSrValid  (CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearRxFifo   (CySCB_Type *base);
+
+__STATIC_FORCEINLINE void     Cy_SCB_WriteTxFifo   (CySCB_Type *base, uint32_t data);
+__STATIC_INLINE void     Cy_SCB_SetTxFifoLevel(CySCB_Type *base, uint32_t level);
+__STATIC_INLINE uint32_t Cy_SCB_GetNumInTxFifo(CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetTxSrValid  (CySCB_Type const *base);
+__STATIC_INLINE bool     Cy_SCB_IsTxComplete  (CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearTxFifo   (CySCB_Type *base);
+
+__STATIC_INLINE void     Cy_SCB_SetByteMode(CySCB_Type *base, bool byteMode);
+
+/** \} group_scb_common_general_functions */
+
+/**
+* \addtogroup group_scb_common_interrupt_functions
+* \{
+*/
+
+__STATIC_INLINE uint32_t Cy_SCB_GetInterruptCause(CySCB_Type const *base);
+
+__STATIC_INLINE uint32_t Cy_SCB_GetRxInterruptStatus(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetRxInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE uint32_t Cy_SCB_GetRxInterruptMask  (CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetRxInterruptStatusMasked(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearRxInterrupt    (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE void     Cy_SCB_SetRxInterrupt      (CySCB_Type *base, uint32_t interruptMask);
+
+__STATIC_INLINE uint32_t Cy_SCB_GetTxInterruptStatus(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetTxInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE uint32_t Cy_SCB_GetTxInterruptMask  (CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetTxInterruptStatusMasked(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearTxInterrupt    (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE void     Cy_SCB_SetTxInterrupt      (CySCB_Type *base, uint32_t interruptMask);
+
+__STATIC_INLINE uint32_t Cy_SCB_GetMasterInterruptStatus(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetMasterInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE uint32_t Cy_SCB_GetMasterInterruptMask  (CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetMasterInterruptStatusMasked(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearMasterInterrupt    (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE void     Cy_SCB_SetMasterInterrupt      (CySCB_Type *base, uint32_t interruptMask);
+
+__STATIC_INLINE uint32_t Cy_SCB_GetSlaveInterruptStatus(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetSlaveInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE uint32_t Cy_SCB_GetSlaveInterruptMask  (CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetSlaveInterruptStatusMasked(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearSlaveInterrupt    (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE void     Cy_SCB_SetSlaveInterrupt      (CySCB_Type *base, uint32_t interruptMask);
+
+__STATIC_INLINE uint32_t Cy_SCB_GetI2CInterruptStatus(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetI2CInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE uint32_t Cy_SCB_GetI2CInterruptMask  (CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetI2CInterruptStatusMasked(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearI2CInterrupt    (CySCB_Type *base, uint32_t interruptMask);
+
+__STATIC_INLINE uint32_t Cy_SCB_GetSpiInterruptStatus(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetSpiInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE uint32_t Cy_SCB_GetSpiInterruptMask  (CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetSpiInterruptStatusMasked(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearSpiInterrupt    (CySCB_Type *base, uint32_t interruptMask);
+
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+
+__STATIC_INLINE uint32_t Cy_SCB_GetTgsInterruptStatus(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_SetTgsInterruptMask  (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE uint32_t Cy_SCB_GetTgsInterruptMask  (CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetTgsInterruptStatusMasked(CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_ClearTgsInterrupt    (CySCB_Type *base, uint32_t interruptMask);
+__STATIC_INLINE void     Cy_SCB_SetTgsInterrupt      (CySCB_Type *base, uint32_t interruptMask);
+
+/** \} group_scb_common_interrupt_functions */
+
+/**
+* \addtogroup group_scb_tgs_functions
+* \{
+*/
+cy_en_scb_tgs_status_t Cy_SCB_TGSx_Init(CySCB_Type *base, uint8_t cntNum, cy_stc_scb_tgs_config_t const *config);
+void Cy_SCB_TGSx_DeInit(CySCB_Type *base, uint8_t cntNum);
+__STATIC_INLINE void     Cy_SCB_TGSx_Enable(CySCB_Type *base, uint8_t cntNum);
+__STATIC_INLINE void     Cy_SCB_TGSx_Disable(CySCB_Type *base, uint8_t cntNum);
+__STATIC_INLINE void     Cy_SCB_TGSx_SetCTRL(CySCB_Type *base, uint8_t cntNum, uint32_t ctrl);
+__STATIC_INLINE uint32_t Cy_SCB_TGSx_GetCTRL(CySCB_Type const *base, uint8_t cntNum);
+__STATIC_INLINE void     Cy_SCB_TGSx_SetCount(CySCB_Type *base, uint8_t cntNum, uint32_t count);
+__STATIC_INLINE uint32_t Cy_SCB_TGSx_GetCount(CySCB_Type const *base, uint8_t cntNum);
+__STATIC_INLINE void     Cy_SCB_TGSx_SetReload(CySCB_Type *base, uint8_t cntNum, uint32_t reload);
+__STATIC_INLINE uint32_t Cy_SCB_TGSx_GetReload(CySCB_Type const *base, uint8_t cntNum);
+/** \} group_scb_tgs_functions */
+
+#endif /* ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN)) */
+
+
+/*******************************************************************************
+*                         Internal Function Prototypes
+*******************************************************************************/
+
+/** \cond INTERNAL */
+void     Cy_SCB_ReadArrayNoCheck  (CySCB_Type const *base, void *buffer, uint32_t size);
+uint32_t Cy_SCB_ReadArray         (CySCB_Type const *base, void *buffer, uint32_t size);
+void     Cy_SCB_ReadArrayBlocking (CySCB_Type const *base, void *buffer, uint32_t size);
+uint32_t Cy_SCB_Write             (CySCB_Type *base, uint32_t data);
+void     Cy_SCB_WriteArrayNoCheck (CySCB_Type *base, void *buffer, uint32_t size);
+uint32_t Cy_SCB_WriteArray        (CySCB_Type *base, void *buffer, uint32_t size);
+void     Cy_SCB_WriteArrayBlocking(CySCB_Type *base, void *buffer, uint32_t size);
+void     Cy_SCB_WriteString       (CySCB_Type *base, char_t const string[]);
+void     Cy_SCB_WriteDefaultArrayNoCheck(CySCB_Type *base, uint32_t txData, uint32_t size);
+uint32_t Cy_SCB_WriteDefaultArray (CySCB_Type *base, uint32_t txData, uint32_t size);
+
+__STATIC_INLINE uint32_t Cy_SCB_GetFifoSize (CySCB_Type const *base);
+__STATIC_INLINE void     Cy_SCB_FwBlockReset(CySCB_Type *base);
+__STATIC_INLINE bool     Cy_SCB_IsRxDataWidthByte(CySCB_Type const *base);
+__STATIC_INLINE bool     Cy_SCB_IsTxDataWidthByte(CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_GetRxFifoLevel   (CySCB_Type const *base);
+#if((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=2)) || defined (CY_IP_MXS22SCB))
+__STATIC_INLINE uint32_t Cy_SCB_Get_RxDataWidth(CySCB_Type const *base);
+__STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
+#endif /* CY_IP_MXSCB_VERSION */
+/** \endcond */
 
 
 /*******************************************************************************
@@ -599,7 +821,7 @@ __STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth(CySCB_Type const *base);
 *******************************************************************************/
 
 /**
-* \addtogroup group_scb_common_functions
+* \addtogroup group_scb_common_general_functions
 * \{
 */
 
@@ -644,7 +866,7 @@ __STATIC_INLINE void Cy_SCB_SetRxFifoLevel(CySCB_Type *base, uint32_t level)
     CY_REG32_CLR_SET(SCB_RX_FIFO_CTRL(base), SCB_RX_FIFO_CTRL_TRIGGER_LEVEL, level);
 }
 
-
+#ifndef AROM_SUPPORTED
 /*******************************************************************************
 * Function Name: Cy_SCB_GetNumInRxFifo
 ****************************************************************************//**
@@ -662,7 +884,7 @@ __STATIC_INLINE uint32_t Cy_SCB_GetNumInRxFifo(CySCB_Type const *base)
 {
     return _FLD2VAL(SCB_RX_FIFO_STATUS_USED, SCB_RX_FIFO_STATUS(base));
 }
-
+#endif
 
 /*******************************************************************************
 * Function Name: Cy_SCB_GetRxSrValid
@@ -748,7 +970,7 @@ __STATIC_INLINE void Cy_SCB_SetTxFifoLevel(CySCB_Type *base, uint32_t level)
     CY_REG32_CLR_SET(SCB_TX_FIFO_CTRL(base), SCB_TX_FIFO_CTRL_TRIGGER_LEVEL, level);
 }
 
-
+#ifndef AROM_SUPPORTED
 /*******************************************************************************
 * Function Name: Cy_SCB_GetNumInTxFifo
 ****************************************************************************//**
@@ -766,7 +988,7 @@ __STATIC_INLINE uint32_t Cy_SCB_GetNumInTxFifo(CySCB_Type const *base)
 {
     return _FLD2VAL(SCB_TX_FIFO_STATUS_USED, SCB_TX_FIFO_STATUS(base));
 }
-
+#endif
 
 /*******************************************************************************
 * Function Name: Cy_SCB_GetTxSrValid
@@ -897,6 +1119,12 @@ __STATIC_INLINE void Cy_SCB_SetMemWidth(CySCB_Type *base, uint32_t MemWidthMode)
         SCB_CTRL(base) |=  _VAL2FLD(SCB_CTRL_MEM_WIDTH, MemWidthMode);
 }
 #endif /* CY_IP_MXSCB_VERSION */
+/** \} group_scb_common_general_functions */
+
+/**
+* \addtogroup group_scb_common_interrupt_functions
+* \{
+*/
 
 /*******************************************************************************
 * Function Name: Cy_SCB_GetInterruptCause
@@ -1025,12 +1253,14 @@ __STATIC_INLINE uint32_t Cy_SCB_GetRxInterruptStatusMasked(CySCB_Type const *bas
 * See \ref group_scb_common_macros_rx_intr for the set of constants.
 *
 * \note
-*  - CY_SCB_INTR_RX_FIFO_LEVEL interrupt source is not cleared when
-*    the RX FIFO has more entries than the level.
-*  - CY_SCB_INTR_RX_NOT_EMPTY interrupt source is not cleared when the
-*    RX FIFO is not empty.
-*  - CY_SCB_INTR_RX_FULL interrupt source is not cleared when the
-*    RX FIFO is full.
+*  The following are level-sensitive interrupt sources. Writing to the
+*  interrupt register clears the flag, but the hardware re-asserts it
+*  on the next SCB clock cycle if the triggering condition persists:
+*  - CY_SCB_INTR_RX_FIFO_LEVEL is re-asserted when the RX FIFO has
+*    more entries than the level.
+*  - CY_SCB_INTR_RX_NOT_EMPTY is re-asserted when the RX FIFO is
+*    not empty.
+*  - CY_SCB_INTR_RX_FULL is re-asserted when the RX FIFO is full.
 *
 *******************************************************************************/
 __STATIC_INLINE void Cy_SCB_ClearRxInterrupt(CySCB_Type *base, uint32_t interruptMask)
@@ -1169,14 +1399,16 @@ __STATIC_INLINE uint32_t Cy_SCB_GetTxInterruptStatusMasked(CySCB_Type const *bas
 * See \ref group_scb_common_macros_tx_intr for the set of constants.
 *
 * \note
-*  - CY_SCB_INTR_TX_FIFO_LEVEL interrupt source is not cleared when the
-*    TX FIFO has fewer entries than the TX level.
-*  - CY_SCB_INTR_TX_NOT_FULL interrupt source is not cleared when the
-*    TX FIFO has empty entries in the TX FIFO.
-*  - CY_SCB_INTR_TX_EMPTY interrupt source is not cleared when the
-*    TX FIFO is empty.
-*  - CY_SCB_INTR_TX_UNDERFLOW interrupt source is not cleared when the
-*    TX FIFO is empty. Put data into the TX FIFO before clearing it.
+*  The following are level-sensitive interrupt sources. Writing to the
+*  interrupt register clears the flag, but the hardware re-asserts it
+*  on the next SCB clock cycle if the triggering condition persists:
+*  - CY_SCB_INTR_TX_FIFO_LEVEL is re-asserted when the TX FIFO has
+*    fewer entries than the TX level.
+*  - CY_SCB_INTR_TX_NOT_FULL is re-asserted when the TX FIFO has
+*    empty entries in the TX FIFO.
+*  - CY_SCB_INTR_TX_EMPTY is re-asserted when the TX FIFO is empty.
+*  - CY_SCB_INTR_TX_UNDERFLOW is re-asserted when the TX FIFO is
+*    empty. Put data into the TX FIFO before clearing it.
 *
 *******************************************************************************/
 __STATIC_INLINE void Cy_SCB_ClearTxInterrupt(CySCB_Type *base, uint32_t interruptMask)
@@ -1712,7 +1944,502 @@ __STATIC_INLINE void Cy_SCB_ClearSpiInterrupt(CySCB_Type *base, uint32_t interru
     (void) SCB_INTR_SPI_EC(base);
 }
 
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+
+/*******************************************************************************
+* Function Name: Cy_SCB_GetTgsInterruptStatus
+****************************************************************************//**
+*
+* Returns the TGS interrupt request register. This register contains the current
+* status of the TGS interrupt sources.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \return
+* The current status of the TGS interrupt sources.
+* Each constant is a bit field value. The value returned may have multiple
+* bits set to indicate the current status.
+* See \ref group_scb_tgs_macros_intr for the set of constants.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_SCB_GetTgsInterruptStatus(CySCB_Type const *base)
+{
+    return (SCB_INTR_TGS(base) & CY_SCB_TGS_INTR_MASK);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_SetTgsInterruptMask
+****************************************************************************//**
+*
+* Writes TGS interrupt mask register.
+* This register specifies which bits from the TGS interrupt request register
+* can trigger an interrupt event.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param interruptMask
+* Enabled TGS interrupt sources.
+* See \ref group_scb_tgs_macros_intr for the set of constants.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_SetTgsInterruptMask(CySCB_Type *base, uint32_t interruptMask)
+{
+    CY_ASSERT_L2(CY_SCB_IS_INTR_VALID(interruptMask, CY_SCB_TGS_INTR_MASK));
+
+    SCB_INTR_TGS_MASK(base) = interruptMask;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_GetTgsInterruptMask
+****************************************************************************//**
+*
+* Returns the TGS interrupt mask register.
+* This register specifies which bits from the TGS interrupt request register
+* can trigger an interrupt event.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \return
+* Enabled TGS interrupt sources.
+* See \ref group_scb_tgs_macros_intr for the set of constants.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_SCB_GetTgsInterruptMask(CySCB_Type const *base)
+{
+    return (SCB_INTR_TGS_MASK(base));
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_GetTgsInterruptStatusMasked
+****************************************************************************//**
+*
+* Returns the TGS interrupt masked request register. This register contains a
+* logical AND of corresponding bits from the TGS interrupt request and mask
+* registers.
+* This function is intended to be used in the interrupt service routine to
+* identify which of enabled TGS interrupt sources caused the interrupt
+* event.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \return
+* The current status of enabled TGS interrupt sources.
+* See \ref group_scb_tgs_macros_intr for the set of constants.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_SCB_GetTgsInterruptStatusMasked(CySCB_Type const *base)
+{
+    return (SCB_INTR_TGS_MASKED(base));
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_ClearTgsInterrupt
+****************************************************************************//**
+*
+* Clears the TGS interrupt sources in the interrupt request register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param interruptMask
+*  interrupt sources to be cleared.
+* See \ref group_scb_tgs_macros_intr for the set of constants.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_ClearTgsInterrupt(CySCB_Type *base, uint32_t interruptMask)
+{
+    CY_ASSERT_L2(CY_SCB_IS_INTR_VALID(interruptMask, CY_SCB_TGS_INTR_MASK));
+
+    SCB_INTR_TGS(base) = interruptMask;
+    (void) SCB_INTR_TGS(base);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_SetTgsInterrupt
+****************************************************************************//**
+*
+* Sets TGS interrupt sources in the interrupt request register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param interruptMask
+* The TGS interrupt sources to set in the TGS interrupt request register
+* See \ref group_scb_tgs_macros_intr for the set of constants.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_SetTgsInterrupt(CySCB_Type *base, uint32_t interruptMask)
+{
+    CY_ASSERT_L2(CY_SCB_IS_INTR_VALID(interruptMask, CY_SCB_TGS_INTR_MASK));
+
+    SCB_INTR_TGS_SET(base) = interruptMask;
+}
+
+/** \} group_scb_common_interrupt_functions */
+
+/**
+* \addtogroup group_scb_tgs_functions
+* \{
+*/
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_Enable
+****************************************************************************//**
+*
+* Enables the TGS counter.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_TGSx_Enable(CySCB_Type *base, uint8_t cntNum)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    switch (cntNum)
+    {
+        case 0u:
+            SCB_TGS_CTL0(base)|= SCB_TGS_CTL0_ENABLE_Msk;
+            break;
+        case 1u:
+            SCB_TGS_CTL1(base) |= SCB_TGS_CTL1_ENABLE_Msk;
+            break;
+        case 2u:
+            SCB_TGS_CTL2(base) |= SCB_TGS_CTL2_ENABLE_Msk;
+            break;
+        default:
+            /* Not supported counter number */
+            break;
+    }
+}
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_Disable
+****************************************************************************//**
+*
+* Disables the TGS counter.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_TGSx_Disable(CySCB_Type *base, uint8_t cntNum)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    switch (cntNum)
+    {
+        case 0u:
+            SCB_TGS_CTL0(base) &= ~SCB_TGS_CTL0_ENABLE_Msk;
+            break;
+        case 1u:
+            SCB_TGS_CTL1(base) &= ~SCB_TGS_CTL1_ENABLE_Msk;
+            break;
+        case 2u:
+            SCB_TGS_CTL2(base) &= ~SCB_TGS_CTL2_ENABLE_Msk;
+            break;
+        default:
+            /* Not supported counter number */
+            break;
+    }
+}
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_SetCTRL
+****************************************************************************//**
+*
+* Sets the TGS control register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \param ctrl
+* Control register value.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_TGSx_SetCTRL(CySCB_Type *base, uint8_t cntNum, uint32_t ctrl)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    switch (cntNum)
+    {
+        case 0u:
+            SCB_TGS_CTL0(base) = ctrl;
+            break;
+        case 1u:
+            SCB_TGS_CTL1(base) = ctrl;
+            break;
+        case 2u:
+            SCB_TGS_CTL2(base) = ctrl;
+            break;
+        default:
+            /* Not supported counter number */
+            break;
+    }
+}
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_GetCTRL
+****************************************************************************//**
+*
+* Gets the TGS control register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \return
+* Control register value.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_SCB_TGSx_GetCTRL(CySCB_Type const *base, uint8_t cntNum)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    uint32_t ctrlReg;
+    switch (cntNum)
+    {
+        case 0u:
+            ctrlReg = SCB_TGS_CTL0(base);
+            break;
+        case 1u:
+            ctrlReg = SCB_TGS_CTL1(base);
+            break;
+        case 2u:
+            ctrlReg = SCB_TGS_CTL2(base);
+            break;
+        default:
+            /* Not supported counter number */
+            ctrlReg = 0UL;
+            break;
+    }
+    return ctrlReg;
+}
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_SetCount
+****************************************************************************//**
+*
+* Sets the TGS count register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \param count
+* Count value.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_TGSx_SetCount(CySCB_Type *base, uint8_t cntNum, uint32_t count)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    switch (cntNum)
+    {
+        case 0u:
+            SCB_TGS_CNT0(base) = count;
+            break;
+        case 1u:
+            SCB_TGS_CNT1(base) = count;
+            break;
+        case 2u:
+            SCB_TGS_CNT2(base) = count;
+            break;
+        default:
+            /* Not supported counter number */
+            break;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_GetCount
+****************************************************************************//**
+*
+* Gets the TGS count register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \return
+* Count register value.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_SCB_TGSx_GetCount(CySCB_Type const *base, uint8_t cntNum)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    uint32_t countReg;
+    switch (cntNum)
+    {
+        case 0u:
+            countReg = SCB_TGS_CNT0(base);
+            break;
+        case 1u:
+            countReg = SCB_TGS_CNT1(base);
+            break;
+        case 2u:
+            countReg = SCB_TGS_CNT2(base);
+            break;
+        default:
+            /* Not supported counter number */
+            countReg = 0UL;
+            break;
+    }
+    return countReg;
+}
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_SetReload
+****************************************************************************//**
+*
+* Sets the TGS reload register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \param reload
+* Reload value.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_SCB_TGSx_SetReload(CySCB_Type *base, uint8_t cntNum, uint32_t reload)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    switch (cntNum)
+    {
+        case 0u:
+            SCB_TGS_REL0(base) = reload;
+            break;
+        case 1u:
+            SCB_TGS_REL1(base) = reload;
+            break;
+        case 2u:
+            SCB_TGS_REL2(base) = reload;
+            break;
+        default:
+            /* Not supported counter number */
+            break;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_GetReload
+****************************************************************************//**
+*
+* Gets the TGS reload register.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \return
+* Reload register value.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_SCB_TGSx_GetReload(CySCB_Type const *base, uint8_t cntNum)
+{
+    CY_ASSERT_L2(CY_SCB_IS_TGS_VALID(cntNum));
+
+    uint32_t reloadReg;
+    switch (cntNum)
+    {
+        case 0u:
+            reloadReg = SCB_TGS_REL0(base);
+            break;
+        case 1u:
+            reloadReg = SCB_TGS_REL1(base);
+            break;
+        case 2u:
+            reloadReg = SCB_TGS_REL2(base);
+            break;
+        default:
+            /* Not supported counter number */
+            reloadReg = 0UL;
+            break;
+    }
+    return reloadReg;
+}
+
+/** \} group_scb_tgs_functions */
+
+#endif /* ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN)) */
+
 /** \cond INTERNAL */
+#ifndef AROM_SUPPORTED
 /*******************************************************************************
 * Function Name: Cy_SCB_GetFifoSize
 ****************************************************************************//**
@@ -1737,7 +2464,7 @@ __STATIC_INLINE uint32_t Cy_SCB_GetFifoSize(CySCB_Type const *base)
 #endif /* ((CY_IP_MXSCB_VERSION>=2) || defined (CY_IP_MXS22SCB)) */
 
 }
-
+#endif
 
 /*******************************************************************************
 * Function Name: Cy_SCB_IsRxDataWidthByte

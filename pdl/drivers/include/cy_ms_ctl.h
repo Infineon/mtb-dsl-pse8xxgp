@@ -128,6 +128,7 @@ typedef enum
 } cy_en_ms_ctl_status_t;
 
 /** Bus masters */
+// #if (CY_IP_M33SYSCPUSS_VERSION > 1) || defined (CY_IP_M55APPCPUSS)
 typedef enum
 {
     CY_MS_CTL_ID_CM33_0            = 0,  /**< Cortex M33 CPU-0 */
@@ -161,8 +162,9 @@ typedef enum
     CY_MS_CTL_ID_AXI_SYS_MS3       = 28, /**< AXI_SYS_MS_3 */
     CY_MS_CTL_ID_BISR_MS           = 29, /**< BISR_MS */
     CY_MS_CTL_ID_RESERVED          = 30, /**< Reserved */
-    CY_MS_CTL_ID_TC_MS             = 31  /**< Test Controller */
+    CY_MS_CTL_ID_TC_MS             = 31, /**< Test Controller */
 } en_ms_ctl_master_t;
+// #endif
 
 /** Bus masters security controller and Access Control Group (ACG) config */
 typedef enum
@@ -172,7 +174,11 @@ typedef enum
     SYS_MS1_MSC  = 2,
     EXP_MS_MSC   = 3,
     DMAC0_MSC    = 4,
-    DMAC1_MSC    = 5
+    DMAC1_MSC    = 5,
+#if defined (CY_IP_M33SYSCPUSS_VERSION) && (CY_IP_M33SYSCPUSS_VERSION >= 5)
+    NNLITE_MS0_MSC = 6,
+    NNLITE_MS1_MSC = 7,
+#endif
 } en_ms_ctl_master_sc_acg_t;
 
 #if defined (CY_IP_M55APPCPUSS)
@@ -192,6 +198,17 @@ typedef enum
     APP_EXP_MS1_MSC  = 9,
     APP_EXP_MS2_MSC  = 10,
     APP_EXP_MS3_MSC  = 11,
+#if defined (CY_IP_M55APPCPUSS_VERSION) && (CY_IP_M55APPCPUSS_VERSION >= 1)
+#if defined (CY_IP_M55APPCPUSS_VERSION_MINOR) && (CY_IP_M55APPCPUSS_VERSION_MINOR >= 2)
+    APP_AXI_MS4_MSC  = 12,
+    APP_AXI_MS5_MSC  = 13,
+    APP_AXI_MS6_MSC  = 14,
+    APP_AXI_MS7_MSC  = 15,
+    APP_AXI_MS8_MSC  = 16,
+    APP_AXI_MS9_MSC  = 17,
+    APP_AXI_MS10_MSC = 18,
+#endif
+#endif
 } en_ms_ctl_master_sc_acg_v1_t;
 #endif
  
@@ -232,13 +249,47 @@ typedef enum
 
 /** \} group_ms_ctl_enums */
 
+#if ((CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
+/** \cond INTERNAL */
+
+/*******************************************************************************
+* Function Name: Cy_Ms_Ctl_GetActivePC_S
+****************************************************************************//**
+*
+* \brief Reads the active protection context (PC) for the referenced bus master
+*        using the Secure alias
+*
+* \param busMaster
+* Bus master for which the PC value is being read
+*
+* \return
+* PC value
+*
+*******************************************************************************/
+
+uint32_t Cy_Ms_Ctl_GetActivePC_S(en_ms_ctl_master_t busMaster);
 
 
+/*******************************************************************************
+* Function Name: Cy_Ms_Ctl_GetSavedPC_S
+****************************************************************************//**
+*
+* \brief Reads the saved protection context (PC) for the referenced bus master
+*        using the Secure alias
+*
+* \param busMaster
+* Bus master for which the saved PC value is being read
+*
+* \return
+* PC value
+*
+*******************************************************************************/
 
+uint32_t Cy_Ms_Ctl_GetSavedPC_S(en_ms_ctl_master_t busMaster);
 
+/** \endcond */
 
-
-
+#endif // ((CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
 
 /**
 * \addtogroup group_ms_ctl_functions
@@ -349,7 +400,6 @@ __STATIC_INLINE uint32_t Cy_Ms_Ctl_GetSavedPC(en_ms_ctl_master_t busMaster)
 
 cy_israddress Cy_Ms_Ctl_GetPcHandler(uint32_t pc);
 
-#if defined (CY_IP_M55APPCPUSS)
 cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigBusMasterV1(en_ms_ctl_master_t busMaster, bool privileged, bool nonSecure, uint32_t pcMask);
 cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgRespV1(en_ms_ctl_master_sc_acg_v1_t busMaster, cy_en_ms_ctl_cfg_gate_resp_t gateResp, cy_en_ms_ctl_sec_resp_t secResp);
 
@@ -394,17 +444,14 @@ __STATIC_INLINE uint32_t Cy_Ms_Ctl_GetActivePCV1(en_ms_ctl_master_t busMaster)
     return ((uint32_t)_FLD2VAL(MS_CTL_MS_PC_PC_READ_MIR_PC, MS_CTL_PC_READ_MIRROR_V1(busMaster)));
 }
 
-#endif
 /** \} group_ms_ctl_functions */
-
+ 
 #if defined(__cplusplus)
 }
 #endif
 
-#endif /* #if defined (CY_IP_M55APPCPUSS) */
-
 #endif /* #if defined (CY_IP_M33SYSCPUSS) */
-
+#endif
 /** \} group_ms_ctl */
 
 /* [] END OF FILE */

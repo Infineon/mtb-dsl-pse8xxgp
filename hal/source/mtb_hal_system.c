@@ -44,8 +44,7 @@ extern "C"
 
 #if !defined(MTB_HAL_DISABLE_WEAK_FUNC_IMPL)
 /* Overrides weak implemenation for Cy_SysLib_Rtos_Delay to provide a way
- * to call into a RTOS if so configured. This function is only available
- * in mtb-pdl-cat1 version 2.2.0 or later.
+ * to call into a RTOS if so configured.
  */
 void Cy_SysLib_Rtos_Delay(uint32_t milliseconds)
 {

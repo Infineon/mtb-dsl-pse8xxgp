@@ -109,7 +109,7 @@ Quickstart</h1>
 <li>Allocate the memory for the HAL ADC object</li>
 <li>Set up the HAL ADC using mtb_hal_adc_setup by passing the HAL ADC object and the pre-initialized ADC structures.</li>
 </ol>
-<dl class="section note"><dt>Note</dt><dd><a class="el" href="group__group__hal__adc.html#gaf81e53ff86c18a67d12cdecf48c956e6">mtb_hal_adc_read_u16</a> always returns a 16 bit value in the range 0x0000-0xFFFF. If the underlying hardware does not support 16 bit resolution the value is scaled linearly to cover the full 16 bits.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd><a class="el" href="group__group__hal__adc.html#gaf81e53ff86c18a67d12cdecf48c956e6" title="Read the value from the ADC pin, represented as an unsigned 16bit value where 0x0000 represents the m...">mtb_hal_adc_read_u16()</a> always returns a 16 bit value in the range 0x0000-0xFFFF. If the underlying hardware does not support 16 bit resolution the value is scaled linearly to cover the full 16 bits.</dd></dl>
 <h1><a class="anchor" id="subsection_adc_snippets"></a>
 Code snippets</h1>
 <dl class="section note"><dt>Note</dt><dd>Error checking is omitted for clarity </dd></dl>
@@ -135,7 +135,7 @@ Snippet 1: Simple ADC initialization and reading conversion result</h2>
 <div class="ttc" id="agroup__group__hal__adc_html_gaca5af65e04a892d71430cf9a3bb589cf"><div class="ttname"><a href="group__group__hal__adc.html#gaca5af65e04a892d71430cf9a3bb589cf">mtb_hal_adc_setup</a></div><div class="ttdeci">cy_rslt_t mtb_hal_adc_setup(mtb_hal_adc_t *obj, const mtb_hal_adc_configurator_t *config, mtb_hal_clock_t *clk, mtb_hal_adc_channel_t **channels)</div><div class="ttdoc">Sets up a HAL instance to use the specified hardware resource.</div></div>
 <div class="ttc" id="agroup__group__hal__adc_html_gaf81e53ff86c18a67d12cdecf48c956e6"><div class="ttname"><a href="group__group__hal__adc.html#gaf81e53ff86c18a67d12cdecf48c956e6">mtb_hal_adc_read_u16</a></div><div class="ttdeci">uint16_t mtb_hal_adc_read_u16(const mtb_hal_adc_channel_t *obj)</div><div class="ttdoc">Read the value from the ADC pin, represented as an unsigned 16bit value where 0x0000 represents the m...</div></div>
 <div class="ttc" id="agroup__group__result_html_gaca79700fcc701534ce61778a9bcf57d1"><div class="ttname"><a href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a></div><div class="ttdeci">uint32_t cy_rslt_t</div><div class="ttdoc">Provides the result of an operation as a structured bitfield.</div><div class="ttdef"><b>Definition:</b> cy_result.h:459</div></div>
-<div class="ttc" id="astructmtb__hal__adc__channel__t_html"><div class="ttname"><a href="structmtb__hal__adc__channel__t.html">mtb_hal_adc_channel_t</a></div><div class="ttdoc">ADC channel object.</div><div class="ttdef"><b>Definition:</b> mtb_hal_hw_types_adc_lppass.h:95</div></div>
+<div class="ttc" id="astructmtb__hal__adc__channel__t_html"><div class="ttname"><a href="structmtb__hal__adc__channel__t.html">mtb_hal_adc_channel_t</a></div><div class="ttdoc">ADC channel object.</div><div class="ttdef"><b>Definition:</b> mtb_hal_hw_types_adc_lppass.h:96</div></div>
 <div class="ttc" id="astructmtb__hal__adc__t_html"><div class="ttname"><a href="structmtb__hal__adc__t.html">mtb_hal_adc_t</a></div><div class="ttdoc">ADC object.</div><div class="ttdef"><b>Definition:</b> mtb_hal_hw_types_adc_lppass.h:57</div></div>
 </div><!-- fragment --> <h2><a class="anchor" id="subsection_adc_snippet_2"></a>
 Snippet 2: Single-channel ADC initialization set to start a fresh conversion and read the latest result.</h2>

@@ -195,9 +195,8 @@
     <Variable id='hasSmifConn' value='`${smif ne ""}`' />
     <Variable id='smifVersion' value='`${hasSmifConn &amp;&amp; hasExposedMember(smif, "smif_ip_version")  ? getExposedMember(smif, "smif_ip_version") : 6}`' />
     <Variable id='smifCore' value='`${ hasSmifConn ? ((smifVersion == 5) ? getInstFromLocation(findConnectedBlock("aux[0]", "smif.core"), "core") : getInstFromLocation(findConnectedBlock("aux[0]", "smif.core"), "smif")) : ""}`' />
-    <Variable id='smifPortString' value='`${hasSmifConn ? ((smifVersion == 5) ? "(GPIO_PRT_Type*)SMIF0_CORE" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : "(GPIO_PRT_Type*)SMIF" . smifCore . "_CORE_SMIF_GPIO_SMIF_PRT0") : ""}`' />
-    <Variable id='smifNativePortString' value='`${hasSmifConn ? ((smifVersion == 5) ? "SMIF0_CORE" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : "SMIF" . smifCore . "_CORE_SMIF_GPIO_SMIF_PRT0") : ""}`' />
-    <Variable id='smifMmioSuffix' value='`${hasSmifConn ? ((smifCore eq "0") ? "0" : "0" . smifCore) : ""}`' />
+    <Variable id='smifPortString' value='`${hasSmifConn ? ((smifVersion == 5) ? "(GPIO_PRT_Type*)SMIF0_CORE" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : (smifVersion >= 7) ? "(GPIO_PRT_Type*)SMIF" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : "(GPIO_PRT_Type*)SMIF" . smifCore . "_CORE_SMIF_GPIO_SMIF_PRT0") : ""}`' />
+    <Variable id='smifMmioSuffix' value='`${hasSmifConn ? ((smifVersion >= 7) ? smifCore : (smifCore eq "0") ? "0" : "0" . smifCore) : ""}`' /> 
   </Variables>
 
   <DRCs>
@@ -250,8 +249,10 @@
     </ConfigStruct>
 
     <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_GROUP_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_SLAVE_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_CLK_HF_NR);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
-    <!-- For SMIF pins used as GPIO (AUX not connected): release SMIF PHY claim by setting SMIF-side HSIOM to ACT_14 -->
-    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM(`${smifPortString}`, `${INST_NAME}`_PIN, HSIOM_SEL_ACT_14);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <!-- For SMIF pins used as GPIO (AUX not connected): route SMIF output to pad by setting IOSS-side HSIOM to ACT_14.
+         GPIO_PRT is NOT a SMIF address, so Cy_GPIO_SetHSIOM writes directly to IOSS HSIOM (no SMIF redirect).
+         ACT_14 on IOSS HSIOM connects the SMIF active function output to the physical pad. -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, HSIOM_SEL_ACT_14);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
     <!-- For non-SMIF pins (or SMIF peripheral mode with AUX connected): use Cy_GPIO_Pin_Init -->
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_Pin_Init(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, &amp;`${INST_NAME}`_config);' include='`${((!skipConfigCodeGenExtClk) ? (!skipConfigCodeGen) : false) &amp;&amp; !(hasSmifConn &amp;&amp; !hasConnection("aux", 0))}`' />
     <!-- For SMIF pins used as GPIO (AUX not connected): Cy_GPIO_Pin_Init cannot be used because

@@ -10,9 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -52,11 +51,11 @@
       <Entry name='IMO'   value='imo'  />
       <Entry name='IHO'   value='iho'  />
     </ParamChoice>
-    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' />
+    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' desc='Human-readable display name of the selected source clock' />
 
-    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' />
-    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' desc='Resource path of the selected CLK_PWR source clock' />
+    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Source clock frequency in Hz used for DRCs and code generation' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFreq,accuracy)}`' visible='true' editable='false' desc='Source clock frequency' />
     <ParamRange id='divider' name='Divider' group='General' default='1' min='`${"mxs22srss" eq getIpBlockName() &amp;&amp; sourceClock eq iho ? "2" : "1"}`' max='256' resolution='1' visible='true' desc='The source clock frequency divider' />
     <ParamString id='frequency' name='Frequency' group='Internal' default='`${sourceFreq / divider}`' />

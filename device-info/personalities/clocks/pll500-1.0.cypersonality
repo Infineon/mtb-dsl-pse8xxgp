@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2021-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2021-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -50,11 +50,11 @@
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__pll.html' linkText='Open PLL Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <!-- PLL source clock and max device frequency -->
-    <ParamString id='pll500mInst' default='`${getInstNumber("pll500m")}`' />
-    <ParamString id='clockInst' default='`${getInstNumber("pll500m") + NUM_DPLL_LP}`' />
-    <ParamString id='sourceClockRsc' default='srss[0].clock[0].pathmux[`${clockInst}`]' />
-    <ParamString id='sourceFrequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+    <ParamString id='pll500mInst' default='`${getInstNumber("pll500m")}`' desc='Instance number of the PLL500M used in generated configuration' />
+    <ParamString id='clockInst' default='`${getInstNumber("pll500m") + NUM_DPLL_LP}`' desc='Clock path index of the PLL500M offset by the number of low-power DPLLs' />
+    <ParamString id='sourceClockRsc' default='srss[0].clock[0].pathmux[`${clockInst}`]' desc='Source clock resource path for the PLL500M' />
+    <ParamString id='sourceFrequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Source clock frequency in Hz used for DRCs and code generation' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
 
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFrequency,accuracy)}`' visible='true' editable='false' desc='Source clock frequency' />
 
@@ -63,8 +63,8 @@
       <Entry name='Automatic' value='auto'   />
       <Entry name='Manual'    value='manual' />
     </ParamChoice>
-    <ParamBool id='manConfig' default='`${configuration eq manual}`' />
-    <ParamRange id='desiredFrequency' name='Desired Frequency (MHz)' group='General' default='100' min='50' max='$MAX_FREQ' resolution='0.001' visible='`${!manConfig}`' desc='' />
+    <ParamBool id='manConfig' default='`${configuration eq manual}`' desc='True when manual PLL tuning is selected' />
+    <ParamRange id='desiredFrequency' name='Desired Frequency (MHz)' group='General' default='100' min='50' max='$MAX_FREQ' resolution='0.001' visible='`${!manConfig}`' desc='The desired PLL output frequency; the personality selects the closest achievable configuration' />
     <ParamChoice id='optimization' name='Optimization' group='General' default='MinPower' visible='`${!manConfig}`' editable='false' desc='The feedback tuning options'>
       <Entry name='Min Power' value='MinPower' />
       <Entry name='Min Jitter' value='MinJitter' />

@@ -27,6 +27,8 @@ var group__group__lpcomp__enums =
     ] ],
     [ "cy_en_lpcomp_inputs_t", "group__group__lpcomp__enums.html#ga3064b8f5a4564e4d002df51ee8f96962", [
       [ "CY_LPCOMP_SW_GPIO", "group__group__lpcomp__enums.html#gga3064b8f5a4564e4d002df51ee8f96962aa3e2650fb3321ac2ce8ebeae72c501d4", null ],
+      [ "CY_LPCOMP_SW_AMUXBUSA", "group__group__lpcomp__enums.html#gga3064b8f5a4564e4d002df51ee8f96962ae94208ae59d5808627b837701a007472", null ],
+      [ "CY_LPCOMP_SW_AMUXBUSB", "group__group__lpcomp__enums.html#gga3064b8f5a4564e4d002df51ee8f96962a165ebf674134b70ef7d351fcac60d733", null ],
       [ "CY_LPCOMP_SW_LOCAL_VREF", "group__group__lpcomp__enums.html#gga3064b8f5a4564e4d002df51ee8f96962a45d643833ed94cbff8f5ef1debc63ce0", null ]
     ] ],
     [ "cy_en_lpcomp_status_t", "group__group__lpcomp__enums.html#gaf31980ad7c767f9317dd498c03f2dea0", [

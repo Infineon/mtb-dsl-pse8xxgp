@@ -165,7 +165,7 @@ cy_en_nnlite_status_t cy_nn_lstm_step_s8_s16(const int8_t *input,
             return CY_NNLITE_BAD_PARAM;
     }
     Cy_NNLite_Byte_Copy(output_state, output, n_batch * n_output * output_size_bytes);
-#if 0 // ORIGINAL CMSIS-NN
+#if 0 // ORIGINAL CMSIS-NN 
     arm_memcpy_s8(output, output_state, n_batch * n_output * sizeof(int8_t));
 #endif
     return CY_NNLITE_SUCCESS;

@@ -27,6 +27,22 @@ _wait,
 _write,
 that GCC_ARM will throw warnings for by default when using their provided nosys lib implementations.
 
+### What Changed?
+#### v1.0.0
+* Initial release
+
+### Supported Software and Tools
+This version of the stlib Stubs Library was validated for compatibility with the following Software and Tools:
+
+| Software and Tools                        | Version |
+| :---                                      | :----:  |
+| ModusToolbox™ Software Environment        | 3.6.0   |
+| GCC Compiler                              | 14.2.1  |
+| IAR Compiler                              | 9.50.4  |
+| ARM Compiler                              | 6.22    |
+| LLVM ARM Compiler                         | 19.1.5  |
+
+Minimum required ModusToolbox™ Software Environment: v3.0
 
 ### More information
 Use the following links for more information, as needed:

@@ -141,6 +141,9 @@ void Cy_IPC_Pipe_Init(cy_stc_ipc_pipe_config_t const *config)
     /* Configure CM0 interrupts */
     ipc_intr_cypipeConfig.intrSrc          = ((epConfigDataA.ipcNotifierMuxNumber << CY_SYSINT_INTRSRC_MUXIRQ_SHIFT) | (uint32_t)((int32_t)cpuss_interrupts_ipc_0_IRQn + (int32_t)epConfigDataA.ipcNotifierNumber));
     ipc_intr_cypipeConfig.intrPriority     = epConfigDataA.ipcNotifierPriority;
+#elif defined (CY_IP_MXS40PPSS) && defined (COMPONENT_PPCA_DEVICE)
+    ipc_intr_cypipeConfig.intrSrc          = (IRQn_Type)((int32_t)ppca_ipc_0_IRQn + (int32_t)epConfigDataA.ipcNotifierNumber);
+    ipc_intr_cypipeConfig.intrPriority     = epConfigDataA.ipcNotifierPriority;
 #else
     /* Configure interrupts */
     ipc_intr_cypipeConfig.intrSrc          = (IRQn_Type)((int32_t)cpuss_interrupts_ipc_0_IRQn + (int32_t)epConfigDataA.ipcNotifierNumber);

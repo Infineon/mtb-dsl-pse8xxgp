@@ -195,8 +195,8 @@ ifeq ($(VFP_SELECT),hardfp)
 _MTB_TOOLCHAIN_IAR__VFP_FLAGS:=--fpu FPv5-SP
 _MTB_TOOLCHAIN_IAR__VFP_CFLAGS:=$(_MTB_TOOLCHAIN_IAR__VFP_FLAGS) --aapcs vfp
 else ifeq ($(VFP_SELECT),softfloat)
-# Software FP
-_MTB_TOOLCHAIN_IAR__VFP_FLAGS:=
+# Software FP (compiler), but FPU present for linker compatibility
+_MTB_TOOLCHAIN_IAR__VFP_FLAGS:=--fpu FPv5-SP
 _MTB_TOOLCHAIN_IAR__VFP_CFLAGS:=
 else
 _MTB_TOOLCHAIN_IAR__VFP_FLAGS:=--fpu FPv5-SP

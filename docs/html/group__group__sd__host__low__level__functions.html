@@ -976,7 +976,7 @@ The dedicated io_volt_sel pin is used to change the regulator supplying voltage 
 </div><div class="memdoc">
 
 <p>Changes the logic level on the sd_io_volt_sel line. </p>
-<p>It assumes that this line is used to control a regulator connected to the VDDIO of the PSoC. This regulator allows for switching between the 3.3V and 1.8V signaling.</p>
+<p>It assumes that this line is used to control a regulator connected to the VDDIO of the PSOC. This regulator allows for switching between the 3.3V and 1.8V signaling.</p>
 <dl class="section note"><dt>Note</dt><dd>The dedicated io_volt_sel pin is used to change the regulator supplying voltage to the VDDIO of the SD block in order to operate at 1.8V. To configure the custom IO pin in order to control (using the GPIO driver) the regulator supplying voltage, the user must implement weak <a class="el" href="group__group__sd__host__low__level__functions.html#ga307ae5aea7a503f9cac590dd895a8d36" title="Changes the logic level on the sd_io_volt_sel line.">Cy_SD_Host_ChangeIoVoltage()</a>. Also, this function must set the SIGNALING_EN bit of the SDHC_CORE_HOST_CTRL2_R register when ioVoltage = CY_SD_HOST_IO_VOLT_1_8V.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

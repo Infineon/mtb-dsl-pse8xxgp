@@ -60,5 +60,34 @@ var group__group__graphics__data__structures =
       [ "display_update_type", "group__group__graphics__data__structures.html#a710de2682e1af431e945233ea8c27328", null ],
       [ "clockHz", "group__group__graphics__data__structures.html#a5c9b051732f1822b44e4d9ed1638cb92", null ]
     ] ],
-    [ "cy_stc_gfx_context_t", "group__group__graphics__data__structures.html#structcy__stc__gfx__context__t", null ]
+    [ "cy_stc_gfx_transfer_state_t", "group__group__graphics__data__structures.html#structcy__stc__gfx__transfer__state__t", [
+      [ "phase", "group__group__graphics__data__structures.html#a2c740c92528c6b0408c2988e1716d565", null ],
+      [ "current_slice", "group__group__graphics__data__structures.html#a841ef272f6e73bdce9232792b94f2403", null ],
+      [ "total_full_slices", "group__group__graphics__data__structures.html#a954e21e860d08ffca8286c74f44997b1", null ],
+      [ "no_of_lines", "group__group__graphics__data__structures.html#a177de1e2bcf8e85f50bce433fa98e782", null ],
+      [ "remainder_lines", "group__group__graphics__data__structures.html#a63fdcb87248665df8a757ec97e706e51", null ],
+      [ "line_stride", "group__group__graphics__data__structures.html#ae3bd8e4ff266d738bfedb0849b104c86", null ],
+      [ "line_stride_overlay", "group__group__graphics__data__structures.html#a792a8398125437c7028488d25b62337b", null ],
+      [ "line_stride_overlay1", "group__group__graphics__data__structures.html#a7ea72d11440b8a6206e35e372a3318b8", null ],
+      [ "uv_stride", "group__group__graphics__data__structures.html#ae4060b0f897ca1c117f692014c10955f", null ],
+      [ "uv_stride_overlay", "group__group__graphics__data__structures.html#a200a151224c77f284eefd98894e0fcfc", null ],
+      [ "horizontal_resolution", "group__group__graphics__data__structures.html#a6d9fb99dd1367d2ac66e3841e007dcbe", null ],
+      [ "vertical_resolution", "group__group__graphics__data__structures.html#a97ccf3e064c835a0edbd661dd4b594be", null ],
+      [ "slice_base_line", "group__group__graphics__data__structures.html#a8b94da4e4abdf773c696aee996aad118", null ],
+      [ "bytes_per_pixel_dc_output", "group__group__graphics__data__structures.html#a0a0db4b37696236f7b6a442782b195b2", null ],
+      [ "packet_col_address", "group__group__graphics__data__structures.html#ab23558f8b87d98db3409d4994fd97fe2", null ],
+      [ "packet_row_address", "group__group__graphics__data__structures.html#a8ffd87a0cbea17542ac6857dbcb1b09a", null ],
+      [ "is_yuv_gfx", "group__group__graphics__data__structures.html#a83e803250821b6ddd8727e818463c305", null ],
+      [ "is_yuv_ovl0", "group__group__graphics__data__structures.html#a690615a91920b7228b97f2188a2135e0", null ],
+      [ "complete_callback", "group__group__graphics__data__structures.html#ac2d1bc556ed9d212adc3535ca5104185", null ]
+    ] ],
+    [ "cy_stc_gfx_context_t", "group__group__graphics__data__structures.html#structcy__stc__gfx__context__t", null ],
+    [ "cy_gfx_transfer_complete_callback_t", "group__group__graphics__data__structures.html#gac02a86e130c05490ca2d6670c5a40570", null ],
+    [ "cy_en_gfx_transfer_phase_t", "group__group__graphics__data__structures.html#ga346649316da59583bf4005123534b637", [
+      [ "CY_GFX_TRANSFER_IDLE", "group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a95bcd9215ae940fb20c55d885b97903b", null ],
+      [ "CY_GFX_TRANSFER_PENDING_TE", "group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a724e9b09e61237c51f9869fabd468d6c", null ],
+      [ "CY_GFX_TRANSFER_SLICES", "group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a28be8f48f6071446e64e6412140c8218", null ],
+      [ "CY_GFX_TRANSFER_REMAINDER", "group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a07c81ed8c6598a464ee84102259ccc7d", null ],
+      [ "CY_GFX_TRANSFER_COMPLETE", "group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a47cd7d785e397da0aa18485b30a9524e", null ]
+    ] ]
 ];

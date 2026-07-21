@@ -9,9 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -54,11 +53,11 @@
       <Entry name='PILO' value='pilo' visible='`${hasBlock("srss[0].clock[0].pilo[0]")}`'/>
       <Entry name='LPECO_PRESCALER' value='lpecoprescaler' visible='`${hasBlock("srss[0].clock[0].lpecoprescaler[0]")}`'/>
     </ParamChoice>
-    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' />
-    <ParamString id='frequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' desc='Resource path of the selected backup-domain source clock' />
+    <ParamString id='frequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Resulting clock frequency taken from the selected source clock' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
     <ParamString id='frequencyInfo' name='Frequency' group='General' default='`${formatFrequency(frequency,accuracy)}`' visible='true' editable='false' desc='The actual frequency' />
-    <ParamString id='sourceClockApiName' default='`${sourceClock eq wco ? "WCO" : sourceClock eq ilo ? "ILO" : sourceClock eq pilo ? "PILO" : "CLKLF"}`' />
+    <ParamString id='sourceClockApiName' default='`${sourceClock eq wco ? "WCO" : sourceClock eq ilo ? "ILO" : sourceClock eq pilo ? "PILO" : "CLKLF"}`' desc='PDL API source enum suffix for the selected backup clock used in generated configuration' />
   </Parameters>
 
   <DRCs>

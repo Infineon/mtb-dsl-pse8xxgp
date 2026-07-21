@@ -97,8 +97,9 @@ cy_en_smif_status_t Cy_SMIF_HyperBus_InitDevice(SMIF_Type *base, const cy_stc_sm
     SMIF_DEVICE_Type volatile * dev = Cy_SMIF_GetDeviceBySlot(base, memCfg->slaveSelect);
 
     /* DDR_PIPELINE_POS_DAT should be SET for RX Capture mode xSPI */
+    /* v7+: RX_CAPTURE_MODE moved from CTL2 to CTL */
     if (_FLD2VAL(SMIF_CORE_CTL2_RX_CAPTURE_MODE, (SMIF_CTL2(base))) == (uint32_t)CY_SMIF_SEL_XSPI_HYPERBUS_WITH_DQS)
-    {
+     {
         SMIF_DEVICE_RX_CAPTURE_CONFIG(dev) |= _VAL2FLD(SMIF_CORE_DEVICE_RX_CAPTURE_CONFIG_DDR_PIPELINE_POS_DAT, 1U);
     }
      /* Check if SMIF XIP is enabled */
@@ -155,8 +156,9 @@ cy_en_smif_status_t Cy_SMIF_HyperBus_InitDevice(SMIF_Type *base, const cy_stc_sm
                                     _VAL2FLD(SMIF_DEVICE_ADDR_CTL_DIV2, 0U));
     }
 
+    /* v7+: RX_CAPTURE_MODE moved from CTL2 to CTL */
     if (_FLD2VAL(SMIF_CORE_CTL2_RX_CAPTURE_MODE, (SMIF_CTL2(base))) == (uint32_t)CY_SMIF_SEL_XSPI_HYPERBUS_WITH_DQS)
-    {
+     {
         Cy_SMIF_HB_SetDummyCycles(dev, config->hbDevType, config->dummyCycles - 1U);
     }
     else
@@ -994,7 +996,7 @@ cy_en_smif_status_t Cy_SMIF_HyperBus_MMIO_Write(SMIF_Type *base,
     }
     if(isblockingMode)
     {
-        status = Cy_SMIF_TransmitDataBlocking_Ext(base, (uint8_t *)buf, (sizeInHalfWord*2u), CY_SMIF_WIDTH_OCTAL, CY_SMIF_DDR, context);
+        status = Cy_SMIF_TransmitDataBlocking_Ext(base, (const uint8_t *)buf, (sizeInHalfWord*2u), CY_SMIF_WIDTH_OCTAL, CY_SMIF_DDR, context);
     }
     else
     {
@@ -1007,3 +1009,4 @@ cy_en_smif_status_t Cy_SMIF_HyperBus_MMIO_Write(SMIF_Type *base,
 #if defined(__cplusplus)
 }
 #endif
+

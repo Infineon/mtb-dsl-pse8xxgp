@@ -25,7 +25,7 @@
 
 #include "cy_device.h"
 
-#if defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION == 1)) || defined (CY_IP_MXS22SRSS)
+#if defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION == 1)) || (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION < 2))
 
 #include "cy_lvd.h"
 

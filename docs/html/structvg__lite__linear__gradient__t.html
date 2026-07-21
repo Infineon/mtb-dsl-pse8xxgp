@@ -98,27 +98,31 @@ $(document).ready(function(){initNavTree('structvg__lite__linear__gradient__t.ht
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a751947599d995f996251152c910c6c2f"><td class="memItemLeft" align="right" valign="top"><a id="a751947599d995f996251152c910c6c2f" name="a751947599d995f996251152c910c6c2f"></a>
-vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>colors</b> [VLC_MAX_GRADIENT_STOPS]</td></tr>
-<tr class="separator:a751947599d995f996251152c910c6c2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91793aa01184b253bf0fcd617df0fafd"><td class="memItemLeft" align="right" valign="top"><a id="a91793aa01184b253bf0fcd617df0fafd" name="a91793aa01184b253bf0fcd617df0fafd"></a>
+vg_lite_uint32_t *&#160;</td><td class="memItemRight" valign="bottom"><b>colors</b></td></tr>
+<tr class="separator:a91793aa01184b253bf0fcd617df0fafd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf704aec82c59dd1827d6f6976bab40b"><td class="memItemLeft" align="right" valign="top">vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__linear__gradient__t.html#acf704aec82c59dd1827d6f6976bab40b">count</a></td></tr>
 <tr class="separator:acf704aec82c59dd1827d6f6976bab40b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a120a58ce675049b991ab7df7beda44bf"><td class="memItemLeft" align="right" valign="top">vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__linear__gradient__t.html#a120a58ce675049b991ab7df7beda44bf">stops</a> [VLC_MAX_GRADIENT_STOPS]</td></tr>
-<tr class="separator:a120a58ce675049b991ab7df7beda44bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43c35b2ce37f77e63deb4826c798066d"><td class="memItemLeft" align="right" valign="top">vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__linear__gradient__t.html#a43c35b2ce37f77e63deb4826c798066d">m_count</a></td></tr>
+<tr class="separator:a43c35b2ce37f77e63deb4826c798066d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3406bf92f454b07447432c6ce9369f0d"><td class="memItemLeft" align="right" valign="top">vg_lite_uint32_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__linear__gradient__t.html#a3406bf92f454b07447432c6ce9369f0d">stops</a></td></tr>
+<tr class="separator:a3406bf92f454b07447432c6ce9369f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9800e24c8aaf61eddb750e4dca6d299"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structvg__lite__matrix__t.html">vg_lite_matrix_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__linear__gradient__t.html#ae9800e24c8aaf61eddb750e4dca6d299">matrix</a></td></tr>
 <tr class="separator:ae9800e24c8aaf61eddb750e4dca6d299"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd9299465ca3a2547c451de31d90b95e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structvg__lite__buffer__t.html">vg_lite_buffer_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__linear__gradient__t.html#acd9299465ca3a2547c451de31d90b95e">image</a></td></tr>
 <tr class="separator:acd9299465ca3a2547c451de31d90b95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4524b84b399163176378fecea60cc358"><td class="memItemLeft" align="right" valign="top">vg_lite_pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__linear__gradient__t.html#a4524b84b399163176378fecea60cc358">memory</a></td></tr>
+<tr class="separator:a4524b84b399163176378fecea60cc358"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
-<a id="a751947599d995f996251152c910c6c2f" name="a751947599d995f996251152c910c6c2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a751947599d995f996251152c910c6c2f">&#9670;&#160;</a></span>colors</h2>
+<a id="a91793aa01184b253bf0fcd617df0fafd" name="a91793aa01184b253bf0fcd617df0fafd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91793aa01184b253bf0fcd617df0fafd">&#9670;&#160;</a></span>colors</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">vg_lite_uint32_t vg_lite_linear_gradient_t::colors[VLC_MAX_GRADIENT_STOPS]</td>
+          <td class="memname">vg_lite_uint32_t* vg_lite_linear_gradient_t::colors</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -140,18 +144,33 @@ vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>colors</b
 
 </div>
 </div>
-<a id="a120a58ce675049b991ab7df7beda44bf" name="a120a58ce675049b991ab7df7beda44bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a120a58ce675049b991ab7df7beda44bf">&#9670;&#160;</a></span>stops</h2>
+<a id="a43c35b2ce37f77e63deb4826c798066d" name="a43c35b2ce37f77e63deb4826c798066d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43c35b2ce37f77e63deb4826c798066d">&#9670;&#160;</a></span>m_count</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">vg_lite_uint32_t vg_lite_linear_gradient_t::stops[VLC_MAX_GRADIENT_STOPS]</td>
+          <td class="memname">vg_lite_uint32_t vg_lite_linear_gradient_t::m_count</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Count of colors, up to 16. </p>
+
+</div>
+</div>
+<a id="a3406bf92f454b07447432c6ce9369f0d" name="a3406bf92f454b07447432c6ce9369f0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3406bf92f454b07447432c6ce9369f0d">&#9670;&#160;</a></span>stops</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vg_lite_uint32_t* vg_lite_linear_gradient_t::stops</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The count of memory that has been aloocated, if exceeded, need to be allocated again </p>
 
 </div>
 </div>
@@ -182,6 +201,21 @@ vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>colors</b
       </table>
 </div><div class="memdoc">
 <p>The matrix to transform the gradient. </p>
+
+</div>
+</div>
+<a id="a4524b84b399163176378fecea60cc358" name="a4524b84b399163176378fecea60cc358"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4524b84b399163176378fecea60cc358">&#9670;&#160;</a></span>memory</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vg_lite_pointer vg_lite_linear_gradient_t::memory</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The image for rendering as gradient pattern. </p>
 
 </div>
 </div>

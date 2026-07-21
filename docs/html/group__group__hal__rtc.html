@@ -107,13 +107,13 @@ Features</h1>
 </ul>
 <h1><a class="anchor" id="section_rtc_quickstart"></a>
 Quick Start</h1>
-<p>Initialise the RTC using the PDL. Set the current time and date using <a class="el" href="group__group__hal__rtc.html#ga8073680a4703eb8c7f8ed34ad254b307">mtb_hal_rtc_write</a>. <br  />
+<p>Initialise the RTC using the PDL. Set the current time and date using <a class="el" href="group__group__hal__rtc.html#ga8073680a4703eb8c7f8ed34ad254b307" title="Write the specified time and date to the RTC peripheral.">mtb_hal_rtc_write()</a>. <br  />
  See <a class="el" href="group__group__hal__rtc.html#subsection_rtc_snippet_1">Snippet 1: Initialize RTC, write and read current time and date</a> to initialize RTC, read and write current date and time to the RTC peripheral.</p>
 <h1><a class="anchor" id="section_rtc_snippets"></a>
 Code snippets</h1>
 <h2><a class="anchor" id="subsection_rtc_snippet_1"></a>
 Snippet 1: Initialize RTC, write and read current time and date</h2>
-<p>The following code sets the current date and time using <a class="el" href="group__group__hal__rtc.html#ga8073680a4703eb8c7f8ed34ad254b307">mtb_hal_rtc_write</a>. The current date and time is read from the RTC using <a class="el" href="group__group__hal__rtc.html#ga1065622a99e71391fcacff13e447cb64">mtb_hal_rtc_read</a>. The time structure <b> tm </b>, contains the calendar date and time which are broken down into its components. This structure is declared in standard C library time.h which is included by HAL. </p><div class="fragment"><div class="line">    <span class="comment">// Structure tm stores years since 1900</span></div>
+<p>The following code sets the current date and time using <a class="el" href="group__group__hal__rtc.html#ga8073680a4703eb8c7f8ed34ad254b307" title="Write the specified time and date to the RTC peripheral.">mtb_hal_rtc_write()</a>. The current date and time is read from the RTC using <a class="el" href="group__group__hal__rtc.html#ga1065622a99e71391fcacff13e447cb64" title="Get the current time and date from the RTC peripheral.">mtb_hal_rtc_read()</a>. The time structure <b> tm </b>, contains the calendar date and time which are broken down into its components. This structure is declared in standard C library time.h which is included by HAL. </p><div class="fragment"><div class="line">    <span class="comment">// Structure tm stores years since 1900</span></div>
 <div class="line"><span class="preprocessor">    #define TM_YEAR_BASE (1900u)</span></div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>   result;</div>

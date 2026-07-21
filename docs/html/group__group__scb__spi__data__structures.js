@@ -18,6 +18,8 @@ var group__group__scb__spi__data__structures =
       [ "ssSetupDelay", "group__group__scb__spi__data__structures.html#ad34edde1bbeb56c4aa6c8a4449887897", null ],
       [ "ssHoldDelay", "group__group__scb__spi__data__structures.html#ae3ac7c7f20e280f4eb0a433bd0a5c0ca", null ],
       [ "ssInterFrameDelay", "group__group__scb__spi__data__structures.html#ade78bd095cdc2abc90389b653f072e94", null ],
+      [ "enableEzMode", "group__group__scb__spi__data__structures.html#a677f63e71251c0b557861cbfe46e7551", null ],
+      [ "enableExternalClock", "group__group__scb__spi__data__structures.html#a6e99f0eeff54bdbc2a46dd7e5b951bf9", null ],
       [ "enableWakeFromSleep", "group__group__scb__spi__data__structures.html#a8bd8054ad4eb5abac5e4e2d77f305a18", null ],
       [ "rxFifoTriggerLevel", "group__group__scb__spi__data__structures.html#a927681bbde837cd791b5079ef7d95fa7", null ],
       [ "rxFifoIntEnableMask", "group__group__scb__spi__data__structures.html#a853b8bf6437e4a60c959f048a5567003", null ],

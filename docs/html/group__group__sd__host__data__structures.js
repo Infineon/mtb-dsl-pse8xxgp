@@ -49,6 +49,7 @@ var group__group__sd__host__data__structures =
       [ "RCA", "group__group__sd__host__data__structures.html#a1f289f498b5b71bf6b5f68774bb8bade", null ],
       [ "cardType", "group__group__sd__host__data__structures.html#ab74a2b00723daef1423d22b67e4b02b4", null ],
       [ "csd", "group__group__sd__host__data__structures.html#a71a7e7510185e5919c67f0baf2d6b697", null ],
-      [ "busWidth", "group__group__sd__host__data__structures.html#a12c56fa2e6f271d5fd9761e519219844", null ]
+      [ "busWidth", "group__group__sd__host__data__structures.html#a12c56fa2e6f271d5fd9761e519219844", null ],
+      [ "lowVoltageSignaling", "group__group__sd__host__data__structures.html#a8b3b6eb875076e86e317fad1e024bb30", null ]
     ] ]
 ];

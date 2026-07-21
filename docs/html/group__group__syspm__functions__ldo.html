@@ -135,10 +135,10 @@ Functions</h2></td></tr>
 <li>CY_SYSPM_SUCCESS - Requested regulator current mode was set</li>
 <li>CY_SYSPM_CANCELED - The power circuits were not ready to enter into minimum current mode. You should try to call the function again</li>
 <li>CY_SYSPM_TIMEOUT - Timeout occurred because of active reference was not ready to enter into the normal regulator current mode</li>
-<li>CY_SYSPM_FAIL - incorrect mode value was passed For the PSoC 64 devices there are possible situations when function returns the PRA error status code. This is because for PSoC 64 devices the function uses the PRA driver to change the protected registers. Refer to cy_en_pra_status_t for more details.</li>
+<li>CY_SYSPM_FAIL - incorrect mode value was passed For the PSOC 64 devices there are possible situations when function returns the PRA error status code. This is because for PSOC 64 devices the function uses the PRA driver to change the protected registers. Refer to cy_en_pra_status_t for more details.</li>
 </ul>
 </dd></dl>
-<dl class="section user"><dt>Side Effects</dt><dd>For PSoC 64 series devices CY_SYSPM_LDO_MODE_DISABLED mode is not supported. Use Cy_SysPm_BuckEnable() instead. </dd></dl>
+<dl class="section user"><dt>Side Effects</dt><dd>For PSOC 64 series devices CY_SYSPM_LDO_MODE_DISABLED mode is not supported. Use Cy_SysPm_BuckEnable() instead. </dd></dl>
 
 </div>
 </div>

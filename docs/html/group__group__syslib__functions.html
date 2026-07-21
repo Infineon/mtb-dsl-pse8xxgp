@@ -159,11 +159,8 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8e96d4a4aed60c9d7e8c186951147c95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__syslib__enumerated__types.html#ga3ff462c7740be4b6a2c2d9fbe4282666">cy_en_syslib_lcs_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syslib__functions.html#ga8e96d4a4aed60c9d7e8c186951147c95">Cy_SysLib_GetDeviceLCS</a> (cy_syslib_lcs_data_t *base)</td></tr>
 <tr class="memdesc:ga8e96d4a4aed60c9d7e8c186951147c95"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns LCS of Device.  <br /></td></tr>
 <tr class="separator:ga8e96d4a4aed60c9d7e8c186951147c95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabc2fac2da2d735bedac2a57d45d53fac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syslib__functions.html#gabc2fac2da2d735bedac2a57d45d53fac">Cy_Syslib_SetWarmBootEntryPoint</a> (uint32_t *entryPoint, bool enable)</td></tr>
-<tr class="memdesc:gabc2fac2da2d735bedac2a57d45d53fac"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will set Warm boot entry point address to a location read by BootROM.  <br /></td></tr>
-<tr class="separator:gabc2fac2da2d735bedac2a57d45d53fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf3ef05b9419cbb446a501f4a49e233aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syslib__functions.html#gaf3ef05b9419cbb446a501f4a49e233aa">Cy_SysLib_IsDSRAMWarmBootEntry</a> (void)</td></tr>
-<tr class="memdesc:gaf3ef05b9419cbb446a501f4a49e233aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will return true if the system woke up(From DS-RAM) through Warm boot, else it will return false.  <br /></td></tr>
+<tr class="memdesc:gaf3ef05b9419cbb446a501f4a49e233aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">WarmBoot path not supported on PSOC Edge using MXS22SRSS.  <br /></td></tr>
 <tr class="separator:gaf3ef05b9419cbb446a501f4a49e233aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac340f219d12ebdccb28c370bc3740c34"><td class="memItemLeft" align="right" valign="top"><a id="gac340f219d12ebdccb28c370bc3740c34" name="gac340f219d12ebdccb28c370bc3740c34"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SysLib_ClearDSRAMWarmBootEntryStatus</b> (void)</td></tr>
@@ -412,9 +409,9 @@ This function has the WEAK option, so the user can redefine the function for a c
 <p>This function returns the silicon unique ID. </p>
 <p>The ID includes Die lot[3]#, Die Wafer#, Die X, Die Y, Die Sort#, Die Minor and Die Year.</p>
 <dl class="section return"><dt>Returns</dt><dd>A combined 64-bit unique ID. [63:57] - DIE_YEAR [56:56] - DIE_MINOR [55:48] - DIE_SORT [47:40] - DIE_Y [39:32] - DIE_X [31:24] - DIE_WAFER [23:16] - DIE_LOT[2] [15: 8] - DIE_LOT[1] [ 7: 0] - DIE_LOT[0]</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This API is available for devices having M4CPUSS, CY_IP_M33SYSCPUSS and CY_IP_M55APPCPUSS IP.</dd>
+<dl class="section note"><dt>Note</dt><dd>This API is available for PSOC 4/6 and PSOC Edge devices.</dd>
 <dd>
-For CY_IP_M33SYSCPUSS IP, EFUSE must be in enabled state before calling this API.</dd>
+For PSOC Edge devices, EFUSE must be in enabled state before calling this API.</dd>
 <dd>
 For Cores with Security extention, Trust Zone configuration should be done before calling this API. </dd></dl>
 
@@ -454,9 +451,9 @@ This function also resets the WCO trimming value - use the Cy_SysLib_GetWcoTrim 
 <div class="line">    }</div>
 <div class="line">    Cy_SysLib_SetWcoTrim(wcoTrim); <span class="comment">/* Restore the WCO trim value */</span></div>
 <div class="ttc" id="agroup__group__syslib__enumerated__types_html_gga97d0b049220b931606e2ae2e144994e1a7d26e21cf3c67f4202b35c3c6bcde534"><div class="ttname"><a href="group__group__syslib__enumerated__types.html#gga97d0b049220b931606e2ae2e144994e1a7d26e21cf3c67f4202b35c3c6bcde534">CY_SYSLIB_SUCCESS</a></div><div class="ttdeci">@ CY_SYSLIB_SUCCESS</div><div class="ttdoc">The success status code.</div><div class="ttdef"><b>Definition:</b> cy_syslib.h:239</div></div>
-<div class="ttc" id="agroup__group__syslib__functions_html_ga9d2ffe4829c636ad78eaae5043fd6ae6"><div class="ttname"><a href="group__group__syslib__functions.html#ga9d2ffe4829c636ad78eaae5043fd6ae6">Cy_SysLib_DelayUs</a></div><div class="ttdeci">void Cy_SysLib_DelayUs(uint16_t microseconds)</div><div class="ttdoc">The function delays by the specified number of microseconds.</div><div class="ttdef"><b>Definition:</b> cy_syslib.c:119</div></div>
-<div class="ttc" id="agroup__group__syslib__functions_html_gaaea5b87a95001a0b3b2cf128957c58ea"><div class="ttname"><a href="group__group__syslib__functions.html#gaaea5b87a95001a0b3b2cf128957c58ea">Cy_SysLib_GetResetStatus</a></div><div class="ttdeci">CY_SECTION_INIT_CODECOPY_BEGIN __STATIC_INLINE cy_en_syslib_status_t Cy_SysLib_GetResetStatus(void)</div><div class="ttdoc">This function returns the BACKUP-&gt;RESET bit value.</div><div class="ttdef"><b>Definition:</b> cy_syslib.h:1160</div></div>
-<div class="ttc" id="agroup__group__syslib__functions_html_gadb2c8e123ba3a0376a14871e58230321"><div class="ttname"><a href="group__group__syslib__functions.html#gadb2c8e123ba3a0376a14871e58230321">Cy_SysLib_ResetBackupDomain</a></div><div class="ttdeci">cy_en_syslib_status_t Cy_SysLib_ResetBackupDomain(void)</div><div class="ttdoc">This function resets the backup domain power to avoid the ILO glitch.</div><div class="ttdef"><b>Definition:</b> cy_syslib.c:181</div></div>
+<div class="ttc" id="agroup__group__syslib__functions_html_ga9d2ffe4829c636ad78eaae5043fd6ae6"><div class="ttname"><a href="group__group__syslib__functions.html#ga9d2ffe4829c636ad78eaae5043fd6ae6">Cy_SysLib_DelayUs</a></div><div class="ttdeci">void Cy_SysLib_DelayUs(uint16_t microseconds)</div><div class="ttdoc">The function delays by the specified number of microseconds.</div><div class="ttdef"><b>Definition:</b> cy_syslib.c:137</div></div>
+<div class="ttc" id="agroup__group__syslib__functions_html_gaaea5b87a95001a0b3b2cf128957c58ea"><div class="ttname"><a href="group__group__syslib__functions.html#gaaea5b87a95001a0b3b2cf128957c58ea">Cy_SysLib_GetResetStatus</a></div><div class="ttdeci">CY_SECTION_INIT_CODECOPY_BEGIN __STATIC_INLINE cy_en_syslib_status_t Cy_SysLib_GetResetStatus(void)</div><div class="ttdoc">This function returns the BACKUP-&gt;RESET bit value.</div><div class="ttdef"><b>Definition:</b> cy_syslib.h:1230</div></div>
+<div class="ttc" id="agroup__group__syslib__functions_html_gadb2c8e123ba3a0376a14871e58230321"><div class="ttname"><a href="group__group__syslib__functions.html#gadb2c8e123ba3a0376a14871e58230321">Cy_SysLib_ResetBackupDomain</a></div><div class="ttdeci">cy_en_syslib_status_t Cy_SysLib_ResetBackupDomain(void)</div><div class="ttdoc">This function resets the backup domain power to avoid the ILO glitch.</div><div class="ttdef"><b>Definition:</b> cy_syslib.c:201</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -478,11 +475,11 @@ This function also resets the WCO trimming value - use the Cy_SysLib_GetWcoTrim 
 </div><div class="memdoc">
 
 <p>The function returns the cause for the latest reset(s) that occurred in the system. </p>
-<p>The reset causes include system faults and device reset on a wakeup from Hibernate mode. For M33SYSCPUSS IP, the reset causes also include an HFCLK error. The return results are consolidated reset causes from reading RES_CAUSE, RES_CAUSE2 and PWR_HIBERNATE token registers.</p>
-<dl class="section return"><dt>Returns</dt><dd>The cause of a system reset. Return values to be checked as per the CPUSS IP of the device.</dd></dl>
+<p>The reset causes include system faults and device reset on a wakeup from Hibernate mode. For PSOC Edge devices, the reset causes also include an HFCLK error. The return results are consolidated reset causes from reading RES_CAUSE, RES_CAUSE2 and PWR_HIBERNATE token registers.</p>
+<dl class="section return"><dt>Returns</dt><dd>The cause of a system reset. Return values to be checked as per the device family.</dd></dl>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Name in M4CPUSS IP   </th><th class="markdownTableHeadNone">Name in M33SYSCPUSS IP   </th><th class="markdownTableHeadNone">Name in M7CPUSS IP   </th><th class="markdownTableHeadNone">Value    </th></tr>
+<th class="markdownTableHeadNone">Name in PSOC 4/6   </th><th class="markdownTableHeadNone">Name in PSOC Edge   </th><th class="markdownTableHeadNone">Name in XMC7xxx/T2G   </th><th class="markdownTableHeadNone">Value    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">CY_SYSLIB_RESET_HWWDT   </td><td class="markdownTableBodyNone">CY_SYSLIB_RESET_HWWDT   </td><td class="markdownTableBodyNone">CY_SYSLIB_RESET_HWWDT   </td><td class="markdownTableBodyNone">0x00001 (bit0)    </td></tr>
 <tr class="markdownTableRowEven">
@@ -548,7 +545,7 @@ This function also resets the WCO trimming value - use the Cy_SysLib_GetWcoTrim 
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">CY_SYSLIB_RESET_HIB_WAKEUP   </td><td class="markdownTableBodyNone">CY_SYSLIB_RESET_HIB_WAKEUP   </td><td class="markdownTableBodyNone">CY_SYSLIB_RESET_HIB_WAKEUP   </td><td class="markdownTableBodyNone">0x80000000 (bit31)   </td></tr>
 </table>
-<dl class="section note"><dt>Note</dt><dd>This not is available for devices having M33SYSCPUSS IP CY_SYSLIB_RESET_CSV_WCO_LOSS, CY_SYSLIB_RESET_HFCLK_LOSS and CY_SYSLIB_RESET_HFCLK_ERR causes of a system reset available only if WCO CSV present in the device. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This note is applicable for PSOC Edge devices: CY_SYSLIB_RESET_CSV_WCO_LOSS, CY_SYSLIB_RESET_HFCLK_LOSS and CY_SYSLIB_RESET_HFCLK_ERR causes of a system reset available only if WCO CSV present in the device. </dd></dl>
 
 </div>
 </div>
@@ -819,45 +816,8 @@ The CY_ARM_FAULT_DEBUG macro defines if the Fault Handler is enabled. By default
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__syslib__enumerated__types.html#ga3ff462c7740be4b6a2c2d9fbe4282666">cy_en_syslib_lcs_mode_t</a> </dd></dl>
-
-</div>
-</div>
-<a id="gabc2fac2da2d735bedac2a57d45d53fac" name="gabc2fac2da2d735bedac2a57d45d53fac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabc2fac2da2d735bedac2a57d45d53fac">&#9670;&#160;</a></span>Cy_Syslib_SetWarmBootEntryPoint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Cy_Syslib_SetWarmBootEntryPoint </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t *&#160;</td>
-          <td class="paramname"><em>entryPoint</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enable</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function will set Warm boot entry point address to a location read by BootROM. </p>
-<p>This function is used only before entering DeepSleep-RAM and not effective in any other sleep mode. Before entering CY_SYSPM_MODE_DEEPSLEEP_RAM, user needs to set entry point to a function located in RAM Image using <a class="el" href="group__group__syslib__functions.html#gabc2fac2da2d735bedac2a57d45d53fac" title="This function will set Warm boot entry point address to a location read by BootROM.">Cy_Syslib_SetWarmBootEntryPoint()</a>, refer <a class="el" href="group__group__syspm__functions__power.html#gaaff87adb57f74191a344e996517bd74b" title="Allow users to implement any context store required before entering deep sleep in RTOS based builds,...">Cy_SysPm_SetDeepSleepMode()</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">entryPoint</td><td>Address of the function that needs to be entered after WARM boot.</td></tr>
-    <tr><td class="paramname">enable</td><td>Enables/Disables debugging control after DS-RAM wakeup i.e. warmboot </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__syslib__enumerated__types.html#ga3ff462c7740be4b6a2c2d9fbe4282666">cy_en_syslib_lcs_mode_t</a></dd></dl>
+<dl class="section note"><dt>Note</dt><dd>eFuse must be in enabled state before calling this API. </dd></dl>
 
 </div>
 </div>
@@ -877,7 +837,8 @@ The CY_ARM_FAULT_DEBUG macro defines if the Fault Handler is enabled. By default
       </table>
 </div><div class="memdoc">
 
-<p>This function will return true if the system woke up(From DS-RAM) through Warm boot, else it will return false. </p>
+<p>WarmBoot path not supported on PSOC Edge using MXS22SRSS. </p>
+<p>This function will return true if the system woke up(From DS-RAM) through Warm boot, else it will return false.</p>
 <dl class="section return"><dt>Returns</dt><dd>Warm Boot Status. </dd></dl>
 
 </div>

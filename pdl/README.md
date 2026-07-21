@@ -35,4 +35,4 @@ See the [PDL API Reference Manual Getting Started section](https://infineon.gith
 
 
 ---
-© Cypress Semiconductor Corporation (an Infineon company), 2020-2025.
+© 2020-2026, Infineon Technologies AG or an affiliate of Infineon Technologies AG.

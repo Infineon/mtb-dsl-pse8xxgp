@@ -14,6 +14,7 @@ var group__group__smif__macros__sfdp =
     [ "CY_SMIF_SFDP_JEDEC_REV_0", "group__group__smif__macros__sfdp.html#ga94957a9260fcb48b8b74ce0e03f553c9", null ],
     [ "CY_SMIF_SFDP_JEDEC_REV_B", "group__group__smif__macros__sfdp.html#ga34df2b1a68dd595936764ac4396a2dab", null ],
     [ "CY_SMIF_SFDP_JEDEC_REV_D", "group__group__smif__macros__sfdp.html#gab679e118c0acdea765b39f49798b3aac", null ],
+    [ "CY_SMIF_SFDP_JEDEC_REV_F", "group__group__smif__macros__sfdp.html#gae87af26c791a4d6a3ac428ad6d9c3795", null ],
     [ "CY_SMIF_SFDP_PARAM_TABLE_PTR", "group__group__smif__macros__sfdp.html#ga2b764687c78e7ce71bed89e5f997e95e", null ],
     [ "CY_SMIF_SFDP_THREE_BYTES_ADDR_CODE", "group__group__smif__macros__sfdp.html#gad0be772038040081cfb1da6674c19f56", null ],
     [ "CY_SMIF_SFDP_THREE_OR_FOUR_BYTES_ADDR_CODE", "group__group__smif__macros__sfdp.html#gab85f733efd25783719a87875650545af", null ],

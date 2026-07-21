@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_GPIO)
+
+
+
 
 /**
  * \addtogroup group_hal_gpio GPIO (General Purpose Input Output)
@@ -43,11 +54,11 @@
  * its GPIO pins.
  *
  * \section subsection_gpio_features Features
- * * Configurable GPIO pin direction - \ref mtb_hal_gpio_direction_t
- * * Configurable GPIO pin drive modes - \ref mtb_hal_gpio_drive_mode_t
+ * * Configurable GPIO pin direction - #mtb_hal_gpio_direction_t
+ * * Configurable GPIO pin drive modes - #mtb_hal_gpio_drive_mode_t
  * * Configurable analog and digital characteristics
- * * Configurable edge-triggered interrupts and callback assignment on GPIO events - \ref
- * mtb_hal_gpio_event_t
+ * * Configurable edge-triggered interrupts and callback assignment on GPIO events -
+ * #mtb_hal_gpio_event_t
  *
  * \section subsection_gpio_quickstart Quick Start
  *
@@ -72,7 +83,7 @@
  * GPIO pin
  * is first initialized as an output pin with strong drive mode. The pin is then reconfigured as an
  * input with high impedance digital drive mode.
- * \note \ref mtb_hal_gpio_configure only changes the <b>direction</b> and the <b>drive_mode</b>
+ * \note mtb_hal_gpio_configure() only changes the <b>direction</b> and the <b>drive_mode</b>
  * of the pin. Previously set pin value is retained.
  *
  * \snippet hal_gpio.c snippet_mtb_hal_gpio_reconfigure
@@ -97,14 +108,6 @@
  * \snippet hal_gpio.c snippet_mtb_hal_gpio_port_write_read
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_GPIO)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -351,6 +354,6 @@ bool mtb_hal_gpio_read_out(mtb_hal_gpio_t* obj);
 #include MTB_HAL_GPIO_IMPL_HEADER
 #endif /* MTB_HAL_GPIO_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_GPIO)
-
 /** \} group_hal_gpio */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_GPIO)

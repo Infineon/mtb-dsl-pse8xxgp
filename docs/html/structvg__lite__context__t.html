@@ -155,6 +155,9 @@ int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>scissor</b> [4]</t
 <tr class="memitem:a02332a80fd199d7f6521309ff339d7ea"><td class="memItemLeft" align="right" valign="top"><a id="a02332a80fd199d7f6521309ff339d7ea" name="a02332a80fd199d7f6521309ff339d7ea"></a>
 <a class="el" href="structvg__lite__buffer__t.html">vg_lite_buffer_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>scissor_layer</b></td></tr>
 <tr class="separator:a02332a80fd199d7f6521309ff339d7ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a445faa03677ba17025cb29067b66c3a0"><td class="memItemLeft" align="right" valign="top"><a id="a445faa03677ba17025cb29067b66c3a0" name="a445faa03677ba17025cb29067b66c3a0"></a>
+int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>scissor_layer_range</b> [4]</td></tr>
+<tr class="separator:a445faa03677ba17025cb29067b66c3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae981252cdea3b219d78f9ed79bf98937"><td class="memItemLeft" align="right" valign="top"><a id="ae981252cdea3b219d78f9ed79bf98937" name="ae981252cdea3b219d78f9ed79bf98937"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>src_alpha_mode</b></td></tr>
 <tr class="separator:ae981252cdea3b219d78f9ed79bf98937"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,6 +215,9 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>custom_tessbuf</b>
 <tr class="memitem:a659a6f30f6a4f01e398e9f1437f0b4ff"><td class="memItemLeft" align="right" valign="top"><a id="a659a6f30f6a4f01e398e9f1437f0b4ff" name="a659a6f30f6a4f01e398e9f1437f0b4ff"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>enable_mask</b></td></tr>
 <tr class="separator:a659a6f30f6a4f01e398e9f1437f0b4ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1010cfad6d77755c074d7c88f388d0e"><td class="memItemLeft" align="right" valign="top"><a id="ad1010cfad6d77755c074d7c88f388d0e" name="ad1010cfad6d77755c074d7c88f388d0e"></a>
+<a class="el" href="structvg__lite__buffer__t.html">vg_lite_buffer_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>mask_layer</b></td></tr>
+<tr class="separator:ad1010cfad6d77755c074d7c88f388d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f7d17790783f9c0c82dbcb158b5d257"><td class="memItemLeft" align="right" valign="top"><a id="a9f7d17790783f9c0c82dbcb158b5d257" name="a9f7d17790783f9c0c82dbcb158b5d257"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>matrix_enable</b></td></tr>
 <tr class="separator:a9f7d17790783f9c0c82dbcb158b5d257"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,6 +278,15 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>last_command_size
 <tr class="memitem:aac4674ead7afddb015f1dd112727f6be"><td class="memItemLeft" align="right" valign="top"><a id="aac4674ead7afddb015f1dd112727f6be" name="aac4674ead7afddb015f1dd112727f6be"></a>
 vg_lite_frame_flag_t&#160;</td><td class="memItemRight" valign="bottom"><b>frame_flag</b></td></tr>
 <tr class="separator:aac4674ead7afddb015f1dd112727f6be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11a046504b3171d01932ced90dd7652a"><td class="memItemLeft" align="right" valign="top"><a id="a11a046504b3171d01932ced90dd7652a" name="a11a046504b3171d01932ced90dd7652a"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>mesh_mode</b></td></tr>
+<tr class="separator:a11a046504b3171d01932ced90dd7652a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec2a9d5341765b5b26e1105a66237859"><td class="memItemLeft" align="right" valign="top"><a id="aec2a9d5341765b5b26e1105a66237859" name="aec2a9d5341765b5b26e1105a66237859"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>mesh_size</b></td></tr>
+<tr class="separator:aec2a9d5341765b5b26e1105a66237859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26eda3663533cd3f1fe5bcdd19760d8b"><td class="memItemLeft" align="right" valign="top"><a id="a26eda3663533cd3f1fe5bcdd19760d8b" name="a26eda3663533cd3f1fe5bcdd19760d8b"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>mesh_dirty</b></td></tr>
+<tr class="separator:a26eda3663533cd3f1fe5bcdd19760d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a610ade6419a723cc1ef57018589d9d8b"><td class="memItemLeft" align="right" valign="top"><a id="a610ade6419a723cc1ef57018589d9d8b" name="a610ade6419a723cc1ef57018589d9d8b"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>backup_fb_command_flag</b></td></tr>
 <tr class="separator:a610ade6419a723cc1ef57018589d9d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,9 +302,21 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_command_buffer
 <tr class="memitem:ab6960a0a0302b912b93a54792146bd88"><td class="memItemLeft" align="right" valign="top"><a id="ab6960a0a0302b912b93a54792146bd88" name="ab6960a0a0302b912b93a54792146bd88"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_command_offset</b></td></tr>
 <tr class="separator:ab6960a0a0302b912b93a54792146bd88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd615ca6aa1d0ffabb0c2268b61fc19c"><td class="memItemLeft" align="right" valign="top"><a id="abd615ca6aa1d0ffabb0c2268b61fc19c" name="abd615ca6aa1d0ffabb0c2268b61fc19c"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_command_buffer_index</b></td></tr>
+<tr class="separator:abd615ca6aa1d0ffabb0c2268b61fc19c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c6ba20a0e316323ee44fead80562aeb"><td class="memItemLeft" align="right" valign="top"><a id="a1c6ba20a0e316323ee44fead80562aeb" name="a1c6ba20a0e316323ee44fead80562aeb"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_finish_flag</b></td></tr>
 <tr class="separator:a1c6ba20a0e316323ee44fead80562aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af79ea762ce6d2f827d0ff941f230fa12"><td class="memItemLeft" align="right" valign="top"><a id="af79ea762ce6d2f827d0ff941f230fa12" name="af79ea762ce6d2f827d0ff941f230fa12"></a>
+<a class="el" href="structvg__lite__cache__cmd__info.html">vg_lite_cache_cmd_info</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>fb_command_buffer_start</b></td></tr>
+<tr class="separator:af79ea762ce6d2f827d0ff941f230fa12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff577828e28b19f141e0dc4c0daa487"><td class="memItemLeft" align="right" valign="top"><a id="a0ff577828e28b19f141e0dc4c0daa487" name="a0ff577828e28b19f141e0dc4c0daa487"></a>
+<a class="el" href="structvg__lite__cache__cmd__info.html">vg_lite_cache_cmd_info</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>fb_command_buffer_end</b></td></tr>
+<tr class="separator:a0ff577828e28b19f141e0dc4c0daa487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab045f9fb7632a535a656fde7225326f9"><td class="memItemLeft" align="right" valign="top"><a id="ab045f9fb7632a535a656fde7225326f9" name="ab045f9fb7632a535a656fde7225326f9"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>split_path</b></td></tr>
+<tr class="separator:ab045f9fb7632a535a656fde7225326f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="a83afda81d98fe0a3bce172a169f4fe1b" name="a83afda81d98fe0a3bce172a169f4fe1b"></a>
@@ -558,6 +585,20 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_finish_flag</b
 
 </div>
 </div>
+<a id="a445faa03677ba17025cb29067b66c3a0" name="a445faa03677ba17025cb29067b66c3a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a445faa03677ba17025cb29067b66c3a0">&#9670;&#160;</a></span>scissor_layer_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32_t vg_lite_context_t::scissor_layer_range[4]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae981252cdea3b219d78f9ed79bf98937" name="ae981252cdea3b219d78f9ed79bf98937"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae981252cdea3b219d78f9ed79bf98937">&#9670;&#160;</a></span>src_alpha_mode</h2>
 
@@ -818,6 +859,20 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_finish_flag</b
       <table class="memname">
         <tr>
           <td class="memname">uint32_t vg_lite_context_t::enable_mask</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1010cfad6d77755c074d7c88f388d0e" name="ad1010cfad6d77755c074d7c88f388d0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1010cfad6d77755c074d7c88f388d0e">&#9670;&#160;</a></span>mask_layer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structvg__lite__buffer__t.html">vg_lite_buffer_t</a>* vg_lite_context_t::mask_layer</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1104,6 +1159,48 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_finish_flag</b
 
 </div>
 </div>
+<a id="a11a046504b3171d01932ced90dd7652a" name="a11a046504b3171d01932ced90dd7652a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11a046504b3171d01932ced90dd7652a">&#9670;&#160;</a></span>mesh_mode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t vg_lite_context_t::mesh_mode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aec2a9d5341765b5b26e1105a66237859" name="aec2a9d5341765b5b26e1105a66237859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec2a9d5341765b5b26e1105a66237859">&#9670;&#160;</a></span>mesh_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t vg_lite_context_t::mesh_size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a26eda3663533cd3f1fe5bcdd19760d8b" name="a26eda3663533cd3f1fe5bcdd19760d8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26eda3663533cd3f1fe5bcdd19760d8b">&#9670;&#160;</a></span>mesh_dirty</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t vg_lite_context_t::mesh_dirty</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a610ade6419a723cc1ef57018589d9d8b" name="a610ade6419a723cc1ef57018589d9d8b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a610ade6419a723cc1ef57018589d9d8b">&#9670;&#160;</a></span>backup_fb_command_flag</h2>
 
@@ -1174,6 +1271,20 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_finish_flag</b
 
 </div>
 </div>
+<a id="abd615ca6aa1d0ffabb0c2268b61fc19c" name="abd615ca6aa1d0ffabb0c2268b61fc19c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd615ca6aa1d0ffabb0c2268b61fc19c">&#9670;&#160;</a></span>fb_command_buffer_index</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t vg_lite_context_t::fb_command_buffer_index</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1c6ba20a0e316323ee44fead80562aeb" name="a1c6ba20a0e316323ee44fead80562aeb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1c6ba20a0e316323ee44fead80562aeb">&#9670;&#160;</a></span>fb_finish_flag</h2>
 
@@ -1182,6 +1293,48 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>fb_finish_flag</b
       <table class="memname">
         <tr>
           <td class="memname">uint32_t vg_lite_context_t::fb_finish_flag</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af79ea762ce6d2f827d0ff941f230fa12" name="af79ea762ce6d2f827d0ff941f230fa12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af79ea762ce6d2f827d0ff941f230fa12">&#9670;&#160;</a></span>fb_command_buffer_start</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structvg__lite__cache__cmd__info.html">vg_lite_cache_cmd_info</a>* vg_lite_context_t::fb_command_buffer_start</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ff577828e28b19f141e0dc4c0daa487" name="a0ff577828e28b19f141e0dc4c0daa487"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ff577828e28b19f141e0dc4c0daa487">&#9670;&#160;</a></span>fb_command_buffer_end</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structvg__lite__cache__cmd__info.html">vg_lite_cache_cmd_info</a>* vg_lite_context_t::fb_command_buffer_end</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab045f9fb7632a535a656fde7225326f9" name="ab045f9fb7632a535a656fde7225326f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab045f9fb7632a535a656fde7225326f9">&#9670;&#160;</a></span>split_path</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t vg_lite_context_t::split_path</td>
         </tr>
       </table>
 </div><div class="memdoc">

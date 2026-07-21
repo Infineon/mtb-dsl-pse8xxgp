@@ -16,8 +16,8 @@ var group__group__hal__results =
     [ "SPI HAL Results", "group__group__hal__results__spi.html", "group__group__hal__results__spi" ],
     [ "SYSPM HAL Results", "group__group__hal__results__syspm.html", "group__group__hal__results__syspm" ],
     [ "SYSTEM HAL Results", "group__group__hal__results__system.html", "group__group__hal__results__system" ],
-    [ "Timer HAL Results", "group__group__hal__results__timer.html", "group__group__hal__results__timer" ],
     [ "TRNG HAL Results", "group__group__hal__results__trng.html", "group__group__hal__results__trng" ],
+    [ "Timer HAL Results", "group__group__hal__results__timer.html", "group__group__hal__results__timer" ],
     [ "UART HAL Results", "group__group__hal__results__uart.html", "group__group__hal__results__uart" ],
     [ "mtb_hal_rslt_module_chip", "group__group__hal__results.html#ga282238a3cd4da88799258412ba837ceb", [
       [ "MTB_HAL_RSLT_MODULE_ADC", "group__group__hal__results.html#gga282238a3cd4da88799258412ba837ceba0fb2a348d3639460b493dba0ac01520b", null ],

@@ -11,6 +11,9 @@ var searchData=
   ['external_20clock_20source_20_28extclk_29_8',['External Clock Source (EXTCLK)',['../group__group__sysclk__ext.html',1,'']]],
   ['external_20crystal_20oscillator_20_28eco_29_9',['External Crystal Oscillator (ECO)',['../group__group__sysclk__eco.html',1,'']]],
   ['external_20memory_20flags_10',['External Memory Flags',['../group__group__smif__macros__flags.html',1,'']]],
-  ['ezi2c_20_28scb_29_11',['EZI2C (SCB)',['../group__group__scb__ezi2c.html',1,'']]],
-  ['ezi2c_20activity_20status_12',['EZI2C Activity Status',['../group__group__scb__ezi2c__macros__get__activity.html',1,'']]]
+  ['ez_20mode_20ec_20interrupt_20flags_11',['EZ Mode EC Interrupt Flags',['../group__group__scb__spi__ez__macros__ec__status.html',1,'']]],
+  ['ez_20mode_20slave_20status_20flags_12',['EZ Mode Slave Status Flags',['../group__group__scb__spi__ez__macros__status.html',1,'']]],
+  ['ezi2c_20_28scb_29_13',['EZI2C (SCB)',['../group__group__scb__ezi2c.html',1,'']]],
+  ['ezi2c_20activity_20status_14',['EZI2C Activity Status',['../group__group__scb__ezi2c__macros__get__activity.html',1,'']]],
+  ['ezspi_20_28scb_29_15',['EZSPI (SCB)',['../group__group__scb__spi__ez.html',1,'']]]
 ];

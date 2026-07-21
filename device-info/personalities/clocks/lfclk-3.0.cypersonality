@@ -10,9 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -49,7 +48,7 @@
   <Parameters>
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__clk__lf.html' linkText='Open Low-Frequency Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
-    <ParamString id='clockInst' default='`${getInstNumber("lfclk")}`' />
+    <ParamString id='clockInst' default='`${getInstNumber("lfclk")}`' desc='Instance number of the CLK_LF used in generated configuration' />
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${hasBlock("srss[0].clock[0].pilo[0]") ? pilo : hasBlock("srss[0].clock[0].ilo[1]") ? ilo0 : ilo}`' visible='true' desc='The clock source for CLK_LF'>
       <Entry name='ALTLF' value='altlf' visible='`${hasBlock("srss[0].clock[0].altlf[0]")}`'/>
       <Entry name='ILO' value='ilo' visible='`${hasBlock("srss[0].clock[0].ilo[0]") &amp;&amp; !hasBlock("srss[0].clock[0].ilo[1]")}`'/>
@@ -60,15 +59,15 @@
       <Entry name='ECO_PRESCALER' value='ecoprescaler' visible='`${hasBlock("srss[0].clock[0].ecoprescaler[0]")}`'/>
       <Entry name='LPECO_PRESCALER' value='lpecoprescaler' visible='`${hasBlock("srss[0].clock[0].lpecoprescaler[0]")}`'/>
     </ParamChoice>
-    <ParamString id='sourceClockRsc' default='`${sourceClock eq ilo1 ? "srss[0].clock[0].ilo[1]" : (sourceClock eq ilo0 ? "srss[0].clock[0].ilo[0]" : "srss[0].clock[0]." . sourceClock . "[0]")}`' />
+    <ParamString id='sourceClockRsc' default='`${sourceClock eq ilo1 ? "srss[0].clock[0].ilo[1]" : (sourceClock eq ilo0 ? "srss[0].clock[0].ilo[0]" : "srss[0].clock[0]." . sourceClock . "[0]")}`' desc='Resource path of the selected CLK_LF source clock' />
     <ParamString id='sourceClockApiName' default='`${sourceClock eq ilo   ? "ILO" :
                                                      sourceClock eq wco   ? "WCO" :
                                                      sourceClock eq ilo0  ? "ILO" :
                                                      sourceClock eq ilo1  ? "ILO1" :
                                                      sourceClock eq ecoprescaler   ? "ECO_PRESCALER" :
-                                                     sourceClock eq altlf ? "ALTLF" : "PILO"}`' />
-    <ParamString id='frequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+                                                     sourceClock eq altlf ? "ALTLF" : "PILO"}`' desc='PDL API source enum suffix for the selected CLK_LF source used in generated configuration' />
+    <ParamString id='frequency' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Resulting CLK_LF frequency taken from the selected source clock' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
     <ParamString id='frequencyInfo' name='Frequency' group='General' default='`${formatFrequency(frequency,accuracy)}`' visible='true' editable='false' desc='The CLK_LF frequency provided by the chosen clock source' />
 
     <ParamBool id='ClkLfCsv' name='CSV' group='CSV' default='false' visible='`${("mxs40ssrss" eq getIpBlockName() || "mxs22srss" eq getIpBlockName()) &amp;&amp; (CSV_PRESENT == 1)}`' desc='Enables/Disables CSV configuration.' />

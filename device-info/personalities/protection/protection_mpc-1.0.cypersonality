@@ -55,33 +55,35 @@
     <ParamString id='hasPPCASRAM3' name="hasPPCASRAM3" default='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]")}`' visible='false' />
     <ParamString id='hasPPCASRAM4' name="hasPPCASRAM4" default='`${hasBlock("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]")}`' visible='false' />
 
-    <!-- ROT Configurability per memory type (from device-db, defaults to true for BWC) -->
+    <!-- ROT Configurability per memory type (from protection custom data, defaults to true for BWC).
+         Uses MpcLocation/@key lookup because getCustomData does not support bracket characters in
+         attribute-value predicates (e.g. [@location="flashc[0].mpc[0]"] is invalid). -->
     <ParamBool id='rotConfigurableFlash' name="rotConfigurableFlash"
-        default='`${isBlockUsed("flashc[0].mpc[0]") ? getExposedMember("flashc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;FLASH_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableRRAM' name="rotConfigurableRRAM"
-        default='`${isBlockUsed("mxrramc[0].mpc[0]") ? getExposedMember("mxrramc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;RRAM_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSMIF0' name="rotConfigurableSMIF0"
-        default='`${isBlockUsed("smif[0].mpc[0]") ? getExposedMember("smif[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SMIF_PORT0_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSMIF1' name="rotConfigurableSMIF1"
-        default='`${isBlockUsed("smif[1].mpc[0]") ? getExposedMember("smif[1].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SMIF_PORT1_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSOCMEM' name="rotConfigurableSOCMEM"
-        default='`${isBlockUsed("socmem[0].mpc[0]") ? getExposedMember("socmem[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SOCMEM_RAM_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSRAM0' name="rotConfigurableSRAM0"
-        default='`${isBlockUsed("mxsramc[0].mpc[0]") ? getExposedMember("mxsramc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SRAM0_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSRAM1' name="rotConfigurableSRAM1"
-        default='`${isBlockUsed("mxsramc[1].mpc[0]") ? getExposedMember("mxsramc[1].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SRAM1_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePROMC' name="rotConfigurablePROMC"
-        default='`${isBlockUsed("mxpromc[0].mpc[0]") ? getExposedMember("mxpromc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PROMC_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM0' name="rotConfigurablePPCASRAM0"
-        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[0].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM0_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM1' name="rotConfigurablePPCASRAM1"
-        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[1].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM1_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM2' name="rotConfigurablePPCASRAM2"
-        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[2].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM2_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM3' name="rotConfigurablePPCASRAM3"
-        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[3].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM3_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM4' name="rotConfigurablePPCASRAM4"
-        default='`${isBlockUsed("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]") ? getExposedMember("ppca[0].cpuss_cnfg[0].mxsramc[4].mpc[0]", "rot_configurable") : true}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM4_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
 
     <ParamString id='regionCountFlash' name="regionCountFlash" default='`${hasFlash ? splitCount(getMpcRegionStarts("flashc[0].mpc[0]")) : ""}`' visible='false' />
     <ParamString id='regionCountRRAM' name="regionCountRRAM" default='`${hasRRAM ? splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]")) : ""}`' visible='false' />
@@ -679,7 +681,7 @@
         <Member name='cfg_count' value='sizeof(`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_cfg) / sizeof(cy_stc_mpc_rot_cfg_t)' />
         <Member name='locked_rot_regions' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_regions' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)' />
         <Member name='locked_rot_region_count' value='sizeof(`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_regions) / sizeof(cy_stc_mpc_regions_t)' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)' />
-        <Member name='locked_rot_cfg' value='`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_cfg' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)' />
+        <Member name='locked_rot_cfg' value='&amp;`${getExposedMember("vres[0].protection[0].domain[$idx{domainIdx}]", "displayName")}`_mpc_locked_rot_cfg' guard='defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)' />
       </ConfigStruct>
     </ConfigArray>
 
@@ -866,7 +868,7 @@
       <Line value=''/>
       <Line value='            if (region-&gt;base != NULL)'/>
       <Line value='            {'/>
-      <Line value='                currentResult = _cycfg_mpc_init_regions_nonrot(region, &amp;(domain-&gt;locked_rot_cfg));'/>
+      <Line value='                currentResult = _cycfg_mpc_init_regions_nonrot(region, domain-&gt;locked_rot_cfg);'/>
       <Line value='            }'/>
       <Line value=''/>
       <Line value='            if (CY_RSLT_SUCCESS != currentResult)'/>

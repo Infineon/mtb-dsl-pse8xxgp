@@ -91,7 +91,8 @@ $(document).ready(function(){initNavTree('group__group__scb__common.html',''); i
 
 <div class="header">
   <div class="summary">
-<a href="#groups">API Reference</a>  </div>
+<a href="#groups">API Reference</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Common<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a> &raquo; <a class="el" href="group__group__scb.html">SCB          (Serial Communication Block)</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -101,17 +102,119 @@ $(document).ready(function(){initNavTree('group__group__scb__common.html',''); i
 <p>The functions and other declarations used in this part of the driver are in cy_scb_common.h. You can include either of cy_scb_spi.h, cy_scb_uart.h, cy_scb_ezi2c.h, cy_scb_i2c.h depending on the desired functionality. You can also include cy_pdl.h to get access to all functions and declarations in the PDL.</p>
 <h1><a class="anchor" id="group_scb_common_configuration"></a>
 Configuration Considerations</h1>
-<p>This is not a driver and it does not require configuration. </p>
-<table class="memberdecls">
+<p>Common API is divided into general, interrupt, and TGS types. General and interrupt functions do not have separate configurations and are meant to be used in an already initialized SCB block.</p>
+<dl class="section note"><dt>Note</dt><dd>SCB3 instance is used as an example for all code snippets. Modify the code to match your design.</dd></dl>
+<h2><a class="anchor" id="group_scb_tgs_config"></a>
+Configure TGS</h2>
+<p>The Timeout Generation Support block is a free-running down counter that triggers a timeout event once the count value reaches 0. There are 3 signals to control it. A reload signal will reload the counter with the reload count value. A gate signal will pause the counter for the specified duration for that signal. A stop signal will stop the counter. To set up the TGS block, provide the configuration parameters in the <a class="el" href="group__group__scb__tgs__data__structures.html#structcy__stc__scb__tgs__config__t">cy_stc_scb_tgs_config_t</a> structure and the counter number to use. Initialize the block by calling the <a class="el" href="group__group__scb__tgs__functions.html#gaac149f8d285359bfe872b4342382aa81">Cy_SCB_TGSx_Init</a> function, providing a pointer to the populated <a class="el" href="group__group__scb__tgs__data__structures.html#structcy__stc__scb__tgs__config__t">cy_stc_scb_tgs_config_t</a> structure. Enable it by calling the <a class="el" href="group__group__scb__tgs__functions.html#gae6b6bd41620edd58ed3614f656d392d0">Cy_SCB_TGSx_Enable</a> function.</p>
+<div class="fragment"></div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>
-<tr class="memitem:group__group__scb__common__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros.html">Macros</a></td></tr>
+<tr class="memitem:group__group__scb__common__data__structures"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__data__structures.html">Data Structures</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__scb__common__functions"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__functions.html">Functions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__scb__common__data__structures"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__data__structures.html">Data Structures</a></td></tr>
+<tr class="memitem:group__group__scb__common__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common__macros.html">Macros</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__scb__tgs__data__structures"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__tgs__data__structures.html">TGS Data Structures</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__scb__tgs__enums"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__tgs__enums.html">TGS Enumerated Types</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gaef77f8b5b4b94d3413a05517165591a2"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common.html#gaef77f8b5b4b94d3413a05517165591a2">Cy_SCB_Get_RxDataWidth</a> (<a class="el" href="structCySCB__Type.html">CySCB_Type</a> const *base)</td></tr>
+<tr class="memdesc:gaef77f8b5b4b94d3413a05517165591a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the RX data width.  <br /></td></tr>
+<tr class="separator:gaef77f8b5b4b94d3413a05517165591a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2a371c838a72134646cb973562e42b9"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common.html#gac2a371c838a72134646cb973562e42b9">Cy_SCB_IsTxDataWidthByte</a> (<a class="el" href="structCySCB__Type.html">CySCB_Type</a> const *base)</td></tr>
+<tr class="memdesc:gac2a371c838a72134646cb973562e42b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the TX data width is a byte (8 bits).  <br /></td></tr>
+<tr class="separator:gac2a371c838a72134646cb973562e42b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga60f36e44a9aed61db905e17ab7c6b495"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__common.html#ga60f36e44a9aed61db905e17ab7c6b495">Cy_SCB_Get_TxDataWidth</a> (<a class="el" href="structCySCB__Type.html">CySCB_Type</a> const *base)</td></tr>
+<tr class="memdesc:ga60f36e44a9aed61db905e17ab7c6b495"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the TX data width.  <br /></td></tr>
+<tr class="separator:ga60f36e44a9aed61db905e17ab7c6b495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="gaef77f8b5b4b94d3413a05517165591a2" name="gaef77f8b5b4b94d3413a05517165591a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaef77f8b5b4b94d3413a05517165591a2">&#9670;&#160;</a></span>Cy_SCB_Get_RxDataWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE uint32_t Cy_SCB_Get_RxDataWidth </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCySCB__Type.html">CySCB_Type</a> const *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the RX data width. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>The pointer to the SCB instance.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>RX data width. </dd></dl>
+
+</div>
+</div>
+<a id="gac2a371c838a72134646cb973562e42b9" name="gac2a371c838a72134646cb973562e42b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac2a371c838a72134646cb973562e42b9">&#9670;&#160;</a></span>Cy_SCB_IsTxDataWidthByte()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE bool Cy_SCB_IsTxDataWidthByte </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCySCB__Type.html">CySCB_Type</a> const *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the TX data width is a byte (8 bits). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>The pointer to the SCB instance.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If true, the TX data width is a byte (8 bits). Otherwise, false. </dd></dl>
+
+</div>
+</div>
+<a id="ga60f36e44a9aed61db905e17ab7c6b495" name="ga60f36e44a9aed61db905e17ab7c6b495"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga60f36e44a9aed61db905e17ab7c6b495">&#9670;&#160;</a></span>Cy_SCB_Get_TxDataWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE uint32_t Cy_SCB_Get_TxDataWidth </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCySCB__Type.html">CySCB_Type</a> const *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the TX data width. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>The pointer to the SCB instance.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The TX data width. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part

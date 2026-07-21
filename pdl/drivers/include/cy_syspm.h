@@ -337,7 +337,7 @@
 * \attention Transitions from ULP to HP modes (or vice versa) are only allowed in steps.
 * These transitions must proceed via the intermediate LP mode
 * (ULP -> LP -> HP or the reverse). This staged approach ensures system stability
-* and reliable operations. These steps are handled internally by the driver 
+* and reliable operations. These steps are handled internally by the driver
 * when using one of the APIs: \ref Cy_SysPm_SystemEnterHp(),
 * \ref Cy_SysPm_SystemEnterLp(), or \ref Cy_SysPm_SystemEnterUlp().
 *
@@ -443,6 +443,47 @@
 * When the system is performing a power transition all the clocks used to access the SRAM
 * must be adapted to the new power mode. The SRAM clock frequency must be reduced
 * before the transition and can be increased after the transition is completed.
+*
+* \subsubsection group_syspm_sram_trims SRAM Trims for Low Power Modes
+* During power mode transitions, the core supply voltage (VCCD) changes to match the
+* target mode (HP=0.9V, LP=0.8V, ULP=0.7V, DeepSleep=0.55V). Because SRAM timing
+* margins are directly affected by supply voltage, the SRAM timing trim registers
+* (TRIM_RAM_CTL) must be reconfigured to ensure reliable SRAM operation at each
+* voltage level.
+*
+* <b>Why SRAM trims are needed:</b>
+* - SRAM macros have timing parameters (setup, hold, access time) that vary with
+*   supply voltage.
+* - At lower voltages, signal propagation is slower, reducing timing margins.
+* - Without proper trim adjustment, high-speed peripherals (such as DMA, CPU, and
+*   bus masters) accessing SRAM may encounter timing violations, leading to data
+*   corruption or read failures.
+*
+* <b>When SRAM trims are updated:</b>
+* - <b>Entering/exiting DeepSleep:</b> The driver automatically calls
+*   \ref Cy_SysPm_SetRamTrimsPreDs() before entering DeepSleep and
+*   \ref Cy_SysPm_SetRamTrimsPostDs() after waking up from DeepSleep
+*   inside \ref Cy_SysPm_CpuEnterDeepSleep(). No user action is required for
+*   standard DeepSleep transitions.
+* - <b>Active mode transitions (HP/LP/ULP):</b> The transition APIs
+*   (\ref Cy_SysPm_SystemTransitionHpToLp(), \ref Cy_SysPm_SystemTransitionLpToHp(),
+*   \ref Cy_SysPm_SystemTransitionUlpToLp(), \ref Cy_SysPm_SystemTransitionLpToUlp())
+*   handle the SRAM trim updates internally as part of the transition sequence.
+*   The user must reduce the SRAM clock frequency before calling these APIs and may
+*   restore it after the transition completes.
+*
+* <b>Impact on high-speed peripherals:</b>
+* - Peripherals that access SRAM at high frequencies (e.g., HPDMA, CPU instruction
+*   fetch, AXI bus masters) depend on correct SRAM timing margins.
+* - If the system transitions to a lower voltage mode without updating SRAM trims,
+*   these peripherals may experience unreliable memory access.
+* - The driver ensures correct trim sequencing so that SRAM remains accessible at
+*   the maximum allowed frequency for each power mode.
+*
+* \note Users implementing custom power transition sequences (bypassing the
+* standard transition APIs) must manually call \ref Cy_SysPm_SetRamTrimsPreDs()
+* and \ref Cy_SysPm_SetRamTrimsPostDs() for DeepSleep entry/exit, or replicate
+* the appropriate trim sequence for active mode transitions.
 * \subsection group_syspm_system_reg_curr_mode System Regulator Current Mode
 * In addition to system ULP and LP modes, the five different resource
 * power settings can be configured to reduce current consumption:
@@ -942,6 +983,17 @@ extern "C" {
 /* Macro to validate parameters in Cy_SysPm_ExecuteCallback() function */
 
 #if defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+#if (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+#define CY_SYSPM_IS_CALLBACK_TYPE_VALID(type)           (((type) == CY_SYSPM_SLEEP)         || \
+                                                         ((type) == CY_SYSPM_DEEPSLEEP)     || \
+                                                         ((type) == CY_SYSPM_DEEPSLEEP_RAM) || \
+                                                         ((type) == CY_SYSPM_DEEPSLEEP_OFF) || \
+                                                         ((type) == CY_SYSPM_LP) || \
+                                                         ((type) == CY_SYSPM_ULP) || \
+                                                         ((type) == CY_SYSPM_HP) || \
+                                                         ((type) == CY_SYSPM_HIBERNATE_RAM) || \
+                                                         ((type) == CY_SYSPM_HIBERNATE))
+#else
 #define CY_SYSPM_IS_CALLBACK_TYPE_VALID(type)           (((type) == CY_SYSPM_SLEEP)         || \
                                                          ((type) == CY_SYSPM_DEEPSLEEP)     || \
                                                          ((type) == CY_SYSPM_DEEPSLEEP_RAM) || \
@@ -950,6 +1002,7 @@ extern "C" {
                                                          ((type) == CY_SYSPM_ULP) || \
                                                          ((type) == CY_SYSPM_HP) || \
                                                          ((type) == CY_SYSPM_HIBERNATE))
+#endif
 
 /* Macro to validate parameters in Cy_SysPm_CoreBuckSetVoltage() & Cy_SysPm_CoreBuckConfig functions */
 #define CY_SYSPM_IS_CORE_BUCK_VOLTAGE_VALID(voltage)    (((voltage) == CY_SYSPM_CORE_BUCK_VOLTAGE_0_58V) || \
@@ -1152,6 +1205,47 @@ extern "C" {
 /** The internal define of the unlock value for the PMIC functions */
 #define CY_SYSPM_PMIC_UNLOCK_KEY                    (0x3AU)
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1UL) && defined (CY_DEVICE_PSB3)
+
+/** The internal define of the first wakeup pin bit used in the
+* Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN0_POS                ((uint32_t) 0x1U << 0U)
+
+/** The internal define of the second wakeup pin bit
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN1_POS                ((uint32_t) 0x1U << 1U)
+
+
+/** The internal define of the third wakeup pin bit used in the
+* Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN2_POS                ((uint32_t) 0x1U << 2U)
+
+/** The internal define of the fourth wakeup pin bit
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN3_POS                ((uint32_t) 0x1U << 3U)
+
+/** The internal define of the BTSS wakeup bit
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_BTSS_POS                ((uint32_t) 0x1U << 4U)
+
+/** The internal define of the WDT0 wake bit
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_WDT0_POS                ((uint32_t) 0x1U << 0U)
+
+#if defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A > 1)
+/** The internal define of the WDT1 wake bit
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_WDT1_POS                ((uint32_t) 0x1U << 1U)
+#endif
+
+#else
 
 /** The internal define of the first wakeup pin bit used in the
 * Cy_SysPm_SetHibernateWakeupSource() function
@@ -1175,9 +1269,142 @@ extern "C" {
 */
 #define CY_SYSPM_HIB_WAKEUP_LPCOMP1_POS             (8UL)
 
+#endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1UL) && defined (CY_DEVICE_PSB3) */
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
 
+#if (CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1UL) && defined (CY_DEVICE_PSB3)
+
+/**
+* The internal define of the first wake-up pin value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN0_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN0_POS))
+
+/**
+* The internal define of the second wake-up pin value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN1_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN1_POS))
+
+/**
+* The internal define of the third wake-up pin value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN2_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN2_POS))
+
+/**
+* The internal define of the fourth wake-up pin value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN3_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN3_POS))
+
+/**
+* The internal define of the BTSS interrupt wake value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_BTSS_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_BTSS_POS))
+
+/**
+* The internal define of the WDT wakeup source
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_WDT_MASK    PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_WDT_Msk
+
+/**
+* The internal define of the WDT0 wakeup source
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_WDT0_MASK  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_WDT, CY_SYSPM_HIB_WAKEUP_WDT0_POS))
+
+#if defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A > 1)
+/**
+* The internal define of the WDT1 wakeup source
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_WDT1_MASK  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_WDT, CY_SYSPM_HIB_WAKEUP_WDT1_POS))
+#endif
+
+/**
+* The internal define of the RTC wakeup source
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_RTC_MASK    PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_RTC_Msk
+
+/** The internal define for the first wake-up pin polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_PIN0_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN0_POS))
+
+/** The internal define for the second wake-up pin polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_PIN1_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN1_POS))
+
+/** The internal define for the third wake-up pin polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_PIN2_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN2_POS))
+
+/** The internal define for the fourth wake-up pin polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_PIN3_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN3_POS))
+
+/** The internal define for the BTSS signal polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_BTSS_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_BTSS_POS))
+
+#elif (CY_IP_MXS22SRSS_VERSION == 2UL)
+/**
+* The internal define of the first LPComparator value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_LPCOMP0_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_LPCOMP0_POS))
+
+/**
+* The internal define of the second LPComparator value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_LPCOMP1_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_LPCOMP1_POS))
+
+/**
+* The internal define of the first wake-up pin value
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN0_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN0_POS))
+
+/**
+* The internal define of the second wake-up pin value used
+* in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_PIN1_MASK    (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN1_POS))
+
+/** The internal define for the first LPComparator polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_LPCOMP0_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_LPCOMP0_POS))
+
+/** The internal define for the second LPComparator polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_LPCOMP1_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_LPCOMP1_POS))
+
+/** The internal define for the first wake-up pin polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_PIN0_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN0_POS))
+
+/** The internal define for the second wake-up pin polarity configuration */
+#define CY_SYSPM_HIB_WAKEUP_PIN1_POLARITY_HIGH_MASK    \
+                                  (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_PIN1_POS))
+
+/**
+* The internal define of the WDT wakeup source
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_WDT_MASK    PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_WDT_Msk
+
+/**
+* The internal define of the WDT wakeup source
+* used in the Cy_SysPm_SetHibernateWakeupSource() function
+*/
+#define CY_SYSPM_HIB_WAKEUP_RTC_MASK    PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL_HIB_WAKE_RTC_Msk
+
+#else
 /**
 * The internal define of the first LPComparator value
 * used in the Cy_SysPm_SetHibernateWakeupSource() function
@@ -1229,14 +1456,25 @@ extern "C" {
 * used in the Cy_SysPm_SetHibernateWakeupSource() function
 */
 #define CY_SYSPM_HIB_WAKEUP_RTC_MASK    SRSS_PWR_HIB_WAKE_CTL_HIB_WAKE_RTC_Msk
+#endif /*(CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1UL) && defined (CY_DEVICE_PSB3)*/
 #endif /*(CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)*/
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1UL)
+#define CY_SYSPM_HIB_WAKEUP_SOURCE_MASK    (CY_SYSPM_HIBERNATE_PIN0_LOW    | CY_SYSPM_HIBERNATE_PIN0_HIGH |\
+                                            CY_SYSPM_HIBERNATE_PIN1_LOW    | CY_SYSPM_HIBERNATE_PIN1_HIGH |\
+                                            CY_SYSPM_HIBERNATE_PIN2_LOW    | CY_SYSPM_HIBERNATE_PIN2_HIGH |\
+                                            CY_SYSPM_HIBERNATE_PIN3_LOW    | CY_SYSPM_HIBERNATE_PIN3_HIGH |\
+                                            CY_SYSPM_HIBERNATE_BTSS_LOW    | CY_SYSPM_HIBERNATE_BTSS_HIGH |\
+                                            CY_SYSPM_HIBERNATE_WDT0        | CY_SYSPM_HIBERNATE_WDT1 | \
+                                            CY_SYSPM_HIBERNATE_RTC_ALARM )
+#else
 /* Internal macro of all possible wakeup sources from hibernate power mode */
 #define CY_SYSPM_HIB_WAKEUP_SOURCE_MASK    (CY_SYSPM_HIBERNATE_LPCOMP0_LOW | CY_SYSPM_HIBERNATE_LPCOMP0_HIGH |\
                                             CY_SYSPM_HIBERNATE_LPCOMP1_LOW | CY_SYSPM_HIBERNATE_LPCOMP1_HIGH |\
                                             CY_SYSPM_HIBERNATE_RTC_ALARM   | CY_SYSPM_HIBERNATE_WDT |\
                                             CY_SYSPM_HIBERNATE_PIN0_LOW    | CY_SYSPM_HIBERNATE_PIN0_HIGH |\
                                             CY_SYSPM_HIBERNATE_PIN1_LOW    | CY_SYSPM_HIBERNATE_PIN1_HIGH)
+#endif
 
 
 /* The mask for low power modes the power circuits (POR/BOD, Bandgap
@@ -1375,6 +1613,49 @@ typedef enum
 */
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1UL)
+typedef enum
+{
+     /** Configure a low logic level for the first wakeup-pin. See device datasheet for specific pin. */
+    CY_SYSPM_HIBERNATE_PIN0_LOW     = ((uint32_t) 0x1U << 0U),
+
+    /** Configure a high logic level for the first wakeup-pin. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_PIN0_HIGH    = ((uint32_t) 0x1U << 1U),
+
+    /** Configure a low logic level for the second wakeup-pin. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_PIN1_LOW     = ((uint32_t) 0x1U << 2U),
+
+    /** Configure a high logic level for the second wakeup-pin. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_PIN1_HIGH    = ((uint32_t) 0x1U << 3U),
+
+    /** Configure a low logic level for the third wakeup-pin. See device datasheet for specific pin. */
+    CY_SYSPM_HIBERNATE_PIN2_LOW     = ((uint32_t) 0x1U << 4U),
+
+    /** Configure a high logic level for the third wakeup-pin. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_PIN2_HIGH    = ((uint32_t) 0x1U << 5U),
+
+    /** Configure a low logic level for the fourth wakeup-pin. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_PIN3_LOW     = ((uint32_t) 0x1U << 6U),
+
+    /** Configure a high logic level for the fourth wakeup-pin. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_PIN3_HIGH    = ((uint32_t) 0x1U << 7U),
+
+    /** Configure a low logic level for the BTSS wake signal. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_BTSS_LOW     = ((uint32_t) 0x1U << 8U),
+
+    /** Configure a high logic level for the BTSS wake signal. See device datasheet for specific pin.*/
+    CY_SYSPM_HIBERNATE_BTSS_HIGH    = ((uint32_t) 0x1U << 9U),
+
+    /** Configure the WDT0 interrupt as wakeup source. */
+    CY_SYSPM_HIBERNATE_WDT0         = ((uint32_t) 0x1U << 10U),
+
+    /** Configure the WDT0 interrupt as wakeup source. */
+    CY_SYSPM_HIBERNATE_WDT1         = ((uint32_t) 0x1U << 11U),
+
+     /** Configure the RTC alarm as wakeup source. */
+    CY_SYSPM_HIBERNATE_RTC_ALARM    = ((uint32_t) 0x1U << 12U)
+} cy_en_syspm_hibernate_wakeup_source_t;
+#else
 typedef enum
 {
     /** Wake on a low logic level for the LPComp0. */
@@ -1407,6 +1688,7 @@ typedef enum
     /** Configure a high logic level for the second wakeup-pin. See device datasheet for specific pin.*/
     CY_SYSPM_HIBERNATE_PIN1_HIGH    = (0x1U << 9)
 } cy_en_syspm_hibernate_wakeup_source_t;
+#endif
 #endif
 
 #if !(defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 > 0UL))
@@ -1449,7 +1731,7 @@ typedef enum
 typedef enum
 {
     CY_SYSPM_BUCK_VBUCK_1 = 0x0U,    /**< Buck output 1 Voltage (Vbuck1). Typically used to
-                                          supply the PSoC digital core logic. */
+                                          supply the PSOC digital core logic. */
     CY_SYSPM_BUCK_VRF                /**< Buck out 2 Voltage (Vbuckrf). Typically used to
                                           supply the BLE radio logic. */
 } cy_en_syspm_buck_out_t;
@@ -1529,6 +1811,10 @@ typedef enum
     CY_SYSPM_HP             = 7U,     /**< The High Performance mode enum callback type */
 #endif
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+    CY_SYSPM_HIBERNATE_RAM   = 9U,     /**< The Hibernate ram callback type */
+#endif
+    CY_SYSPM_MAX_CALLBACK_INDEX_PLUS_1
 } cy_en_syspm_callback_type_t;
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
@@ -1608,43 +1894,6 @@ typedef enum
 } cy_en_syspm_core_buck_voltage_t;
 
 
-#else
-
-typedef enum
-{
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_76V = 0U,    /**< 0.76 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_78V = 1U,    /**< 0.78 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_80V = 2U,    /**< 0.80 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_82V = 3U,    /**< 0.82 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_84V = 4U,    /**< 0.84 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_86V = 5U,    /**< 0.86 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_88V = 6U,    /**< 0.88 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_90V = 7U,    /**< 0.90 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_92V = 8U,    /**< 0.92 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_94V = 9U,    /**< 0.94 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_96V = 10U,    /**< 0.96 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_0_98V = 11U,    /**< 0.98 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_00V = 12U,    /**< 1.00 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_02V = 13U,    /**< 1.02 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_04V = 14U,    /**< 1.04 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_06V = 15U,    /**< 1.06 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_08V = 16U,    /**< 1.08 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_10V = 17U,    /**< 1.10 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_12V = 18U,    /**< 1.12 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_14V = 19U,    /**< 1.14 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_16V = 20U,    /**< 1.16 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_18V = 21U,    /**< 1.18 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_20V = 22U,    /**< 1.20 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_22V = 23U,    /**< 1.22 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_24V = 24U,    /**< 1.24 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_26V = 25U,    /**< 1.26 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_28V = 26U,    /**< 1.28 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_30V = 27U,    /**< 1.30 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_32V = 28U,    /**< 1.32 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_34V = 29U,    /**< 1.34 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_36V = 30U,    /**< 1.36 V nominal voltage. */
-    CY_SYSPM_CORE_BUCK_VOLTAGE_1_38V = 31U,    /**< 1.38 V nominal voltage. */
-} cy_en_syspm_core_buck_voltage_t;
 #endif
 
 #if defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
@@ -1665,6 +1914,11 @@ typedef enum
 /**
 * This enumeration is used to select the output voltage for the
 * SRAMLDO.
+*
+* \note Voltage values below \ref CY_SYSPM_SRAMLDO_VOLTAGE_0_80V (i.e. 0.58V
+* to 0.78V) are intended for deepsleep SRAM retention only and must not be used
+* during active mode operation. Using these values in active mode will corrupt
+* SRAM contents and hang the device.
 */
 
 typedef enum
@@ -1873,7 +2127,11 @@ typedef enum
 
 #endif /* defined (CY_IP_MXS22SRSS) */
 
-
+#if defined (CY_IP_MXS40SSRSS)
+/**
+* \note
+* This enum is available for PSC devices.
+**/
 /**
 * For SDR's(Step Down Regulators), this enumeration is used to select the SDR0 or SDR1
 */
@@ -1930,7 +2188,7 @@ typedef enum
     CY_SYSPM_HVLDO_VOLTAGE_3_200V = 14U,    /**< 3.200 V nominal voltage. */
     CY_SYSPM_HVLDO_VOLTAGE_3_300V = 15U,    /**< 3.300 V nominal voltage. */
 } cy_en_syspm_hvldo_voltage_t;
-
+#endif /* defined (CY_IP_MXS40SSRSS)  */
 
 #endif
 
@@ -2153,6 +2411,19 @@ typedef struct
     uint32_t *entry_pointer;      /**< Entry Function Address */
 } cy_stc_syspm_warmboot_entrypoint_t;
 
+/** The structure contains warmboot CPU context information used during DEEPSLEEP-RAM entry/exit */
+typedef struct {
+    uint32_t r[13];     /**< R0-R12 register content */
+    uint32_t lr;        /**< LR register content */
+    uint32_t exit;      /**< DS Exit address */
+    uint32_t msp;       /**< Main stack pointer */
+    uint32_t wfiStatus; /**< WFI entry/exit status */
+} cy_stc_syspm_warmboot_context_t;
+
+/**
+* \note
+* This structure is available for PSC devices.
+**/
 /** The structure contains syspm core buck configuration parameters */
 typedef struct
 {
@@ -2235,7 +2506,24 @@ typedef struct
 #endif
 
 /** \cond INTERNAL */
-#if defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
+#if defined (CY_IP_MXS40PPSS) && !defined (COMPONENT_PPCA_DEVICE) || defined (CY_DOXYGEN)
+
+/**
+* \note
+* This structure is available for PSC devices.
+**/
+/** Describes the PPCA CPU Core images */
+typedef struct
+{
+    void     *flash_address0;      /**< Flash address of PPCA core 0 */
+    void     *flash_address1;    /**< Flash address of PPCA core 1 */
+    uint32_t image_size0;         /**< Image size of PPCA core 0 */
+    uint32_t image_size1;          /**< Image size of PPCA core 1 */
+} cy_stc_syspm_ppca_images_t;
+
+#endif /* defined (CY_IP_MXS40PPSS) && !defined (COMPONENT_PPCA_DEVICE) */
+
+#if defined(CY_IP_MXCM55) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
 /** This is only used by secure-aware. The structure contains enable CM55 configuration parameters */
 typedef struct {
     uint32_t vectorTableOffset;
@@ -2249,7 +2537,7 @@ typedef struct {
     uint32_t waitus;
 } cy_pdl_syspm_srf_syscm55reset_in_t;
 
-#endif
+#endif /* defined(CY_IP_MXCM55) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) */
 /** \endcond */
 /** \} group_syspm_data_structures */
 
@@ -2258,6 +2546,53 @@ typedef struct {
 * \{
 */
 
+
+/**
+* \addtogroup group_syspm_functions_ppca
+* \{
+*/
+
+#if defined (CY_IP_MXS40PPSS) && !defined (COMPONENT_PPCA_DEVICE) || defined (CY_DOXYGEN)
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_PPCA_ClearDeepSleepInterrupt
+****************************************************************************//**
+*
+* Clear the PPCA deep-sleep ready interrupt
+*
+*******************************************************************************/
+void Cy_SysPm_PPCA_ClearDeepSleepInterrupt(void);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_PPCA_IsDeepSleepReady
+****************************************************************************//**
+*
+* Check if PPCA is ready for deep-sleep entry
+*
+* \return
+* PPCA ready(1) or not ready(0)
+*
+*******************************************************************************/
+bool Cy_SysPm_PPCA_IsDeepSleepReady(void);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_PPCA_RequestDeepSleep
+****************************************************************************//**
+*
+* Request the PPCA cores to enter deep-sleep.
+*
+* \param coreImages
+* Flash image location and size for the PPCA core applications
+*
+* \return
+* - CY_SYSPM_SUCCESS - Request was successful
+* - CY_SYSPM_INVALID_STATE - At least one PPCA CPU should be enabled
+* - CY_SYSPM_BAD_PARAM - Input parameter should define at least one image
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_PPCA_RequestDeepSleep(cy_stc_syspm_ppca_images_t *coreImages);
+
+#endif /* defined (CY_IP_MXS40PPSS) && !defined (COMPONENT_PPCA_DEVICE) || defined (CY_DOXYGEN) */
 /** \} group_syspm_functions_ppca */
 
 /**
@@ -2795,7 +3130,7 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetSysDeepSleepMode(void);
 *******************************************************************************/
 cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetAppDeepSleepMode(void);
 
-#if (defined (CY_IP_MXS22SRSS) && defined (CY_IP_MXSOCMEM)) || defined (CY_DOXYGEN)
+#if (defined (CY_IP_MXS22SRSS) && defined (CY_IP_MXSOCMEM) && !((CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 2))) || defined (CY_DOXYGEN)
 /*******************************************************************************
 * Function Name: Cy_SysPm_SetSOCMEMDeepSleepMode
 ****************************************************************************//**
@@ -2842,7 +3177,7 @@ cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetAppDeepSleepMode(void);
 *
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SetSOCMEMDeepSleepMode(cy_en_syspm_deep_sleep_mode_t deepSleepMode);
-#endif /* (defined (CY_IP_MXS22SRSS) && defined (CY_IP_MXSOCMEM)) || defined (CY_DOXYGEN) */
+#endif /* (defined (CY_IP_MXS22SRSS) && defined (CY_IP_MXSOCMEM) && !((CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 2))) || defined (CY_DOXYGEN) */
 
 /*******************************************************************************
 * Function Name: Cy_SysPm_SetPPUDeepSleepMode
@@ -2864,6 +3199,7 @@ cy_en_syspm_status_t Cy_SysPm_SetSOCMEMDeepSleepMode(cy_en_syspm_deep_sleep_mode
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SetPPUDeepSleepMode(uint32_t ppu, uint32_t mode);
 
+#if !(defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 2))
 /*******************************************************************************
 * Function Name: Cy_SysPm_SystemTransitionHpToLp
 ****************************************************************************//**
@@ -2889,6 +3225,8 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionHpToLp(void);
 * \note This API is secure aware. See header subsection Secure Aware SYSPM for further details.
 * The involved PPC regions is PROT_PERI0_SRSS_MAIN.
 *
+* \note The API clears the PWRCTL_MAIN_LV_REG resource map sense to allow a smooth transition.
+*
 * \return
 * - CY_SYSPM_SUCCESS - Successfully transitioned from LP to HP mode.
 * - CY_SYSPM_FAIL - The transition failed.
@@ -2904,6 +3242,8 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToHp(void);
 *
 * \note This API is secure aware. See header subsection Secure Aware SYSPM for further details.
 * The involved PPC regions is PROT_PERI0_SRSS_MAIN.
+*
+* \note The API clears the PWRCTL_MAIN_LV_REG resource map sense to allow a smooth transition.
 *
 * \return
 * - CY_SYSPM_SUCCESS - Successfully transitioned from ULP to LP mode.
@@ -2927,6 +3267,7 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionUlpToLp(void);
 *
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToUlp(void);
+#endif /* !(CY_IP_MXS22SRSS_VERSION == 2 && CY_IP_MXS22SRSS_VERSION_MINOR == 2) */
 
 
 #endif /* defined (CY_IP_MXS22SRSS) */
@@ -2960,6 +3301,50 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionLpToUlp(void);
 cy_en_syspm_deep_sleep_mode_t Cy_SysPm_GetDeepSleepMode(void);
 
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+/*******************************************************************************
+* Function Name: Cy_SysPm_SetHibernateRamMode
+****************************************************************************//**
+*
+* Sets the Hibernate RAM mode. PPU settings are same as that of DeepSleep RAM
+*
+* \note
+* If mode is set to Hibernate RAM && Application in Flash, user
+* needs to take care of below
+*
+* Two types of images need to be generated
+* 1. Flash image
+*    - Contains the actual application.
+*
+* 2. RAM Image(Resides in RAM)
+*    - Contains Warmboot Entry Point function.
+*    - SMIF initialization is performed only during coldboot, and not in
+*      warmboot, so RAM Image will have the code performing SMIF
+*      initialization before jumping to Flash Image.
+*
+* Before entering Hibernate RAM, user need to take care of below
+* 1. Entry point
+*    - Set entry point to a function located in RAM Image using
+*    - Cy_Syslib_SetWarmBootEntryPoint(Syslib Driver)
+*
+* After waking up from Hibernate RAM, bootrom jumps to
+* entry point function located in RAM image code. Entry point function should
+* take care of below
+*
+* 1. Vector table and Peripheral IP's enabling
+*    - Set VTOR register with vector table address.
+*    - Enable all the peripheral IP's using \ref Cy_SysClk_PeriGroupSetSlaveCtl.
+* 2. SMIF Initialization
+*    - Perform  SMIF Initialization.
+* 3. Jump to API in the Flash.
+*
+* \return
+* \ref cy_en_syspm_status_t
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SetHibernateRamMode(void);
+
+#endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)*/
 
 /*******************************************************************************
 * Function Name: Cy_SysPm_GetBootMode
@@ -3209,8 +3594,8 @@ he LP mode
 * - CY_SYSPM_CANCELED - Operation was canceled. Call the function again until
 *   the function returns CY_SYSPM_SUCCESS.
 * - CY_SYSPM_FAIL - The system LP mode is not entered.
-*   For the PSoC 64 devices there are possible situations when function returns
-*   the PRA error status code. This is because for PSoC 64 devices the function
+*   For the PSOC 64 devices there are possible situations when function returns
+*   the PRA error status code. This is because for PSOC 64 devices the function
 *   uses the PRA driver to change the protected registers. Refer to
 *   \ref cy_en_pra_status_t for more details.
 *
@@ -3218,8 +3603,12 @@ he LP mode
 * \snippet syspm/snippet/main.c snippet_Cy_SysPm_SystemEnterLp
 *
 *******************************************************************************/
+#if !(defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 2))
 cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void);
+#endif /* !(CY_IP_MXS22SRSS VERSION_MINOR == 2) */
 
+
+#if !(defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1)) || defined (CY_DOXYGEN)
 /*******************************************************************************
 * Function Name: Cy_SysPm_SystemEnterUlp
 ****************************************************************************//**
@@ -3293,8 +3682,8 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void);
 * - CY_SYSPM_CANCELED - Operation was canceled. Call the function again until
 *   the function returns CY_SYSPM_SUCCESS.
 * - CY_SYSPM_FAIL - The system ULP mode is not entered.
-*   For the PSoC 64 devices there are possible situations when function returns
-*   the PRA error status code. This is because for PSoC 64 devices the function
+*   For the PSOC 64 devices there are possible situations when function returns
+*   the PRA error status code. This is because for PSOC 64 devices the function
 *   uses the PRA driver to change the protected registers. Refer to
 *   \ref cy_en_pra_status_t for more details.
 *
@@ -3304,6 +3693,7 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterLp(void);
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SystemEnterUlp(void);
 
+#endif /* #if !(defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1)) || defined (CY_DOXYGEN) */
 #if defined (CY_IP_MXS22SRSS) || defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 > 0UL) || defined (CY_DOXYGEN)
 
 #if defined (CY_IP_MXS22SRSS)
@@ -3394,7 +3784,25 @@ cy_en_syspm_status_t Cy_SysPm_SystemEnterHp(void);
 * Function Name: Cy_SysPm_SetRamTrimsPreDs
 ****************************************************************************//**
 *
-* Sets RAM trims before entering Deepsleep.
+* Configures SRAM timing trims before entering DeepSleep mode.
+*
+* This function adjusts the SRAM timing trim registers (TRIM_RAM_CTL) to values
+* appropriate for the reduced supply voltage in DeepSleep mode. The trim sequence
+* depends on the current active power mode (HP, LP, or ULP) and ensures that
+* SRAM timing margins remain valid as the voltage transitions down.
+*
+* This function is called automatically by \ref Cy_SysPm_CpuEnterDeepSleep()
+* when both CPUs are entering DeepSleep. It uses an IPC semaphore to coordinate
+* trim updates between the CM33 and CM55 cores, ensuring that trims are applied
+* only once when both cores are ready for DeepSleep.
+*
+* \note Users who implement a custom DeepSleep entry flow (not using
+* \ref Cy_SysPm_CpuEnterDeepSleep()) must call this function before executing
+* WFI/WFE to ensure SRAM reliability during and after the transition.
+*
+* \warning Failing to apply pre-DeepSleep trims can cause SRAM data corruption
+* for high-speed peripherals that access SRAM immediately upon wakeup, before
+* post-DeepSleep trims are restored.
 *
 *******************************************************************************/
 void Cy_SysPm_SetRamTrimsPreDs(void);
@@ -3403,7 +3811,21 @@ void Cy_SysPm_SetRamTrimsPreDs(void);
 * Function Name: Cy_SysPm_SetRamTrimsPostDs
 ****************************************************************************//**
 *
-* Sets RAM trims After exiting Deepsleep.
+* Restores SRAM timing trims after exiting DeepSleep mode.
+*
+* This function reconfigures the SRAM timing trim registers (TRIM_RAM_CTL) back
+* to values appropriate for the active power mode (HP, LP, or ULP) after waking
+* from DeepSleep. This restores full SRAM timing margins, allowing high-speed
+* peripherals (DMA, CPU, bus masters) to access SRAM reliably at the maximum
+* frequency supported by the current power mode.
+*
+* This function is called automatically by \ref Cy_SysPm_CpuEnterDeepSleep()
+* upon wakeup. It uses an IPC semaphore to coordinate with the other core,
+* ensuring trims are restored exactly once.
+*
+* \note Users who implement a custom DeepSleep exit flow must call this function
+* immediately after wakeup (after WFI/WFE returns) and before any high-speed
+* SRAM access occurs.
 *
 *******************************************************************************/
 void Cy_SysPm_SetRamTrimsPostDs(void);
@@ -3416,6 +3838,57 @@ void Cy_SysPm_SetRamTrimsPostDs(void);
 #endif /* (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN) ||
            (defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 > 0UL))*/
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_SystemEnterHibernateRam
+****************************************************************************//**
+*
+* Configures the system to enter the Hibernate RAM mode. Before entering the
+* Hibernate RAM mode, system perform the context save and if the context save fails
+* device triggers a power reset. The context info saved by the syspm driver is
+* used by the Boot code on wakeup to restore the configuration to perform warm boot
+*
+* Puts the device into the system Hibernate RAM power mode. Prior to entering
+* Hibernate mode, all callbacks of the CY_SYSPM_HIBERNATE_RAM type are executed.
+*
+* First, callbacks of the CY_SYSPM_HIBERNATE_RAM type are called with the
+* CY_SYSPM_CHECK_READY parameter. This allows the callback to signal that the
+* driver is not ready to enter the system Hibernate RAM power mode. If any of the
+* callback return CY_SYSPM_FAIL, the remaining CY_SYSPM_HIBERNATE_RAM callbacks are
+* skipped. In this case, all of the callbacks that have already been called are
+* called again with the CY_SYSPM_CHECK_FAIL parameter. System Hibernate mode is
+* not entered and the Cy_SysPm_SystemEnterHibernate() function returns
+* CY_SYSPM_FAIL.
+*
+* If all CY_SYSPM_HIBERNATE_RAM callbacks with the CY_SYSPM_CHECK_READY parameter
+* return CY_SYSPM_SUCCESS, then all CY_SYSPM_HIBERNATE_RAM callbacks with
+* CY_SYSPM_CHECK_FAIL calls are skipped and all CY_SYSPM_HIBERNATE_RAM callbacks
+* with CY_SYSPM_BEFORE_TRANSITION parameter are executed allowing the
+* peripherals to prepare for system Hibernate RAM.
+*
+* \note The last callback that returns CY_SYSPM_FAIL is not executed with the
+* CY_SYSPM_CHECK_FAIL parameter because of the FAIL. The callback generating
+* CY_SYSPM_FAIL is expected to not make any changes that require being undone.
+*
+* The return value from executed callback functions with the
+* CY_SYSPM_CHECK_FAIL, CY_SYSPM_BEFORE_TRANSITION, and CY_SYSPM_AFTER_TRANSITION
+* modes are ignored.
+*
+* Wakeup from system Hibernate RAM is similar to that of Hibernate mode and is
+* triggered by toggling the wakeup pin(s), WDT
+* match, or back-up domain RTC alarm expiration, depending on how the they are
+* configured. To configure the wakeup pin(s), a digital input pin must be
+* configured, and resistively pulled up or down to the inverse state of the
+* wakeup polarity.
+*
+* \return
+* \ref cy_en_syspm_status_t
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_SystemEnterHibernateRam(cy_en_syspm_waitfor_t waitFor);
+
+#endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1) */
 
 /*******************************************************************************
 * Function Name: Cy_SysPm_SystemEnterHibernate
@@ -3495,8 +3968,8 @@ void Cy_SysPm_SetRamTrimsPostDs(void);
 *
 * \return
 * Entered status, see \ref cy_en_syspm_status_t.
-* For the PSoC 64 devices there are possible situations when function returns
-* the PRA error status code. This is because for PSoC 64 devices the function
+* For the PSOC 64 devices there are possible situations when function returns
+* the PRA error status code. This is because for PSOC 64 devices the function
 * uses the PRA driver to change the protected registers. Refer to
 * \ref cy_en_pra_status_t for more details.
 *
@@ -3653,8 +4126,8 @@ __STATIC_INLINE void Cy_SysPm_ClearHibernateWakeupCause(void)
 * - CY_SYSPM_SUCCESS - Minimum regulator current mode was set
 * - CY_SYSPM_CANCELED - The power circuits were not ready to enter into
 *   minimum current mode. You should call the function again.
-*   For the PSoC 64 devices there are possible situations when function returns
-*   the PRA error status code. This is because for PSoC 64 devices the function
+*   For the PSOC 64 devices there are possible situations when function returns
+*   the PRA error status code. This is because for PSOC 64 devices the function
 *   uses the PRA driver to change the protected registers. Refer to
 *   \ref cy_en_pra_status_t for more details.
 *
@@ -3691,8 +4164,8 @@ cy_en_syspm_status_t Cy_SysPm_SystemSetMinRegulatorCurrent(void);
 * - CY_SYSPM_SUCCESS - Normal regulator current mode was set
 * - CY_SYSPM_TIMEOUT - The timeout occurred because device was not
 *   ready to enter into the normal regulator current mode
-*   For the PSoC 64 devices there are possible situations when function returns
-*   the PRA error status code. This is because for PSoC 64 devices the function
+*   For the PSOC 64 devices there are possible situations when function returns
+*   the PRA error status code. This is because for PSOC 64 devices the function
 *   uses the PRA driver to change the protected registers. Refer to
 *   \ref cy_en_pra_status_t for more details.
 *
@@ -3792,9 +4265,25 @@ __STATIC_INLINE void Cy_SysPm_CpuSendWakeupEvent(void)
 *******************************************************************************/
 __STATIC_INLINE bool Cy_SysPm_SystemIsMinRegulatorCurrentSet(void)
 {
+    #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL)
+    return ((0U == _FLD2VAL(PWRCTL_MAIN_HV_PWR_CTL2_REFSYS_VBUF_DIS, SRSS_PWR_CTL2)) ? false : true);
+    #else
     return ((0U == _FLD2VAL(SRSS_PWR_CTL2_REFSYS_VBUF_DIS, SRSS_PWR_CTL2)) ? false : true);
+    #endif
 }
 #endif /* defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_DOXYGEN) */
+#if defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS40SSRSS)
+__STATIC_INLINE bool Cy_SysPm_SystemIsMinRegulatorCurrentSet(void)
+{
+#if (defined (CY_IP_MXS40SSRSS) && (SRSS_S40S_REGSETB_PRESENT == 1UL))
+    uint32_t regMask = Cy_SysPm_LdoIsEnabled() ? CY_SYSPM_PWR_CIRCUITS_LPMODE_ACTIVE_LDO_MASK : CY_SYSPM_PWR_CIRCUITS_LPMODE_ACTIVE_BUCK_MASK;
+
+    return ((SRSS_PWR_CTL & regMask) == regMask);
+#else
+    return ((0U == _FLD2VAL(SRSS_PWR_CTL2_REFV_DIS, SRSS_PWR_CTL2)) ? false : true);
+#endif
+}
+#endif
 /** \} group_syspm_functions_power */
 
 /**
@@ -3825,13 +4314,13 @@ __STATIC_INLINE bool Cy_SysPm_SystemIsMinRegulatorCurrentSet(void)
 * - CY_SYSPM_TIMEOUT - Timeout occurred because of active reference was not
 *   ready to enter into the normal regulator current mode
 * - CY_SYSPM_FAIL - incorrect mode value was passed
-*   For the PSoC 64 devices there are possible situations when function returns
-*   the PRA error status code. This is because for PSoC 64 devices the function
+*   For the PSOC 64 devices there are possible situations when function returns
+*   the PRA error status code. This is because for PSOC 64 devices the function
 *   uses the PRA driver to change the protected registers. Refer to
 *   \ref cy_en_pra_status_t for more details.
 *
 * \sideeffect
-* For PSoC 64 series devices CY_SYSPM_LDO_MODE_DISABLED mode is not supported.
+* For PSOC 64 series devices CY_SYSPM_LDO_MODE_DISABLED mode is not supported.
 * Use \ref Cy_SysPm_BuckEnable() instead.
 *
 *******************************************************************************/
@@ -3866,6 +4355,15 @@ __STATIC_INLINE cy_en_syspm_ldo_mode_t Cy_SysPm_LdoGetMode(void)
 }
 
 /** \} group_syspm_functions_ldo */
+
+
+
+
+
+
+
+
+
 
 /**
 * \addtogroup group_syspm_functions_callback
@@ -4052,7 +4550,9 @@ bool Cy_SysPm_IsSystemUlp(void);
 * \snippet syspm/snippet/main.c snippet_Cy_SysPm_IsSystemLp
 *
 *******************************************************************************/
+#if !((CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 2))
 bool Cy_SysPm_IsSystemLp(void);
+#endif
 #endif
 
 
@@ -4185,7 +4685,7 @@ __STATIC_INLINE bool Cy_SysPm_Cm55IsDeepSleep(void)
 /** \} group_syspm_functions_power_status */
 
 
-#if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+#if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION < 2UL) || defined (CY_DOXYGEN)
 /**
 * \addtogroup group_syspm_functions_buck
 * \{
@@ -4480,6 +4980,11 @@ cy_en_syspm_status_t Cy_SysPm_SramLdoStatus(void);
 * \return
 * see \ref cy_en_syspm_status_t.
 *
+* \warning The sramLdoVoltSel field must be set to
+* \ref CY_SYSPM_SRAMLDO_VOLTAGE_0_80V or higher when the device is in active
+* mode. Voltages below 0.80V are for deepsleep SRAM retention only and will
+* cause SRAM corruption and device hang if used in active mode.
+*
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_SramLdoConfigure(cy_stc_syspm_sramldo_params_t *sramLdoParam);
 
@@ -4512,6 +5017,12 @@ __STATIC_INLINE cy_en_syspm_status_t Cy_SysPm_SramLdoEnable(bool enable)
 * \param voltage
 * Enum \ref cy_en_syspm_sramldo_voltage_t
 *
+* \warning Voltage values below \ref CY_SYSPM_SRAMLDO_VOLTAGE_0_80V are intended
+* for deepsleep SRAM retention only. Setting a voltage below 0.80V while the
+* device is in active mode will cause the SRAM contents (stack, data, code) to
+* become corrupted, resulting in a device hang. Use
+* \ref CY_SYSPM_SRAMLDO_VOLTAGE_0_80V or higher for active mode operation.
+*
 *******************************************************************************/
 __STATIC_INLINE void Cy_SysPm_SramLdoSetVoltage(cy_en_syspm_sramldo_voltage_t voltage)
 {
@@ -4536,6 +5047,17 @@ __STATIC_INLINE cy_en_syspm_sramldo_voltage_t Cy_SysPm_SramLdoGetVoltage(void)
     return (cy_en_syspm_sramldo_voltage_t)(_FLD2VAL(SRSS_PWR_SRAMLDO_CTL_SRAMLDO_VOUT, SRSS_PWR_SRAMLDO_CTL));
 }
 
+
+
+
+
+#endif /* defined (CY_IP_MXS22SRSS)  || defined (CY_DOXYGEN) */
+
+
+/** \} group_syspm_functions_buck */
+#endif /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN) */
+
+#if defined (CY_IP_MXS22SRSS) || defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL)
 /*******************************************************************************
 * Function Name: Cy_SysPm_MiscLdoStatus
 ****************************************************************************//**
@@ -4562,16 +5084,15 @@ cy_en_syspm_status_t Cy_SysPm_MiscLdoStatus(void);
 *
 *******************************************************************************/
 cy_en_syspm_status_t Cy_SysPm_MiscLdoConfigure(cy_stc_syspm_miscldo_params_t *miscLdoParam);
+#endif
+
+/**
+* \addtogroup group_syspm_functions_ldo
+* \{
+*/
 
 
-
-#endif /* defined (CY_IP_MXS22SRSS)  || defined (CY_DOXYGEN) */
-
-
-/** \} group_syspm_functions_buck */
-#endif /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN) */
-
-
+/** \} group_syspm_functions_ldo */
 
 
 /**
@@ -4594,7 +5115,13 @@ cy_en_syspm_status_t Cy_SysPm_MiscLdoConfigure(cy_stc_syspm_miscldo_params_t *mi
 *******************************************************************************/
 __STATIC_INLINE bool Cy_SysPm_IoIsFrozen(void)
 {
+    #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1)
+    return (0U != _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_FREEZE_FREEZE, SRSS_PWR_FREEZE));
+    #elif defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)
+    return (0U != _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_FREEZE_FREEZE, SRSS_PWR_HIBERNATE));
+    #else
     return (0U != _FLD2VAL(SRSS_PWR_HIBERNATE_FREEZE, SRSS_PWR_HIBERNATE));
+    #endif
 }
 
 /*******************************************************************************
@@ -4676,7 +5203,7 @@ void Cy_SysPm_DeepSleepIoUnfreeze(void);
 *   if called from secure core, it directly disables the SE
 *   else if SRF-integrated configurations, it uses the Secure Runtime Framework
 *   else returns fail
-* - In secure enclave disabled device configurations 
+* - In secure enclave disabled device configurations
 *   it returns success as SE is disbaled at boot up time
 *
 * \return
@@ -4707,7 +5234,7 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionInitiate(void);
 *   if called from secure core, it directly enables the SE
 *   else if SRF-integrated configurations, it uses the Secure Runtime Framework
 *   else returns fail
-* - In secure enclave disabled device configurations 
+* - In secure enclave disabled device configurations
 *   it returns success as disbaling SE is not applicable
 *
 * \return
@@ -4727,6 +5254,51 @@ cy_en_syspm_status_t Cy_SysPm_SystemTransitionFinalize(void);
 /** \} group_syspm_functions_iofreeze */
 
 
+
+
+
+#if defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2) && (defined (SRSS_BACKUP_PRESENT) && (SRSS_BACKUP_PRESENT == 1u))) || (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION < 2) && defined (BACKUP_BREG_SET0)) || defined (CY_DOXYGEN)
+/*******************************************************************************
+* Function Name: Cy_SysPm_BackupWordStore
+****************************************************************************//**
+*
+* Stores supported number of words(SRSS_BACKUP_NUM_BREG) in Backup Domain
+*
+* \param wordIndex
+* Offset/Index of Backup Register Region(BREG) to where the data needs
+* to be stored.
+* Starts with 0, ends with (SRSS_BACKUP_NUM_BREG - 1)
+*
+* \param wordSrcPointer
+* Source address from where the words have to be picked and backed up.
+*
+* \param wordSize
+* Number of words to be stored
+*
+*******************************************************************************/
+
+void Cy_SysPm_BackupWordStore(uint32_t wordIndex, uint32_t *wordSrcPointer, uint32_t wordSize);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_BackupWordReStore
+****************************************************************************//**
+*
+* Restores supported number of words(SRSS_BACKUP_NUM_BREG) in Backup Domain
+*
+* \param wordIndex
+* Offset/Index of Backup Register Region(BREG) from where the data need
+* to be Restored.
+* Starts with 0, ends with (SRSS_BACKUP_NUM_BREG - 1)
+*
+* \param wordDstPointer
+* Destination address from where the backed up words have to be written.
+*
+* \param wordSize
+* Number of words to be Restored
+*
+*******************************************************************************/
+void Cy_SysPm_BackupWordReStore(uint32_t wordIndex, uint32_t *wordDstPointer, uint32_t wordSize);
+#endif  /* (defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS40SRSS)) && (defined (SRSS_BACKUP_PRESENT) && (SRSS_BACKUP_PRESENT == 1u)) || (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION < 2) && defined (BACKUP_BREG_SET0)) || defined (CY_DOXYGEN) */
 
 /** \} group_syspm_functions */
 
@@ -4759,8 +5331,6 @@ typedef cy_en_syspm_hibernate_wakeup_source_t  cy_en_syspm_hib_wakeup_source_t;
 #define Cy_SysPm_GetIoFreezeStatus           Cy_SysPm_IoIsFrozen
 
 /* BWC defines for Backup related functions */
-#define Cy_SysPm_SetBackupSupply             Cy_SysPm_BackupSetSupply
-#define Cy_SysPm_GetBackupSupply             Cy_SysPm_BackupGetSupply
 #define Cy_SysPm_EnableBackupVMeasure        Cy_SysPm_BackupEnableVoltageMeasurement
 #define Cy_SysPm_DisableBackupVMeasure       Cy_SysPm_BackupDisableVoltageMeasurement
 

@@ -59,9 +59,23 @@ var group__group__tcpwm__data__structures__pwm =
       [ "deadTimeClocksBuff_linecompl_out", "group__group__tcpwm__data__structures__pwm.html#ac700d4f8834d9702fdcfb3478627e7e3", null ],
       [ "glitch_filter_enable", "group__group__tcpwm__data__structures__pwm.html#a67a6184cfff26a9bbd37430308da4891", null ],
       [ "gf_depth", "group__group__tcpwm__data__structures__pwm.html#a80fe764b1303506c68b06358482b9cf8", null ],
+      [ "cc0_parallel_path_enable", "group__group__tcpwm__data__structures__pwm.html#affceac062bdd5223ea81b7645b7bab95", null ],
+      [ "cc1_parallel_path_enable", "group__group__tcpwm__data__structures__pwm.html#a5b39d72969f5fb293dc6575f7a870081", null ],
       [ "pwm_tc_sync_kill_dt", "group__group__tcpwm__data__structures__pwm.html#aec22a72f237c8ad78eb7fa85818a4af0", null ],
-      [ "pwm_sync_kill_dt", "group__group__tcpwm__data__structures__pwm.html#a8703da1aecb3538a8e98eed27063d894", null ]
+      [ "pwm_sync_kill_dt", "group__group__tcpwm__data__structures__pwm.html#a8703da1aecb3538a8e98eed27063d894", null ],
+      [ "debug_freeze_enable", "group__group__tcpwm__data__structures__pwm.html#a65f9a164620363fa75eac28a87aee5ea", null ],
+      [ "debug_suspend_enable", "group__group__tcpwm__data__structures__pwm.html#a9d7d000bc686c74cc6df5df5705c0868", null ],
+      [ "upDownMode", "group__group__tcpwm__data__structures__pwm.html#a35bd7fab8f3f5b211851713449aea167", null ],
+      [ "initialCountVal", "group__group__tcpwm__data__structures__pwm.html#a78d4fcef965acbb67821fd2d3ccb3dcf", null ],
+      [ "cc0MatchMode", "group__group__tcpwm__data__structures__pwm.html#a006986df22cd26697690eeb935b6cb0d", null ],
+      [ "cc1MatchMode", "group__group__tcpwm__data__structures__pwm.html#a56238b382fcdc092a9fa1cfdaa735552", null ],
+      [ "overflowMode", "group__group__tcpwm__data__structures__pwm.html#a92f470198a5227a4c629dbc5d42dca25", null ],
+      [ "underflowMode", "group__group__tcpwm__data__structures__pwm.html#ae9e87696b19fb526f5bcc39c077922ea", null ]
     ] ],
+    [ "Cy_TCPWM_DeadTime", "group__group__tcpwm__data__structures__pwm.html#unionCy__TCPWM__DeadTime", [
+      [ "u", "group__group__tcpwm__data__structures__pwm.html#a904d1913149faa91937b48618acf5671", null ]
+    ] ],
+    [ "Cy_TCPWM_DeadTime.__unnamed29__", "group__group__tcpwm__data__structures__pwm.html#structCy__TCPWM__DeadTime_8____unnamed29____", null ],
     [ "cy_en_tcpwm_dithering_t", "group__group__tcpwm__data__structures__pwm.html#ga5ba36f547c6817ce1f2a5ed6e89283ff", [
       [ "CY_TCPWM_DITHERING_DISABLE", "group__group__tcpwm__data__structures__pwm.html#gga5ba36f547c6817ce1f2a5ed6e89283ffa184ba01f25b8da6efec3a883e558ae61", null ],
       [ "CY_TCPWM_DITHERING_PERIOD", "group__group__tcpwm__data__structures__pwm.html#gga5ba36f547c6817ce1f2a5ed6e89283ffa4a79a7cbba7cd8259444c9f22cd2734c", null ],

@@ -14,4 +14,4 @@ for a complete description of the Peripheral Driver Library.
 
 
 ---
-© Cypress Semiconductor Corporation (an Infineon company), 2020-2025.
+© 2020-2026, Infineon Technologies AG or an affiliate of Infineon Technologies AG.

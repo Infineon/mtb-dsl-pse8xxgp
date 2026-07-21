@@ -12,4 +12,9 @@
   <Source id='power_v4-1.0'>
     <Destination id='power_v4-1.1' valid='true' message='Migration is successful' defaultMapping='true' />
   </Source>
+  <Source id='spi-3.0'>
+    <Destination id='spi-4.0' valid='true' message='SPI upgraded to version 4.0 with enhanced slave mode late sampling support and improved data rate calculations' defaultMapping='true'>
+      <Parameter param='EnableLateMisoSample' value='`${(value("ModeUser") eq "CY_SCB_SPI_MASTER") ? value("EnableLateMisoSample") : false}`' />
+    </Destination>
+  </Source>
 </Migration>

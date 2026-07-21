@@ -37,8 +37,11 @@ extern "C" {
 
 
 #if defined (CY_IP_MXS22LPCOMP)
+#if defined (CY_IP_MXS22RRAMC) && (CY_IP_MXS22RRAMC_VERSION == 2)
+#include "cy_v2_systrimm.h"
+#else
 #include "cy_systrimm.h"
-
+#endif
 
 /* Start trimming data for COMP_CH0 */
 #define TRIMM_START_IDX_COMP_CH0                                                                (90UL)
@@ -407,9 +410,14 @@ void Cy_LPComp_SetHysteresis(LPCOMP_Type* base, cy_en_lpcomp_channel_t channel, 
 ****************************************************************************//**
 *
 * Sets the comparator input sources. The comparator inputs can be connected
-* to the dedicated GPIO pins. Additionally, the negative
+* to the dedicated GPIO pins or AMUXBUSA/AMUXBUSB. Additionally, the negative
 * comparator input can be connected to the local VREF.
 * Even one unconnected input causes a comparator undefined output.
+*
+* \note Connection to AMUXBUSA/AMUXBUSB requires closing the additional
+* switches, which are part of the IO system. These switches can be configured
+* using the HSIOM->AMUX_SPLIT_CTL[3] register.
+* For details, refer to the appropriate Technical Reference Manual (TRM).
 *
 * \param *base
 *     The low-power comparator register structure pointer.
@@ -420,10 +428,15 @@ void Cy_LPComp_SetHysteresis(LPCOMP_Type* base, cy_en_lpcomp_channel_t channel, 
 * \param inputP
 *   Positive input selection:
 *   * CY_LPCOMP_SW_GPIO (0x01u);
+*   * CY_LPCOMP_SW_AMUXBUSA (0x02u) - Hi-Z in Hibernate mode;
+*   * CY_LPCOMP_SW_AMUXBUSB (0x04u) - Hi-Z in Hibernate mode.
+* \note The option AMUXBUS should NOT be selected in case of usage device from PSE family.
 *
 * \param inputN
 *   Negative input selection:
 *   * CY_LPCOMP_SW_GPIO (0x01u);
+*   * CY_LPCOMP_SW_AMUXBUSA   (0x02u) - Hi-Z in Hibernate mode;
+*   * CY_LPCOMP_SW_AMUXBUSB   (0x04u) - Hi-Z in Hibernate mode;
 *   * CY_LPCOMP_SW_LOCAL_VREF (0x08u) - the negative input only for a crude REF.
 *
 * \return None.
@@ -437,11 +450,41 @@ void Cy_LPComp_SetInputs(LPCOMP_Type* base, cy_en_lpcomp_channel_t channel, cy_e
     CY_ASSERT_L3(CY_LPCOMP_IS_INPUT_P_VALID(inputP));
     CY_ASSERT_L3(CY_LPCOMP_IS_INPUT_N_VALID(inputN));
 
-    (void) inputP;
-    input = (channel == CY_LPCOMP_CHANNEL_0) ? LPCOMP_CMP0_SW_CMP0_IP0_Msk : LPCOMP_CMP1_SW_CMP1_IP1_Msk;
+    switch(inputP)
+    {
+        case CY_LPCOMP_SW_AMUXBUSA:
+        {
+            input = (channel == CY_LPCOMP_CHANNEL_0) ? LPCOMP_CMP0_SW_CMP0_AP0_Msk : LPCOMP_CMP1_SW_CMP1_AP1_Msk;
+            HSIOM_AMUX_SPLIT_CTL(3U) = _CLR_SET_FLD32U(HSIOM_AMUX_SPLIT_CTL(3U), CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SL_SR, 3u);
+            break;
+        }
+        case CY_LPCOMP_SW_AMUXBUSB:
+        {
+            input = (channel == CY_LPCOMP_CHANNEL_0) ? LPCOMP_CMP0_SW_CMP0_BP0_Msk : LPCOMP_CMP1_SW_CMP1_BP1_Msk;
+            HSIOM_AMUX_SPLIT_CTL(3U) = _CLR_SET_FLD32U(HSIOM_AMUX_SPLIT_CTL(3U), CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_SR, 3u);
+            break;
+        }
+        default:
+        {
+            input = (channel == CY_LPCOMP_CHANNEL_0) ? LPCOMP_CMP0_SW_CMP0_IP0_Msk : LPCOMP_CMP1_SW_CMP1_IP1_Msk;
+            break;
+        }
+    }
 
     switch(inputN)
     {
+        case CY_LPCOMP_SW_AMUXBUSA:
+        {
+            input |= (channel == CY_LPCOMP_CHANNEL_0) ? LPCOMP_CMP0_SW_CMP0_AN0_Msk : LPCOMP_CMP1_SW_CMP1_AN1_Msk;
+            HSIOM_AMUX_SPLIT_CTL(3U) = _CLR_SET_FLD32U(HSIOM_AMUX_SPLIT_CTL(3U), CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_AA_SL_SR, 3u);
+            break;
+        }
+        case CY_LPCOMP_SW_AMUXBUSB:
+        {
+            input |= (channel == CY_LPCOMP_CHANNEL_0) ? LPCOMP_CMP0_SW_CMP0_BN0_Msk : LPCOMP_CMP1_SW_CMP1_BN1_Msk;
+            HSIOM_AMUX_SPLIT_CTL(3U) = _CLR_SET_FLD32U(HSIOM_AMUX_SPLIT_CTL(3U), CY_HSIOM_AMUX_SPLIT_CTL_SWITCH_BB_SL_SR, 3u);
+            break;
+        }
         case CY_LPCOMP_SW_LOCAL_VREF:
         {
             input |= (channel == CY_LPCOMP_CHANNEL_0) ? LPCOMP_CMP0_SW_CMP0_VN0_Msk : LPCOMP_CMP1_SW_CMP1_VN1_Msk;

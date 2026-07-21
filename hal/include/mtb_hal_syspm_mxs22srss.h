@@ -48,7 +48,7 @@ extern "C" {
 #define _MTB_HAL_SYSPM_SUPPORTS_DS_MODES
 
 #if defined(CY_IP_MXS22SRSS_VERSION) && (CY_IP_MXS22SRSS_VERSION == 2) && \
-    (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+    (CY_IP_MXS22SRSS_VERSION_MINOR == 1)
 
 #define _MTB_HAL_SYSPM_SUPPORTS_HIB_RAM_MODE
 
@@ -99,6 +99,49 @@ static inline bool _mtb_hal_syspm_ensure_cb_registered_dsram_lptimer(void)
 
 
 #endif // (MTB_HAL_DRIVER_AVAILABLE_LPTIMER)
+#if (MTB_HAL_DRIVER_AVAILABLE_LPTIMER)
+/* extern declarations for _mtb_hal_syspm_handle_lptimer and _mtb_hal_syspm_cb_params_default
+ * are provided by cb_deepsleep_ram_lptimer.inc.j2, which must be included before this file. */
+
+//--------------------------------------------------------------------------------------------------
+// _mtb_hal_syspm_ensure_cb_registered_hibram_lptimer
+//--------------------------------------------------------------------------------------------------
+#if defined(_MTB_HAL_SYSPM_SUPPORTS_HIB_RAM_MODE)
+static inline bool _mtb_hal_syspm_ensure_cb_registered_hibram_lptimer(void)
+{
+    static cy_stc_syspm_callback_t cb_hibernate_ram =
+    {
+        .callback       = _mtb_hal_syspm_handle_lptimer,
+        .type           = CY_SYSPM_HIBERNATE_RAM,
+        // We need to start the LPTimer before transition and stop it after the transition
+        .skipMode       = (CY_SYSPM_SKIP_CHECK_READY | CY_SYSPM_SKIP_CHECK_FAIL),
+        .callbackParams = &_mtb_hal_syspm_cb_params_default,
+        .prevItm        = NULL,
+        .nextItm        = NULL,
+        /* We want this to be the last to run before HibernateRAM entry, so that the LPTimer
+         * delay corresponds as closely as possible to the actual time asleep. This also
+         * means this will be the first to run on wakeup, which is also what we want
+         * so that we can accurately capture the time spent actually asleep for debugging
+         */
+        .order          = 255u,
+    };
+
+    return Cy_SysPm_RegisterCallback(&cb_hibernate_ram);
+}
+
+
+#else
+static inline bool _mtb_hal_syspm_ensure_cb_registered_hibram_lptimer(void)
+{
+    // This IP does not support Hibernate RAM
+    return true;
+}
+
+
+#endif // defined(_MTB_HAL_SYSPM_SUPPORTS_HIB_RAM_MODE)
+
+#endif // (MTB_HAL_DRIVER_AVAILABLE_LPTIMER)
+
 #if defined(__cplusplus)
 }
 #endif

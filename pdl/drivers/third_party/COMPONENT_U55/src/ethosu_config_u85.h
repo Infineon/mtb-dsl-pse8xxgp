@@ -30,11 +30,13 @@
 #endif
 
 #ifndef NPU_MEM_ATTR_2
-#define NPU_MEM_ATTR_2 (1 << 2) /* EXT AXI port, non_sharable, device_non_bufferable */
+// #define NPU_MEM_ATTR_2 (1 << 2) /* EXT AXI port, non_sharable, device_non_bufferable */
+#define NPU_MEM_ATTR_2 0 /* For SOCMEM we use sharable attribute*/
 #endif
 
 #ifndef NPU_MEM_ATTR_3
-#define NPU_MEM_ATTR_3 (1 << 2) /* EXT AXI port, non_sharable, device_non_bufferable */
+// #define NPU_MEM_ATTR_3 (1 << 2) /* EXT AXI port, non_sharable, device_non_bufferable */
+#define NPU_MEM_ATTR_3 0 /* For SOCMEM we use sharable attribute*/
 #endif
 
 /* Default MEM_ATTR index to use for command stream */

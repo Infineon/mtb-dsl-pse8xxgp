@@ -83,7 +83,7 @@
 * the interrupt must be enabled using the \ref Cy_AXIDMAC_Channel_SetInterruptMask
 * function for each AXIDMAC channel.
 * <B>NOTE:</B> When DCache is enabled it is critical to clean the DCache right before calling \ref Cy_AXIDMAC_Channel_Enable
-* .Cleaning the cache too early or too late may result in a \ref CY_AXIDMAC_INTR_SRC_BUS_ERROR interrupt.\n
+* . Cleaning the cache too early or too late may result in a \ref CY_AXIDMAC_INTR_SRC_BUS_ERROR interrupt.\n
 * Ensure cache maintenance operations are performed at the correct point in the sequence to avoid data coherency issues.
 *
 * <B>Scenario</B>: AXIDMAC with DMA descriptors, DMA config descriptors, source and destination buffer stored in memory
@@ -380,7 +380,7 @@ typedef struct
 
 __STATIC_INLINE void     Cy_AXIDMAC_Enable              (AXI_DMAC_Type * base);
 __STATIC_INLINE void     Cy_AXIDMAC_Disable             (AXI_DMAC_Type * base);
-__STATIC_INLINE uint32_t Cy_AXIDMAC_GetAllChannelStatus (AXI_DMAC_Type * base);
+__STATIC_INLINE uint32_t Cy_AXIDMAC_GetAllChannelStatus (AXI_DMAC_Type const * base);
 #if defined (CY_IP_MXSAXIDMAC)
 __STATIC_INLINE uint32_t Cy_AXIDMAC_GetActiveChannel    (AXI_DMAC_Type const * base);
 #elif defined (CY_IP_MXAXIDMAC)
@@ -510,7 +510,7 @@ void Cy_AXIDMAC_Descriptor_DeInit(cy_stc_axidmac_descriptor_t * descriptor);
 
 
 /*******************************************************************************
-* Function Name: Cy_DMAC_Descriptor_SetNextDescriptor
+* Function Name: Cy_AXIDMAC_Descriptor_SetNextDescriptor
 ****************************************************************************//**
 *
 * Sets a Next Descriptor parameter for the specified descriptor.
@@ -601,7 +601,7 @@ __STATIC_INLINE void Cy_AXIDMAC_Descriptor_SetChannelState     (cy_stc_axidmac_d
 
 
 /*******************************************************************************
-* Function Name: Cy_DMAC_Descriptor_GetNextDescriptor
+* Function Name: Cy_AXIDMAC_Descriptor_GetNextDescriptor
 ****************************************************************************//**
 *
 * Returns a next descriptor address of the specified descriptor.
@@ -732,7 +732,7 @@ __STATIC_INLINE void Cy_AXIDMAC_Disable(AXI_DMAC_Type * base)
 * \snippet axidmac/snippet/main.c snippet_Cy_AXIDMAC_GetAllChannelStatus
 *
 *******************************************************************************/
-__STATIC_INLINE uint32_t Cy_AXIDMAC_GetAllChannelStatus(AXI_DMAC_Type * base)
+__STATIC_INLINE uint32_t Cy_AXIDMAC_GetAllChannelStatus(AXI_DMAC_Type const * base)
 {
     return(_FLD2VAL(AXI_DMAC_STATUS_CH_EN, AXIDMAC_STATUS(base)));
 }
@@ -1394,11 +1394,11 @@ __STATIC_INLINE void Cy_AXIDMAC_Descriptor_SetYloopSrcIncrement(cy_stc_axidmac_d
 
 
 /*******************************************************************************
-* Function Name: Cy_DMAC_Descriptor_GetYloopSrcIncrement
+* Function Name: Cy_AXIDMAC_Descriptor_GetYloopSrcIncrement
 ****************************************************************************//**
 *
 * Returns the source increment parameter for the Y loop of the specified
-* descriptor (for 2D descriptors only).
+* descriptor (for 3D descriptors only).
 *
 * \param descriptor
 * The descriptor structure instance.
@@ -1999,7 +1999,7 @@ CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1')
 
 #endif /* CY_IP_MXSAXIDMAC || CY_IP_MXAXIDMAC */
 
-#endif  /* !defined (CY_AXI_DMAC_H) */
+#endif  /* !defined (CY_AXIDMAC_H) */
 
 /** \} group_axidmac */
 

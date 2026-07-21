@@ -37,9 +37,14 @@
 #elif defined(__ZEPHYR__)
     #include <zephyr.h>
     #include <fs/fs.h>
-#else
+#elif defined(__linux__)
     #include <stdbool.h>
-
+    #include <pthread.h>
+    #include <unistd.h>
+    #include "png.h"
+#else
+    /* Bare-metal / RTOS — no filesystem or PNG support */
+    #include <stdbool.h>
 #endif
 
 #if DUMP_CAPTURE || DUMP_LAST_CAPTURE
@@ -890,28 +895,12 @@ vg_lite_error_t vglitefDumpBuffer(char *Tag, size_t Physical, void * Logical, si
 
     vglitemLOCKDUMP();
 
-#if !DUMP_COMMAND_CAPTURE
     vglitemDUMP("@[%s 0x%08X 0x%08X", Tag, Physical + (Offset & ~3), bytes);
-#endif
 
     while (bytes >= 16)
     {
-#if !DUMP_COMMAND_CAPTURE
         vglitemDUMP("  0x%08X 0x%08X 0x%08X 0x%08X",
                 ptr[0], ptr[1], ptr[2], ptr[3]);
-#else
-        vglitemDUMP("  0x%08X", ptr[0]);
-        vglitemDUMP("  0x%08X", ptr[1]);
-        if (bytes == 16 && (ptr[2] == 0) && (ptr[3] == 0))
-        {
-            printf("This two commands is 0x00000000\n");
-        }
-        else {
-            vglitemDUMP("  0x%08X", ptr[2]);
-            vglitemDUMP("  0x%08X", ptr[3]);
-        }
-#endif
-
         ptr   += 4;
         bytes -= 16;
     }
@@ -919,36 +908,11 @@ vg_lite_error_t vglitefDumpBuffer(char *Tag, size_t Physical, void * Logical, si
     switch (bytes)
     {
     case 12:
-#if !DUMP_COMMAND_CAPTURE
         vglitemDUMP("  0x%08X 0x%08X 0x%08X", ptr[0], ptr[1], ptr[2]);
-#else
-        vglitemDUMP("  0x%08X", ptr[0]);
-        if ((ptr[1] == 0) && (ptr[2] == 0))
-        {
-            printf("This two commands is 0x00000000\n");
-        }
-        else
-        {
-            vglitemDUMP("  0x%08X", ptr[1]);
-            vglitemDUMP("  0x%08X", ptr[2]);
-        }
-#endif
         break;
 
     case 8:
-#if !DUMP_COMMAND_CAPTURE
         vglitemDUMP("  0x%08X 0x%08X", ptr[0], ptr[1]);
-#else
-        if ((ptr[0] == 0) && (ptr[1] == 0))
-        {
-            printf("This two commands is 0x00000000\n");
-        }
-        else
-        {
-            vglitemDUMP("  0x%08X", ptr[0]);
-            vglitemDUMP("  0x%08X", ptr[1]);
-        }
-#endif
         break;
 
     case 4:
@@ -956,11 +920,7 @@ vg_lite_error_t vglitefDumpBuffer(char *Tag, size_t Physical, void * Logical, si
         break;
     }
 
-#if !DUMP_COMMAND_CAPTURE
     vglitemDUMP("] -- %s", Tag);
-#else
-    vglitemDUMP("---This command end----");
-#endif
 
     vglitemUNLOCKDUMP();
 
@@ -982,28 +942,12 @@ vg_lite_error_t vglitefDumpBuffer_single(char* Tag, size_t Physical, void* Logic
 
     vglitemLOCKDUMP();
 
-#if !DUMP_COMMAND_CAPTURE
     vglitemDUMP_single("@[%s 0x%08X 0x%08X", Tag, Physical + (Offset & ~3), bytes);
-#endif
 
     while (bytes >= 16)
     {
-#if !DUMP_COMMAND_CAPTURE
         vglitemDUMP_single("  0x%08X 0x%08X 0x%08X 0x%08X",
             ptr[0], ptr[1], ptr[2], ptr[3]);
-#else
-        vglitemDUMP("  0x%08X", ptr[0]);
-        vglitemDUMP("  0x%08X", ptr[1]);
-        if (bytes == 16 && (ptr[2] == 0) && (ptr[3] == 0))
-        {
-            printf("This two commands is 0x00000000\n");
-        }
-        else {
-            vglitemDUMP("  0x%08X", ptr[2]);
-            vglitemDUMP("  0x%08X", ptr[3]);
-        }
-#endif
-
         ptr += 4;
         bytes -= 16;
     }
@@ -1011,36 +955,11 @@ vg_lite_error_t vglitefDumpBuffer_single(char* Tag, size_t Physical, void* Logic
     switch (bytes)
     {
     case 12:
-#if !DUMP_COMMAND_CAPTURE
         vglitemDUMP_single("  0x%08X 0x%08X 0x%08X", ptr[0], ptr[1], ptr[2]);
-#else
-        vglitemDUMP("  0x%08X", ptr[0]);
-        if ((ptr[1] == 0) && (ptr[2] == 0))
-        {
-            printf("This two commands is 0x00000000\n");
-        }
-        else
-        {
-            vglitemDUMP("  0x%08X", ptr[1]);
-            vglitemDUMP("  0x%08X", ptr[2]);
-        }
-#endif
         break;
 
     case 8:
-#if !DUMP_COMMAND_CAPTURE
         vglitemDUMP_single("  0x%08X 0x%08X", ptr[0], ptr[1]);
-#else
-        if ((ptr[0] == 0) && (ptr[1] == 0))
-        {
-            printf("This two commands is 0x00000000\n");
-        }
-        else
-        {
-            vglitemDUMP("  0x%08X", ptr[0]);
-            vglitemDUMP("  0x%08X", ptr[1]);
-        }
-#endif
         break;
 
     case 4:
@@ -1048,11 +967,7 @@ vg_lite_error_t vglitefDumpBuffer_single(char* Tag, size_t Physical, void* Logic
         break;
     }
 
-#if !DUMP_COMMAND_CAPTURE
     vglitemDUMP_single("] -- %s", Tag);
-#else
-    vglitemDUMP("---This command end----");
-#endif
 
     vglitemUNLOCKDUMP();
 

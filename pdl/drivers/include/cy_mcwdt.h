@@ -180,6 +180,10 @@ extern "C" {
                                                                    Cy_MCWDT_Disable(), Cy_MCWDT_ClearInterrupt() and Cy_MCWDT_ResetCounters(). */
 
 
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /* ADDED MANUALLY */
+/** For compatibility with PSE8X7 and PSB MCWDT driver */
+#define MCWDT_STRUCT_Type MCWDT_MAIN_Type
+#endif
 
 /** \} group_mcwdt_macros */
 
@@ -441,9 +445,15 @@ __STATIC_INLINE void Cy_MCWDT_Enable(MCWDT_STRUCT_Type *base, uint32_t counters,
     CY_ASSERT_L2(CY_MCWDT_IS_CNTS_MASK_VALID(counters));
 
     /* Extract particular counters for enable */
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /*PSE8X7: ADDED MANUALLY */
+    enableCounters = ((0UL != (counters & CY_MCWDT_CTR0)) ? MCWDT_MAIN_MCWDT_CTL_WDT_ENABLE0_Msk : 0UL) |
+                     ((0UL != (counters & CY_MCWDT_CTR1)) ? MCWDT_MAIN_MCWDT_CTL_WDT_ENABLE1_Msk : 0UL) |
+                     ((0UL != (counters & CY_MCWDT_CTR2)) ? MCWDT_MAIN_MCWDT_CTL_WDT_ENABLE2_Msk : 0UL);
+    #else
     enableCounters = ((0UL != (counters & CY_MCWDT_CTR0)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE0_Msk : 0UL) |
                      ((0UL != (counters & CY_MCWDT_CTR1)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE1_Msk : 0UL) |
                      ((0UL != (counters & CY_MCWDT_CTR2)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE2_Msk : 0UL);
+    #endif
 
     MCWDT_CTL(base) |= enableCounters;
 #endif
@@ -484,9 +494,15 @@ __STATIC_INLINE void Cy_MCWDT_Disable(MCWDT_STRUCT_Type *base, uint32_t counters
     CY_ASSERT_L2(CY_MCWDT_IS_CNTS_MASK_VALID(counters));
 
     /* Extract particular counters for disable */
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /* ADDED MANUALLY */
+    disableCounters = ((0UL != (counters & CY_MCWDT_CTR0)) ? MCWDT_MAIN_MCWDT_CTL_WDT_ENABLE0_Msk : 0UL) |
+                      ((0UL != (counters & CY_MCWDT_CTR1)) ? MCWDT_MAIN_MCWDT_CTL_WDT_ENABLE1_Msk : 0UL) |
+                      ((0UL != (counters & CY_MCWDT_CTR2)) ? MCWDT_MAIN_MCWDT_CTL_WDT_ENABLE2_Msk : 0UL);
+    #else
     disableCounters = ((0UL != (counters & CY_MCWDT_CTR0)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE0_Msk : 0UL) |
                       ((0UL != (counters & CY_MCWDT_CTR1)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE1_Msk : 0UL) |
                       ((0UL != (counters & CY_MCWDT_CTR2)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLE2_Msk : 0UL);
+    #endif
 
     MCWDT_CTL(base) &= ~disableCounters;
 #endif
@@ -521,13 +537,25 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetEnabledStatus(MCWDT_STRUCT_Type const *base
     switch (counter)
     {
         case CY_MCWDT_COUNTER0:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /*PSE8X7: ADDED MANUALLY */
+            status = _FLD2VAL(MCWDT_MAIN_MCWDT_CTL_WDT_ENABLED0, MCWDT_CTL(base));
+            #else
             status = _FLD2VAL(MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLED0, MCWDT_CTL(base));
+            #endif
             break;
         case CY_MCWDT_COUNTER1:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /*PSE8X7: ADDED MANUALLY */
+            status = _FLD2VAL(MCWDT_MAIN_MCWDT_CTL_WDT_ENABLED1, MCWDT_CTL(base));
+            #else
             status = _FLD2VAL(MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLED1, MCWDT_CTL(base));
+            #endif
             break;
         case CY_MCWDT_COUNTER2:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /*PSE8X7: ADDED MANUALLY */
+            status = _FLD2VAL(MCWDT_MAIN_MCWDT_CTL_WDT_ENABLED2, MCWDT_CTL(base));
+            #else
             status = _FLD2VAL(MCWDT_STRUCT_MCWDT_CTL_WDT_ENABLED2, MCWDT_CTL(base));
+            #endif
             break;
 
         default:
@@ -556,7 +584,11 @@ __STATIC_INLINE void Cy_MCWDT_Lock(MCWDT_STRUCT_Type *base)
 
     interruptState = Cy_SysLib_EnterCriticalSection();
 #if !defined(CY_IP_MXS40SRSS) || (CY_IP_MXS40SRSS_VERSION < 2)
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /*PSE8X7: ADDED MANUALLY */
+    MCWDT_LOCK(base) = _CLR_SET_FLD32U(MCWDT_LOCK(base), MCWDT_MAIN_MCWDT_LOCK_MCWDT_LOCK, (uint32_t)CY_MCWDT_LOCK_SET01);
+#else
     MCWDT_LOCK(base) = _CLR_SET_FLD32U(MCWDT_LOCK(base), MCWDT_STRUCT_MCWDT_LOCK_MCWDT_LOCK, (uint32_t)CY_MCWDT_LOCK_SET01);
+#endif
 #endif
 
     Cy_SysLib_ExitCriticalSection(interruptState);
@@ -579,8 +611,13 @@ __STATIC_INLINE void Cy_MCWDT_Unlock(MCWDT_STRUCT_Type *base)
 
     interruptState = Cy_SysLib_EnterCriticalSection();
 #if !defined(CY_IP_MXS40SRSS) || (CY_IP_MXS40SRSS_VERSION < 2)
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) /*PSE8X7: ADDED MANUALLY */
+    MCWDT_LOCK(base) = _CLR_SET_FLD32U(MCWDT_LOCK(base), MCWDT_MAIN_MCWDT_LOCK_MCWDT_LOCK, (uint32_t)CY_MCWDT_LOCK_CLR0);
+    MCWDT_LOCK(base) = _CLR_SET_FLD32U(MCWDT_LOCK(base), MCWDT_MAIN_MCWDT_LOCK_MCWDT_LOCK, (uint32_t)CY_MCWDT_LOCK_CLR1);
+#else
     MCWDT_LOCK(base) = _CLR_SET_FLD32U(MCWDT_LOCK(base), MCWDT_STRUCT_MCWDT_LOCK_MCWDT_LOCK, (uint32_t)CY_MCWDT_LOCK_CLR0);
     MCWDT_LOCK(base) = _CLR_SET_FLD32U(MCWDT_LOCK(base), MCWDT_STRUCT_MCWDT_LOCK_MCWDT_LOCK, (uint32_t)CY_MCWDT_LOCK_CLR1);
+#endif
 #endif
     Cy_SysLib_ExitCriticalSection(interruptState);
 }
@@ -602,7 +639,11 @@ __STATIC_INLINE void Cy_MCWDT_Unlock(MCWDT_STRUCT_Type *base)
 __STATIC_INLINE uint32_t Cy_MCWDT_GetLockedStatus(MCWDT_STRUCT_Type const *base)
 {
 #if !defined(CY_IP_MXS40SRSS) || (CY_IP_MXS40SRSS_VERSION < 2)
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    return ((0UL != (MCWDT_LOCK(base) & MCWDT_MAIN_MCWDT_LOCK_MCWDT_LOCK_Msk)) ? 1UL : 0UL);
+#else
     return ((0UL != (MCWDT_LOCK(base) & MCWDT_STRUCT_MCWDT_LOCK_MCWDT_LOCK_Msk)) ? 1UL : 0UL);
+#endif
 #endif
 }
 
@@ -706,11 +747,19 @@ __STATIC_INLINE void Cy_MCWDT_SetClearOnMatch(MCWDT_STRUCT_Type *base, cy_en_mcw
 
     if (CY_MCWDT_COUNTER0 == counter)
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_CLEAR0, enable);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR0, enable);
+        #endif
     }
     else
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_CLEAR1, enable);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR1, enable);
+        #endif
     }
 }
 
@@ -742,11 +791,19 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetClearOnMatch(MCWDT_STRUCT_Type const *base,
 
     if (CY_MCWDT_COUNTER0 == counter)
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        getClear = _FLD2VAL(MCWDT_MAIN_MCWDT_CONFIG_WDT_CLEAR0, MCWDT_CONFIG(base));
+        #else
         getClear = _FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR0, MCWDT_CONFIG(base));
+        #endif
     }
     else
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        getClear = _FLD2VAL(MCWDT_MAIN_MCWDT_CONFIG_WDT_CLEAR1, MCWDT_CONFIG(base));
+        #else
         getClear = _FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR1, MCWDT_CONFIG(base));
+        #endif
     }
 
     return (getClear);
@@ -773,10 +830,17 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetClearOnMatch(MCWDT_STRUCT_Type const *base,
 __STATIC_INLINE void Cy_MCWDT_SetCascade(MCWDT_STRUCT_Type *base, cy_en_mcwdtcascade_t cascade)
 {
     CY_ASSERT_L3(CY_MCWDT_IS_CASCADE_VALID(cascade));
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_CASCADE0_1,
+                                             (uint32_t) cascade);
+    MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_CASCADE1_2,
+                                             ((uint32_t) cascade >> 1u));
+    #else
     MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CASCADE0_1,
                                              (uint32_t) cascade);
     MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CASCADE1_2,
                                              ((uint32_t) cascade >> 1u));
+    #endif
 }
 
 /*******************************************************************************
@@ -796,8 +860,13 @@ __STATIC_INLINE cy_en_mcwdtcascade_t Cy_MCWDT_GetCascade(MCWDT_STRUCT_Type const
 {
     uint32_t cascade;
 
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    cascade = (_FLD2VAL(MCWDT_MAIN_MCWDT_CONFIG_WDT_CASCADE1_2, MCWDT_CONFIG(base)) << 1u) |
+               _FLD2VAL(MCWDT_MAIN_MCWDT_CONFIG_WDT_CASCADE0_1, MCWDT_CONFIG(base));
+    #else
     cascade = (_FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CASCADE1_2, MCWDT_CONFIG(base)) << 1u) |
                _FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CASCADE0_1, MCWDT_CONFIG(base));
+    #endif
 
 
     return ((cy_en_mcwdtcascade_t) cascade);
@@ -840,17 +909,32 @@ __STATIC_INLINE void Cy_MCWDT_SetMatch(MCWDT_STRUCT_Type *base, cy_en_mcwdtctr_t
 {
     CY_ASSERT_L3(CY_MCWDT_IS_CNT_NUM_VALID(counter));
 
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    CY_ASSERT_L2(CY_MCWDT_IS_MATCH_VALID((CY_MCWDT_COUNTER0 == counter) ?                                        \
+                                         ((MCWDT_CONFIG(base) & MCWDT_MAIN_MCWDT_CONFIG_WDT_CLEAR0_Msk) > 0U) :  \
+                                         ((MCWDT_CONFIG(base) & MCWDT_MAIN_MCWDT_CONFIG_WDT_CLEAR1_Msk) > 0U),   \
+                                         match));
+
+    #else
     CY_ASSERT_L2(CY_MCWDT_IS_MATCH_VALID((CY_MCWDT_COUNTER0 == counter) ?                                        \
                                          ((MCWDT_CONFIG(base) & MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR0_Msk) > 0U) :  \
                                          ((MCWDT_CONFIG(base) & MCWDT_STRUCT_MCWDT_CONFIG_WDT_CLEAR1_Msk) > 0U),   \
                                          match));
 
+    #endif
     MCWDT_MATCH(base) = (counter == CY_MCWDT_COUNTER0) ?
 
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        _CLR_SET_FLD32U(MCWDT_MATCH(base), MCWDT_MAIN_MCWDT_MATCH_WDT_MATCH0,
+                       (match & MCWDT_MAIN_MCWDT_MATCH_WDT_MATCH0_Msk)) :
+        _CLR_SET_FLD32U(MCWDT_MATCH(base), MCWDT_MAIN_MCWDT_MATCH_WDT_MATCH1,
+                       (match & MCWDT_MAIN_MCWDT_MATCH_WDT_MATCH0_Msk));
+    #else
         _CLR_SET_FLD32U(MCWDT_MATCH(base), MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH0,
                         (match & MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH0_Msk)) :
         _CLR_SET_FLD32U(MCWDT_MATCH(base), MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH1,
                         (match & MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH0_Msk));
+    #endif
 
     Cy_SysLib_DelayUs(waitUs);
 }
@@ -881,8 +965,13 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetMatch(MCWDT_STRUCT_Type const *base, cy_en_
 
     CY_ASSERT_L3(CY_MCWDT_IS_CNT_NUM_VALID(counter));
 
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    match = (counter == CY_MCWDT_COUNTER0) ? _FLD2VAL(MCWDT_MAIN_MCWDT_MATCH_WDT_MATCH0, MCWDT_MATCH(base)) :
+                                          _FLD2VAL(MCWDT_MAIN_MCWDT_MATCH_WDT_MATCH1, MCWDT_MATCH(base));
+    #else
     match = (counter == CY_MCWDT_COUNTER0) ? _FLD2VAL(MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH0, MCWDT_MATCH(base)) :
                                           _FLD2VAL(MCWDT_STRUCT_MCWDT_MATCH_WDT_MATCH1, MCWDT_MATCH(base));
+    #endif
 
     return (match);
 }
@@ -909,7 +998,11 @@ __STATIC_INLINE void Cy_MCWDT_SetToggleBit(MCWDT_STRUCT_Type *base, uint32_t bit
 {
     CY_ASSERT_L2(CY_MCWDT_IS_BIT_VALID(bit));
 #if !defined(CY_IP_MXS40SRSS) || (CY_IP_MXS40SRSS_VERSION < 2)
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_BITS2, bit);
+#else
     MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_BITS2, bit);
+#endif
 #endif
 }
 
@@ -930,7 +1023,11 @@ __STATIC_INLINE void Cy_MCWDT_SetToggleBit(MCWDT_STRUCT_Type *base, uint32_t bit
 __STATIC_INLINE uint32_t Cy_MCWDT_GetToggleBit(MCWDT_STRUCT_Type const *base)
 {
 #if !defined(CY_IP_MXS40SRSS) || (CY_IP_MXS40SRSS_VERSION < 2)
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    return (_FLD2VAL(MCWDT_MAIN_MCWDT_CONFIG_WDT_BITS2, MCWDT_CONFIG(base)));
+#else
     return (_FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_BITS2, MCWDT_CONFIG(base)));
+#endif
 #endif
 }
 
@@ -963,13 +1060,25 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetCount(MCWDT_STRUCT_Type const *base, cy_en_
     switch (counter)
     {
         case CY_MCWDT_COUNTER0:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2VAL(MCWDT_MAIN_MCWDT_CNTLOW_WDT_CTR0, MCWDT_CNTLOW(base));
+            #else
             countVal = _FLD2VAL(MCWDT_STRUCT_MCWDT_CNTLOW_WDT_CTR0, MCWDT_CNTLOW(base));
+            #endif
             break;
         case CY_MCWDT_COUNTER1:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2VAL(MCWDT_MAIN_MCWDT_CNTLOW_WDT_CTR1, MCWDT_CNTLOW(base));
+            #else
             countVal = _FLD2VAL(MCWDT_STRUCT_MCWDT_CNTLOW_WDT_CTR1, MCWDT_CNTLOW(base));
+            #endif
             break;
         case CY_MCWDT_COUNTER2:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2VAL(MCWDT_MAIN_MCWDT_CNTHIGH_WDT_CTR2, MCWDT_CNTHIGH(base));
+            #else
             countVal = _FLD2VAL(MCWDT_STRUCT_MCWDT_CNTHIGH_WDT_CTR2, MCWDT_CNTHIGH(base));
+            #endif
             break;
         default:
             CY_ASSERT(0u != 0u);
@@ -1023,9 +1132,15 @@ __STATIC_INLINE void Cy_MCWDT_ResetCounters(MCWDT_STRUCT_Type *base, uint32_t co
     CY_ASSERT_L2(CY_MCWDT_IS_CNTS_MASK_VALID(counters));
 
     /* Extract particular counters for reset */
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    resetCounters = ((0UL != (counters & CY_MCWDT_CTR0)) ? MCWDT_MAIN_MCWDT_CTL_WDT_RESET0_Msk : 0UL) |
+                    ((0UL != (counters & CY_MCWDT_CTR1)) ? MCWDT_MAIN_MCWDT_CTL_WDT_RESET1_Msk : 0UL) |
+                    ((0UL != (counters & CY_MCWDT_CTR2)) ? MCWDT_MAIN_MCWDT_CTL_WDT_RESET2_Msk : 0UL);
+    #else
     resetCounters = ((0UL != (counters & CY_MCWDT_CTR0)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_RESET0_Msk : 0UL) |
                     ((0UL != (counters & CY_MCWDT_CTR1)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_RESET1_Msk : 0UL) |
                     ((0UL != (counters & CY_MCWDT_CTR2)) ? MCWDT_STRUCT_MCWDT_CTL_WDT_RESET2_Msk : 0UL);
+    #endif
 
     MCWDT_CTL(base) |= resetCounters;
 
@@ -1211,11 +1326,19 @@ __STATIC_INLINE void Cy_MCWDT_SetLowerLimit(MCWDT_STRUCT_Type *base, cy_en_mcwdt
 {
     CY_ASSERT_L3(CY_MCWDT_IS_LOWER_LIMIT_VALID(counter));
 
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+    MCWDT_LOWER_LIMIT(base) = (counter == CY_MCWDT_LOWER_LIMIT0) ?
+        _CLR_SET_FLD32U(MCWDT_LOWER_LIMIT(base), MCWDT_MAIN_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0,
+                        (lowerLimit & MCWDT_MAIN_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0_Msk)) :
+        _CLR_SET_FLD32U(MCWDT_LOWER_LIMIT(base), MCWDT_MAIN_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT1,
+                        (lowerLimit & MCWDT_MAIN_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0_Msk));
+    #else
     MCWDT_LOWER_LIMIT(base) = (counter == CY_MCWDT_LOWER_LIMIT0) ?
         _CLR_SET_FLD32U(MCWDT_LOWER_LIMIT(base), MCWDT_STRUCT_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0,
                         (lowerLimit & MCWDT_STRUCT_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0_Msk)) :
         _CLR_SET_FLD32U(MCWDT_LOWER_LIMIT(base), MCWDT_STRUCT_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT1,
                         (lowerLimit & MCWDT_STRUCT_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0_Msk));
+    #endif
 
     Cy_SysLib_DelayUs(waitUs);
 }
@@ -1245,10 +1368,18 @@ __STATIC_INLINE uint32_t Cy_MCWDT_GetLowerLimit(MCWDT_STRUCT_Type const *base, c
     switch (counter)
     {
         case CY_MCWDT_LOWER_LIMIT0:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2VAL(MCWDT_MAIN_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0, MCWDT_LOWER_LIMIT(base));
+            #else
             countVal = _FLD2VAL(MCWDT_STRUCT_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT0, MCWDT_LOWER_LIMIT(base));
+            #endif
             break;
         case CY_MCWDT_LOWER_LIMIT1:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2VAL(MCWDT_MAIN_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT1, MCWDT_LOWER_LIMIT(base));
+            #else
             countVal = _FLD2VAL(MCWDT_STRUCT_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT1, MCWDT_LOWER_LIMIT(base));
+            #endif
             break;
         default:
             CY_ASSERT(0u != 0u);
@@ -1288,11 +1419,19 @@ __STATIC_INLINE void Cy_MCWDT_SetLowerLimitMode(MCWDT_STRUCT_Type *base, cy_en_m
 
     if (CY_MCWDT_LOWER_LIMIT0 == counter)
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_LOWER_MODE0, mode);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_LOWER_MODE0, mode);
+        #endif
     }
     else
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_LOWER_MODE1, mode);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_LOWER_MODE1, mode);
+        #endif
     }
 }
 
@@ -1320,11 +1459,19 @@ __STATIC_INLINE cy_en_mcwdtlowerlimitmode_t Cy_MCWDT_GetLowerLimitMode(MCWDT_STR
 
     if (CY_MCWDT_LOWER_LIMIT0 == counter)
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        getLowerLimitMode = _FLD2VAL(MCWDT_MAIN_MCWDT_CONFIG_WDT_LOWER_MODE0, MCWDT_CONFIG(base));
+        #else
         getLowerLimitMode = _FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_LOWER_MODE0, MCWDT_CONFIG(base));
+        #endif
     }
     else
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        getLowerLimitMode = _FLD2VAL(MCWDT_MAIN_MCWDT_CONFIG_WDT_LOWER_MODE1, MCWDT_CONFIG(base));
+        #else
         getLowerLimitMode = _FLD2VAL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_LOWER_MODE1, MCWDT_CONFIG(base));
+        #endif
     }
 
     return (cy_en_mcwdtlowerlimitmode_t)getLowerLimitMode;
@@ -1382,11 +1529,19 @@ __STATIC_INLINE void Cy_MCWDT_SetCascadeCarryOutRollOver(MCWDT_STRUCT_Type *base
 
     if (CY_MCWDT_CASCADE_C0C1 == counter)
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_CARRY0_1, carryoutconfig);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY0_1, carryoutconfig);
+        #endif
     }
     else
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_CARRY1_2, carryoutconfig);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY1_2, carryoutconfig);
+        #endif
     }
 }
 
@@ -1416,10 +1571,18 @@ __STATIC_INLINE bool Cy_MCWDT_GetCascadeCarryOutRollOver(MCWDT_STRUCT_Type const
     switch (counter)
     {
         case CY_MCWDT_CASCADE_C0C1:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2BOOL(MCWDT_MAIN_MCWDT_CONFIG_WDT_CARRY0_1, MCWDT_CONFIG(base));
+            #else
             countVal = _FLD2BOOL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY0_1, MCWDT_CONFIG(base));
+            #endif
             break;
         case CY_MCWDT_CASCADE_C1C2:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2BOOL(MCWDT_MAIN_MCWDT_CONFIG_WDT_CARRY1_2, MCWDT_CONFIG(base));
+            #else
             countVal = _FLD2BOOL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_CARRY1_2, MCWDT_CONFIG(base));
+            #endif
             break;
         default:
             CY_ASSERT(0u != 0u);
@@ -1454,11 +1617,19 @@ __STATIC_INLINE void Cy_MCWDT_SetCascadeMatchCombined(MCWDT_STRUCT_Type *base, c
 {
     if (CY_MCWDT_CASCADE_C0C1 == counter)
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_MATCH0_1, matchconfig);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH0_1, matchconfig);
+        #endif
     }
     else
     {
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+        MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_MAIN_MCWDT_CONFIG_WDT_MATCH1_2, matchconfig);
+        #else
         MCWDT_CONFIG(base) = _CLR_SET_FLD32U(MCWDT_CONFIG(base), MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH1_2, matchconfig);
+        #endif
     }
 }
 
@@ -1485,10 +1656,18 @@ __STATIC_INLINE bool Cy_MCWDT_GetCascadeMatchCombined(MCWDT_STRUCT_Type const *b
     switch (counter)
     {
         case CY_MCWDT_CASCADE_C0C1:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2BOOL(MCWDT_MAIN_MCWDT_CONFIG_WDT_MATCH0_1, MCWDT_CONFIG(base));
+            #else
             countVal = _FLD2BOOL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH0_1, MCWDT_CONFIG(base));
+            #endif
             break;
         case CY_MCWDT_CASCADE_C1C2:
+            #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+            countVal = _FLD2BOOL(MCWDT_MAIN_MCWDT_CONFIG_WDT_MATCH1_2, MCWDT_CONFIG(base));
+            #else
             countVal = _FLD2BOOL(MCWDT_STRUCT_MCWDT_CONFIG_WDT_MATCH1_2, MCWDT_CONFIG(base));
+            #endif
             break;
         default:
             CY_ASSERT(0u != 0u);

@@ -23,6 +23,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 #include "cy_autanalog_ctb.h"
 
 #ifdef CY_IP_MXS22LPPASS_CTB
@@ -216,4 +218,5 @@ cy_en_autanalog_status_t Cy_AutAnalog_CTB_LoadDynamicConfig(uint8_t ctbIdx, uint
 }
 
 #endif /* CY_IP_MXS22LPPASS_CTB */
+#endif
 /* [] END OF FILE */

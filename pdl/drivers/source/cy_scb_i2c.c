@@ -6,8 +6,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2016-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2016-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,6 +47,10 @@ static void MasterHandleDataTransmit(CySCB_Type *base, cy_stc_scb_i2c_context_t 
 static void MasterHandleDataReceive (CySCB_Type *base, cy_stc_scb_i2c_context_t *context);
 static void MasterHandleStop        (CySCB_Type *base, cy_stc_scb_i2c_context_t *context);
 static void MasterHandleComplete    (CySCB_Type *base, cy_stc_scb_i2c_context_t *context);
+
+#if (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))
+static void HandleTGSEvents   (CySCB_Type *base, cy_stc_scb_i2c_context_t *context, bool isMaster);
+#endif
 
 static cy_en_scb_i2c_status_t HandleStatus(CySCB_Type *base, uint32_t status,
                                            cy_stc_scb_i2c_context_t *context);
@@ -99,6 +103,15 @@ cy_en_scb_i2c_status_t Cy_SCB_I2C_Init(CySCB_Type *base, cy_stc_scb_i2c_config_t
 #if(defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION==1))
     SCB_CTRL(base) |= SCB_CTRL_BYTE_MODE_Msk;
 #endif /* CY_IP_MXSCB_VERSION */
+    /* When i2cMode is MASTER_SLAVE and address mask is 0
+       request to any address on the line will match
+       but software needs to check the address and respond.
+       enabling ADDRE_ACCEPT will copy the address to RX FIFO, so that software can read and respond.
+     */
+    if((config->i2cMode == CY_SCB_I2C_MASTER_SLAVE) && (config->slaveAddressMask == 0u))
+    {
+        SCB_CTRL(base) |= SCB_CTRL_ADDR_ACCEPT_Msk;
+    }
 
     SCB_I2C_CTRL(base) = _BOOL2FLD(SCB_I2C_CTRL_S_GENERAL_IGNORE, !config->ackGeneralAddr)        |
                          _VAL2FLD(SCB_I2C_CTRL_HIGH_PHASE_OVS, (config->highPhaseDutyCycle - 1U)) |
@@ -122,6 +135,17 @@ cy_en_scb_i2c_status_t Cy_SCB_I2C_Init(CySCB_Type *base, cy_stc_scb_i2c_config_t
     /* Set the default address and mask */
     SCB_RX_MATCH(base) = _VAL2FLD(SCB_RX_MATCH_ADDR, ((uint32_t) config->slaveAddress << 1UL)) |
                          _VAL2FLD(SCB_RX_MATCH_MASK, (uint32_t)  config->slaveAddressMask);
+
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)))
+    for(uint8_t msaIdx = 0u; msaIdx < 5u; msaIdx++)
+    {
+        if (config->multipleSlaveAddress[msaIdx] != 0u)
+        {
+            Cy_SCB_I2C_MSA_SlaveSetAddress(base, config->multipleSlaveAddress[msaIdx], msaIdx + 1u);
+        }
+        Cy_SCB_I2C_MSA_SlaveSetAddressMask(base, config->multipleSlaveAddressMask[msaIdx], msaIdx + 1u);
+    }
+#endif /* ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))) */
 
     /* Configure the TX direction */
     SCB_TX_CTRL(base)      = CY_SCB_I2C_TX_CTRL;
@@ -158,6 +182,10 @@ cy_en_scb_i2c_status_t Cy_SCB_I2C_Init(CySCB_Type *base, cy_stc_scb_i2c_config_t
     /* Unregister callbacks */
     context->cbEvents = NULL;
     context->cbAddr   = NULL;
+    context->cbByteSlave   = NULL;
+    context->cbByteMaster  = NULL;
+
+    context->i2cMode = config->i2cMode;
 
     return CY_SCB_I2C_SUCCESS;
 }
@@ -1253,8 +1281,10 @@ cy_en_scb_i2c_status_t Cy_SCB_I2C_MasterRead(CySCB_Type *base,
     cy_en_scb_i2c_status_t retStatus = CY_SCB_I2C_MASTER_NOT_READY;
 
     /* Disable I2C slave interrupt sources to protect state */
-    Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
-
+    if(context->i2cMode == CY_SCB_I2C_MASTER_SLAVE)
+    {
+        Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
+    }
     if (0UL != (CY_SCB_I2C_IDLE_MASK & context->state))
     {
         uint32_t intrState;
@@ -1334,7 +1364,10 @@ cy_en_scb_i2c_status_t Cy_SCB_I2C_MasterRead(CySCB_Type *base,
     }
 
     /* Enable I2C slave interrupt sources */
-    Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_I2C_SLAVE_INTR);
+    if(context->i2cMode == CY_SCB_I2C_MASTER_SLAVE)
+    {
+        Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_I2C_SLAVE_INTR);
+    }
 
     return (retStatus);
 }
@@ -1481,7 +1514,10 @@ cy_en_scb_i2c_status_t Cy_SCB_I2C_MasterWrite(CySCB_Type *base,
     cy_en_scb_i2c_status_t retStatus = CY_SCB_I2C_MASTER_NOT_READY;
 
     /* Disable I2C slave interrupt sources to protect state */
-    Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
+    if(context->i2cMode == CY_SCB_I2C_MASTER_SLAVE)
+    {
+        Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
+    }
 
     if (0UL != (CY_SCB_I2C_IDLE_MASK & context->state))
     {
@@ -1564,7 +1600,10 @@ cy_en_scb_i2c_status_t Cy_SCB_I2C_MasterWrite(CySCB_Type *base,
     }
 
     /* Enable I2C slave interrupt sources */
-    Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_I2C_SLAVE_INTR);
+    if(context->i2cMode == CY_SCB_I2C_MASTER_SLAVE)
+    {
+        Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_I2C_SLAVE_INTR);
+    }
 
     return (retStatus);
 }
@@ -1610,11 +1649,8 @@ void Cy_SCB_I2C_MasterAbortWrite(CySCB_Type *base, cy_stc_scb_i2c_context_t *con
         /* Disable TX processing */
         Cy_SCB_SetTxInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
 
-        if (context->useTxFifo)
-        {
-            /* Clear TX FIFO to allow Stop generation */
-            Cy_SCB_ClearTxFifo(base);
-        }
+        /* Clear TX FIFO to allow Stop generation. This should happen irrespective of useTxFifo is enabled or not*/
+        Cy_SCB_ClearTxFifo(base);
 
         if ((CY_SCB_I2C_MASTER_TX == context->state) || (CY_SCB_I2C_MASTER_TX_DONE == context->state))
         {
@@ -2207,6 +2243,15 @@ void Cy_SCB_I2C_SlaveInterrupt(CySCB_Type *base, cy_stc_scb_i2c_context_t *conte
         Cy_SCB_ClearI2CInterrupt(base, CY_SCB_I2C_INTR_WAKEUP);
     }
 
+#if (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))
+    /* Check for TGS conditions */
+    uint32_t intrCause = Cy_SCB_GetInterruptCause(base);
+    if (0UL != (CY_SCB_TGS_INTR & intrCause))
+    {
+        HandleTGSEvents(base, context, false);
+    }
+#endif /* (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4) */
+
     /* Handle the slave interrupt sources */
     slaveIntrStatus = Cy_SCB_GetSlaveInterruptStatusMasked(base);
 
@@ -2238,6 +2283,36 @@ void Cy_SCB_I2C_SlaveInterrupt(CySCB_Type *base, cy_stc_scb_i2c_context_t *conte
         }
     }
 
+    /* Call low-level event callbacks before the high-level handling */
+    if (0UL != (slaveIntrStatus & CY_SCB_SLAVE_INTR_I2C_ARB_LOST))
+    {
+        Cy_SCB_ClearSlaveInterrupt(base, CY_SCB_SLAVE_INTR_I2C_ARB_LOST);
+        if (NULL != context->cbEvents)
+        {
+            context->cbEvents(CY_SCB_I2C_SLAVE_ARB_LOST_EVENT);
+        }
+    }
+#if (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))
+    if (0UL != (slaveIntrStatus & CY_SCB_SLAVE_INTR_I2C_RESTART))
+    {
+        context->slaveStatus |= CY_SCB_I2C_SLAVE_RESTART;
+        Cy_SCB_ClearSlaveInterrupt(base, CY_SCB_SLAVE_INTR_I2C_RESTART);
+        if (NULL != context->cbEvents)
+        {
+            context->cbEvents(CY_SCB_I2C_SLAVE_RESTART_EVENT);
+        }
+    }
+    if (0UL != (slaveIntrStatus & CY_SCB_SLAVE_INTR_I2C_STOP_ANY))
+    {
+        Cy_SCB_ClearSlaveInterrupt(base, CY_SCB_SLAVE_INTR_I2C_STOP_ANY);
+        context->slaveStatus |= CY_SCB_I2C_SLAVE_STOP_ANY;
+        if (NULL != context->cbEvents)
+        {
+            context->cbEvents(CY_SCB_I2C_SLAVE_STOP_ANY_EVENT);
+        }
+    }
+#endif /* (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4) */
+
     /* Handle the receive direction (master writes data) */
     if (0UL != (CY_SCB_RX_INTR_LEVEL & Cy_SCB_GetRxInterruptStatusMasked(base)))
     {
@@ -2267,13 +2342,99 @@ void Cy_SCB_I2C_SlaveInterrupt(CySCB_Type *base, cy_stc_scb_i2c_context_t *conte
     }
 
     /* Handle the transmit direction (master reads data) */
-    if (0UL != (CY_SCB_I2C_SLAVE_INTR_TX & Cy_SCB_GetTxInterruptStatusMasked(base)))
+    if ((0UL != (CY_SCB_I2C_SLAVE_INTR_TX & Cy_SCB_GetTxInterruptStatusMasked(base))) && !context->slaveRdPaused)
     {
         SlaveHandleDataTransmit(base, context);
 
         Cy_SCB_ClearTxInterrupt(base, CY_SCB_TX_INTR_LEVEL);
     }
 }
+
+#if (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))
+/*******************************************************************************
+* Function Name: HandleTGSEvents
+****************************************************************************//**
+*
+* Checks for TGS error conditions and call callbacks as needed
+*
+* \param base
+* The pointer to the I2C SCB instance.
+*
+* \param context
+* The pointer to the context structure \ref cy_stc_scb_i2c_context_t allocated
+* by the user. The structure is used during the I2C operation for internal
+* configuration and data retention. The user must not modify anything
+* in this structure.
+*
+* \param isMaster
+* Master true, Slave false
+*
+*******************************************************************************/
+static void HandleTGSEvents(CySCB_Type *base, cy_stc_scb_i2c_context_t *context, bool isMaster)
+{
+    uint32_t tgsIntrStatus = Cy_SCB_GetTgsInterruptStatusMasked(base);
+    if (0UL != (tgsIntrStatus & CY_SCB_TGS_INTR_0_UNDERFLOW))
+    {
+        Cy_SCB_ClearTgsInterrupt(base, CY_SCB_TGS_INTR_0_UNDERFLOW);
+        if (isMaster)
+        {
+            context->masterStatus |= CY_SCB_I2C_MASTER_TIMEOUT0;
+            if (NULL != context->cbEvents)
+            {
+                context->cbEvents(CY_SCB_I2C_MASTER_TIMEOUT0_EVENT);
+            }
+        }
+        else
+        {
+            context->slaveStatus |= CY_SCB_I2C_SLAVE_TIMEOUT0;
+            if (NULL != context->cbEvents)
+            {
+                context->cbEvents(CY_SCB_I2C_SLAVE_TIMEOUT0_EVENT);
+            }
+        }
+    }
+    if (0UL != (tgsIntrStatus & CY_SCB_TGS_INTR_1_UNDERFLOW))
+    {
+        Cy_SCB_ClearTgsInterrupt(base, CY_SCB_TGS_INTR_1_UNDERFLOW);
+        if (isMaster)
+        {
+            context->masterStatus |= CY_SCB_I2C_MASTER_TIMEOUT1;
+            if (NULL != context->cbEvents)
+            {
+                context->cbEvents(CY_SCB_I2C_MASTER_TIMEOUT1_EVENT);
+            }
+        }
+        else
+        {
+            context->slaveStatus |= CY_SCB_I2C_SLAVE_TIMEOUT1;
+            if (NULL != context->cbEvents)
+            {
+                context->cbEvents(CY_SCB_I2C_SLAVE_TIMEOUT1_EVENT);
+            }
+        }
+    }
+    if (0UL != (tgsIntrStatus & CY_SCB_TGS_INTR_2_UNDERFLOW))
+    {        
+        Cy_SCB_ClearTgsInterrupt(base, CY_SCB_TGS_INTR_2_UNDERFLOW);
+        if (isMaster)
+        {
+            context->masterStatus |= CY_SCB_I2C_MASTER_TIMEOUT2;
+            if (NULL != context->cbEvents)
+            {
+                context->cbEvents(CY_SCB_I2C_MASTER_TIMEOUT2_EVENT);
+            }
+        }
+        else
+        {
+            context->slaveStatus |= CY_SCB_I2C_SLAVE_TIMEOUT2;
+            if (NULL != context->cbEvents)
+            {
+                context->cbEvents(CY_SCB_I2C_SLAVE_TIMEOUT2_EVENT);
+            }
+        }
+    }
+}
+#endif /* (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4) */
 
 #if (((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=3)) || defined (CY_IP_MXS22SCB)) || defined (CY_DOXYGEN))
 /*******************************************************************************
@@ -2471,7 +2632,10 @@ static void SlaveHandleAddress(CySCB_Type *base, cy_stc_scb_i2c_context_t *conte
             /* Prepare to transmit data */
             context->slaveTxBufferIdx = context->slaveTxBufferCnt;
             context->slaveRdBufEmpty  = false;
-            Cy_SCB_SetTxInterruptMask(base, CY_SCB_TX_INTR_LEVEL);
+            if (!context->slaveRdPaused)
+            {
+                Cy_SCB_SetTxInterruptMask(base, CY_SCB_TX_INTR_LEVEL);
+            }
         }
         else
         {
@@ -2579,13 +2743,42 @@ static void SlaveHandleDataReceive(CySCB_Type *base, cy_stc_scb_i2c_context_t *c
         }
         else
         {
-            /* Continue the transfer: send an ACK */
-            SCB_I2C_S_CMD(base) = SCB_I2C_S_CMD_S_ACK_Msk;
+            /* Ignore for address match in repeated start scenario */
+            if ((CY_SCB_I2C_SLAVE_INTR_ADDR & Cy_SCB_GetSlaveInterruptStatusMasked(base)) == 0U)
+            {
+                /* Involve a byte received callback if registered */
+                if (NULL != context->cbByteSlave)
+                {
+                    uint8_t rxData = (uint8_t) Cy_SCB_ReadRxFifo(base);
+                    cy_en_scb_i2c_command_t cmd = context->cbByteSlave(rxData);
+                    if (cmd == CY_SCB_I2C_ACK)
+                    {
+                        /* Continue the transfer: send an ACK */
+                        SCB_I2C_S_CMD(base) = SCB_I2C_S_CMD_S_ACK_Msk;
 
-            /* Put data into the RX buffer */
-            context->slaveRxBuffer[context->slaveRxBufferIdx] = (uint8_t) Cy_SCB_ReadRxFifo(base);
-            ++context->slaveRxBufferIdx;
-            --context->slaveRxBufferSize;
+                        /* Put data into the RX buffer */
+                        context->slaveRxBuffer[context->slaveRxBufferIdx] = rxData;
+                        ++context->slaveRxBufferIdx;
+                        --context->slaveRxBufferSize;
+                    }
+                    else
+                    {
+                        /* Finish a transfer: send a NACK and discard the received byte */
+                        SCB_I2C_S_CMD(base) = SCB_I2C_S_CMD_S_NACK_Msk;
+                        Cy_SCB_SetRxInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
+                    }
+                }
+                else
+                {
+                    /* Continue the transfer: send an ACK */
+                    SCB_I2C_S_CMD(base) = SCB_I2C_S_CMD_S_ACK_Msk;
+
+                    /* Put data into the RX buffer */
+                    context->slaveRxBuffer[context->slaveRxBufferIdx] = (uint8_t) Cy_SCB_ReadRxFifo(base);
+                    ++context->slaveRxBufferIdx;
+                    --context->slaveRxBufferSize;
+                }
+            }
         }
     }
     else
@@ -2724,8 +2917,8 @@ static void SlaveHandleStop(CySCB_Type *base, cy_stc_scb_i2c_context_t *context)
 
     if (CY_SCB_I2C_SLAVE_RX == context->state)
     {
-        /* If any data is left in RX FIFO, this is an overflow */
-        if (Cy_SCB_GetNumInRxFifo(base) > 0UL)
+        /* If any data is left in RX FIFO, this is an overflow. Ignore for address match in repeated start scenario */
+        if ((Cy_SCB_GetNumInRxFifo(base) > 0UL) && ((CY_SCB_I2C_SLAVE_INTR_ADDR & Cy_SCB_GetSlaveInterruptStatusMasked(base)) == 0U))
         {
             context->slaveStatus |= CY_SCB_I2C_SLAVE_WR_OVRFL;
 
@@ -2819,16 +3012,51 @@ void Cy_SCB_I2C_MasterInterrupt(CySCB_Type *base, cy_stc_scb_i2c_context_t *cont
     /* Check whether the slave is active. It can be addressed during the master set-up transfer */
     if (0UL != (CY_SCB_SLAVE_INTR & intrCause))
     {
-        /* Abort the transfer due to slave operation */
-        if (0UL != SCB_I2C_M_CMD(base))
+        /* Handling unstandard case when addr_mask is 0 and I2C is configured as master-slave.
+         * Sending NACK by slave is needed to avoid addressing by self and start master transfer.
+         * Clearing the slave stop and restart events to not breaking the state machine logic.
+         */
+        if((context->i2cMode == CY_SCB_I2C_MASTER_SLAVE) && 
+           ((Cy_SCB_GetMasterInterruptStatusMasked(base) & CY_SCB_MASTER_INTR_I2C_ARB_LOST) == 0UL))
         {
-            SCB_I2C_M_CMD(base) = 0UL;
-
-            context->masterStatus |= CY_SCB_I2C_MASTER_ABORT_START;
+            uint32_t slaveIntrStatus = Cy_SCB_GetSlaveInterruptStatusMasked(base);
+            if ((slaveIntrStatus & (CY_SCB_I2C_SLAVE_INTR_ADDR | CY_SCB_SLAVE_INTR_I2C_STOP
+#if (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))
+                                    | CY_SCB_SLAVE_INTR_I2C_RESTART | CY_SCB_SLAVE_INTR_I2C_STOP_ANY
+#endif /* (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) */
+                                    )) != 0UL)
+            {
+                if ((CY_SCB_SLAVE_INTR_I2C_ADDR_MATCH & slaveIntrStatus) != 0UL)
+                {
+                    /* Removed address from RX FIFO */
+                    (void)Cy_SCB_ReadRxFifo(base);
+                    SCB_I2C_S_CMD(base) = SCB_I2C_S_CMD_S_NACK_Msk;
+                }
+                Cy_SCB_ClearSlaveInterrupt(base, slaveIntrStatus);
+            }
         }
+        else
+        {
+            /* Abort the transfer due to slave operation */
+            if (0UL != SCB_I2C_M_CMD(base))
+            {
+                SCB_I2C_M_CMD(base) = 0UL;
 
-        context->state = CY_SCB_I2C_MASTER_CMPLT;
+                context->masterStatus |= CY_SCB_I2C_MASTER_ABORT_START;
+            }
+
+            context->state = CY_SCB_I2C_MASTER_CMPLT;
+        }
     }
+
+#if (defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4))
+    /* Check for TGS conditions */
+    if (0UL != (CY_SCB_TGS_INTR & intrCause))
+    {
+        HandleTGSEvents(base, context, true);
+        intrCause &= (uint32_t) ~CY_SCB_TGS_INTR;
+    }
+#endif
 
     /* Check for master error conditions */
     if (0UL != (CY_SCB_MASTER_INTR & intrCause))
@@ -2918,6 +3146,10 @@ static void MasterHandleEvents(CySCB_Type *base, cy_stc_scb_i2c_context_t *conte
     if (0UL != (CY_SCB_MASTER_INTR_I2C_ARB_LOST & masterIntrStatus))
     {
         context->masterStatus |= CY_SCB_I2C_MASTER_ARB_LOST;
+        if (NULL != context->cbEvents)
+        {
+            context->cbEvents(CY_SCB_I2C_MASTER_ARB_LOST_EVENT);
+        }
     }
 
     /* Complete the transfer: stop, bus error or arbitration lost */
@@ -2950,13 +3182,22 @@ static void MasterHandleDataReceive(CySCB_Type *base, cy_stc_scb_i2c_context_t *
     {
         case CY_SCB_I2C_MASTER_RX0:
         {
-            /* Put data into the component buffer */
-            context->masterBuffer[0UL] = (uint8_t) Cy_SCB_ReadRxFifo(base);
-
-            ++context->masterBufferIdx;
-            --context->masterBufferSize;
-
-            if (context->masterBufferSize > 0UL)
+            cy_en_scb_i2c_command_t cmd = CY_SCB_I2C_ACK;
+            uint8_t rxData = (uint8_t) Cy_SCB_ReadRxFifo(base);
+            if (NULL != context->cbByteMaster)
+            {
+                cmd = context->cbByteMaster(rxData);
+            }
+        
+            if (cmd == CY_SCB_I2C_ACK)
+            {
+                /* Put data into the component buffer */
+                context->masterBuffer[0UL] = rxData;
+                ++context->masterBufferIdx;
+                --context->masterBufferSize;
+            }
+        
+            if ((context->masterBufferSize > 0UL) && (cmd == CY_SCB_I2C_ACK))
             {
                 /* Continue the transaction: move pointer send an ACK */
                 context->masterBuffer = &context->masterBuffer[1UL];
@@ -3399,6 +3640,222 @@ static cy_en_scb_i2c_status_t HandleStatus(CySCB_Type *base, uint32_t status, cy
     return (retStatus);
 }
 
+
+#if ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+
+/*******************************************************************************
+* Function Name: Cy_SCB_I2C_MSA_SlaveSetAddress
+****************************************************************************//**
+*
+* Sets the slave address for the I2C slave in the address match slot in
+* multiple slave addressing scenario.
+*
+* \param base
+* The pointer to the I2C SCB instance.
+*
+* \param addr
+* The 7-bit right justified slave address.
+*
+* \param slotNum
+* Address match slot number (0-5)
+*
+* \note
+* This API is only available for devices containing MSA functionality.
+*
+*******************************************************************************/
+void Cy_SCB_I2C_MSA_SlaveSetAddress(CySCB_Type *base, uint8_t addr, uint8_t slotNum)
+{
+    CY_ASSERT_L2(CY_SCB_IS_I2C_ADDR_VALID(addr));
+    uint32_t addrShifted = ((uint32_t)((uint32_t) addr << 1UL));
+
+    switch (slotNum)
+    {
+        case 0u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH(base), SCB_RX_MATCH_ADDR, addrShifted);
+            break;
+        case 1u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH(base), SCB_RX_MATCH_ADDR1, addrShifted);
+            break;
+        case 2u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH1(base), SCB_RX_MATCH_ADDR, addrShifted);
+            break;
+        case 3u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH1(base), SCB_RX_MATCH_ADDR1, addrShifted);
+            break;
+        case 4u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH2(base), SCB_RX_MATCH_ADDR, addrShifted);
+            break;
+        case 5u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH2(base), SCB_RX_MATCH_ADDR1, addrShifted);
+            break;
+        default:
+            /* Not supported slot number */
+            break;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_I2C_MSA_SlaveGetAddress
+****************************************************************************//**
+*
+* Returns the slave address of the I2C slave from the address match slot in
+* multiple slave addressing scenario.
+*
+* \param base
+* The pointer to the I2C SCB instance.
+*
+* \param slotNum
+* Address match slot number (0-5)
+*
+* \return
+* The 7-bit right justified slave address.
+*
+* \note
+* This API is only available for devices containing MSA functionality.
+*
+*******************************************************************************/
+uint8_t Cy_SCB_I2C_MSA_SlaveGetAddress(CySCB_Type const *base, uint8_t slotNum)
+{
+    uint8_t address;
+    switch (slotNum)
+    {
+        case 0u:
+            address = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_ADDR, SCB_RX_MATCH(base)) >> 1UL);
+            break;
+        case 1u:
+            address = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_ADDR1, SCB_RX_MATCH(base)) >> 1UL);
+            break;
+        case 2u:
+            address = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_ADDR, SCB_RX_MATCH1(base)) >> 1UL);
+            break;
+        case 3u:
+            address = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_ADDR1, SCB_RX_MATCH1(base)) >> 1UL);
+            break;
+        case 4u:
+            address = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_ADDR, SCB_RX_MATCH2(base)) >> 1UL);
+            break;
+        case 5u:
+            address = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_ADDR1, SCB_RX_MATCH2(base)) >> 1UL);
+            break;
+        default:
+            address = 0u;
+            break;
+    }
+    return address;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_I2C_MSA_SlaveSetAddressMask
+****************************************************************************//**
+*
+* Sets the slave address mask for the I2C slave in the address match slot in
+* multiple slave addressing scenario.
+* The LSBit must always be 0.
+* In all other bit positions a 1 indicates that the incoming address must match
+* the corresponding bit in the slave address. A 0 in the mask means that the
+* incoming address does not need to match.
+* Example Slave Address = 0x0C. Slave Address Mask = 0x08. This means that the
+* hardware will accept both 0x08 and 0x0C as valid addresses.
+*
+* \param base
+* The pointer to the I2C SCB instance.
+*
+* \param addrMask
+* The 8-bit address mask, the upper 7 bits correspond to the slave address.
+* LSBit must always be 0.
+*
+* \param slotNum
+* Address match slot number (0-5)
+*
+* \note
+* This API is only available for devices containing MSA functionality.
+*
+*******************************************************************************/
+void Cy_SCB_I2C_MSA_SlaveSetAddressMask(CySCB_Type *base, uint8_t addrMask, uint8_t slotNum)
+{
+    CY_ASSERT_L2(CY_SCB_I2C_IS_ADDR_MASK_VALID(addrMask));
+
+    switch (slotNum)
+    {
+        case 0u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH(base), SCB_RX_MATCH_MASK, ((uint32_t) addrMask));
+            break;
+        case 1u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH(base), SCB_RX_MATCH_MASK1, ((uint32_t) addrMask));
+            break;
+        case 2u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH1(base), SCB_RX_MATCH_MASK, ((uint32_t) addrMask));
+            break;
+        case 3u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH1(base), SCB_RX_MATCH_MASK1, ((uint32_t) addrMask));
+            break;
+        case 4u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH2(base), SCB_RX_MATCH_MASK, ((uint32_t) addrMask));
+            break;
+        case 5u:
+            CY_REG32_CLR_SET(SCB_RX_MATCH2(base), SCB_RX_MATCH_MASK1, ((uint32_t) addrMask));
+            break;
+        default:
+            /* Not supported slot number */
+            break;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_I2C_MSA_SlaveGetAddressMask
+****************************************************************************//**
+*
+* Returns the slave address mask from the address match slot in
+* multiple slave addressing scenario.
+*
+* \param base
+* The pointer to the I2C SCB instance.
+*
+* \param slotNum
+* Address match slot number (0-5)
+*
+* \return
+* The 8-bit address mask, the upper 7 bits correspond to the slave address.
+* LSBit must always be 0.
+*
+* \note
+* This API is only available for devices containing MSA functionality.
+*
+*******************************************************************************/
+uint8_t Cy_SCB_I2C_MSA_SlaveGetAddressMask(CySCB_Type const *base, uint8_t slotNum)
+{
+    uint8_t addressMask;
+    switch (slotNum)
+    {
+        case 0u:
+            addressMask = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_MASK, SCB_RX_MATCH(base)));
+            break;
+        case 1u:
+            addressMask = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_MASK1, SCB_RX_MATCH(base)));
+            break;
+        case 2u:
+            addressMask = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_MASK, SCB_RX_MATCH1(base)));
+            break;
+        case 3u:
+            addressMask = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_MASK1, SCB_RX_MATCH1(base)));
+            break;
+        case 4u:
+            addressMask = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_MASK, SCB_RX_MATCH2(base)));
+            break;
+        case 5u:
+            addressMask = ((uint8_t)_FLD2VAL(SCB_RX_MATCH_MASK1, SCB_RX_MATCH2(base)));
+            break;
+        default:
+            addressMask = 0u;
+            break;
+    }
+    return addressMask;
+}
+
+#endif /* ((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN)) */
 
 #if defined(__cplusplus)
 }

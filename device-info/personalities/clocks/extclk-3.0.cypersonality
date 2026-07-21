@@ -9,9 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -50,18 +49,30 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk.html' linkText='Open System Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__ext.html' linkText='Open External Clock Source Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
-    <ParamString id='maxFrequency' default='`${min(getDeviceAttr("CPU_MAX_MHZ"), 100)}`' />
+    <ParamString id='maxFrequency' default='`${min(getDeviceAttr("CPU_MAX_MHZ"), 100)}`' desc='Maximum allowed external clock frequency in MHz for the device' />
 
-    <ParamRange id='extFrequency' name='Frequency (MHz)' group='General' default='24.000' min='0.001' max='100' resolution='0.001' visible='true' desc='' />
+    <ParamRange id='extFrequency' name='Frequency (MHz)' group='General' default='24.000' min='0.001' max='100' resolution='0.001' visible='true' desc='The frequency of the external clock source provided on the EXTCLK pin' />
     <ParamString id='frequency' default='`${extFrequency * 1000000}`' />
     <ParamRange id='accuracyPpm' name='Accuracy (±ppm)' group='General' default='0' min='0' max='1000000' resolution='1' visible='true' desc='Clock accuracy in ppm' />
     <ParamString id='accuracyPct' name='Accuracy (±%)' group='General' default='`${accuracyPpm/10000.0}`' visible='true' editable='false' desc='Clock accuracy in %' />
 
-    <ParamSignal port='ext_clk[0]' name='Pin' group='Connections' visible='true' desc='The input terminal to connect the external clock signal' canBeEmpty='false' />
+    <ParamSignal port='ext_clk[0]' name='Pin' group='Connections' visible='true' desc='The input terminal to connect the external clock signal' canBeEmpty='false' >
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Parameter id='DriveModes' severity='DEFAULT' reason=''>
+          <Fixed value='CY_GPIO_DM_HIGHZ' />
+        </Parameter>
+      </Constraint>
+      <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
+        <Parameter id='DriveModes' severity='INFO' reason='The EXTCLK pin Drive Mode must be Digital High-Z (input buffer on) for the external clock signal to reach SRSS.'>
+          <Fixed value='CY_GPIO_DM_HIGHZ' />
+        </Parameter>
+      </Constraint>
+      <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
+    </ParamSignal>
 
-    <ParamBool id='suppressCodeGen' default='true' />
+    <ParamBool id='suppressCodeGen' default='true' desc='Flags the clock framework to skip automatic code generation for this clock' />
   </Parameters>
 
   <Variables>

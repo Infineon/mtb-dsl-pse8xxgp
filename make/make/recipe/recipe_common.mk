@@ -166,8 +166,8 @@ ifeq ($(TOOLCHAIN),LLVM_ARM)
 endif
 else # (,$(filter $(VCORE_ATTRS),CRC_PPCA))
 	$(MTB__NOISE)echo "Calculating CRC32 and updating the binary...";
-	$(MTB_TOOLCHAIN_GCC_ARM__OBJCOPY) -O binary "$<" "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" --pad-to $(MTB_BSP__CRC_CALC_END_ADDR) --gap-fill 0x00
-	$(MTB__NOISE)$(CY_TOOL_srec_cat_EXE_ABS) "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary -crop $(MTB_BSP__CRC_CALC_START_ADDR) $(MTB_BSP__CRC_CALC_END_ADDR) -fill 0x00 $(MTB_BSP__CRC_CALC_START_ADDR) $(MTB_BSP__CRC_CALC_END_ADDR) -CRC32_Little_Endian $(MTB_BSP__CRC_CALC_END_ADDR) -o "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary
+	$(MTB_TOOLCHAIN_GCC_ARM__OBJCOPY) -O binary "$<" "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" --pad-to $(shell printf "0x%X\n" $$(( ($(MTB_BSP__CRC_CALC_START_ADDR) + $(MTB_BSP__CRC_CALC_SIZE) - 1) & 0xFFFFFFFF )) ) --gap-fill 0x00
+	$(MTB__NOISE)$(CY_TOOL_srec_cat_EXE_ABS) "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary -crop $(MTB_BSP__CRC_CALC_START_ADDR) $(shell printf "0x%X\n" $$(( ($(MTB_BSP__CRC_CALC_START_ADDR) + $(MTB_BSP__CRC_CALC_SIZE) - 1) & 0xFFFFFFFF )) ) -fill 0x00 $(MTB_BSP__CRC_CALC_START_ADDR) $(shell printf "0x%X\n" $$(( ($(MTB_BSP__CRC_CALC_START_ADDR) + $(MTB_BSP__CRC_CALC_SIZE) - 1) & 0xFFFFFFFF )) ) -CRC32_Little_Endian $(MTB_BSP__CRC_START_ADDR) -o "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary
 	$(MTB__NOISE)$(CY_TOOL_srec_cat_EXE_ABS) "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME).bin" -binary -offset $(MTB_BSP__CRC_CALC_START_ADDR) -o "$(MTB_TOOLS__OUTPUT_CONFIG_DIR)/$(APPNAME)$(_MTB_RECIPE__PROG_FILE_SUFFIX).$(MTB_RECIPE__SUFFIX_PROGRAM)" -intel
 	$(MTB__NOISE)echo "CRC32 calculation complete...";
 endif

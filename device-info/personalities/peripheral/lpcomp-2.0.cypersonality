@@ -10,9 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2025-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -51,9 +50,9 @@
     </ParamChoice>
 
     <!-- Response time -->
-    <ParamString id='CAT1D_ModeNormal_ResponseTime' name='Response time for device CAT1D in Normal power mode' group='General' default='Approx: 100 ns' visible='false' editable='false' desc='' />
-    <ParamString id='CAT1D_ModeLP_ResponseTime' name='Response time for device CAT1D in LP power mode' group='General' default='Approx: 1000 ns' visible='false' editable='false' desc='' />
-    <ParamString id='CAT1D_ModeULP_ResponseTime' name='Response time for device CAT1D in ULP power mode' group='General' default='Approx: 20 us' visible='false' editable='false' desc='' />
+    <ParamString id='CAT1D_ModeNormal_ResponseTime' name='Response time for device PSE in Normal power mode' group='General' default='Approx: 100 ns' visible='false' editable='false' desc='' />
+    <ParamString id='CAT1D_ModeLP_ResponseTime' name='Response time for device PSE in LP power mode' group='General' default='Approx: 1000 ns' visible='false' editable='false' desc='' />
+    <ParamString id='CAT1D_ModeULP_ResponseTime' name='Response time for device PSE in ULP power mode' group='General' default='Approx: 20 us' visible='false' editable='false' desc='' />
     <ParamString id='ResponseTime' name='Response Time' group='General' default='`${(PowerSpeed eq "CY_LPCOMP_MODE_NORMAL" ? CAT1D_ModeNormal_ResponseTime : (PowerSpeed eq "CY_LPCOMP_MODE_LP" ? CAT1D_ModeLP_ResponseTime : (PowerSpeed eq "CY_LPCOMP_MODE_ULP" ? CAT1D_ModeULP_ResponseTime : 0)))}`' visible='`${"mxlpcomp_s40" eq getIpBlockName() ? false : true}`' editable='false' desc='Display the response time of the comparator based on the Power/Speed setting.' />
 
     <ParamChoice id='PulseInterruptConfiguration' name='Pulse/Interrupt Configuration' group='General' default='CY_LPCOMP_INTR_RISING' visible='true' editable='true' desc='Defines the transition that will cause a pulse to be generated on the interrupt terminal or direct comparator output. Allows to select interrupt/output mode: Disabled, Rising edge, Falling edge, or Both edges.' >

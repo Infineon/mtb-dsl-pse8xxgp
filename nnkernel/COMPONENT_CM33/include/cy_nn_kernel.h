@@ -1343,7 +1343,7 @@ Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData, uint32_t count);
  ** \brief Repeat Byte Copy operation with new input/output buffers
  **
  ** \note Must follow a Cy_NNLite_Byte_Copy operation that has setup the NNLite Pipeline,
- ** in a context where this setup can be guaranteed to still be valid.
+ ** in a context where this setup can be guaranteed to still be valid. 
  ** For example, this can be used to block copies for concatenation operations.
  **
  ** \param [in]  inData         address start byte vector  to be copied
@@ -1356,7 +1356,7 @@ Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData, uint32_t count);
  **
  **
  *****************************************************************************/
-
+               
 cy_en_nnlite_status_t
 Cy_NNLite_Redo_Byte_Copy(const int8_t *inData, int8_t* outData,  uint32_t count);
 
@@ -1612,17 +1612,6 @@ cy_en_nnlite_status_t Cy_NNLite_KernelInit(cy_kernel_config_t *kernelConfig);
  ** \retval cy_en_nnlite_status_t
  *****************************************************************************/
 cy_en_nnlite_status_t Cy_NNLite_KernelDeInit(void);
-
-#if defined(IFX_USE_MXNNLITE_STREAM_EMU)
-/**
- *****************************************************************************
- ** \brief  NNLite ISR, Error or completion interrupt
- ** calls completion handlers to notify op completion to API callee
- ** or internal (for ops requiring multiple internal operations).
- **
- *****************************************************************************/
-void Cy_NNLite_Isr(void);
-#endif
 
 /** \} group_nn_kernel_functions */
 

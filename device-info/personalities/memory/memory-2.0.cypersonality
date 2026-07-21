@@ -9,9 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2025-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -1287,7 +1286,9 @@
     <!-- regionOffset_$idx must be within memorySize -->
     <DRC condition='`${$idx &lt; numRegionsDefined &amp;&amp; hasMemory(regionPhysMemId_$idx) &amp;&amp; regionOffset_$idx &gt;= memorySize(regionPhysMemId_$idx)}`' type='ERROR'
          text='Memory region "`${regionId_$idx}`" must begin within physical memory "`${memoryDisplayName(regionPhysMemId_$idx)}`".'
-         repeatCount='$MAX_REGIONS' paramId='$idx' />
+         repeatCount='$MAX_REGIONS' paramId='$idx' >
+      <FixIt action='DISABLE_BLOCK' target='`${memoryRegionLocation($idx)}`' valid='true' description='Unallocate memory region "`${regionId_$idx}`"' />
+    </DRC>
     <!-- regionOffset_$idx is unsigned so it cannot be less than 0 -->
     <DRC condition='`${$idx &lt; numRegionsDefined &amp;&amp; hasMemory(regionPhysMemId_$idx) &amp;&amp; regionOffset_$idx &lt; memorySize(regionPhysMemId_$idx) &amp;&amp; regionEndOffset_$idx &gt; memorySize(regionPhysMemId_$idx)}`' type='ERROR'
          text='Memory region "`${regionId_$idx}`" does not fit within physical memory "`${memoryDisplayName(regionPhysMemId_$idx)}`".'

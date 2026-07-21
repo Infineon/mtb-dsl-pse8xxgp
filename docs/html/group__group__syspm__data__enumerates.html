@@ -259,6 +259,8 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0a96131777d17bc11f3db19b05a51b5f87">CY_SYSPM_DEEPSLEEP_OFF</a> = 6U
 , <br />
 &#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga8c2960c0164ead1cfa86e7d6846b6ff0a37ca905b7feeb358171a4f9842b9a8cc">CY_SYSPM_HP</a> = 7U
+, <br />
+&#160;&#160;<b>CY_SYSPM_MAX_CALLBACK_INDEX_PLUS_1</b>
 <br />
  }</td></tr>
 <tr class="memdesc:ga8c2960c0164ead1cfa86e7d6846b6ff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">This enumeration is used to select the low power mode for which the appropriate registered callback handler will be executed.  <a href="group__group__syspm__data__enumerates.html#ga8c2960c0164ead1cfa86e7d6846b6ff0">More...</a><br /></td></tr>
@@ -629,86 +631,6 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:gaa6cefd648d76445ce14d47427b63582d"><td class="mdescLeft">&#160;</td><td class="mdescRight">For MISCLDO, this enumeration is used to select the output mode for MISCLDO.  <a href="group__group__syspm__data__enumerates.html#gaa6cefd648d76445ce14d47427b63582d">More...</a><br /></td></tr>
 <tr class="separator:gaa6cefd648d76445ce14d47427b63582d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaadd068c13e4c6a2f850492c542b2492b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__enumerates.html#gaadd068c13e4c6a2f850492c542b2492b">cy_en_syspm_sdr_t</a> { <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#ggaadd068c13e4c6a2f850492c542b2492ba1e07a3842e5937a56cceafec5acfe3e8">CY_SYSPM_SDR_0</a> = 0U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#ggaadd068c13e4c6a2f850492c542b2492bace726b70fd386dd97a0dd6eeda32484c">CY_SYSPM_SDR_1</a> = 1U
-<br />
- }</td></tr>
-<tr class="memdesc:gaadd068c13e4c6a2f850492c542b2492b"><td class="mdescLeft">&#160;</td><td class="mdescRight">For SDR's(Step Down Regulators), this enumeration is used to select the SDR0 or SDR1.  <a href="group__group__syspm__data__enumerates.html#gaadd068c13e4c6a2f850492c542b2492b">More...</a><br /></td></tr>
-<tr class="separator:gaadd068c13e4c6a2f850492c542b2492b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5b3fa93779730eb75af8b267923d68c1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a> { <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a2f00780abdc8877253f6eed77c242f44">CY_SYSPM_SDR_VOLTAGE_0_850V</a> = 0U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a1a265f00b45f6559b6e740dc6767a847">CY_SYSPM_SDR_VOLTAGE_0_875V</a> = 1U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1adfbfdab4fdf9944d2c026edc122226f1">CY_SYSPM_SDR_VOLTAGE_0_900V</a> = 2U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ae4ca21332208b00acd3e401899b36c70">CY_SYSPM_SDR_VOLTAGE_0_925V</a> = 3U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ab0a96a90c2d5a8032c5a3bafbeaeb71c">CY_SYSPM_SDR_VOLTAGE_0_950V</a> = 4U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ae8e10f9c103d05470f0ab7006d2accf7">CY_SYSPM_SDR_VOLTAGE_0_975V</a> = 5U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a69d0f2840021fc8b14e11bd9c5810361">CY_SYSPM_SDR_VOLTAGE_1_000V</a> = 6U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a29ee67f00ce0407a5655680e73894707">CY_SYSPM_SDR_VOLTAGE_1_025V</a> = 7U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ae17e435a3f69085f5185a5753c050875">CY_SYSPM_SDR_VOLTAGE_1_050V</a> = 8U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1acd5bf833dbfbd0e607a6f670ccf15e14">CY_SYSPM_SDR_VOLTAGE_1_075V</a> = 9U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1adf7c5f62acd0e9c659bb109651403556">CY_SYSPM_SDR_VOLTAGE_1_100V</a> = 10U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a106368774d779137b49e37a4699fc53b">CY_SYSPM_SDR_VOLTAGE_1_125V</a> = 11U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a6824a5d754a88097138e703cf5cb0c94">CY_SYSPM_SDR_VOLTAGE_1_150V</a> = 12U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a29d1cb9fc21e60e99d1c7637480d4ebd">CY_SYSPM_SDR_VOLTAGE_1_175V</a> = 13U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a5b81831090ce10548a05f67d53a65a7a">CY_SYSPM_SDR_VOLTAGE_1_200V</a> = 14U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a065a94ead0c12018e2b830813013b8eb">CY_SYSPM_SDR_VOLTAGE_1_225V</a> = 15U
-<br />
- }</td></tr>
-<tr class="memdesc:ga5b3fa93779730eb75af8b267923d68c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This enumeration is used to select the output voltage for the SDR(Step Down Regulator) output.  <a href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">More...</a><br /></td></tr>
-<tr class="separator:ga5b3fa93779730eb75af8b267923d68c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga64b1d9370a07008a83b14bcbee4f731c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__enumerates.html#ga64b1d9370a07008a83b14bcbee4f731c">cy_en_syspm_hvldo_voltage_t</a> { <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca24ad777ed0e9e7ba1bf77061a16e5aa2">CY_SYSPM_HVLDO_VOLTAGE_1_800V</a> = 0U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cabf9ea47680e3eb17f0577cb83680815b">CY_SYSPM_HVLDO_VOLTAGE_1_900V</a> = 1U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731caf0e8060e9058c51ece66c4fcddba5c69">CY_SYSPM_HVLDO_VOLTAGE_2_000V</a> = 2U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca48490d6966bfea95acd9249ef952bb61">CY_SYSPM_HVLDO_VOLTAGE_2_100V</a> = 3U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca65919ad743e9a8581d6057ab00032599">CY_SYSPM_HVLDO_VOLTAGE_2_200V</a> = 4U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cad10d7a36512dedcbf695d64af757936f">CY_SYSPM_HVLDO_VOLTAGE_2_300V</a> = 5U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca15941900ad1187039f576b2bb1f096e3">CY_SYSPM_HVLDO_VOLTAGE_2_400V</a> = 6U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731caf65f031de63faadbe27567b1b1aab30d">CY_SYSPM_HVLDO_VOLTAGE_2_500V</a> = 7U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca4ab8b6a5c0558f666b77bc0cd375dff8">CY_SYSPM_HVLDO_VOLTAGE_2_600V</a> = 8U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca218dacec8d394ee703b6ed9831207dbb">CY_SYSPM_HVLDO_VOLTAGE_2_700V</a> = 9U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cabec0f2907f0a058e8993e03fb9f5a067">CY_SYSPM_HVLDO_VOLTAGE_2_800V</a> = 10U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cab1a6f4628888ba29959ca00b9d7949eb">CY_SYSPM_HVLDO_VOLTAGE_2_900V</a> = 11U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca516b23dae4cf1bc91742aaa8dcb60b23">CY_SYSPM_HVLDO_VOLTAGE_3_000V</a> = 12U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cacee7fb8f904de100a98e492cd98bee04">CY_SYSPM_HVLDO_VOLTAGE_3_100V</a> = 13U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca4c6eb4889f33adca41bc0f591feedad3">CY_SYSPM_HVLDO_VOLTAGE_3_200V</a> = 14U
-, <br />
-&#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca1336733b87496c94101ed74c788ee8ea">CY_SYSPM_HVLDO_VOLTAGE_3_300V</a> = 15U
-<br />
- }</td></tr>
-<tr class="memdesc:ga64b1d9370a07008a83b14bcbee4f731c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This enumeration is used to select the output voltage for the HVLDO Regulator.  <a href="group__group__syspm__data__enumerates.html#ga64b1d9370a07008a83b14bcbee4f731c">More...</a><br /></td></tr>
-<tr class="separator:ga64b1d9370a07008a83b14bcbee4f731c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7c6db751c1fb0b15f63af6b52811e418"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__enumerates.html#ga7c6db751c1fb0b15f63af6b52811e418">cy_en_syspm_sram0_macro_t</a> { <br />
 &#160;&#160;<a class="el" href="group__group__syspm__data__enumerates.html#gga7c6db751c1fb0b15f63af6b52811e418ad77cab540a00473dc249577f457b400a">CY_SYSPM_SRAM0_MACRO_0</a> = 0U
 , <br />
@@ -994,7 +916,7 @@ Enumerations</h2></td></tr>
 <p>This enumeration is used to select the Buck regulator outputs. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga35ca7d1dbdf91fa732f52398652ec4c9a1f86389e9d393fb053d97ea9701e5d97" name="gga35ca7d1dbdf91fa732f52398652ec4c9a1f86389e9d393fb053d97ea9701e5d97"></a>CY_SYSPM_BUCK_VBUCK_1&#160;</td><td class="fielddoc"><p>Buck output 1 Voltage (Vbuck1). </p>
-<p>Typically used to supply the PSoC digital core logic. </p>
+<p>Typically used to supply the PSOC digital core logic. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="gga35ca7d1dbdf91fa732f52398652ec4c9ac4cae6fd90d302b5514103caea274214" name="gga35ca7d1dbdf91fa732f52398652ec4c9ac4cae6fd90d302b5514103caea274214"></a>CY_SYSPM_BUCK_VRF&#160;</td><td class="fielddoc"><p>Buck out 2 Voltage (Vbuckrf). </p>
 <p>Typically used to supply the BLE radio logic. </p>
@@ -1357,6 +1279,7 @@ Enumerations</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This enumeration is used to select the output voltage for the SRAMLDO. </p>
+<dl class="section note"><dt>Note</dt><dd>Voltage values below <a class="el" href="group__group__syspm__data__enumerates.html#ggabcfc6a787bace557a58cfd1319045dbead49018a124a82b65ff7de1e737c83f64">CY_SYSPM_SRAMLDO_VOLTAGE_0_80V</a> (i.e. 0.58V to 0.78V) are intended for deepsleep SRAM retention only and must not be used during active mode operation. Using these values in active mode will corrupt SRAM contents and hang the device. </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggabcfc6a787bace557a58cfd1319045dbea6796c93e7438df1daa6056ee1ed71332" name="ggabcfc6a787bace557a58cfd1319045dbea6796c93e7438df1daa6056ee1ed71332"></a>CY_SYSPM_SRAMLDO_VOLTAGE_0_58V&#160;</td><td class="fielddoc"><p>0.58 V nominal voltage. </p>
 </td></tr>
@@ -1679,128 +1602,6 @@ Enumerations</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaa6cefd648d76445ce14d47427b63582daf71e63b5a1696714128a3bacb2ff812c" name="ggaa6cefd648d76445ce14d47427b63582daf71e63b5a1696714128a3bacb2ff812c"></a>CY_SYSPM_MISCLDO_VCCACT&#160;</td><td class="fielddoc"><p>MISCLDO output follows VCCACT_MISC. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ggaa6cefd648d76445ce14d47427b63582dacf0cce5c7b5e196d2696b80fe026cded" name="ggaa6cefd648d76445ce14d47427b63582dacf0cce5c7b5e196d2696b80fe026cded"></a>CY_SYSPM_MISCLDO_VOUT&#160;</td><td class="fielddoc"><p>MISCLDO output follows VOUT. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="gaadd068c13e4c6a2f850492c542b2492b" name="gaadd068c13e4c6a2f850492c542b2492b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaadd068c13e4c6a2f850492c542b2492b">&#9670;&#160;</a></span>cy_en_syspm_sdr_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="group__group__syspm__data__enumerates.html#gaadd068c13e4c6a2f850492c542b2492b">cy_en_syspm_sdr_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>For SDR's(Step Down Regulators), this enumeration is used to select the SDR0 or SDR1. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaadd068c13e4c6a2f850492c542b2492ba1e07a3842e5937a56cceafec5acfe3e8" name="ggaadd068c13e4c6a2f850492c542b2492ba1e07a3842e5937a56cceafec5acfe3e8"></a>CY_SYSPM_SDR_0&#160;</td><td class="fielddoc"><p>SDR0. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ggaadd068c13e4c6a2f850492c542b2492bace726b70fd386dd97a0dd6eeda32484c" name="ggaadd068c13e4c6a2f850492c542b2492bace726b70fd386dd97a0dd6eeda32484c"></a>CY_SYSPM_SDR_1&#160;</td><td class="fielddoc"><p>SDR1. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="ga5b3fa93779730eb75af8b267923d68c1" name="ga5b3fa93779730eb75af8b267923d68c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5b3fa93779730eb75af8b267923d68c1">&#9670;&#160;</a></span>cy_en_syspm_sdr_voltage_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This enumeration is used to select the output voltage for the SDR(Step Down Regulator) output. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a2f00780abdc8877253f6eed77c242f44" name="gga5b3fa93779730eb75af8b267923d68c1a2f00780abdc8877253f6eed77c242f44"></a>CY_SYSPM_SDR_VOLTAGE_0_850V&#160;</td><td class="fielddoc"><p>0.850 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a1a265f00b45f6559b6e740dc6767a847" name="gga5b3fa93779730eb75af8b267923d68c1a1a265f00b45f6559b6e740dc6767a847"></a>CY_SYSPM_SDR_VOLTAGE_0_875V&#160;</td><td class="fielddoc"><p>0.875 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1adfbfdab4fdf9944d2c026edc122226f1" name="gga5b3fa93779730eb75af8b267923d68c1adfbfdab4fdf9944d2c026edc122226f1"></a>CY_SYSPM_SDR_VOLTAGE_0_900V&#160;</td><td class="fielddoc"><p>0.900 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1ae4ca21332208b00acd3e401899b36c70" name="gga5b3fa93779730eb75af8b267923d68c1ae4ca21332208b00acd3e401899b36c70"></a>CY_SYSPM_SDR_VOLTAGE_0_925V&#160;</td><td class="fielddoc"><p>0.925 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1ab0a96a90c2d5a8032c5a3bafbeaeb71c" name="gga5b3fa93779730eb75af8b267923d68c1ab0a96a90c2d5a8032c5a3bafbeaeb71c"></a>CY_SYSPM_SDR_VOLTAGE_0_950V&#160;</td><td class="fielddoc"><p>0.950 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1ae8e10f9c103d05470f0ab7006d2accf7" name="gga5b3fa93779730eb75af8b267923d68c1ae8e10f9c103d05470f0ab7006d2accf7"></a>CY_SYSPM_SDR_VOLTAGE_0_975V&#160;</td><td class="fielddoc"><p>0.975 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a69d0f2840021fc8b14e11bd9c5810361" name="gga5b3fa93779730eb75af8b267923d68c1a69d0f2840021fc8b14e11bd9c5810361"></a>CY_SYSPM_SDR_VOLTAGE_1_000V&#160;</td><td class="fielddoc"><p>1.000 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a29ee67f00ce0407a5655680e73894707" name="gga5b3fa93779730eb75af8b267923d68c1a29ee67f00ce0407a5655680e73894707"></a>CY_SYSPM_SDR_VOLTAGE_1_025V&#160;</td><td class="fielddoc"><p>1.025 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1ae17e435a3f69085f5185a5753c050875" name="gga5b3fa93779730eb75af8b267923d68c1ae17e435a3f69085f5185a5753c050875"></a>CY_SYSPM_SDR_VOLTAGE_1_050V&#160;</td><td class="fielddoc"><p>1.050 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1acd5bf833dbfbd0e607a6f670ccf15e14" name="gga5b3fa93779730eb75af8b267923d68c1acd5bf833dbfbd0e607a6f670ccf15e14"></a>CY_SYSPM_SDR_VOLTAGE_1_075V&#160;</td><td class="fielddoc"><p>1.075 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1adf7c5f62acd0e9c659bb109651403556" name="gga5b3fa93779730eb75af8b267923d68c1adf7c5f62acd0e9c659bb109651403556"></a>CY_SYSPM_SDR_VOLTAGE_1_100V&#160;</td><td class="fielddoc"><p>1.100 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a106368774d779137b49e37a4699fc53b" name="gga5b3fa93779730eb75af8b267923d68c1a106368774d779137b49e37a4699fc53b"></a>CY_SYSPM_SDR_VOLTAGE_1_125V&#160;</td><td class="fielddoc"><p>1.125 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a6824a5d754a88097138e703cf5cb0c94" name="gga5b3fa93779730eb75af8b267923d68c1a6824a5d754a88097138e703cf5cb0c94"></a>CY_SYSPM_SDR_VOLTAGE_1_150V&#160;</td><td class="fielddoc"><p>1.150 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a29d1cb9fc21e60e99d1c7637480d4ebd" name="gga5b3fa93779730eb75af8b267923d68c1a29d1cb9fc21e60e99d1c7637480d4ebd"></a>CY_SYSPM_SDR_VOLTAGE_1_175V&#160;</td><td class="fielddoc"><p>1.175 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a5b81831090ce10548a05f67d53a65a7a" name="gga5b3fa93779730eb75af8b267923d68c1a5b81831090ce10548a05f67d53a65a7a"></a>CY_SYSPM_SDR_VOLTAGE_1_200V&#160;</td><td class="fielddoc"><p>1.200 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga5b3fa93779730eb75af8b267923d68c1a065a94ead0c12018e2b830813013b8eb" name="gga5b3fa93779730eb75af8b267923d68c1a065a94ead0c12018e2b830813013b8eb"></a>CY_SYSPM_SDR_VOLTAGE_1_225V&#160;</td><td class="fielddoc"><p>1.225 V nominal voltage. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="ga64b1d9370a07008a83b14bcbee4f731c" name="ga64b1d9370a07008a83b14bcbee4f731c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga64b1d9370a07008a83b14bcbee4f731c">&#9670;&#160;</a></span>cy_en_syspm_hvldo_voltage_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="group__group__syspm__data__enumerates.html#ga64b1d9370a07008a83b14bcbee4f731c">cy_en_syspm_hvldo_voltage_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This enumeration is used to select the output voltage for the HVLDO Regulator. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca24ad777ed0e9e7ba1bf77061a16e5aa2" name="gga64b1d9370a07008a83b14bcbee4f731ca24ad777ed0e9e7ba1bf77061a16e5aa2"></a>CY_SYSPM_HVLDO_VOLTAGE_1_800V&#160;</td><td class="fielddoc"><p>1.800 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731cabf9ea47680e3eb17f0577cb83680815b" name="gga64b1d9370a07008a83b14bcbee4f731cabf9ea47680e3eb17f0577cb83680815b"></a>CY_SYSPM_HVLDO_VOLTAGE_1_900V&#160;</td><td class="fielddoc"><p>1.900 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731caf0e8060e9058c51ece66c4fcddba5c69" name="gga64b1d9370a07008a83b14bcbee4f731caf0e8060e9058c51ece66c4fcddba5c69"></a>CY_SYSPM_HVLDO_VOLTAGE_2_000V&#160;</td><td class="fielddoc"><p>2.000 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca48490d6966bfea95acd9249ef952bb61" name="gga64b1d9370a07008a83b14bcbee4f731ca48490d6966bfea95acd9249ef952bb61"></a>CY_SYSPM_HVLDO_VOLTAGE_2_100V&#160;</td><td class="fielddoc"><p>2.100 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca65919ad743e9a8581d6057ab00032599" name="gga64b1d9370a07008a83b14bcbee4f731ca65919ad743e9a8581d6057ab00032599"></a>CY_SYSPM_HVLDO_VOLTAGE_2_200V&#160;</td><td class="fielddoc"><p>2.200 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731cad10d7a36512dedcbf695d64af757936f" name="gga64b1d9370a07008a83b14bcbee4f731cad10d7a36512dedcbf695d64af757936f"></a>CY_SYSPM_HVLDO_VOLTAGE_2_300V&#160;</td><td class="fielddoc"><p>2.300 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca15941900ad1187039f576b2bb1f096e3" name="gga64b1d9370a07008a83b14bcbee4f731ca15941900ad1187039f576b2bb1f096e3"></a>CY_SYSPM_HVLDO_VOLTAGE_2_400V&#160;</td><td class="fielddoc"><p>2.400 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731caf65f031de63faadbe27567b1b1aab30d" name="gga64b1d9370a07008a83b14bcbee4f731caf65f031de63faadbe27567b1b1aab30d"></a>CY_SYSPM_HVLDO_VOLTAGE_2_500V&#160;</td><td class="fielddoc"><p>2.500 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca4ab8b6a5c0558f666b77bc0cd375dff8" name="gga64b1d9370a07008a83b14bcbee4f731ca4ab8b6a5c0558f666b77bc0cd375dff8"></a>CY_SYSPM_HVLDO_VOLTAGE_2_600V&#160;</td><td class="fielddoc"><p>2.600 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca218dacec8d394ee703b6ed9831207dbb" name="gga64b1d9370a07008a83b14bcbee4f731ca218dacec8d394ee703b6ed9831207dbb"></a>CY_SYSPM_HVLDO_VOLTAGE_2_700V&#160;</td><td class="fielddoc"><p>2.700 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731cabec0f2907f0a058e8993e03fb9f5a067" name="gga64b1d9370a07008a83b14bcbee4f731cabec0f2907f0a058e8993e03fb9f5a067"></a>CY_SYSPM_HVLDO_VOLTAGE_2_800V&#160;</td><td class="fielddoc"><p>2.800 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731cab1a6f4628888ba29959ca00b9d7949eb" name="gga64b1d9370a07008a83b14bcbee4f731cab1a6f4628888ba29959ca00b9d7949eb"></a>CY_SYSPM_HVLDO_VOLTAGE_2_900V&#160;</td><td class="fielddoc"><p>2.900 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca516b23dae4cf1bc91742aaa8dcb60b23" name="gga64b1d9370a07008a83b14bcbee4f731ca516b23dae4cf1bc91742aaa8dcb60b23"></a>CY_SYSPM_HVLDO_VOLTAGE_3_000V&#160;</td><td class="fielddoc"><p>3.000 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731cacee7fb8f904de100a98e492cd98bee04" name="gga64b1d9370a07008a83b14bcbee4f731cacee7fb8f904de100a98e492cd98bee04"></a>CY_SYSPM_HVLDO_VOLTAGE_3_100V&#160;</td><td class="fielddoc"><p>3.100 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca4c6eb4889f33adca41bc0f591feedad3" name="gga64b1d9370a07008a83b14bcbee4f731ca4c6eb4889f33adca41bc0f591feedad3"></a>CY_SYSPM_HVLDO_VOLTAGE_3_200V&#160;</td><td class="fielddoc"><p>3.200 V nominal voltage. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga64b1d9370a07008a83b14bcbee4f731ca1336733b87496c94101ed74c788ee8ea" name="gga64b1d9370a07008a83b14bcbee4f731ca1336733b87496c94101ed74c788ee8ea"></a>CY_SYSPM_HVLDO_VOLTAGE_3_300V&#160;</td><td class="fielddoc"><p>3.300 V nominal voltage. </p>
 </td></tr>
 </table>
 

@@ -416,6 +416,7 @@
 #define CY_AUTANALOG_SAR_H
 
 #include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 
 #ifdef CY_IP_MXS22LPPASS_SAR
 
@@ -2602,5 +2603,6 @@ __STATIC_INLINE uint32_t Cy_AutAnalog_FIFO_GetInterruptStatusMasked(uint8_t fifo
 #endif /* CY_IP_MXS22LPPASS_SAR */
 
 #endif /** !defined(CY_AUTANALOG_SAR_H) */
+#endif
 
 /* [] END OF FILE */

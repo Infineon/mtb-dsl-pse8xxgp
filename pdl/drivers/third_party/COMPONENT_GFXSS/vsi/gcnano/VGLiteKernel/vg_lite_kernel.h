@@ -199,6 +199,9 @@ typedef enum vg_lite_kernel_command
     /* Flexa enable */
     VG_LITE_FLEXA_ENABLE,
 
+    /* Target mesh set */
+    VG_LITE_TARGET_MESH_SET,
+
     /* Flexa stop frame */
     VG_LITE_FLEXA_STOP_FRAME,
 
@@ -560,6 +563,13 @@ typedef struct vg_lite_kernel_flexa_info
     uint32_t                    reset_flag;
 }
 vg_lite_kernel_flexa_info_t;
+
+typedef struct vg_lite_kernel_mesh_info
+{
+    uint32_t                    mesh_size;
+}
+vg_lite_kernel_mesh_info_t;
+
 
 typedef struct vg_lite_kernel_mem
 {

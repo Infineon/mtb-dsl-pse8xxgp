@@ -66,15 +66,13 @@ extern "C" {
 /** NNLite driver ID */
 #define CY_NNLITE_ID                              CY_PDL_DRV_ID(0x48U)
 
-#if CY_IP_MXNNLITE_VERSION==1
-/** NNLite type */
-#define NNLITE_Type                               MXNNLITE_1_0_Type
-#elif CY_IP_MXNNLITE_VERSION==2
-
 /** NNLite type */
 #define NNLITE_Type                               MXNNLITE_2_0_Type
-#else
-#error CY_IP_MXNNLITE_VERSION macro unset/unrecognized setting
+#if !defined(NNLITE_VAL2FLD)
+  #define NNLITE_VAL2FLD(field, value) _VAL2FLD(MXNNLITE_2_0_##field, value)
+#endif
+#if CY_IP_MXNNLITE_VERSION==3
+#error "NNLite v2 driver cannot be used with MXNNLITE v3 IP"
 #endif
 
 
@@ -82,27 +80,6 @@ extern "C" {
 /** Output Scaling 1 mask */
 #define NNLITE_NO_SCALING                         (0x3F800000U)
 
-#if CY_IP_MXNNLITE_VERSION==1
-
-/** Output value Clipping mask */
-#define NNLITE_BYTE_CLIPING                       (0xFFU)
-
-
-/** Error Interrupt */
-#define NNLITE_INTR_ERRORS_MASK                 (MXNNLITE_1_0_INTR_MASKED_INTR_MASKED_MEM_ERR_SPARSITY_Msk | \
-                                                 MXNNLITE_1_0_INTR_MASKED_INTR_MASKED_MEM_ERR_ACTIVATIONSTREAMER_Msk | \
-                                                 MXNNLITE_1_0_INTR_MASKED_INTR_MASKED_MEM_ERR_WEIGHTSTREAMER_Msk | \
-                                                 MXNNLITE_1_0_INTR_MASKED_INTR_MASKED_MEM_ERR_BIASSTREAMER_Msk | \
-                                                 MXNNLITE_1_0_INTR_MASKED_INTR_MASKED_MEM_ERR_OUTPUTSTREAMER_Msk)
-
-/** Interrupt Enable mask */
-#define NNLITE_INTR_ENABLE_MASK                 (MXNNLITE_1_0_INTR_MASKED_INTR_MASKED_DONE_Msk | \
-                                                 MXNNLITE_1_0_INTR_MASKED_INTR_MASKED_SATURATION_Msk | \
-                                                 NNLITE_INTR_ERRORS_MASK)
-/** Interrupt mask for all interrupts */
-#define NNLITE_INTR_MASK                        NNLITE_INTR_ENABLE_MASK
-
-#else
  /** Read Error Interrupt */
 #define NNLITE_INTR_READ_ERRORS_MASK           (MXNNLITE_2_0_INTR_MASKED_INTR_MASKED_MEM_ERR_SPARSITY_Msk | \
                                                  MXNNLITE_2_0_INTR_MASKED_INTR_MASKED_MEM_ERR_ACTIVATIONSTREAMER_Msk | \
@@ -146,7 +123,6 @@ extern "C" {
 /** Preshift of add/sub inputs when prescaling */
 #define NNLITE_ADDSUB_PRESCALE_SHIFT_BITS 8
 
-#endif
 
 /** \} group_nnlite_macros */
 
@@ -154,42 +130,6 @@ extern "C" {
 /** \addtogroup group_nnlite_enums
 * \{
 */
-#if CY_IP_MXNNLITE_VERSION==1
-
-/** NNLite pdl status codes */
-typedef enum
-{
-    CY_NNLITE_SUCCESS = 0U, /**< Status successful  */
-
-    CY_NNLITE_OP_QUEUED = 1U, /** Operation is Pending state */
-
-    CY_NNLITE_MEM_ERR_SPARSITY = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR |
-                                            MXNNLITE_1_0_INTR_INTR_MEM_ERR_SPARSITY_Msk), /**< Mem fetch Error for Sparsity */
-
-    CY_NNLITE_MEM_ERR_ACTIVATION_STREAMER = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR |
-                                            MXNNLITE_1_0_INTR_INTR_MEM_ERR_ACTIVATIONSTREAMER_Msk),  /**< Mem fetch Error for Activation pointer */
-
-    CY_NNLITE_MEM_ERR_WEIGHT_STREAMER = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR |
-                                            MXNNLITE_1_0_INTR_INTR_MEM_ERR_WEIGHTSTREAMER_Msk), /**< Mem fetch Error for Weight pointer */
-
-    CY_NNLITE_MEM_ERR_BIAS_STREAMER = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR |
-                                            MXNNLITE_1_0_INTR_INTR_MEM_ERR_BIASSTREAMER_Msk), /**< Mem fetch Error for Bias pointer */
-
-    CY_NNLITE_MEM_ERR_OUTPUT_STREAMER = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR |
-                                            MXNNLITE_1_0_INTR_INTR_MEM_ERR_OUTPUTSTREAMER_Msk),/**< Mem Error for Output pointer */
-
-    CY_NNLITE_SATURATION = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR |
-                                            MXNNLITE_1_0_INTR_INTR_SATURATION_Msk), /**< Saturation in output */
-
-    CY_NNLITE_BAD_PARAM = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR | 0x41U),  /**< function call with invalid parameter*/
-
-    CY_NNLITE_BAD_STATE = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR | 0x42U), /**< Invalid state, order */
-
-    CY_NNLITE_EXTERN_API_ERR = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR | 0x43U), /**< Error code for system (RTOS) level API failure */
-
-} cy_en_nnlite_status_t;
-
-#else
 
 /** NNLite pdl status codes */
 typedef enum
@@ -231,30 +171,12 @@ typedef enum
     CY_NNLITE_BAD_STATE = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR | 0x42U), /**< Invalid state, order */
 
     CY_NNLITE_EXTERN_API_ERR = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR | 0x43U), /**< Error code for system (RTOS) level API failure */
+
+    CY_NNLITE_INVALID_RANGE = (CY_NNLITE_ID | CY_PDL_STATUS_ERROR | 0x44U), /**< Parameter exceeds hardware register field width */
 } cy_en_nnlite_status_t;
 
-#endif
 
 
-#if CY_IP_MXNNLITE_VERSION==1
-
-/** NNLite nn layer type*/
-typedef enum
-{
-  CY_NNLITE_FC_LAYER = 0U, /**< NN FC or Dense Layer */
-  CY_NNLITE_CONV_LAYER = 1U, /**< NN Convolution Layer */
-  CY_NNLITE_LAST_LAYER_CODE = 1u
-} cy_en_nnlite_layer_t;
-
-
-/** Out Activation type, includes some implement via PDL */
-typedef enum
-{
-  CY_NNLITE_ACTIVATION_NONE = 0U, /**< Activation type none */
-  CY_NNLITE_ACTIVATION_RELU = 1U, /**< Activation type RELU */
-  CY_NNLITE_ACTIVATION_LEAKY_RELU = 2U, /**< Activation type leaky RELU */
-} cy_en_nnlite_fused_activation_t;
-#else
 /** Out Activation type, includes some implement via PDL
 *   @note For ReLU use clipping mask with ACTIVATION_NONE
 *   For Leaky ReLU use ACTIVATION_PWL together with interpolation params
@@ -269,7 +191,6 @@ typedef enum
   CY_NNLITE_ACTIVATION_RECIPROCAL = 5U,   /**< 1/x                    - 32-bit IEEE754 float from positive Qx.31 input */
 
 } cy_en_nnlite_fused_activation_t;
-#endif
 
 /** Activation size */
 typedef enum
@@ -373,6 +294,20 @@ typedef enum
 
 /**
  *****************************************************************************
+ ** \brief  Utility structure read/write raw bits of IEEE754 float values
+ **
+ ** Float values are assumed to be IEEE754 single precision 32-bit format.  
+  ** This union is used to access the raw bits of the float value for programming
+ *****************************************************************************/
+ 
+typedef union cy_nnlite_float_bits_u 
+{ 
+  float fval; 
+  uint32_t rawbits; 
+} cy_nnlite_float_bits_t;
+
+/**
+ *****************************************************************************
  ** \brief nnlite context structure
  *****************************************************************************/
 typedef struct cy_nnlite_context
@@ -394,15 +329,6 @@ typedef struct cy_nnlite_sparsity_cfg
 } cy_nnlite_sparsity_cfg_t;
 
 
-#if CY_IP_MXNNLITE_VERSION==1
-
-/**
- *****************************************************************************
- ** \brief nnlite 1.0 clipping settings (simple bitmask)
- *****************************************************************************/
-typedef uint32_t cy_nnlite_clipping_t;
-
-#else
 /**
  *****************************************************************************
  ** \brief nnlite 2.0 and later clipping settings signed min/max values
@@ -413,7 +339,6 @@ typedef struct cy_nnlite_clipping_s
   int16_t max; /**< maximum value (signed) to clip in out streamer */
 } cy_nnlite_clipping_t;
 
-#endif
 
  /** \} group_nnlite_data_structures */
 
@@ -491,117 +416,6 @@ cy_en_nnlite_status_t Cy_NNLite_Start(NNLITE_Type *nnlite,
 cy_en_nnlite_status_t Cy_NNLite_Stop(NNLITE_Type *nnlite,
                                       cy_nnlite_context_t *context);
 
-#if CY_IP_MXNNLITE_VERSION==1
-/**
- *****************************************************************************
- **  Compute size of sparsity map in bytes for given number of number of weights.
- **
- **
- **  \param [in]  num_weights    Number of weights.
- ** \retval Size in bytes.
- *****************************************************************************/
-static inline uint32_t Cy_NNLite_SparsityMapSize(uint32_t num_weights)
-{
-  /* Start is byte aligned */
-  return (num_weights + 7u ) / 8u;
-}
-
-
-/**
- *****************************************************************************
- **  parse sparsity map, API will  parse sparsity bit map and update non
- **  zero weight pointer, sparsity bit map address and weight pointer in
- **  sparCfg, sparsity configuration structure
- **
- **  \param [in]  sparsitybaseAddr sparsity map base address
- **
- **  \param [in]  sparseBitMapLen  Size of sparsity bitmap in bytes
- **
- **  \param [in]  activationRepeats  activation streamer repeat count
- **
- **  \param [out]  sparCfg sparsity configuration
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_ParseSparsity(NNLITE_Type *nnlite, const void *sparsitybaseAddr,
-    uint32_t activationRepeats, uint32_t sparseBitMapLen, cy_nnlite_sparsity_cfg_t *sparCfg);
-
-/**
- *****************************************************************************
- **  configure sparsity from valid cy_nnlite_sparsity_cfg
- **  write non zero wt pointer and sparsity bit map MEMIO and enable sparsity
- **  in streamer mode MEMIO
- **
- ** \param [in]  nnlite base pointer of register map.
- **
- ** \param [out]  sparCfg sparsity configuration
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_SparsityCfg(NNLITE_Type *nnlite, cy_nnlite_sparsity_cfg_t *sparCfg);
-
-
-/**
- *****************************************************************************
- ** \brief nnlite enable sparsity in streamer mode MEMIO
- **
- ** \param [in]  nnlite base pointer of register map.
- **
- ** \param [in]  sparsityEn sparsity enable
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_SparsityEnable(NNLITE_Type *nnlite, bool sparsityEn);
-
-/**
- *****************************************************************************
- ** \brief  nnlite activation streamer configuration set, API will configure
- ** parameters for activation streamer
- **
- ** \param [in]  nnlite     base pointer of NNLIte register map.
- **
- ** \param [in]  context    pointer to the driver context structure
- **
- ** \param [in]  filterWidth  filter width
- **
- ** \param [in]  filterHeight  fFilter height
- **
- ** \param [in]  activationRepeats  activation streamer repeat count (how often each "kernel footprint" needs to be fetched)
- **
- ** \param [in]  inputWidth  input activation Width
- **
- ** \param [in]  inputHeight  input activation Height
- **
- ** \param [in]  inputChannel  input activation channels
- **
- ** \param [in]  inputChannel  channel depth multiplier (depthwise convolution only)
- **
- ** \param [in]  startCol  starting column for activation
- **
- ** \param [in]  startRow  starting row for activation
- **
- ** \param [in]  padVal  padding value
- **
- ** \param [in]  padHeight  padding Height
- **
- ** \param [in]  padWidth  padding Width
- **
- ** \param [in]  strideCol  Stride column
- **
- ** \param [in]  strideRow  Stride rows
- **
- ** \param [in]  inputOffset input offset value
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-#endif
 
 /**
  *****************************************************************************
@@ -647,9 +461,6 @@ Cy_NNLite_ActivationStreamerCfg(NNLITE_Type *nnlite, cy_nnlite_context_t *contex
                         uint32_t filterWidth, uint32_t filterHeight,
                         uint32_t activationRepeats, uint32_t inputWidth,
                         uint32_t inputHeight, uint32_t inputChannel,
-#if CY_IP_MXNNLITE_VERSION==1
-                        uint32_t startCol, uint32_t startRow,
-#endif
                         int16_t padVal, uint8_t padWidth,
                         uint8_t padHeight, uint8_t strideCol,
                         uint8_t strideRow, int32_t inputOffset);
@@ -673,8 +484,6 @@ Cy_NNLite_ActivationStreamerCfg(NNLITE_Type *nnlite, cy_nnlite_context_t *contex
 cy_en_nnlite_status_t
 Cy_NNLite_WeightStreamerCfg(NNLITE_Type *nnlite, cy_nnlite_context_t *context,
                           uint32_t weightPerNeuron, int32_t filterOffset);
-
-#if CY_IP_MXNNLITE_VERSION !=1
 
 /**
  *****************************************************************************
@@ -706,53 +515,6 @@ Cy_NNLite_OutputStreamerCfg(NNLITE_Type *nnlite, cy_nnlite_context_t *context,
                         uint32_t outputWidth, uint32_t outputHeight,
                         uint32_t outputChannels);
 
-
-#else
-
-/**
- *****************************************************************************
- ** \brief  nnlite out streamer configuration set, API will set clipping mask,
- **  offset, scaling factor ,width and height for output streamer
- **
- ** \param [in]  nnlite     base pointer of NNLIte register map.
- **
- ** \param [in]  context    pointer to the driver context structure
- **
- ** \param [in]  clipping    output clipping setting
- **
- ** \param [in]  outputOffset  output elements offset value
- **
- ** \param [in]  outputWidth  output width
- **
- ** \param [in]  outputHeight  output height
- **
- ** \param [in]  outputScalingFactor  output scaling factor
- **
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-
-cy_en_nnlite_status_t
-Cy_NNLite_OutputStreamerCfg(NNLITE_Type *nnlite, cy_nnlite_context_t *context,
-                        cy_nnlite_clipping_t clipping, int32_t outputOffset,
-                        uint32_t outputWidth, uint32_t outputHeight,
-                        float outputScalingFactor);
-/**
- *****************************************************************************
- ** \brief nnlite bias streamer enable
- **
- ** \param [in]  nnlite base pointer of register map.
- **
- ** \param [in]  biasEn bias streamer enable
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_BiasStreamerEnable(NNLITE_Type *nnlite, bool biasEn);
-#endif
-
 /**
  *****************************************************************************
  ** \brief  set nnlite streamer base address
@@ -771,35 +533,6 @@ Cy_NNLite_StreamerBaseAddrSet(NNLITE_Type *nnlite,
                         cy_en_nnlite_streamer_id_t strmId, const void *baseAddr);
 
 
-#if CY_IP_MXNNLITE_VERSION==1
-/**
- *****************************************************************************
- ** \brief  set activation type control
- **
- ** \param [in]  nnlite     base pointer of NNLIte register map.
- **
- ** \param [in]  nnLayer    NN Layer operation type
- **
- ** \param [in]  actEn      Output Activation enable
- **
- ** \param [in]  actDataSize    Activation size
-
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- ** Note:  Should be set to inline as usually called with constant valued-arguments
- ** and there are is no significant checking code.
- *****************************************************************************/
-
-cy_en_nnlite_status_t
-Cy_NNLite_ActivationTypeCtrl(NNLITE_Type *nnlite,
-
-                        cy_en_nnlite_layer_t nnLayer,
-                        bool actEn,
-                        cy_en_nnlite_activation_size_t actDataSize
-
-);
-
-#else
 
 
 /**
@@ -864,44 +597,7 @@ Cy_NNLite_PipelineConfig(NNLITE_Type *nnlite,
 
 }
 
-#endif
 
-#if CY_IP_MXNNLITE_VERSION==1
-/**
- *****************************************************************************
- ** \brief  nnlite set Interpolation lookup table to be used along
- **  with Cy_NNLite_SetinterpolationParam. For lut 0 and lut 1 both,
- **  Cy_NNLite_SetinterpolationParam need to be set.
- **
- ** \param [in]  nnlite     base pointer of NNLIte register map.
- **
- ** \param [in]  lut        lookup table
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_SetInterpolationLUTAddr(NNLITE_Type *nnlite, bool lut);
-
-
-/**
- *****************************************************************************
- ** \brief  set interpolation parameter
- **
- ** \param [in]  nnlite     base pointer of NNLIte register map.
- **
- ** \param [in]  slope      slope value for interpolation
- **
- ** \param [in]  intercept  Y-intercept value for calculation of interpolation
- **
- ** \retval Refer \ref cy_en_nnlite_status_t
- **
- *****************************************************************************/
-cy_en_nnlite_status_t
-Cy_NNLite_SetInterpolationParam(NNLITE_Type *nnlite,
-                                        uint16_t slope, uint16_t intercept);
-
-#else
 
 /**
  *****************************************************************************
@@ -966,7 +662,6 @@ Cy_NNLite_FFTCfg(NNLITE_Type *nnlite,
                 void *ppBuf0, void *ppBuf1,
                 unsigned int fftStages);
 
-#endif
 /**
  *****************************************************************************
  ** \brief  nnlite set interrupt mask, available interrupt are operation STATUS Done,
@@ -1091,6 +786,7 @@ void Cy_NNLite_InterruptHandler(NNLITE_Type *nnlite,
 cy_en_nnlite_status_t
 Cy_NNLite_WaitForCompletion(NNLITE_Type *nnlite, cy_nnlite_context_t *context);
 /** \} group_nnlite_functions */
+
 #ifdef __cplusplus
 }
 #endif

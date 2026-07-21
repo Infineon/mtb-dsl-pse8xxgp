@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_LPTIMER)
+
+
+
 //" *SUSPEND-FORMATTING*"
 /**
  * \addtogroup group_hal_lptimer LPTimer (Low-Power Timer)
@@ -54,21 +65,14 @@
  * \snippet hal_lptimer.c snippet_mtb_hal_lptimer_simple_setup_def
  *
  * \subsection subsection_lptimer_snippet_2 Snippet 2: LPTimer interrupts
- * The following snippet initializes a LPTimer and uses \ref mtb_hal_lptimer_set_delay() to trigger
+ * The following snippet initializes a LPTimer and uses mtb_hal_lptimer_set_delay() to trigger
  * an interrupt
- * on match. Subsequent interrupts can be triggered at required times using \ref
+ * on match. Subsequent interrupts can be triggered at required times using
  * mtb_hal_lptimer_set_delay() called from the ISR.
  * \snippet hal_lptimer.c snippet_mtb_hal_lptimer_interrupt
  */
 //" *RESUME-FORMATTING*"
-#pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_LPTIMER)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -193,6 +197,6 @@ cy_rslt_t mtb_hal_lptimer_process_interrupt(mtb_hal_lptimer_t* obj);
 }
 #endif
 
-#endif //defined(MTB_HAL_DRIVER_AVAILABLE_LPTIMER)
-
 /** \} group_hal_lptimer */
+
+#endif //defined(MTB_HAL_DRIVER_AVAILABLE_LPTIMER)

@@ -23,6 +23,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 #include "cy_autanalog_dac.h"
 
 #ifdef CY_IP_MXS22LPPASS_DAC
@@ -371,4 +373,5 @@ void Cy_AutAnalog_DAC_Data_SetDriveModeAll(uint8_t dacIdx, const cy_en_autanalog
 }
 
 #endif /* CY_IP_MXS22LPPASS_DAC */
+#endif
 /* [] END OF FILE */

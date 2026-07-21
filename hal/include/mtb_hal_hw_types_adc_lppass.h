@@ -55,14 +55,15 @@
  */
 typedef struct
 {
-    struct _mtb_hal_adc_channel_s*      channel_config[CY_SAR_MAX_NUM_CHANNELS];
+    struct _mtb_hal_adc_channel_s*      channel_config[CY_SAR_MAX_NUM_CHANNELS]; //!< Channel
+                                                                                 //!< configs
     /* Intentionally no base pointer, unnecessary for this IP */
-    uint32_t                            enabled_channels;
-    uint32_t                            enabled_diff;
-    uint32_t                            enabled_signed;
-    bool                                enabled_continuous;
-    const mtb_hal_clock_t*              clock;
-    uint8_t                             adc_index;
+    uint32_t                            enabled_channels; //!< Enabled channel mask
+    uint32_t                            enabled_diff; //!< Differential channel mask
+    uint32_t                            enabled_signed; //!< Signed channel mask
+    bool                                enabled_continuous; //!< Continuous scan mode
+    const mtb_hal_clock_t*              clock; //!< Clock resource
+    uint8_t                             adc_index; //!< ADC instance index
 } mtb_hal_adc_t;
 
 
@@ -77,10 +78,10 @@ typedef struct
 typedef struct
 {
     /* Intentionally no base pointer, unnecessary for this IP */
-    cy_stc_autanalog_sar_t*             config;
-    const mtb_hal_clock_t*              clock;
-    uint8_t                             num_channels;
-    uint8_t                             adc_index;
+    cy_stc_autanalog_sar_t*             config; //!< SAR config
+    const mtb_hal_clock_t*              clock; //!< Clock resource
+    uint8_t                             num_channels; //!< Number of channels
+    uint8_t                             adc_index; //!< ADC instance index
 } mtb_hal_adc_configurator_t;
 
 /**
@@ -93,9 +94,9 @@ typedef struct
 typedef struct _mtb_hal_adc_channel_s   /* Struct given an explicit name to make the forward
                                            declaration above work */
 {
-    mtb_hal_adc_t*                      adc;
-    uint8_t                             channel_idx;
-    uint8_t                             channel_msk;
+    mtb_hal_adc_t*                      adc; //!< Parent ADC object
+    uint8_t                             channel_idx; //!< Channel index
+    uint8_t                             channel_msk; //!< Channel mask
 } mtb_hal_adc_channel_t;
 
 

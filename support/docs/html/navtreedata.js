@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "stdlib-stubs", "index.html", [
+  [ "(stdlib-stubs)", "index.html", [
     [ "stdlib Stubs", "index.html", [
       [ "Overview", "index.html#autotoc_md1", null ]
     ] ]

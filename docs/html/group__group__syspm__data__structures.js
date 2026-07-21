@@ -34,6 +34,13 @@ var group__group__syspm__data__structures =
       [ "stack_pointer", "group__group__syspm__data__structures.html#af94c827b080dbbb1b820a80689ef24eb", null ],
       [ "entry_pointer", "group__group__syspm__data__structures.html#a35789621c867f503c8c20d180c183bfa", null ]
     ] ],
+    [ "cy_stc_syspm_warmboot_context_t", "group__group__syspm__data__structures.html#structcy__stc__syspm__warmboot__context__t", [
+      [ "r", "group__group__syspm__data__structures.html#ad1fc11d8d21dbd5ad05807a217cfdf12", null ],
+      [ "lr", "group__group__syspm__data__structures.html#abd80e531931fb33c28573fb3d5ee6195", null ],
+      [ "exit", "group__group__syspm__data__structures.html#a9c7a73708f53a4f50ba6eebe76e3044f", null ],
+      [ "msp", "group__group__syspm__data__structures.html#ab968a4e6215d6d4189c64d21d39e9596", null ],
+      [ "wfiStatus", "group__group__syspm__data__structures.html#a8ec055d69f1d75227249a9cab76fdc57", null ]
+    ] ],
     [ "cy_stc_syspm_core_buck_params_t", "group__group__syspm__data__structures.html#structcy__stc__syspm__core__buck__params__t", [
       [ "voltageSel", "group__group__syspm__data__structures.html#a7a2f940cbdb0dc1940fe25a801302946", null ],
       [ "mode", "group__group__syspm__data__structures.html#a67564267794c895105556ff3bb6ed6dd", null ],

@@ -25,6 +25,23 @@ This release of the HAL includes support for the following drivers:
 * Timer
 * UART
 
+### What Changed?
+#### v1.0.0
+* Initial release for PSE8xxGP support.
+
+
+### Supported Software and Tools
+This version of the Hardware Abstraction Layer was validated for compatibility with the following Software and Tools:
+
+| Software and Tools                        | Version |
+| :---                                      | :----:  |
+| ModusToolbox&trade; Software Environment        | 3.8.0   |
+| GCC Compiler                              | 14.2.1  |
+| IAR Compiler                              | 9.50.2  |
+| ARM Compiler                              | 6.22    |
+| LLVM ARM Compiler                         | 19.1.5  |
+
+Minimum required ModusToolbox&trade; Software Environment: v3.6
 
 ### More information
 Use the following links for more information, as needed:

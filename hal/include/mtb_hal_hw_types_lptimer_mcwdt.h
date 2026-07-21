@@ -41,7 +41,8 @@
 /** \} group_hal_availability */
 
 
-#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || ((SRSS_NUM_MCWDT_B) > 0)
+#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || (((SRSS_NUM_MCWDT_B) > 0) && \
+    (SRSS_WDT_B_PRESENT != 0))
 #define _MTB_HAL_LPTIMER_MCWDT_B
 #else
 #define _MTB_HAL_LPTIMER_MCWDT_A
@@ -59,19 +60,19 @@
 typedef struct
 {
     #if defined(_MTB_HAL_LPTIMER_MCWDT_B)
-    MCWDT_Type*                         base;
-    cy_en_mcwdtctr_t                    counter;
-    volatile uint32_t                   final_time;
+    MCWDT_Type*                         base; //!< MCWDT base pointer
+    cy_en_mcwdtctr_t                    counter; //!< Counter index
+    volatile uint32_t                   final_time; //!< Final time value
     #else // MCWDT A
-    MCWDT_STRUCT_Type*                  base;
+    MCWDT_STRUCT_Type*                  base; //!< MCWDT base pointer
     #endif
     #if (defined(CY_IP_MXS22SRSS) && (SRSS_NUM_MCWDT == 1) && (SRSS_WDT_A_PRESENT == 0))
-    volatile uint32_t                   offset;
+    volatile uint32_t                   offset; //!< Time offset
     #endif /* (defined(CY_IP_MXS22SRSS) && (SRSS_NUM_MCWDT == 1) && (SRSS_WDT_A_PRESENT == 0)) */
-    uint32_t                            lfclk_freqhz;
-    _mtb_hal_event_callback_data_t      callback_data;
-    bool                                clear_int_mask;
-    uint8_t                             isr_instruction;
+    uint32_t                            lfclk_freqhz; //!< LFCLK frequency in Hz
+    _mtb_hal_event_callback_data_t      callback_data; //!< Callback data
+    bool                                clear_int_mask; //!< Clear interrupt mask
+    uint8_t                             isr_instruction; //!< ISR instruction
 } mtb_hal_lptimer_t;
 
 /**
@@ -85,11 +86,11 @@ typedef struct
 typedef struct
 {
     #if defined(_MTB_HAL_LPTIMER_MCWDT_B)
-    MCWDT_Type*                         base;
+    MCWDT_Type*                         base; //!< MCWDT base pointer
     #else // MCWDT A
-    MCWDT_STRUCT_Type*                  base;
+    MCWDT_STRUCT_Type*                  base; //!< MCWDT base pointer
     #endif
-    uint32_t                            lfclk_freqhz;
+    uint32_t                            lfclk_freqhz; //!< LFCLK frequency in Hz
 } mtb_hal_lptimer_configurator_t;
 #endif // if (defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS22SRSS))
 // && ((SRSS_NUM_MCWDT) > 0)

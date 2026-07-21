@@ -132,13 +132,13 @@
 * The PDL provides specific files that set up default IPC functionality.
 * They are system_psoc6.h, system_psoc6_cm0plus.c and system_psoc6_cm4.c. You
 * can modify these files based on the requirements of your design.
-* If you use PSoC Creator as a development environment, it will not overwrite
+* If you use PSOC Creator as a development environment, it will not overwrite
 * your changes when you generate the application or build your code.
 *
 *
 * \section group_ipc_pipe_layer PIPE layer
 *
-* A pipe is a communication channel between two endpoints. PSoC 6 devices support
+* A pipe is a communication channel between two endpoints. PSOC 6 devices support
 * 16 IPC channels, and 16 IPC interrupts, each numbered 0-15. IPC Channels 0-7
 * and IPC interrupts 0-7 are reserved for system use. Channels 8-15 and
 * interrupts 8-15 are available for application use.
@@ -418,6 +418,33 @@ __STATIC_INLINE void     Cy_IPC_Drv_SetInterrupt (IPC_INTR_STRUCT_Type * base,
 __STATIC_INLINE void     Cy_IPC_Drv_ClearInterrupt (IPC_INTR_STRUCT_Type * base,
                                                       uint32_t ipcReleaseMask, uint32_t ipcNotifyMask);
 
+#if defined (CY_IP_MXS40PPSS)
+/*******************************************************************************
+* Function Name: Cy_IPC_Drv_GetPPCAIpcBaseAddress
+****************************************************************************//**
+*
+* This function takes an IPC channel index as a parameter and returns the base
+* address the PPCA IPC registers corresponding to the PPCA IPC channel.
+*
+* \note The user is responsible for ensuring that ipcIndex does not exceed the
+* limits.
+*
+* \param ipcIndex
+* Represents the number of PPCA IPC structure. This is converted to the base address of
+* the PPCA IPC channel registers. This comprises of total number of channels present in
+* all PPCA IPC IP instances.
+*
+* \return
+* Returns a pointer to the base of the PPCA IPC registers.
+*
+*******************************************************************************/
+__STATIC_INLINE IPC_STRUCT_Type* Cy_IPC_Drv_GetPPCAIpcBaseAddress (uint32_t ipcIndex)
+{
+    CY_ASSERT_L1(CY_PPCA_IPC_CHANNELS > ipcIndex);
+    return ( (IPC_STRUCT_Type*) CY_PPCA_IPC_STRUCT_PTR(ipcIndex));
+}
+
+#endif /* defined (CY_IP_MXS40PPSS) */
 /*******************************************************************************
 * Function Name: Cy_IPC_Drv_GetIpcBaseAddress
 ****************************************************************************//**
@@ -1043,7 +1070,6 @@ __STATIC_INLINE  cy_en_ipcdrv_status_t  Cy_IPC_Drv_ReadMsgPtr (IPC_STRUCT_Type c
 *******************************************************************************/
 __STATIC_INLINE cy_en_ipcdrv_status_t Cy_IPC_Drv_LockAcquire (IPC_STRUCT_Type const * base)
 {
-    CY_ASSERT_L1(NULL != base);
     return ( 0UL != _FLD2VAL(IPC_STRUCT_ACQUIRE_SUCCESS, REG_IPC_STRUCT_ACQUIRE(base))) ? CY_IPC_DRV_SUCCESS : CY_IPC_DRV_ERROR;
 }
 

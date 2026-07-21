@@ -71,6 +71,7 @@
 * * \ref group_scb_ezi2c_data_rate
 * * \ref group_scb_ezi2c_intr
 * * \ref group_scb_ezi2c_enable
+* * \ref group_scb_ezi2c_hw_ez_mode
 *
 * \note
 * EZI2C slave driver is built on top of the SCB hardware block. The SCB3
@@ -151,6 +152,27 @@
 * Finally, enable the EZI2C slave operation by calling \ref Cy_SCB_EZI2C_Enable.
 * Now the I2C device responds to the assigned address.
 * \snippet scb/ezi2c_snippet/main.c EZI2C_ENABLE
+*
+********************************************************************************
+* \subsection group_scb_ezi2c_hw_ez_mode Hardware EZ Mode
+********************************************************************************
+* On devices with hardware EZ mode support, the EZI2C slave supports
+* a hardware EZ mode. In this mode, the SCB uses its 256-byte EZ_DATA dual-port
+* memory for all data transfer. The I2C master reads and writes directly to
+* EZ_DATA without any firmware intervention or I2C clock stretching.
+*
+* To use hardware EZ mode, set \ref cy_stc_scb_ezi2c_config_t::enableHwEzMode
+* to true. No slave buffer (\ref Cy_SCB_EZI2C_SetBuffer1) or interrupt
+* configuration is needed for data transfer. Use
+* \ref Cy_SCB_EZI2C_HwEzReadData and \ref Cy_SCB_EZI2C_HwEzWriteData to
+* access the EZ_DATA registers from firmware.
+*
+* \snippet scb/ezi2c_snippet/main.c EZI2C_HW_EZ_MODE
+*
+* \note
+* An interrupt is still needed if the application must be notified on
+* write-stop or error events. In that case configure the ISR and use
+* \ref CY_SCB_EZI2C_SLAVE_INTR_HW_EZ as the interrupt mask.
 *
 ********************************************************************************
 * \section group_scb_ezi2c_use_cases Common Use Cases
@@ -332,6 +354,13 @@ typedef struct cy_stc_scb_ezi2c_config
     * support this mode)
     */
     bool enableWakeFromSleep;
+
+    /**
+    * When set, enables the SCB hardware EZ mode which uses EZ_DATA
+    * dual-port memory registers for data transfer, eliminating I2C clock
+    * stretching. Only applicable for devices with hardware EZ mode support.
+    */
+    bool enableHwEzMode;
 } cy_stc_scb_ezi2c_config_t;
 
 /** EZI2C slave context structure.
@@ -366,6 +395,8 @@ typedef struct cy_stc_scb_ezi2c_context
     uint8_t *buf2;          /**< The pointer to the buffer exposed on the request intended for the secondary slave address */
     uint32_t buf2Size;      /**< The buffer size assigned to the secondary slave address */
     uint32_t buf2rwBoundary; /**< The Read/Write boundary within the buffer assigned for the secondary slave address */
+
+    bool hwEzMode; /**< Indicates whether hardware EZ mode is enabled */
     /** \endcond */
 } cy_stc_scb_ezi2c_context_t;
 /** \} group_scb_ezi2c_data_structures */
@@ -404,6 +435,11 @@ void Cy_SCB_EZI2C_SetBuffer2(CySCB_Type const *base, uint8_t *buffer, uint32_t s
 uint32_t Cy_SCB_EZI2C_GetActivity(CySCB_Type const *base, cy_stc_scb_ezi2c_context_t *context);
 
 void Cy_SCB_EZI2C_Interrupt(CySCB_Type *base, cy_stc_scb_ezi2c_context_t *context);
+
+cy_en_scb_ezi2c_status_t Cy_SCB_EZI2C_HwEzReadData(CySCB_Type const *base, uint32_t offset,
+                                                    uint8_t *data, uint32_t size);
+cy_en_scb_ezi2c_status_t Cy_SCB_EZI2C_HwEzWriteData(CySCB_Type *base, uint32_t offset,
+                                                     const uint8_t *data, uint32_t size);
 /** \} group_scb_ezi2c_slave_functions */
 
 /**
@@ -486,6 +522,12 @@ cy_en_syspm_status_t Cy_SCB_EZI2C_HibernateCallback(cy_stc_syspm_callback_params
 */
 #define CY_SCB_EZI2C_DEFAULT_TX  (0xFFUL)
 
+/**
+* The number of EZ_DATA registers available in hardware EZ mode.
+* Each register holds one byte of data (bits [7:0] are used).
+*/
+#define CY_SCB_EZI2C_EZ_DATA_SIZE  (256UL)
+
 
 /*******************************************************************************
 *                          Internal Constants
@@ -508,6 +550,9 @@ cy_en_syspm_status_t Cy_SCB_EZI2C_HibernateCallback(cy_stc_syspm_callback_params
                                      CY_SCB_SLAVE_INTR_I2C_BUS_ERROR  | CY_SCB_SLAVE_INTR_I2C_ARB_LOST)
 /* Error interrupt sources */
 #define CY_SCB_EZI2C_SLAVE_INTR_ERROR   (CY_SCB_SLAVE_INTR_I2C_BUS_ERROR  | CY_SCB_SLAVE_INTR_I2C_ARB_LOST)
+
+/* Hardware EZ mode interrupt sources: only write-stop and errors */
+#define CY_SCB_EZI2C_SLAVE_INTR_HW_EZ  (CY_SCB_SLAVE_INTR_I2C_WRITE_STOP | CY_SCB_EZI2C_SLAVE_INTR_ERROR)
 
 /* Disables Stop interrupt source */
 #define CY_SCB_EZI2C_SLAVE_INTR_NO_STOP (CY_SCB_EZI2C_SLAVE_INTR & ((uint32_t) ~CY_SCB_SLAVE_INTR_I2C_STOP))

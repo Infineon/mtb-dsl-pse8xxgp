@@ -64,7 +64,7 @@
  * with \ref CY_RSLT_MODULE_DRIVERS_PDL_BASE. The exact errors are documented for each
  * driver in the
  * <a href="https://infineon.github.io/mtb-pdl-cat1/pdl_api_reference_manual/html/index.html">
- * mtb-pdl-cat1 documentation</a>.
+ * PDL documentation</a>.
  */
 
 /**

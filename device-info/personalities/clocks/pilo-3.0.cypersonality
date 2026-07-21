@@ -10,9 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -47,8 +46,8 @@
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__pilo.html' linkText='Open PILO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
-    <ParamString id='frequency' default='32768' />
-    <ParamString id='accuracy' default='2' />
+    <ParamString id='frequency' default='32768' desc='Fixed PILO nominal frequency in Hz used for code generation' />
+    <ParamString id='accuracy' default='2' desc='Fixed PILO clock accuracy in percent' />
     <ParamString id='frequencyInfo' name='Frequency' group='General' default='`${frequency / 1000.0 . " kHz"}`' visible='true' editable='false' desc='The nominal output frequency' />
     <ParamString id='accuracyInfo' name='Accuracy' group='General' default='±`${accuracy . "%"}`' visible='true' editable='false' desc='The expected accuracy of the output frequency' />
   </Parameters>

@@ -150,6 +150,9 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SMIF_SFDP_JEDEC_REV_D</b>&#160;&#160;&#160;(0x08U)</td></tr>
 <tr class="memdesc:gab679e118c0acdea765b39f49798b3aac"><td class="mdescLeft">&#160;</td><td class="mdescRight">The JEDEC JESD216 Revision is D. <br /></td></tr>
 <tr class="separator:gab679e118c0acdea765b39f49798b3aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae87af26c791a4d6a3ac428ad6d9c3795"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__macros__sfdp.html#gae87af26c791a4d6a3ac428ad6d9c3795">CY_SMIF_SFDP_JEDEC_REV_F</a>&#160;&#160;&#160;(0x0AU)</td></tr>
+<tr class="memdesc:gae87af26c791a4d6a3ac428ad6d9c3795"><td class="mdescLeft">&#160;</td><td class="mdescRight">The JEDEC JESD216 Revision is F.  <br /></td></tr>
+<tr class="separator:gae87af26c791a4d6a3ac428ad6d9c3795"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2b764687c78e7ce71bed89e5f997e95e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__macros__sfdp.html#ga2b764687c78e7ce71bed89e5f997e95e">CY_SMIF_SFDP_PARAM_TABLE_PTR</a>&#160;&#160;&#160;(0x0CU)</td></tr>
 <tr class="memdesc:ga2b764687c78e7ce71bed89e5f997e95e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the start of the JEDEC Basic Flash Parameter Table in the SFDP structure.  <br /></td></tr>
 <tr class="separator:ga2b764687c78e7ce71bed89e5f997e95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1273,6 +1276,23 @@ typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SMIF_F
 
 <p>The SFDP Header byte 0x05. </p>
 <p>Defines the SFDP Major Revision </p>
+
+</div>
+</div>
+<a id="gae87af26c791a4d6a3ac428ad6d9c3795" name="gae87af26c791a4d6a3ac428ad6d9c3795"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae87af26c791a4d6a3ac428ad6d9c3795">&#9670;&#160;</a></span>CY_SMIF_SFDP_JEDEC_REV_F</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CY_SMIF_SFDP_JEDEC_REV_F&#160;&#160;&#160;(0x0AU)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The JEDEC JESD216 Revision is F. </p>
+<p>BFPT extended to 23 DWORDs; adds DWORDs 21/22/23 describing Fast Read 1S-1D-1D, 1S-2D-2D, 1S-4D-4D. (Rev E was skipped by JEDEC.) </p>
 
 </div>
 </div>

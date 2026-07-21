@@ -36,6 +36,11 @@
 #include "mtb_srf.h"
 #include "cycfg_ppc.h"
 
+/* Provide defaults for PPC macros that may not be defined by cycfg_ppc.h (MISRA C-2012 Rule 20.9) */
+#if !defined(CYCFG_PPC_SECURED_RTC_BACKUP)
+#define CYCFG_PPC_SECURED_RTC_BACKUP             (0)
+#endif
+
 #if !defined(CY_PDL_ENABLE_SECURE_AWARE_RTC)
 /** RTC Secure Aware Driver enablement.  Set to 0 via Makefile defines to disable. When not manually set,
  * defaults to the PDL-wide Secure Aware Driver enablement status.

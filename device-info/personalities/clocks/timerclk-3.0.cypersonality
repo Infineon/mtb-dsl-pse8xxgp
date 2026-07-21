@@ -10,9 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -53,10 +52,10 @@
       <Entry name='CLK_HF0' value='hfclk' />
       <Entry name='IHO' value='iho' />
     </ParamChoice>
-    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' />
-    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' />
-    <ParamString id='sourceFreq' default='`${getExposedMember(sourceClockRsc, "frequency")}`' />
-    <ParamString id='accuracy' default='`${getExposedMember(sourceClockRsc, "accuracy")}`' />
+    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' desc='Human-readable display name of the selected source clock' />
+    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' desc='Resource path of the selected CLK_TIMER source clock' />
+    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Source clock frequency in Hz used for DRCs and code generation' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFreq,accuracy)}`' visible='`${"mxs40srss" eq getIpBlockName()}`' editable='false' desc='Source clock frequency' />
     <ParamChoice id='hf0Div' name='CLK_HF0 Divider' group='General' default='1' visible='`${"mxs40srss" eq getIpBlockName()}`' editable='`${sourceClock eq hfclk}`' desc='CLK_HF0 can be additionaly divided before it is connected to the timer divider. If CLK_HF0 frequency is less than 100 MHz and has approximately 50% duty cycle, then no division is required. Otherwise, select a divide ratio of 2, 4, or 8.'>
       <Entry name='1' value='1' />
@@ -65,8 +64,8 @@
       <Entry name='8' value='8' />
     </ParamChoice>
 
-    <ParamRange id='timerDivider' name='Timer Divider' group='General' default='`${"mxs40ssrss" eq getIpBlockName() ? 8 : 1}`' min='1' max='256' resolution='1' visible='`${("mxs40srss" eq getIpBlockName()) || ("mxs40ssrss" eq getIpBlockName())}`' desc='' />
-    <ParamString id='frequency' default='`${"mxs22srss" eq getIpBlockName() ? 1000000 : (sourceFreq / (sourceClock eq imo ? timerDivider : hf0Div))}`' />
+    <ParamRange id='timerDivider' name='Timer Divider' group='General' default='`${"mxs40ssrss" eq getIpBlockName() ? 8 : 1}`' min='1' max='256' resolution='1' visible='`${("mxs40srss" eq getIpBlockName()) || ("mxs40ssrss" eq getIpBlockName())}`' desc='The integer divider applied to the source clock to produce the timer clock (CLK_TIMER)' />
+    <ParamString id='frequency' default='`${"mxs22srss" eq getIpBlockName() ? 1000000 : (sourceFreq / (sourceClock eq imo ? timerDivider : hf0Div))}`' desc='Resulting CLK_TIMER frequency depending on device IP block and the selected divider' />
     <!-- If the frequency is less than one MHz, display its value in kHz -->
     <ParamString id='frequencyInfo' name='Frequency' group='General' default='`${"mxs40srss" eq getIpBlockName() ? formatFrequency(frequency,accuracy) : "mxs40ssrss" eq getIpBlockName() ? formatFrequency(sourceFreq / timerDivider) : formatFrequency(2000000)}`' visible='true' editable='false' desc='The resulting CLK_TIMER output clock frequency' />
   </Parameters>

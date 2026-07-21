@@ -103,14 +103,9 @@ Protection personalities</div></div>
  <h2>Configure Protection Level</h2>
 <p>User can change the protection level by clicking on the Protection Resource in the device configurator and select the target protection level from the parameters display on the right side. By selecting 'Secure Services + Peripherals' and 'Custom Security' user can customize PPC cofiguration for different PPC regions. Here is the brief description of various protection levels </p><ul>
 <li>
-<b>Non-Secure:</b> All PPC regions are assigned to the M33_M55 protection domain and accessible to both cores. </li>
-<li>
-<b>Secure Services:</b> PPC regions required by secure services are assigned to the M33_S protection domain by default and only accessible to the M33 secure core. </li>
-<li>
-<b>Secure Services + Peripherals:</b> PPC regions required by secure services and peripherals are assigned to the M33_S protection domain by default and only accessible to the M33 secure core. Related regions are grouped together under one name and all share a security domain. </li>
-<li>
-<b>Custom Security:</b> All PPC regions are assigned to the M33_M55 protection domain by default and accessible to both cores. Each region can be assigned to different security domains independently. </li>
+</li>
 </ul>
+<p>44  <b>Non-Secure:</b> All PPC regions are assigned to the M33_M55 protection domain and accessible to both cores.  <b>Secure Services:</b> PPC regions required by secure services are assigned to the M33_S protection domain by default and only accessible to the M33 secure core. <b>Secure Services + Peripherals:</b> PPC regions required by secure services and peripherals are assigned to the M33_S protection domain by default and only accessible to the M33 secure core. Related regions are grouped together under one name and all share a security domain.  <b>Custom Security:</b> All PPC regions are assigned to the M33_M55 protection domain by default and accessible to both cores. Each region can be assigned to different security domains independently.   </p>
 <div class="image">
 <img src="protection_levels.png" alt="" width="70%"/>
 <div class="caption">
@@ -182,15 +177,15 @@ MPU personality</div></div>
 <li>‘Device-nGnRnE’: No Gathering, No Reordering, No Early Acknowledgment. This is the strictest option, ensuring that memory accesses happen exactly as issued, with no optimizations. This is ideal for device memory where the timing and order of transactions are critical.</li>
 <li>‘Device-nGnRE’: No Gathering, No Reordering, Early Acknowledgment. Early write acknowledgment is allowed, meaning the processor can continue executing after writing to the device memory without waiting for the write to complete. This can be beneficial for performance but may not be suitable for all devices.</li>
 <li>‘Device-nGRE’: No Gathering, Reordering allowed, Early Acknowledgment. This allows for reordering and early acknowledgment, which may improve performance but sacrifices the strict control over memory access order and timing that is usually needed for device memory.</li>
-<li>‘Device-GRE’: Gathering, Reordering, Early Acknowledgment. This is the most relaxed setting, allowing the processor to optimize memory transactions heavily. This is generally not suitable for most device memory interactions where precise control over access is needed. </li>
+<li>‘Device-GRE’: Gathering, Reordering, Early Acknowledgment. This is the most relaxed setting, allowing the processor to optimize memory transactions heavily. This is generally not suitable for most device memory interactions where precise control over access is needed.  </li>
 </ul>
 <p class="startli">After saving, the settings will be generated to cycfg_mpu_cm33_s_0.c file for secure MPU or cycfg_mpu_cm33_ns_0.c/ cycfg_mpu_cm55_ns_0.c for non-secure cores in GeneratedSource folder.</p>
-<p class="startli">To apply then call Cy_MpuInit_cm33_ns_0()/Cy_MpuInit_cm55_ns_0()/Cy_MpuInit_cm33_s_0() function. <a class="anchor" id="MPC_personality"></a></p><h1>MPC (Memory Protection Controller)</h1>
-<p class="startli">The Memory Protection Controllers (MPC) personality allows you to configure MPC domain security settings for device memory: </p><div class="image">
+<p class="startli">To apply then call Cy_MpuInit_cm33_ns_0()/Cy_MpuInit_cm55_ns_0()/Cy_MpuInit_cm33_s_0() function.  <a class="anchor" id="MPC_personality"></a></p><h1>MPC (Memory Protection Controller)</h1>
+<p class="startli">The Memory Protection Controllers (MPC) personality allows you to configure MPC domain security settings for device memory:  </p><div class="image">
 <img src="mpc_personality.png" alt=""/>
 <div class="caption">
 MPC personality</div></div>
-<p> This personality allows to configure MPC responce on assess violation of the Security Domains. </p>
+<p>  This personality allows to configure MPC responce on assess violation of the Security Domains. </p>
 </li>
 </ul>
 </div></div><!-- contents -->

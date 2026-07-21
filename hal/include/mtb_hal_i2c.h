@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_I2C)
+
+
+
 
 /**
  * \addtogroup group_hal_i2c I2C (Inter-Integrated Circuit)
@@ -42,11 +53,11 @@
  * * Controller or target functionality
  * * Configurable target address
  * * Configurable data rates
- * * Configurable interrupt and callback assignment from I2C events - \ref mtb_hal_i2c_event_t
+ * * Configurable interrupt and callback assignment from I2C events - #mtb_hal_i2c_event_t
  *
  * \section section_i2c_quickstart Quick Start
  * Configure the behavior (controller/target) and the interface (bus frequency, target address)
- * using the \ref mtb_hal_i2c_configure function. <br>
+ * using the mtb_hal_i2c_configure() function. <br>
  * See \ref subsection_i2c_snippet_1 for example initialization as controller or target.
  * \note The clock parameter (const mtb_hal_clock_divider_t *clk) is optional and can be set
  * to NULL to generate and use an available clock resource with a default frequency
@@ -65,12 +76,12 @@
  * \snippet hal_i2c.c snippet_mtb_hal_i2c_target_init
  *
  * \subsection subsection_i2c_snippet_2 Snippet 2: Handling events
- * This snippet shows how to enable and handle I2C events using \ref mtb_hal_i2c_enable_event and
- * \ref mtb_hal_i2c_register_callback.<br>
- * The <b>callback</b> parameter of \ref mtb_hal_i2c_register_callback is used to pass the callback
+ * This snippet shows how to enable and handle I2C events using mtb_hal_i2c_enable_event() and
+ * mtb_hal_i2c_register_callback().<br>
+ * The <b>callback</b> parameter of mtb_hal_i2c_register_callback() is used to pass the callback
  * handler that will be invoked when an event occurs.<br>
- * The <b>event</b> parameter of \ref mtb_hal_i2c_enable_event is used to pass the bitmasks of
- * events ( \ref mtb_hal_i2c_event_t) to be enabled.
+ * The <b>event</b> parameter of mtb_hal_i2c_enable_event() is used to pass the bitmasks of
+ * events ( #mtb_hal_i2c_event_t) to be enabled.
  *
  * \snippet hal_i2c.c snippet_mtb_hal_handle_i2c_events
  *
@@ -88,14 +99,6 @@
    PSOC™ 6 MCU: I2C Target Using Callbacks</b></a>
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_I2C)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -485,6 +488,6 @@ cy_rslt_t mtb_hal_i2c_process_interrupt(mtb_hal_i2c_t* obj);
 #include MTB_HAL_I2C_IMPL_HEADER
 #endif /* MTB_HAL_I2C_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_I2C)
-
 /** \} group_hal_i2c */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_I2C)

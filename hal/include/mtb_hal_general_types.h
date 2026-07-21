@@ -49,17 +49,17 @@ extern "C" {
  * built on top of a lower level driver. In this case the errors returned from the
  * HAL could be one of the values below or a value from that lower level driver.
  * See the device specific documentation for details about the other error codes.
- * The HAL uses the same \ref CY_RSLT_CREATE macro to define result codes using
- * the standard \ref cy_rslt_t format. All HAL results use the module ID \ref
+ * The HAL uses the same CY_RSLT_CREATE macro to define result codes using
+ * the standard cy_rslt_t format. All HAL results use the module ID
  * CY_RSLT_MODULE_ABSTRACTION_HAL. Driver distinction is done as part of the 16-bit
  * code field. The HAL splits this into individual bytes. The upper byte signifies
- * the HAL driver using values from the \ref mtb_hal_rslt_module_chip enum. The lower
+ * the HAL driver using values from the #mtb_hal_rslt_module_chip enum. The lower
  * byte is defined by each HAL driver.
  */
 
 
 /**
- * Enum to specify module IDs for \ref cy_rslt_t values returned from the HAL.
+ * Enum to specify module IDs for cy_rslt_t values returned from the HAL.
  */
 enum mtb_hal_rslt_module_chip
 {

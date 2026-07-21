@@ -30,11 +30,13 @@
 
 #include "cy_sysint.h"
 
+#if !defined (CY_SYSINT_VECTOR_RW_DISABLED)
 #if (CY_CPU_CORTEX_M0P) || defined(CY_PDL_TZ_ENABLED)
 static uint32_t *__vector_table_rw_ptr = (uint32_t*)&__s_vector_table_rw;
 #else
 static uint32_t *__vector_table_rw_ptr = (uint32_t*)&__ns_vector_table_rw;
 #endif
+#endif /* !defined (CY_SYSINT_VECTOR_RW_DISABLED) */
 
 #if ((defined(CY_CPU_CORTEX_M0P) && (CY_CPU_CORTEX_M0P)) && !defined(CY_IP_M0SECCPUSS))
 void Cy_SysInt_SetNmiSource(cy_en_sysint_nmi_t nmiNum, cy_en_intr_t intrSrc)
@@ -86,11 +88,14 @@ cy_en_sysint_status_t Cy_SysInt_Init(const cy_stc_sysint_t* config, cy_israddres
         CY_ASSERT_L3(CY_SYSINT_IS_PRIORITY_VALID(config->intrPriority));
 
         NVIC_SetPriority(config->intrSrc, config->intrPriority);
-
+#if !defined (CY_SYSINT_VECTOR_RW_DISABLED)
         if (SCB->VTOR == (uint32_t)__vector_table_rw_ptr)
         {
             (void)Cy_SysInt_SetVector(config->intrSrc, userIsr);
         }
+#else
+        status = (userIsr != NULL) ? CY_SYSINT_BAD_PARAM : CY_SYSINT_SUCCESS;
+#endif /* !defined (CY_SYSINT_VECTOR_RW_DISABLED) */
     }
     else
     {
@@ -105,7 +110,7 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 2, \
 cy_israddress Cy_SysInt_SetVector(IRQn_Type IRQn, cy_israddress userIsr)
 {
     cy_israddress prevIsr;
-
+#if !defined (CY_SYSINT_VECTOR_RW_DISABLED)
     if (SCB->VTOR == (uint32_t)__vector_table_rw_ptr)
     {
         CY_ASSERT_L1(CY_SYSINT_IS_VECTOR_VALID(userIsr));
@@ -114,6 +119,10 @@ cy_israddress Cy_SysInt_SetVector(IRQn_Type IRQn, cy_israddress userIsr)
         __vector_table_rw_ptr[CY_INT_IRQ_BASE + (uint32_t)IRQn] = (uint32_t)userIsr;
     }
     else
+#else
+    (void)IRQn;
+    (void)userIsr;
+#endif /* !defined (CY_SYSINT_VECTOR_RW_DISABLED) */
     {
         /* vector table is always loaded to non secure SRAM, so there is no need to return
         the non-secure ROM vector */
@@ -128,11 +137,15 @@ cy_israddress Cy_SysInt_GetVector(IRQn_Type IRQn)
 {
     cy_israddress currIsr;
 
+#if !defined (CY_SYSINT_VECTOR_RW_DISABLED)
     if (SCB->VTOR == (uint32_t)__vector_table_rw_ptr)
     {
         currIsr = (cy_israddress)__vector_table_rw_ptr[CY_INT_IRQ_BASE + (uint32_t)IRQn];
     }
     else
+#else
+    (void)IRQn;
+#endif /* !defined (CY_SYSINT_VECTOR_RW_DISABLED) */
     {
         /* vector table is always loaded to non-secure SRAM, so there is no need to return
         the non-secure ROM vector */

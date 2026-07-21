@@ -23,7 +23,15 @@ var group__group__graphics__functions =
     [ "Cy_GFXSS_Enable_GPU", "group__group__graphics__functions.html#gaaf48067ead1da10be6d91f075944763c", null ],
     [ "Cy_GFXSS_Disable_GPU", "group__group__graphics__functions.html#gadb9c9742a569c4b08a39cf20e3708274", null ],
     [ "Cy_GFXSS_Transfer_Frame", "group__group__graphics__functions.html#gaff6bce72f0a3214b8527d90155b1f4f4", null ],
+    [ "Cy_GFXSS_Transfer_Frame_Async", "group__group__graphics__functions.html#ga59b664a7598b0ed0bc6a143e641a8e03", null ],
+    [ "Cy_GFXSS_DC_DBI_InterruptHandler", "group__group__graphics__functions.html#ga7526b65bb4a2e68703d39a23ee780c44", null ],
+    [ "Cy_GFXSS_MIPIDSI_TE_InterruptHandler", "group__group__graphics__functions.html#ga41f32fb36541f05e60711515523529fc", null ],
+    [ "Cy_GFXSS_Is_Transfer_Complete", "group__group__graphics__functions.html#ga7080f9a5c523e4f298d55386fb5a78bf", null ],
+    [ "Cy_GFXSS_Clear_MIPIDSI_Interrupt", "group__group__graphics__functions.html#ga6c8c831867fd775c43fd816c483e0d55", null ],
+    [ "Cy_GFXSS_Is_DC_DBI_Transfer_Active", "group__group__graphics__functions.html#gacc8d0e3bb9296ca41b4e9d3db278a63c", null ],
+    [ "Cy_GFXSS_RegisterTransferCompleteCallback", "group__group__graphics__functions.html#gac6ce151ed021cb7fb3a0e75822b6ca75", null ],
     [ "Cy_GFXSS_TransferPartialFrame", "group__group__graphics__functions.html#gae0433a5151e706051b205a75876e4ffe", null ],
+    [ "Cy_GFXSS_TransferPartialFrame_Async", "group__group__graphics__functions.html#ga05bad46fe635bf1ae310e468875d2283", null ],
     [ "Cy_GFXSS_Enable_GPU_Interrupt", "group__group__graphics__functions.html#ga54aa0c21ce3892c9c7e9c2482f54bf1d", null ],
     [ "Cy_GFXSS_Disable_GPU_Interrupt", "group__group__graphics__functions.html#ga055904b9a6954c089c2df639f2f6a988", null ]
 ];

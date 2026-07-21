@@ -115,6 +115,8 @@ vg_lite_int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>width</b><
 <tr class="separator:aa7359211918e3163fc7a0116a841aa1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7507accce74a41e784f140002187da6e"><td class="memItemLeft" align="right" valign="top">vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#a7507accce74a41e784f140002187da6e">address</a></td></tr>
 <tr class="separator:a7507accce74a41e784f140002187da6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a866642bc757ae1c4ce3c047da6b3d867"><td class="memItemLeft" align="right" valign="top">vg_lite_uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#a866642bc757ae1c4ce3c047da6b3d867">base_address</a></td></tr>
+<tr class="separator:a866642bc757ae1c4ce3c047da6b3d867"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a964405a3b7c893ce238f98f4b3d02d08"><td class="memItemLeft" align="right" valign="top">vg_lite_memory_pool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#a964405a3b7c893ce238f98f4b3d02d08">pool</a></td></tr>
 <tr class="separator:a964405a3b7c893ce238f98f4b3d02d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa67730724d7a04426171abb1102ecfbc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structvg__lite__yuvinfo__t.html">vg_lite_yuvinfo_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#aa67730724d7a04426171abb1102ecfbc">yuv</a></td></tr>
@@ -141,10 +143,16 @@ vg_lite_int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>width</b><
 <tr class="separator:ac7fbc515165cd872f910c08090a2f806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf3b70cbced37e3f77ac88589b34e2f9"><td class="memItemLeft" align="right" valign="top">struct vg_lite_buffer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#adf3b70cbced37e3f77ac88589b34e2f9">lvgl_buffer</a></td></tr>
 <tr class="separator:adf3b70cbced37e3f77ac88589b34e2f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d99808e8448a55f07cefda6c4546f75"><td class="memItemLeft" align="right" valign="top">struct vg_lite_buffer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#a4d99808e8448a55f07cefda6c4546f75">sw24bit_buffer</a></td></tr>
+<tr class="separator:a4d99808e8448a55f07cefda6c4546f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dda7b3ef7c2d46556e6aaa941dadb6a"><td class="memItemLeft" align="right" valign="top">struct vg_lite_buffer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#a6dda7b3ef7c2d46556e6aaa941dadb6a">sw24bit_planar_buffer</a></td></tr>
+<tr class="separator:a6dda7b3ef7c2d46556e6aaa941dadb6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1de7f92376d3ec266bcb391ddc0ec36f"><td class="memItemLeft" align="right" valign="top">vg_lite_color_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#a1de7f92376d3ec266bcb391ddc0ec36f">bg_color</a></td></tr>
 <tr class="separator:a1de7f92376d3ec266bcb391ddc0ec36f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0997a1c14a78e82f6e7d8f086510b962"><td class="memItemLeft" align="right" valign="top">vg_lite_uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#a0997a1c14a78e82f6e7d8f086510b962">screen_copy</a></td></tr>
 <tr class="separator:a0997a1c14a78e82f6e7d8f086510b962"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefef3c01f90e6f622ce3ee524adadde0"><td class="memItemLeft" align="right" valign="top">vg_lite_uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvg__lite__buffer__t.html#aefef3c01f90e6f622ce3ee524adadde0">svg_blend_flag</a></td></tr>
+<tr class="separator:aefef3c01f90e6f622ce3ee524adadde0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
 <a id="ad333a77fb2dc7c390b09fbc5c2238423" name="ad333a77fb2dc7c390b09fbc5c2238423"></a>
@@ -266,6 +274,21 @@ vg_lite_int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>width</b><
 
 </div>
 </div>
+<a id="a866642bc757ae1c4ce3c047da6b3d867" name="a866642bc757ae1c4ce3c047da6b3d867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a866642bc757ae1c4ce3c047da6b3d867">&#9670;&#160;</a></span>base_address</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vg_lite_uint32_t vg_lite_buffer_t::base_address</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The address to the buffer's memory for the hardware. </p>
+
+</div>
+</div>
 <a id="a964405a3b7c893ce238f98f4b3d02d08" name="a964405a3b7c893ce238f98f4b3d02d08"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a964405a3b7c893ce238f98f4b3d02d08">&#9670;&#160;</a></span>pool</h2>
 
@@ -277,7 +300,7 @@ vg_lite_int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>width</b><
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The address to the buffer's memory for the hardware. </p>
+<p>The base address to the buffer's memory for the hardware. </p>
 
 </div>
 </div>
@@ -461,6 +484,36 @@ vg_lite_int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>width</b><
 
 </div>
 </div>
+<a id="a4d99808e8448a55f07cefda6c4546f75" name="a4d99808e8448a55f07cefda6c4546f75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d99808e8448a55f07cefda6c4546f75">&#9670;&#160;</a></span>sw24bit_buffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct vg_lite_buffer* vg_lite_buffer_t::sw24bit_buffer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Buffer for SW LVGL blending support </p>
+
+</div>
+</div>
+<a id="a6dda7b3ef7c2d46556e6aaa941dadb6a" name="a6dda7b3ef7c2d46556e6aaa941dadb6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6dda7b3ef7c2d46556e6aaa941dadb6a">&#9670;&#160;</a></span>sw24bit_planar_buffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct vg_lite_buffer* vg_lite_buffer_t::sw24bit_planar_buffer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Buffer cache for SW 24bit-planar support </p>
+
+</div>
+</div>
 <a id="a1de7f92376d3ec266bcb391ddc0ec36f" name="a1de7f92376d3ec266bcb391ddc0ec36f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1de7f92376d3ec266bcb391ddc0ec36f">&#9670;&#160;</a></span>bg_color</h2>
 
@@ -472,7 +525,7 @@ vg_lite_int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>width</b><
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Buffer for SW LVGL blending support </p>
+<p>sw24bit-planar_buffer is the original buffer of sw24bit_buffer </p>
 
 </div>
 </div>
@@ -488,6 +541,21 @@ vg_lite_int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>width</b><
       </table>
 </div><div class="memdoc">
 <p>Background for edge filter </p>
+
+</div>
+</div>
+<a id="aefef3c01f90e6f622ce3ee524adadde0" name="aefef3c01f90e6f622ce3ee524adadde0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefef3c01f90e6f622ce3ee524adadde0">&#9670;&#160;</a></span>svg_blend_flag</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vg_lite_uint8_t vg_lite_buffer_t::svg_blend_flag</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Flag to optimize bandwidth when enable dec and copy image to full dst buffer without blending </p>
 
 </div>
 </div>

@@ -103,24 +103,31 @@ $(document).ready(function(){initNavTree('structmtb__hal__adc__t.html',''); init
 Data Fields</h2></td></tr>
 <tr class="memitem:a9387d26c68285e0178fae800bafaf28b"><td class="memItemLeft" align="right" valign="top"><a id="a9387d26c68285e0178fae800bafaf28b" name="a9387d26c68285e0178fae800bafaf28b"></a>
 struct _mtb_hal_adc_channel_s *&#160;</td><td class="memItemRight" valign="bottom"><b>channel_config</b> [CY_SAR_MAX_NUM_CHANNELS]</td></tr>
+<tr class="memdesc:a9387d26c68285e0178fae800bafaf28b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Channel configs. <br /></td></tr>
 <tr class="separator:a9387d26c68285e0178fae800bafaf28b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a616ad888bad31595527ed4a5f22ca28e"><td class="memItemLeft" align="right" valign="top"><a id="a616ad888bad31595527ed4a5f22ca28e" name="a616ad888bad31595527ed4a5f22ca28e"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>enabled_channels</b></td></tr>
+<tr class="memdesc:a616ad888bad31595527ed4a5f22ca28e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled channel mask. <br /></td></tr>
 <tr class="separator:a616ad888bad31595527ed4a5f22ca28e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52bfba121565d7b9ad4a279ca569d103"><td class="memItemLeft" align="right" valign="top"><a id="a52bfba121565d7b9ad4a279ca569d103" name="a52bfba121565d7b9ad4a279ca569d103"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>enabled_diff</b></td></tr>
+<tr class="memdesc:a52bfba121565d7b9ad4a279ca569d103"><td class="mdescLeft">&#160;</td><td class="mdescRight">Differential channel mask. <br /></td></tr>
 <tr class="separator:a52bfba121565d7b9ad4a279ca569d103"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c4dafba90a392b687fdd0b543133a36"><td class="memItemLeft" align="right" valign="top"><a id="a1c4dafba90a392b687fdd0b543133a36" name="a1c4dafba90a392b687fdd0b543133a36"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>enabled_signed</b></td></tr>
+<tr class="memdesc:a1c4dafba90a392b687fdd0b543133a36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signed channel mask. <br /></td></tr>
 <tr class="separator:a1c4dafba90a392b687fdd0b543133a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaecd4834509970906cc7d155c365b72"><td class="memItemLeft" align="right" valign="top"><a id="acaecd4834509970906cc7d155c365b72" name="acaecd4834509970906cc7d155c365b72"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>enabled_continuous</b></td></tr>
+<tr class="memdesc:acaecd4834509970906cc7d155c365b72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuous scan mode. <br /></td></tr>
 <tr class="separator:acaecd4834509970906cc7d155c365b72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1746ae89f509f6758a8c7f3301efa4f2"><td class="memItemLeft" align="right" valign="top"><a id="a1746ae89f509f6758a8c7f3301efa4f2" name="a1746ae89f509f6758a8c7f3301efa4f2"></a>
 const <a class="el" href="structmtb__hal__clock__t.html">mtb_hal_clock_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>clock</b></td></tr>
+<tr class="memdesc:a1746ae89f509f6758a8c7f3301efa4f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clock resource. <br /></td></tr>
 <tr class="separator:a1746ae89f509f6758a8c7f3301efa4f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a819eab44cdd27b5257f99a4a0d7ff29f"><td class="memItemLeft" align="right" valign="top"><a id="a819eab44cdd27b5257f99a4a0d7ff29f" name="a819eab44cdd27b5257f99a4a0d7ff29f"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td></tr>
+<tr class="memdesc:a819eab44cdd27b5257f99a4a0d7ff29f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ADC instance index. <br /></td></tr>
 <tr class="separator:a819eab44cdd27b5257f99a4a0d7ff29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
@@ -136,6 +143,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td>
       </table>
 </div><div class="memdoc">
 
+<p>Channel configs. </p>
+
 </div>
 </div>
 <a id="a616ad888bad31595527ed4a5f22ca28e" name="a616ad888bad31595527ed4a5f22ca28e"></a>
@@ -149,6 +158,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Enabled channel mask. </p>
 
 </div>
 </div>
@@ -164,6 +175,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td>
       </table>
 </div><div class="memdoc">
 
+<p>Differential channel mask. </p>
+
 </div>
 </div>
 <a id="a1c4dafba90a392b687fdd0b543133a36" name="a1c4dafba90a392b687fdd0b543133a36"></a>
@@ -177,6 +190,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Signed channel mask. </p>
 
 </div>
 </div>
@@ -192,6 +207,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td>
       </table>
 </div><div class="memdoc">
 
+<p>Continuous scan mode. </p>
+
 </div>
 </div>
 <a id="a1746ae89f509f6758a8c7f3301efa4f2" name="a1746ae89f509f6758a8c7f3301efa4f2"></a>
@@ -206,6 +223,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td>
       </table>
 </div><div class="memdoc">
 
+<p>Clock resource. </p>
+
 </div>
 </div>
 <a id="a819eab44cdd27b5257f99a4a0d7ff29f" name="a819eab44cdd27b5257f99a4a0d7ff29f"></a>
@@ -219,6 +238,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>adc_index</b></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>ADC instance index. </p>
 
 </div>
 </div>

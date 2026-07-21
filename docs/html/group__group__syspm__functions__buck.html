@@ -159,12 +159,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ga18be6726d10fb0431746018472d46d69"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__buck.html#ga18be6726d10fb0431746018472d46d69">Cy_SysPm_SramLdoGetVoltage</a> (void)</td></tr>
 <tr class="memdesc:ga18be6726d10fb0431746018472d46d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the SRAM LDO Voltage.  <br /></td></tr>
 <tr class="separator:ga18be6726d10fb0431746018472d46d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4e82ae81d78610493eddefbb8b24d5e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__buck.html#ga4e82ae81d78610493eddefbb8b24d5e6">Cy_SysPm_MiscLdoStatus</a> (void)</td></tr>
-<tr class="memdesc:ga4e82ae81d78610493eddefbb8b24d5e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the status of MISCLDO Regulator.  <br /></td></tr>
-<tr class="separator:ga4e82ae81d78610493eddefbb8b24d5e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga31401649e6a772f1f40b1c6d10edcb45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__functions__buck.html#ga31401649e6a772f1f40b1c6d10edcb45">Cy_SysPm_MiscLdoConfigure</a> (<a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__miscldo__params__t">cy_stc_syspm_miscldo_params_t</a> *miscLdoParam)</td></tr>
-<tr class="memdesc:ga31401649e6a772f1f40b1c6d10edcb45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the MISCLDO Regulator.  <br /></td></tr>
-<tr class="separator:ga31401649e6a772f1f40b1c6d10edcb45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga1868109944e95e8da89cd0c538431e72" name="ga1868109944e95e8da89cd0c538431e72"></a>
@@ -565,7 +559,8 @@ see <a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722c
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>see <a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>see <a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The sramLdoVoltSel field must be set to <a class="el" href="group__group__syspm__data__enumerates.html#ggabcfc6a787bace557a58cfd1319045dbead49018a124a82b65ff7de1e737c83f64">CY_SYSPM_SRAMLDO_VOLTAGE_0_80V</a> or higher when the device is in active mode. Voltages below 0.80V are for deepsleep SRAM retention only and will cause SRAM corruption and device hang if used in active mode. </dd></dl>
 
 </div>
 </div>
@@ -615,10 +610,11 @@ see <a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722c
 <p>Set SRAM LDO Voltage. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">voltage</td><td>Enum <a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a> </td></tr>
+    <tr><td class="paramname">voltage</td><td>Enum <a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section warning"><dt>Warning</dt><dd>Voltage values below <a class="el" href="group__group__syspm__data__enumerates.html#ggabcfc6a787bace557a58cfd1319045dbead49018a124a82b65ff7de1e737c83f64">CY_SYSPM_SRAMLDO_VOLTAGE_0_80V</a> are intended for deepsleep SRAM retention only. Setting a voltage below 0.80V while the device is in active mode will cause the SRAM contents (stack, data, code) to become corrupted, resulting in a device hang. Use <a class="el" href="group__group__syspm__data__enumerates.html#ggabcfc6a787bace557a58cfd1319045dbead49018a124a82b65ff7de1e737c83f64">CY_SYSPM_SRAMLDO_VOLTAGE_0_80V</a> or higher for active mode operation. </dd></dl>
 
 </div>
 </div>
@@ -640,54 +636,6 @@ see <a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722c
 
 <p>Get the SRAM LDO Voltage. </p>
 <dl class="section return"><dt>Returns</dt><dd>Gets enum value of type <a class="el" href="group__group__syspm__data__enumerates.html#gabcfc6a787bace557a58cfd1319045dbe">cy_en_syspm_sramldo_voltage_t</a> </dd></dl>
-
-</div>
-</div>
-<a id="ga4e82ae81d78610493eddefbb8b24d5e6" name="ga4e82ae81d78610493eddefbb8b24d5e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4e82ae81d78610493eddefbb8b24d5e6">&#9670;&#160;</a></span>Cy_SysPm_MiscLdoStatus()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> Cy_SysPm_MiscLdoStatus </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the status of MISCLDO Regulator. </p>
-<dl class="section return"><dt>Returns</dt><dd>Gets enum value of type <a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> </dd></dl>
-
-</div>
-</div>
-<a id="ga31401649e6a772f1f40b1c6d10edcb45" name="ga31401649e6a772f1f40b1c6d10edcb45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga31401649e6a772f1f40b1c6d10edcb45">&#9670;&#160;</a></span>Cy_SysPm_MiscLdoConfigure()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a> Cy_SysPm_MiscLdoConfigure </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__miscldo__params__t">cy_stc_syspm_miscldo_params_t</a> *&#160;</td>
-          <td class="paramname"><em>miscLdoParam</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Configures the MISCLDO Regulator. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">miscLdoParam</td><td>Structure containing the config parameters, <a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__miscldo__params__t">cy_stc_syspm_miscldo_params_t</a></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>see <a class="el" href="group__group__syspm__data__enumerates.html#ga601b1cb722cb091133caf33d8ab235ca">cy_en_syspm_status_t</a>. </dd></dl>
 
 </div>
 </div>

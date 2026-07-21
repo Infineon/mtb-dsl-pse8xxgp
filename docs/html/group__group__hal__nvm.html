@@ -113,7 +113,7 @@ Features</h1>
 Code Snippets</h1>
 <h2><a class="anchor" id="subsection_nvm_use_case_1"></a>
 Snippet 1: Get NVM Characteristics</h2>
-<p>Following code snippet demonstrates how to fetch NVM characteristics. Refer <a class="el" href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t">mtb_hal_nvm_info_t</a> for more information. </p><div class="fragment"><div class="line"> </div>
+<p>Following code snippet demonstrates how to fetch NVM characteristics. Refer <a class="el" href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t" title="Information about all of the regions of NVM memory.">mtb_hal_nvm_info_t</a> for more information. </p><div class="fragment"><div class="line"> </div>
 <div class="line">    <a class="code hl_struct" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a>       nvm_obj;</div>
 <div class="line">    <a class="code hl_struct" href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t">mtb_hal_nvm_info_t</a>  nvm_info;</div>
 <div class="line">    <a class="code hl_enumeration" href="group__group__hal__nvm.html#gab994ef1ffec2465000dde7b9a3c7bb22">mtb_hal_nvm_type_t</a>  nvm_type = <a class="code hl_enumvalue" href="group__group__hal__nvm.html#ggab994ef1ffec2465000dde7b9a3c7bb22a9dd70e0cf0f84cb97f62faf8a2219de6">MTB_HAL_NVM_TYPE_FLASH</a>;</div>
@@ -143,20 +143,20 @@ Snippet 1: Get NVM Characteristics</h2>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="ttc" id="agroup__group__hal__impl__hw__types_html_structmtb__hal__nvm__t"><div class="ttname"><a href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a></div><div class="ttdoc">NVM object.</div><div class="ttdef"><b>Definition:</b> mtb_hal_hw_types_nvm.h:67</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a17c1a11f78a4da1a14c127f2d3da2698"><div class="ttname"><a href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">mtb_hal_nvm_info_t::regions</a></div><div class="ttdeci">const mtb_hal_nvm_region_info_t * regions</div><div class="ttdoc">Array of the distinct NVM regions.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:139</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a2ecef525293d19104f82025fe279fdba"><div class="ttname"><a href="group__group__hal__nvm.html#a2ecef525293d19104f82025fe279fdba">mtb_hal_nvm_region_info_t::sector_size</a></div><div class="ttdeci">uint32_t sector_size</div><div class="ttdoc">Sector size of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:127</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a65c06df727ec049daafae955c195f984"><div class="ttname"><a href="group__group__hal__nvm.html#a65c06df727ec049daafae955c195f984">mtb_hal_nvm_info_t::region_count</a></div><div class="ttdeci">uint8_t region_count</div><div class="ttdoc">The number of distinct NVM regions.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:138</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a68cffdca107870ae4476022817aad195"><div class="ttname"><a href="group__group__hal__nvm.html#a68cffdca107870ae4476022817aad195">mtb_hal_nvm_region_info_t::size</a></div><div class="ttdeci">uint32_t size</div><div class="ttdoc">Size of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:126</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a839dd07915b0102fea376099148e9f93"><div class="ttname"><a href="group__group__hal__nvm.html#a839dd07915b0102fea376099148e9f93">mtb_hal_nvm_region_info_t::nvm_type</a></div><div class="ttdeci">mtb_hal_nvm_type_t nvm_type</div><div class="ttdoc">NVM type.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:122</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a866a445ac14ab6df5961785a417bb9eb"><div class="ttname"><a href="group__group__hal__nvm.html#a866a445ac14ab6df5961785a417bb9eb">mtb_hal_nvm_region_info_t::is_erase_required</a></div><div class="ttdeci">bool is_erase_required</div><div class="ttdoc">true = erase required before program, false = erase not required before program.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:130</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a8e2cdda5dd52a7ca948f0201b015ace7"><div class="ttname"><a href="group__group__hal__nvm.html#a8e2cdda5dd52a7ca948f0201b015ace7">mtb_hal_nvm_region_info_t::block_size</a></div><div class="ttdeci">uint32_t block_size</div><div class="ttdoc">Block size (programming granularity) of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:128</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_a95d63fe2e9894fc6e9b5af545d5b1606"><div class="ttname"><a href="group__group__hal__nvm.html#a95d63fe2e9894fc6e9b5af545d5b1606">mtb_hal_nvm_region_info_t::erase_value</a></div><div class="ttdeci">uint8_t erase_value</div><div class="ttdoc">NVM erase value (if applicable).</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:132</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_ad583006fcebf0a48dcf88f48d115ea27"><div class="ttname"><a href="group__group__hal__nvm.html#ad583006fcebf0a48dcf88f48d115ea27">mtb_hal_nvm_region_info_t::start_address</a></div><div class="ttdeci">uint32_t start_address</div><div class="ttdoc">Base address of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:123</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_gab994ef1ffec2465000dde7b9a3c7bb22"><div class="ttname"><a href="group__group__hal__nvm.html#gab994ef1ffec2465000dde7b9a3c7bb22">mtb_hal_nvm_type_t</a></div><div class="ttdeci">mtb_hal_nvm_type_t</div><div class="ttdoc">Enum of Non-volatile memory (NVM) types.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:112</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_gaf20b671cff2959aeb545f15b0ab27b29"><div class="ttname"><a href="group__group__hal__nvm.html#gaf20b671cff2959aeb545f15b0ab27b29">mtb_hal_nvm_get_info</a></div><div class="ttdeci">void mtb_hal_nvm_get_info(mtb_hal_nvm_t *obj, mtb_hal_nvm_info_t *info)</div><div class="ttdoc">Get details about the NVM memory regions such as NVM type, start address, size, is_erase_required,...</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:46</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_ggab994ef1ffec2465000dde7b9a3c7bb22a9dd70e0cf0f84cb97f62faf8a2219de6"><div class="ttname"><a href="group__group__hal__nvm.html#ggab994ef1ffec2465000dde7b9a3c7bb22a9dd70e0cf0f84cb97f62faf8a2219de6">MTB_HAL_NVM_TYPE_FLASH</a></div><div class="ttdeci">@ MTB_HAL_NVM_TYPE_FLASH</div><div class="ttdoc">Internal Flash.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:114</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_structmtb__hal__nvm__info__t"><div class="ttname"><a href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t">mtb_hal_nvm_info_t</a></div><div class="ttdoc">Information about all of the regions of NVM memory.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:137</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_structmtb__hal__nvm__region__info__t"><div class="ttname"><a href="group__group__hal__nvm.html#structmtb__hal__nvm__region__info__t">mtb_hal_nvm_region_info_t</a></div><div class="ttdoc">Information about a single region of NVM memory.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:121</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a17c1a11f78a4da1a14c127f2d3da2698"><div class="ttname"><a href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">mtb_hal_nvm_info_t::regions</a></div><div class="ttdeci">const mtb_hal_nvm_region_info_t * regions</div><div class="ttdoc">Array of the distinct NVM regions.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:158</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a2ecef525293d19104f82025fe279fdba"><div class="ttname"><a href="group__group__hal__nvm.html#a2ecef525293d19104f82025fe279fdba">mtb_hal_nvm_region_info_t::sector_size</a></div><div class="ttdeci">uint32_t sector_size</div><div class="ttdoc">Sector size of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:146</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a65c06df727ec049daafae955c195f984"><div class="ttname"><a href="group__group__hal__nvm.html#a65c06df727ec049daafae955c195f984">mtb_hal_nvm_info_t::region_count</a></div><div class="ttdeci">uint8_t region_count</div><div class="ttdoc">The number of distinct NVM regions.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:157</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a68cffdca107870ae4476022817aad195"><div class="ttname"><a href="group__group__hal__nvm.html#a68cffdca107870ae4476022817aad195">mtb_hal_nvm_region_info_t::size</a></div><div class="ttdeci">uint32_t size</div><div class="ttdoc">Size of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:145</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a839dd07915b0102fea376099148e9f93"><div class="ttname"><a href="group__group__hal__nvm.html#a839dd07915b0102fea376099148e9f93">mtb_hal_nvm_region_info_t::nvm_type</a></div><div class="ttdeci">mtb_hal_nvm_type_t nvm_type</div><div class="ttdoc">NVM type.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:141</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a866a445ac14ab6df5961785a417bb9eb"><div class="ttname"><a href="group__group__hal__nvm.html#a866a445ac14ab6df5961785a417bb9eb">mtb_hal_nvm_region_info_t::is_erase_required</a></div><div class="ttdeci">bool is_erase_required</div><div class="ttdoc">true = erase required before program, false = erase not required before program.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:149</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a8e2cdda5dd52a7ca948f0201b015ace7"><div class="ttname"><a href="group__group__hal__nvm.html#a8e2cdda5dd52a7ca948f0201b015ace7">mtb_hal_nvm_region_info_t::block_size</a></div><div class="ttdeci">uint32_t block_size</div><div class="ttdoc">Block size (programming granularity) of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:147</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_a95d63fe2e9894fc6e9b5af545d5b1606"><div class="ttname"><a href="group__group__hal__nvm.html#a95d63fe2e9894fc6e9b5af545d5b1606">mtb_hal_nvm_region_info_t::erase_value</a></div><div class="ttdeci">uint8_t erase_value</div><div class="ttdoc">NVM erase value (if applicable).</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:151</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_ad583006fcebf0a48dcf88f48d115ea27"><div class="ttname"><a href="group__group__hal__nvm.html#ad583006fcebf0a48dcf88f48d115ea27">mtb_hal_nvm_region_info_t::start_address</a></div><div class="ttdeci">uint32_t start_address</div><div class="ttdoc">Base address of the distinct NVM region.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:142</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_gab994ef1ffec2465000dde7b9a3c7bb22"><div class="ttname"><a href="group__group__hal__nvm.html#gab994ef1ffec2465000dde7b9a3c7bb22">mtb_hal_nvm_type_t</a></div><div class="ttdeci">mtb_hal_nvm_type_t</div><div class="ttdoc">Enum of Non-volatile memory (NVM) types.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:131</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_gaf20b671cff2959aeb545f15b0ab27b29"><div class="ttname"><a href="group__group__hal__nvm.html#gaf20b671cff2959aeb545f15b0ab27b29">mtb_hal_nvm_get_info</a></div><div class="ttdeci">void mtb_hal_nvm_get_info(mtb_hal_nvm_t *obj, mtb_hal_nvm_info_t *info)</div><div class="ttdoc">Get details about the NVM memory regions such as NVM type, start address, size, is_erase_required,...</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:55</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_ggab994ef1ffec2465000dde7b9a3c7bb22a9dd70e0cf0f84cb97f62faf8a2219de6"><div class="ttname"><a href="group__group__hal__nvm.html#ggab994ef1ffec2465000dde7b9a3c7bb22a9dd70e0cf0f84cb97f62faf8a2219de6">MTB_HAL_NVM_TYPE_FLASH</a></div><div class="ttdeci">@ MTB_HAL_NVM_TYPE_FLASH</div><div class="ttdoc">Internal Flash.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:133</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_structmtb__hal__nvm__info__t"><div class="ttname"><a href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t">mtb_hal_nvm_info_t</a></div><div class="ttdoc">Information about all of the regions of NVM memory.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:156</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_structmtb__hal__nvm__region__info__t"><div class="ttname"><a href="group__group__hal__nvm.html#structmtb__hal__nvm__region__info__t">mtb_hal_nvm_region_info_t</a></div><div class="ttdoc">Information about a single region of NVM memory.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.h:140</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_nvm_use_case_2"></a>
 Snippet 2: Blocking NVM Erase-Write and Read</h2>
 <p>Following code snippet demonstrates blocking NVM write. It uses a constant array with a size equaling the size of one NVM row/block. It uses blocking NVM write operation which blocks the caller until the write is completed. It then verifies the NVM data by comparing the NVM data with the written data. </p><div class="fragment"><div class="line"> </div>
@@ -216,11 +216,160 @@ Snippet 2: Blocking NVM Erase-Write and Read</h2>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">// Error erasing NVM</span></div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__hal__nvm_html_ga13baf4216ead141362b679bd28010410"><div class="ttname"><a href="group__group__hal__nvm.html#ga13baf4216ead141362b679bd28010410">mtb_hal_nvm_erase</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_erase(mtb_hal_nvm_t *obj, uint32_t address)</div><div class="ttdoc">Erase one block of NVM starting at the given address.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:118</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_ga8cdcebb8414ed7e4ee053951909cc22b"><div class="ttname"><a href="group__group__hal__nvm.html#ga8cdcebb8414ed7e4ee053951909cc22b">mtb_hal_nvm_program</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t *obj, uint32_t address, const uint32_t *data)</div><div class="ttdoc">Program one block with the provided data starting at the given address.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:238</div></div>
-<div class="ttc" id="agroup__group__hal__nvm_html_ga9dce2f8a935a571e9f1d322b00482b99"><div class="ttname"><a href="group__group__hal__nvm.html#ga9dce2f8a935a571e9f1d322b00482b99">mtb_hal_nvm_read</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_read(mtb_hal_nvm_t *obj, uint32_t address, uint8_t *data, size_t size)</div><div class="ttdoc">Read size amount of data starting from the given address of NVM.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:60</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_ga13baf4216ead141362b679bd28010410"><div class="ttname"><a href="group__group__hal__nvm.html#ga13baf4216ead141362b679bd28010410">mtb_hal_nvm_erase</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_erase(mtb_hal_nvm_t *obj, uint32_t address)</div><div class="ttdoc">Erase one block of NVM starting at the given address.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:160</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_ga8cdcebb8414ed7e4ee053951909cc22b"><div class="ttname"><a href="group__group__hal__nvm.html#ga8cdcebb8414ed7e4ee053951909cc22b">mtb_hal_nvm_program</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t *obj, uint32_t address, const uint32_t *data)</div><div class="ttdoc">Program one block with the provided data starting at the given address.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:178</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_ga9dce2f8a935a571e9f1d322b00482b99"><div class="ttname"><a href="group__group__hal__nvm.html#ga9dce2f8a935a571e9f1d322b00482b99">mtb_hal_nvm_read</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_read(mtb_hal_nvm_t *obj, uint32_t address, uint8_t *data, size_t size)</div><div class="ttdoc">Read size amount of data starting from the given address of NVM.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:102</div></div>
 <div class="ttc" id="agroup__group__result_html_gaca79700fcc701534ce61778a9bcf57d1"><div class="ttname"><a href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a></div><div class="ttdeci">uint32_t cy_rslt_t</div><div class="ttdoc">Provides the result of an operation as a structured bitfield.</div><div class="ttdef"><b>Definition:</b> cy_result.h:459</div></div>
 <div class="ttc" id="agroup__group__result_html_gaf58fac450d9fff4472f03ad68f6e546e"><div class="ttname"><a href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a></div><div class="ttdeci">#define CY_RSLT_SUCCESS</div><div class="ttdoc">cy_rslt_t return value indicating success</div><div class="ttdef"><b>Definition:</b> cy_result.h:486</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="subsection_nvm_use_case_3"></a>
+Snippet 3: Non-blocking NVM Erase-Write and Read</h2>
+<p>Following code snippet demonstrates non-blocking NVM write. It uses a constant array with a size equaling the size of one NVM row/block. It uses non-blocking NVM write operation which to not block the caller. It then verifies the NVM data by comparing the NVM data with the written data. </p><dl class="section note"><dt>Note</dt><dd>When using non-blocking NVM operations:<ul>
+<li>Interrupts must be enabled.</li>
+<li>NVM memory have to be initialized and configured properly before starting the non-blocking operation.</li>
+<li>The user must ensure that the CPU is not in critical section for the duration of the non-blocking NVM operation, otherwise NVM operation will not happen and the operation complete <a class="el" href="group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796" title="Check if a non-blocking NVM operation is complete.">mtb_hal_nvm_is_operation_complete()</a> will always return false.</li>
+</ul>
+</dd></dl>
+<div class="fragment"><div class="line"> </div>
+<div class="line">    <a class="code hl_struct" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a>      nvm_obj;</div>
+<div class="line">    <a class="code hl_struct" href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t">mtb_hal_nvm_info_t</a> nvm_info;</div>
+<div class="line">    <a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>          result = <a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a>; <span class="comment">// NVM Write Status</span></div>
+<div class="line">    uint8_t            ram_data[512];            <span class="comment">// RAM data to be written to NVM</span></div>
+<div class="line">    uint8_t            nvm_read_data[512];       <span class="comment">// RAM data read from NVM for validation</span></div>
+<div class="line">    <span class="keywordtype">bool</span>               compare_status = <span class="keyword">false</span>;   <span class="comment">// Compare Status</span></div>
+<div class="line">    uint32_t           nvm_addr;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">/* Option 1. Non-blocking NVM operations using polling */</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">    #if defined(CY_IP_MXS40FLASHC)</span></div>
+<div class="line">    <span class="comment">// Flash initialization required for non-blocking Flash operations</span></div>
+<div class="line">    Cy_Flash_Init(<span class="keyword">false</span>);</div>
+<div class="line"><span class="preprocessor">    #endif </span><span class="comment">/* defined(CY_IP_MXS40FLASHC) */</span><span class="preprocessor"></span></div>
+<div class="line"> </div>
+<div class="line">    mtb_hal_nvm_setup(&amp;nvm_obj, NULL);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Get NVM characteristics like number of NVM regions, type, and their organization</span></div>
+<div class="line">    <a class="code hl_function" href="group__group__hal__nvm.html#gaf20b671cff2959aeb545f15b0ab27b29">mtb_hal_nvm_get_info</a>(&amp;nvm_obj, &amp;nvm_info);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// NVM region 0 last block</span></div>
+<div class="line">    uint32_t block_num = (nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#a68cffdca107870ae4476022817aad195">size</a>/nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#a8e2cdda5dd52a7ca948f0201b015ace7">block_size</a>) - 1;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// NVM region 0 last block address</span></div>
+<div class="line">    nvm_addr = nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#ad583006fcebf0a48dcf88f48d115ea27">start_address</a> + (block_num * nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#a8e2cdda5dd52a7ca948f0201b015ace7">block_size</a>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Initialize the data in RAM that will be written into NVM</span></div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> index = 0; index &lt; <span class="keyword">sizeof</span>(ram_data); index++)</div>
+<div class="line">    {</div>
+<div class="line">        ram_data[index] = (uint8_t)index;</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#a866a445ac14ab6df5961785a417bb9eb">is_erase_required</a>) <span class="comment">// Check if erase is required on the given NVM type</span></div>
+<div class="line">    {</div>
+<div class="line">        <span class="comment">// Non-blocking NVM erase prior to NVM write</span></div>
+<div class="line">        result = <a class="code hl_function" href="group__group__hal__nvm.html#ga98eb415e0130562eb643d25dffbd540d">mtb_hal_nvm_erase_nb</a>(&amp;nvm_obj, nvm_addr);</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (result == <a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a>)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="comment">/* Non-blocking NVM operations with polling */</span></div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Non-blocking NVM write</span></div>
+<div class="line">        result = <a class="code hl_function" href="group__group__hal__nvm.html#ga0a80eabbf566e2ae86e3be4c75adead3">mtb_hal_nvm_program_nb</a>(&amp;nvm_obj, nvm_addr, (<span class="keyword">const</span> uint32_t*)ram_data);</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordflow">if</span> (result == <a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a>)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="comment">// Wait for the operation to complete</span></div>
+<div class="line">            <span class="keywordflow">while</span> (!<a class="code hl_function" href="group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796">mtb_hal_nvm_is_operation_complete</a>(&amp;nvm_obj))</div>
+<div class="line">            {</div>
+<div class="line">            }</div>
+<div class="line"> </div>
+<div class="line">            <span class="comment">// Read NVM data</span></div>
+<div class="line">            result =</div>
+<div class="line">                <a class="code hl_function" href="group__group__hal__nvm.html#ga9dce2f8a935a571e9f1d322b00482b99">mtb_hal_nvm_read</a>(&amp;nvm_obj, (uint32_t)nvm_addr, nvm_read_data,</div>
+<div class="line">                                 <span class="keyword">sizeof</span>(nvm_read_data));</div>
+<div class="line">            <span class="keywordflow">if</span> (result == <a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a>)</div>
+<div class="line">            {</div>
+<div class="line"> </div>
+<div class="line">                <span class="comment">// Verify the data written into NVM by comparing it with the RAM data</span></div>
+<div class="line">                <span class="keywordflow">if</span> (0 == memcmp(ram_data, nvm_read_data, <span class="keyword">sizeof</span>(nvm_read_data)))</div>
+<div class="line">                {</div>
+<div class="line">                    compare_status = <span class="keyword">true</span>;</div>
+<div class="line">                }</div>
+<div class="line">            }</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">        #if defined(CY_IP_MXS40FLASHC)</span></div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">/* Option 2. Non-blocking NVM operations using flash callbacks.</span></div>
+<div class="line"><span class="comment">         * Supported on Flash NVM.</span></div>
+<div class="line"><span class="comment">         *</span></div>
+<div class="line"><span class="comment">         * For example, flash_irq_complete_callback will be like this</span></div>
+<div class="line"><span class="comment">         *</span></div>
+<div class="line"><span class="comment">         * bool flash_operation_complete;</span></div>
+<div class="line"><span class="comment">         * void flash_irq_complete_callback(void)</span></div>
+<div class="line"><span class="comment">         * {</span></div>
+<div class="line"><span class="comment">         *    flash_operation_complete = true;</span></div>
+<div class="line"><span class="comment">         * }</span></div>
+<div class="line"><span class="comment">         */</span></div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Flash initialization required for non-blocking Flash operations</span></div>
+<div class="line">        Cy_Flash_Init(<span class="keyword">false</span>);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Setup flash callbacks for non-blocking operations</span></div>
+<div class="line">        cy_stc_flash_callback_t config = {0};</div>
+<div class="line">        config.callback_operation_complete = flash_irq_complete_callback;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Register flash callbacks for non-blocking operations</span></div>
+<div class="line">        Cy_Flash_RegisterCallback(&amp;config);</div>
+<div class="line"> </div>
+<div class="line">        mtb_hal_nvm_setup(&amp;nvm_obj, NULL);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Get NVM characteristics like number of NVM regions, type, and their organization</span></div>
+<div class="line">        <a class="code hl_function" href="group__group__hal__nvm.html#gaf20b671cff2959aeb545f15b0ab27b29">mtb_hal_nvm_get_info</a>(&amp;nvm_obj, &amp;nvm_info);</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// NVM region 0 last block</span></div>
+<div class="line">        block_num = (nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#a68cffdca107870ae4476022817aad195">size</a>/nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#a8e2cdda5dd52a7ca948f0201b015ace7">block_size</a>) - 1;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// NVM region 0 last block address</span></div>
+<div class="line">        nvm_addr = nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#ad583006fcebf0a48dcf88f48d115ea27">start_address</a> + (block_num * nvm_info.<a class="code hl_variable" href="group__group__hal__nvm.html#a17c1a11f78a4da1a14c127f2d3da2698">regions</a>[0].<a class="code hl_variable" href="group__group__hal__nvm.html#a8e2cdda5dd52a7ca948f0201b015ace7">block_size</a>);</div>
+<div class="line"> </div>
+<div class="line">        flash_operation_complete = <span class="keyword">false</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Non-blocking NVM write</span></div>
+<div class="line">        result = <a class="code hl_function" href="group__group__hal__nvm.html#gaad4231370356352b28b596bfa36463c4">mtb_hal_nvm_write_nb</a>(&amp;nvm_obj, nvm_addr, (<span class="keyword">const</span> uint32_t*)ram_data);</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordflow">if</span> (result == <a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a>)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="comment">// Wait for the operation to complete</span></div>
+<div class="line">            <span class="keywordflow">while</span> (!flash_operation_complete)</div>
+<div class="line">            {</div>
+<div class="line">            }</div>
+<div class="line"> </div>
+<div class="line">            flash_operation_complete = <span class="keyword">false</span>;</div>
+<div class="line"> </div>
+<div class="line">            <span class="comment">// Read NVM data</span></div>
+<div class="line">            result =</div>
+<div class="line">                <a class="code hl_function" href="group__group__hal__nvm.html#ga9dce2f8a935a571e9f1d322b00482b99">mtb_hal_nvm_read</a>(&amp;nvm_obj, (uint32_t)nvm_addr, nvm_read_data,</div>
+<div class="line">                                 <span class="keyword">sizeof</span>(nvm_read_data));</div>
+<div class="line">            <span class="keywordflow">if</span> (result == <a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a>)</div>
+<div class="line">            {</div>
+<div class="line"> </div>
+<div class="line">                <span class="comment">// Verify the data written into NVM by comparing it with the RAM data</span></div>
+<div class="line">                <span class="keywordflow">if</span> (0 == memcmp(ram_data, nvm_read_data, <span class="keyword">sizeof</span>(nvm_read_data)))</div>
+<div class="line">                {</div>
+<div class="line">                    compare_status = <span class="keyword">true</span>;</div>
+<div class="line">                }</div>
+<div class="line">            }</div>
+<div class="line">        }</div>
+<div class="line"><span class="preprocessor">        #endif </span><span class="comment">/* defined(CY_IP_MXS40FLASHC) */</span><span class="preprocessor"></span></div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">else</span></div>
+<div class="line">    {</div>
+<div class="line">        <span class="comment">// Error erasing NVM</span></div>
+<div class="line">    }</div>
+<div class="ttc" id="agroup__group__hal__nvm_html_ga0a80eabbf566e2ae86e3be4c75adead3"><div class="ttname"><a href="group__group__hal__nvm.html#ga0a80eabbf566e2ae86e3be4c75adead3">mtb_hal_nvm_program_nb</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_program_nb(mtb_hal_nvm_t *obj, uint32_t address, const uint32_t *data)</div><div class="ttdoc">Program one block with the provided data starting at the given address (non-blocking).</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:205</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_ga98eb415e0130562eb643d25dffbd540d"><div class="ttname"><a href="group__group__hal__nvm.html#ga98eb415e0130562eb643d25dffbd540d">mtb_hal_nvm_erase_nb</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_erase_nb(mtb_hal_nvm_t *obj, uint32_t address)</div><div class="ttdoc">Erase one block of NVM starting at the given address (non-blocking).</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:187</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_gaad4231370356352b28b596bfa36463c4"><div class="ttname"><a href="group__group__hal__nvm.html#gaad4231370356352b28b596bfa36463c4">mtb_hal_nvm_write_nb</a></div><div class="ttdeci">cy_rslt_t mtb_hal_nvm_write_nb(mtb_hal_nvm_t *obj, uint32_t address, const uint32_t *data)</div><div class="ttdoc">Write new data into the block starting at the given address (non-blocking).</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:196</div></div>
+<div class="ttc" id="agroup__group__hal__nvm_html_gaea83e79e150278736c9f7bcb410e5796"><div class="ttname"><a href="group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796">mtb_hal_nvm_is_operation_complete</a></div><div class="ttdeci">bool mtb_hal_nvm_is_operation_complete(mtb_hal_nvm_t *obj)</div><div class="ttdoc">Check if a non-blocking NVM operation is complete.</div><div class="ttdef"><b>Definition:</b> mtb_hal_nvm.c:214</div></div>
 </div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>
@@ -269,6 +418,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8cdcebb8414ed7e4ee053951909cc22b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__nvm.html#ga8cdcebb8414ed7e4ee053951909cc22b">mtb_hal_nvm_program</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *obj, uint32_t address, const uint32_t *data)</td></tr>
 <tr class="memdesc:ga8cdcebb8414ed7e4ee053951909cc22b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Program one block with the provided data starting at the given address.  <br /></td></tr>
 <tr class="separator:ga8cdcebb8414ed7e4ee053951909cc22b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga98eb415e0130562eb643d25dffbd540d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__nvm.html#ga98eb415e0130562eb643d25dffbd540d">mtb_hal_nvm_erase_nb</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *obj, uint32_t address)</td></tr>
+<tr class="memdesc:ga98eb415e0130562eb643d25dffbd540d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erase one block of NVM starting at the given address (non-blocking).  <br /></td></tr>
+<tr class="separator:ga98eb415e0130562eb643d25dffbd540d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaad4231370356352b28b596bfa36463c4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__nvm.html#gaad4231370356352b28b596bfa36463c4">mtb_hal_nvm_write_nb</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *obj, uint32_t address, const uint32_t *data)</td></tr>
+<tr class="memdesc:gaad4231370356352b28b596bfa36463c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write new data into the block starting at the given address (non-blocking).  <br /></td></tr>
+<tr class="separator:gaad4231370356352b28b596bfa36463c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0a80eabbf566e2ae86e3be4c75adead3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__nvm.html#ga0a80eabbf566e2ae86e3be4c75adead3">mtb_hal_nvm_program_nb</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *obj, uint32_t address, const uint32_t *data)</td></tr>
+<tr class="memdesc:ga0a80eabbf566e2ae86e3be4c75adead3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Program one block with the provided data starting at the given address (non-blocking).  <br /></td></tr>
+<tr class="separator:ga0a80eabbf566e2ae86e3be4c75adead3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaea83e79e150278736c9f7bcb410e5796"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796">mtb_hal_nvm_is_operation_complete</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *obj)</td></tr>
+<tr class="memdesc:gaea83e79e150278736c9f7bcb410e5796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a non-blocking NVM operation is complete.  <br /></td></tr>
+<tr class="separator:gaea83e79e150278736c9f7bcb410e5796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafb0fe80c7f3b8babd580cf8b238e43c5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="group__group__hal__nvm.html#structmtb__hal__nvm__region__info__t">mtb_hal_nvm_region_info_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__nvm.html#gafb0fe80c7f3b8babd580cf8b238e43c5">mtb_hal_nvm_get_region_for_address</a> (<a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *obj, uint32_t addr, uint32_t length)</td></tr>
 <tr class="memdesc:gafb0fe80c7f3b8babd580cf8b238e43c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nvm region based on given address and length.  <br /></td></tr>
 <tr class="separator:gafb0fe80c7f3b8babd580cf8b238e43c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -423,7 +584,7 @@ Array of the distinct NVM regions. </td></tr>
 </div><div class="memdoc">
 
 <p>Get details about the NVM memory regions such as NVM type, start address, size, is_erase_required, and erase values etc. </p>
-<p>Refer <a class="el" href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t">mtb_hal_nvm_info_t</a>, <a class="el" href="group__group__hal__nvm.html#structmtb__hal__nvm__region__info__t" title="Information about a single region of NVM memory.">mtb_hal_nvm_region_info_t</a> for more information.</p>
+<p>Refer <a class="el" href="group__group__hal__nvm.html#structmtb__hal__nvm__info__t" title="Information about all of the regions of NVM memory.">mtb_hal_nvm_info_t</a>, <a class="el" href="group__group__hal__nvm.html#structmtb__hal__nvm__region__info__t" title="Information about a single region of NVM memory.">mtb_hal_nvm_region_info_t</a> for more information.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The NVM object. </td></tr>
@@ -431,13 +592,7 @@ Array of the distinct NVM regions. </td></tr>
   </table>
   </dd>
 </dl>
-<p>Refer <a class="el" href="group__group__hal__nvm.html#subsection_nvm_use_case_1">Snippet 1: Get NVM Characteristics</a> for more information.</p>
-<p>Get details about the NVM memory regions such as NVM type, start address, size, is_erase_required, and erase values etc.</p>
-<p>Description: Provides a high level interface for interacting with the Infineon embedded non-volatile memory (NVM). This is wrapper around the lower level PDL API.</p>
-<dl class="section copyright"><dt>Copyright</dt><dd>Copyright(c) 2018-2026 Infineon Technologies AG or an affiliate of Infineon Technologies AG</dd></dl>
-<p>SPDX-License-Identifier: Apache-2.0</p>
-<p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at </p><pre class="fragment">http://www.apache.org/licenses/LICENSE-2.0
-</pre><p> Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. </p>
+<p>Refer <a class="el" href="group__group__hal__nvm.html#subsection_nvm_use_case_1">Snippet 1: Get NVM Characteristics</a> for more information. </p>
 
 </div>
 </div>
@@ -630,6 +785,170 @@ Array of the distinct NVM regions. </td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The status of the program request. Returns <a class="el" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a> on successful operation. </dd></dl>
+
+</div>
+</div>
+<a id="ga98eb415e0130562eb643d25dffbd540d" name="ga98eb415e0130562eb643d25dffbd540d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga98eb415e0130562eb643d25dffbd540d">&#9670;&#160;</a></span>mtb_hal_nvm_erase_nb()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_nvm_erase_nb </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>address</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Erase one block of NVM starting at the given address (non-blocking). </p>
+<p>The address must be at block boundary. This function starts the erase operation and returns immediately. Use <a class="el" href="group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796" title="Check if a non-blocking NVM operation is complete.">mtb_hal_nvm_is_operation_complete()</a> to check completion.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__group__hal__nvm.html#gaf20b671cff2959aeb545f15b0ab27b29" title="Get details about the NVM memory regions such as NVM type, start address, size, is_erase_required,...">mtb_hal_nvm_get_info()</a> to get the NVM characteristics for legal address values, is erase required/applicable, and the erase block size(if applicable).</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The NVM object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">address</td><td>The block address to be erased </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the erase request. Returns <a class="el" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a> on successful operation start. </dd></dl>
+
+</div>
+</div>
+<a id="gaad4231370356352b28b596bfa36463c4" name="gaad4231370356352b28b596bfa36463c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaad4231370356352b28b596bfa36463c4">&#9670;&#160;</a></span>mtb_hal_nvm_write_nb()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_nvm_write_nb </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint32_t *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write new data into the block starting at the given address (non-blocking). </p>
+<p>The address must be at block boundary. This function starts the write operation and returns immediately. Use <a class="el" href="group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796" title="Check if a non-blocking NVM operation is complete.">mtb_hal_nvm_is_operation_complete()</a> to check completion.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__group__hal__nvm.html#gaf20b671cff2959aeb545f15b0ab27b29" title="Get details about the NVM memory regions such as NVM type, start address, size, is_erase_required,...">mtb_hal_nvm_get_info()</a> to get the NVM characteristics for legal address values and the write block size. The provided data buffer must be at least as large as the NVM block_size. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Generally the <code>data</code> to be written must be located in the SRAM memory region.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The NVM object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">address</td><td>The address of the block to be written </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>The data buffer to be written to the NVM block </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the write request. Returns <a class="el" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a> on successful operation start. </dd></dl>
+
+</div>
+</div>
+<a id="ga0a80eabbf566e2ae86e3be4c75adead3" name="ga0a80eabbf566e2ae86e3be4c75adead3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0a80eabbf566e2ae86e3be4c75adead3">&#9670;&#160;</a></span>mtb_hal_nvm_program_nb()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> mtb_hal_nvm_program_nb </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint32_t *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Program one block with the provided data starting at the given address (non-blocking). </p>
+<p>The address must be at block boundary. This function starts the program operation and returns immediately. Use <a class="el" href="group__group__hal__nvm.html#gaea83e79e150278736c9f7bcb410e5796" title="Check if a non-blocking NVM operation is complete.">mtb_hal_nvm_is_operation_complete()</a> to check completion.</p>
+<dl class="section note"><dt>Note</dt><dd>This function does not erase the block prior to writing. The block must be erased first via a separate call to erase. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__group__hal__nvm.html#gaf20b671cff2959aeb545f15b0ab27b29" title="Get details about the NVM memory regions such as NVM type, start address, size, is_erase_required,...">mtb_hal_nvm_get_info()</a> to get the NVM characteristics for legal address values and the total block size. The provided data buffer must be at least as large as the NVM block_size. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Generally the <code>data</code> to be programmed must be located in the SRAM memory region.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The NVM object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">address</td><td>The address of the block to be programmed </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>The data buffer to be programmed to the NVM block </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status of the program request. Returns <a class="el" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a> on successful operation start. </dd></dl>
+
+</div>
+</div>
+<a id="gaea83e79e150278736c9f7bcb410e5796" name="gaea83e79e150278736c9f7bcb410e5796"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaea83e79e150278736c9f7bcb410e5796">&#9670;&#160;</a></span>mtb_hal_nvm_is_operation_complete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mtb_hal_nvm_is_operation_complete </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__group__hal__impl__hw__types.html#structmtb__hal__nvm__t">mtb_hal_nvm_t</a> *&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if a non-blocking NVM operation is complete. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">obj</td><td>The NVM object </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if operation is complete and false if still in progress. </dd></dl>
 
 </div>
 </div>

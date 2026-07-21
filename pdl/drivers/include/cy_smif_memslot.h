@@ -75,7 +75,7 @@ extern "C" {
 #define CY_SMIF_DUAL_QUAD_ENABLED  (1U)     /**< The dual quad transmission mode is enabled */
 
 
-/** \} group_smif_macros_status */
+/** \} group_smif_macros_cmd */
 
 /**
 * \addtogroup group_smif_macros_flags
@@ -132,6 +132,9 @@ extern "C" {
 #define CY_SMIF_SFDP_JEDEC_REV_0                    (0x00U)                 /**< The JEDEC JESD216 Revision is 0 */
 #define CY_SMIF_SFDP_JEDEC_REV_B                    (0x06U)                 /**< The JEDEC JESD216 Revision is B */
 #define CY_SMIF_SFDP_JEDEC_REV_D                    (0x08U)                 /**< The JEDEC JESD216 Revision is D */
+#define CY_SMIF_SFDP_JEDEC_REV_F                    (0x0AU)                 /**< The JEDEC JESD216 Revision is F. BFPT extended to 23 DWORDs;
+                                                                             *   adds DWORDs 21/22/23 describing Fast Read 1S-1D-1D, 1S-2D-2D, 1S-4D-4D.
+                                                                             *   (Rev E was skipped by JEDEC.) */
 #define CY_SMIF_SFDP_PARAM_TABLE_PTR                (0x0CU)                 /**< Specifies the start of the JEDEC Basic Flash
                                                                             * Parameter Table in the SFDP structure
                                                                             */
@@ -772,14 +775,14 @@ typedef struct
     uint32_t flags;
     /** The data-line selection options for a slave device */
     cy_en_smif_data_select_t dataSelect;
-    /** The base address the memory slave is mapped to in the PSoC memory map.
+    /** The base address the memory slave is mapped to in the PSOC memory map.
      * This address must be a multiple of the SMIF XIP memory size/capacity. The
      * SMIF XIP memory region should NOT overlap with other memory regions
      * (with exception to dual quad mode). Valid when the memory-mapped mode is
      * enabled.
      */
     uint32_t baseAddress;
-    /** The size/capacity allocated in the PSoC memory map for the memory slave
+    /** The size/capacity allocated in the PSOC memory map for the memory slave
      * device. The capacity is allocated from the base address. The capacity
      * must be a power of 2 and greater or equal than 64 KB. Valid when
      * memory-mapped mode is enabled
@@ -1353,7 +1356,7 @@ __STATIC_INLINE void SfdpGetQuadEnableParameters(cy_stc_smif_mem_device_cfg_t *d
 *
 * \param memCfg
 * The memory configuration structure that configures the SMIF memory device to
-*  map into the PSoC memory map. \ref cy_stc_smif_mem_config_t
+*  map into the PSOC memory map. \ref cy_stc_smif_mem_config_t
 *
 *******************************************************************************/
 __STATIC_INLINE void XipRegInit(SMIF_DEVICE_Type volatile *dev, cy_stc_smif_mem_config_t const * memCfg)

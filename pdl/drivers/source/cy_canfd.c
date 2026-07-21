@@ -1516,12 +1516,14 @@ void Cy_CANFD_IrqHandler(CANFD_Type *base, uint32_t chan, cy_stc_canfd_context_t
                  messageBufferNumber < (CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS);
                  messageBufferNumber++)
             {
+                CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 12.2', 'messageBufferNumber is bounded by loop condition (< CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS = 32); shift cannot exceed 31.');
                 if (0UL != (CANFD_NDAT1(base, chan) & (1UL << messageBufferNumber)))
                 {
                     /* Calculates the Rx Buffer address */
                     address = Cy_CANFD_CalcRxBufAdrs(base, chan, messageBufferNumber, context);
 
                     /* Clears the NDAT1 register */
+                    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 12.2', 'messageBufferNumber is bounded by loop condition (< CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS = 32); shift cannot exceed 31.');
                     CANFD_NDAT1(base, chan) = (1UL << messageBufferNumber);
 
                     break;
@@ -1534,13 +1536,15 @@ void Cy_CANFD_IrqHandler(CANFD_Type *base, uint32_t chan, cy_stc_canfd_context_t
                  messageBufferNumber < (CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS + CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS);
                  messageBufferNumber++)
             {
+                CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 12.2', '(messageBufferNumber - CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS) is bounded by loop condition to 0-31; shift cannot exceed 31.');
                 if (0UL != (CANFD_NDAT2(base, chan) & (1UL << (messageBufferNumber - CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS))))
                 {
                     /* Calculates the Rx Buffer address */
                     address = Cy_CANFD_CalcRxBufAdrs(base, chan, messageBufferNumber, context);
 
                     /* Clears the NDAT2 register */
-                    CANFD_NDAT2(base, chan) = (1UL << (messageBufferNumber - (CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS)));
+                    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 12.2', '(messageBufferNumber - CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS) is bounded by loop condition to 0-31; shift cannot exceed 31.');
+                    CANFD_NDAT2(base, chan) = (1UL << (messageBufferNumber - CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS));
 
                     break;
                 }

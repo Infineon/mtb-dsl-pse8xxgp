@@ -24,6 +24,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 #include "cy_autanalog_ptc.h"
 
 #ifdef CY_IP_MXS22LPPASS_PTC
@@ -250,4 +252,5 @@ cy_en_autanalog_status_t Cy_AutAnalog_PTComp_LoadDynamicConfig(uint8_t ptcompIdx
 }
 
 #endif /* CY_IP_MXS22LPPASS_PTC */
+#endif
 /* [] END OF FILE */

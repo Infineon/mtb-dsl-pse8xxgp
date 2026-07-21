@@ -147,6 +147,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gad38bb682262691e1db99b8f6155e3aaf"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__ethif__functions.html#gad38bb682262691e1db99b8f6155e3aaf">Cy_ETHIF_GetPrivateData</a> (<a class="el" href="structETH__Type.html">ETH_Type</a> *base)</td></tr>
 <tr class="memdesc:gad38bb682262691e1db99b8f6155e3aaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pointer to private data.  <br /></td></tr>
 <tr class="separator:gad38bb682262691e1db99b8f6155e3aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa7fce2182bc978d372c9b7826717aacf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__ethif__functions.html#gaa7fce2182bc978d372c9b7826717aacf">Cy_ETHIF_RxErrorResetAndRecover</a> (<a class="el" href="structETH__Type.html">ETH_Type</a> *base, uint8_t u8QueueIndex)</td></tr>
+<tr class="memdesc:gaa7fce2182bc978d372c9b7826717aacf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs RX queue reset and recovery after a buffer-not-available or overrun condition.  <br /></td></tr>
+<tr class="separator:gaa7fce2182bc978d372c9b7826717aacf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga29e43c154e518f268b7c1b7c627644ac" name="ga29e43c154e518f268b7c1b7c627644ac"></a>
@@ -819,6 +822,44 @@ CY_ETHIF_BAD_PARAM Parameter passed contains invalid values</dd></dl>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to private data or NULL in case wrong parameter </dd></dl>
+
+</div>
+</div>
+<a id="gaa7fce2182bc978d372c9b7826717aacf" name="gaa7fce2182bc978d372c9b7826717aacf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa7fce2182bc978d372c9b7826717aacf">&#9670;&#160;</a></span>Cy_ETHIF_RxErrorResetAndRecover()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cy_ETHIF_RxErrorResetAndRecover </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structETH__Type.html">ETH_Type</a> *&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>u8QueueIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Performs RX queue reset and recovery after a buffer-not-available or overrun condition. </p>
+<p>This function is intended to be called from the user-registered rxerrorcb callback.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Pointer to register area of Ethernet MAC </td></tr>
+    <tr><td class="paramname">u8QueueIndex</td><td>Queue number on which the error occurred </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

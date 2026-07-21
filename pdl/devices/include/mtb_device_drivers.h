@@ -55,6 +55,7 @@
 #include "cy_scb_ezi2c.h"
 #include "cy_scb_i2c.h"
 #include "cy_scb_spi.h"
+#include "cy_scb_spi_ez.h"
 #include "cy_scb_uart.h"
 #include "cy_sd_host.h"
 #include "cy_smartio.h"

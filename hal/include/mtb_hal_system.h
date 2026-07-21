@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_SYSTEM)
+
+
+
 
 /**
  * \addtogroup group_hal_system System
@@ -40,11 +51,11 @@
  * * The ability to disable interrupts during a critical section.
  *
  * \section subsection_system_quickstart Quick Start
- * * \ref mtb_hal_system_critical_section_enter and \ref
- * mtb_hal_system_critical_section_exit are used to enable/disable global interrupts
- * * \ref mtb_hal_system_delay_ms and \ref mtb_hal_system_delay_us are delay functions
+ * * mtb_hal_system_critical_section_enter() and
+ * mtb_hal_system_critical_section_exit() are used to enable/disable global interrupts
+ * * mtb_hal_system_delay_ms() and mtb_hal_system_delay_us() are delay functions
  * used to halt the CPU exectution for a specified period of time
- * * \ref mtb_hal_system_get_reset_reason gets the cause of latest system reset
+ * * mtb_hal_system_get_reset_reason() gets the cause of latest system reset
  *
  * \section subsection_system_codesnippet Code Snippets
  * \subsection subsection_system_snippet1 Snippet 1: Critical Section
@@ -53,26 +64,18 @@
  * be disturbed by an interrupt. An example is a firmware controlled communication
  * protocol where timing of each byte must be maintained and any interrupt might
  * cause loss of data. <br>
- * \ref mtb_hal_system_critical_section_enter returns the current state of interrupts
+ * mtb_hal_system_critical_section_enter() returns the current state of interrupts
  * which denote the active interrupts in the system. This must be passed as argument
- * to \ref mtb_hal_system_critical_section_exit while exiting the critical section.
+ * to mtb_hal_system_critical_section_exit() while exiting the critical section.
  * \snippet hal_system.c snippet_mtb_hal_system_critical_section
  *
  * \subsection subsection_system_snippet2 Snippet 2: Reset reason
- * \ref mtb_hal_system_get_reset_reason must be called at the beginning of the main to
- * determine the reason for reset. The return parameters are present in \ref
- * mtb_hal_reset_reason_t.
+ * mtb_hal_system_get_reset_reason() must be called at the beginning of the main to
+ * determine the reason for reset. The return parameters are present in
+ * #mtb_hal_reset_reason_t.
  * \snippet hal_system.c snippet_mtb_hal_system_reset_reason
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_SYSTEM)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -198,6 +201,6 @@ cy_rslt_t mtb_hal_system_reset_device(void);
 #include MTB_HAL_SYSTEM_IMPL_HEADER
 #endif /* MTB_HAL_SYSTEM_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_SYSTEM)
-
 /** \} group_hal_system */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_SYSTEM)

@@ -70,7 +70,7 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
     {
         case CY_NN_WORD_SIZE_8:
             input_size_bytes = sizeof(int8_t);
-            break;
+            break;        
         case CY_NN_WORD_SIZE_16:
             input_size_bytes = sizeof(int16_t);
             break;
@@ -82,7 +82,7 @@ cy_en_nnlite_status_t Cy_NNLite_LSTM_Int8(cy_nn_lstm_context *scratch_buffers,
     {
         case CY_NN_WORD_SIZE_8:
             output_size_bytes = sizeof(int8_t);
-            break;
+            break;        
         case CY_NN_WORD_SIZE_16:
             output_size_bytes = sizeof(int16_t);
             break;

@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2018-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2018-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -43,13 +43,13 @@
   </BehaviorImplementation>
 
   <Parameters>
-    <ParamString id='is22srssAvailable' default='`${("mxs22srss" eq getIpBlockName())}`' />
+    <ParamString id='is22srssAvailable' default='`${("mxs22srss" eq getIpBlockName())}`' desc='True when the device IP block is mxs22srss' />
 
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk.html' linkText='Open SysClk Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__iho.html' linkText='Open IHO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
     <ParamBool id='is_mxs22srssv2_1' name='is_mxs22srssv2_1' group="" default='`${is22srssAvailable &amp;&amp; (getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 1)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v2.1' />
-    <ParamString id='frequency' default='`${"mxs40ssrss" eq getIpBlockName() ? 48000000 : is_mxs22srssv2_1 ? 48000000: 50000000}`' />
-    <ParamString id='accuracy' default='1' />
+    <ParamString id='frequency' default='`${"mxs40ssrss" eq getIpBlockName() ? 48000000 : is_mxs22srssv2_1 ? 48000000: 50000000}`' desc='Nominal IHO frequency in Hz selected by device IP block and version' />
+    <ParamString id='accuracy' default='1' desc='Fixed IHO clock accuracy in percent' />
 
     <ParamString id='frequencyInfo' name='Frequency' group='General' default='`${formatFrequency(frequency, accuracy)}`' visible='true' editable='false' desc='The nominal output frequency' />
 

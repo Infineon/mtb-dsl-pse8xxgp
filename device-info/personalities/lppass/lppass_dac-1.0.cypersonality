@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) (2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -192,6 +192,19 @@
       <Entry name='CTB1 Opamp0 Out' value='6' visible='`${hasBlock("pass[0].ctb[1].oa[0]") &amp;&amp; isBlockUsed("pass[0].ctb[1].oa[0]")}`'/>
       <Entry name='CTB1 Opamp1 Out' value='7' visible='`${hasBlock("pass[0].ctb[1].oa[1]") &amp;&amp; isBlockUsed("pass[0].ctb[1].oa[1]")}`'/>
     </ParamChoice>
+
+    <!-- DRIVERS-21380: VBGR accuracy display -->
+    <ParamString id='vbgrAccuracyInfo'
+                 name='VBGR Reference Accuracy'
+                 group='Static Configuration'
+                 visible='`${(vrefSelect == 1) ||
+                             ((vrefSelect == 2) &amp;&amp; isBlockUsed("pass[" . inst_pass . "].prb[0]") &amp;&amp;
+                              (getExposedMember("pass[" . inst_pass . "].prb[0]", "prbOut0Vref") eq CY_AUTANALOG_PRB_VBGR)) ||
+                             ((vrefSelect == 3) &amp;&amp; isBlockUsed("pass[" . inst_pass . "].prb[0]") &amp;&amp;
+                              (getExposedMember("pass[" . inst_pass . "].prb[0]", "prbOut1Vref") eq CY_AUTANALOG_PRB_VBGR))}`'
+                 editable='false'
+                 desc='Accuracy specification of the internal VBGR 0.9V reference'
+                 default='VBGR 0.9 V: typical &#177;1%, max &#177;2% over temperature'/>
 
     <ParamRange  id='OpampVrefOutput'
                  name='Opamp VREF Output'
@@ -466,7 +479,7 @@
                  visible='`${(showAdvancedSettings) &amp;&amp; (vrefSelect != 0)}`'
                  editable='`${(showAdvancedSettings) &amp;&amp; (vrefSelect != 0)}`'
                  desc='Controls power consumption, Max sample rate and input VREF voltage range of the DAC&apos;s reference buffer'
-                 default='CY_AUTANALOG_DAC_REF_BUF_PWR_OFF'>
+                 default='`${(vrefSelect == 0) ? "CY_AUTANALOG_DAC_REF_BUF_PWR_OFF" : "CY_AUTANALOG_DAC_REF_BUF_PWR_ULTRA_LOW"}`'>
       <Entry name='Off'                             value='CY_AUTANALOG_DAC_REF_BUF_PWR_OFF'             visible='true'/>
       <Entry name='Ultra-Low'                       value='CY_AUTANALOG_DAC_REF_BUF_PWR_ULTRA_LOW'       visible='true'/>
       <Entry name='Ultra-Low, Rail-to-Rail Inputs'  value='CY_AUTANALOG_DAC_REF_BUF_PWR_ULTRA_LOW_RAIL'  visible='true'/>
@@ -699,7 +712,7 @@
                            dacChan_10_enabled ||
                            dacChan_11_enabled ||
                            dacChan_12_enabled ||
-                           dacChan_12_enabled ||
+                           dacChan_13_enabled ||
                            dacChan_14_enabled}`'/>
 
   </Parameters>
@@ -757,13 +770,13 @@
 
 <!-- The DAC channel configuration -->
     <ConfigArray name='`${INST_NAME_dac . "_ch_cfg"}`' type='cy_stc_autanalog_dac_ch_t' const='`${inFlash}`' public='true' include='`${dacChanEnabled}`' >
-      <ConfigStruct name='empty' type='nested' const='false' public='true' repeatCount='15' include='`${dacChan_$idx{0}_enabled}`'>
-        <Member name='startAddr'     value='`${getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataAddress") : getExposedMember(resource_chan_$idx{1}, "dataStartAddress")}`U' />
-        <Member name='endAddr'       value='`${getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataAddress") : getExposedMember(resource_chan_$idx{1}, "dataEndAddress")}`U' />
-        <Member name='operMode'      value='`${getExposedMember(resource_chan_$idx{1}, "dataOperMode")}`' />
-        <Member name='sampleAndHold' value='`${getExposedMember(resource_chan_$idx{1}, "sampleAndHold")}`' />
-        <Member name='stepSel'       value='`${enableStepValues &amp;&amp; (getExposedMember(resource_chan_$idx{1}, "waveformData") != 0) ? (getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataStepSize") : getExposedMember(resource_chan_$idx{1}, "addressStepSize")) : "CY_AUTANALOG_DAC_STEP_SEL_DISABLED"}`' />
-        <Member name='statSel'       value='`${rangeDetection ? (getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataLimitDetection") : getExposedMember(resource_chan_$idx{1}, "runMode") eq "2" ? getExposedMember(resource_chan_$idx{1}, "addressRangeDetection") : "CY_AUTANALOG_DAC_STATUS_SEL_DISABLED") : "CY_AUTANALOG_DAC_STATUS_SEL_DISABLED"}`' />
+      <ConfigStruct name='empty' type='nested' const='false' public='true' repeatCount='15' include='`${isBlockUsed("pass[" . inst_pass . "].dac[" . inst_dac . "].dacchan[" . $idx{0} . "]")}`'>
+        <Member name='startAddr'     value='`${dacChan_$idx{1}_enabled ? (getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataAddress") : getExposedMember(resource_chan_$idx{1}, "dataStartAddress")) : 0}`U' />
+        <Member name='endAddr'       value='`${dacChan_$idx{1}_enabled ? (getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataAddress") : getExposedMember(resource_chan_$idx{1}, "dataEndAddress")) : 0}`U' />
+        <Member name='operMode'      value='`${dacChan_$idx{1}_enabled ? getExposedMember(resource_chan_$idx{1}, "dataOperMode") : "CY_AUTANALOG_DAC_OPER_MODE_CIRCULAR"}`' />
+        <Member name='sampleAndHold' value='`${dacChan_$idx{1}_enabled ? getExposedMember(resource_chan_$idx{1}, "sampleAndHold") : false}`' />
+        <Member name='stepSel'       value='`${dacChan_$idx{1}_enabled ? (enableStepValues &amp;&amp; (getExposedMember(resource_chan_$idx{1}, "waveformData") != 0) ? (getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataStepSize") : getExposedMember(resource_chan_$idx{1}, "addressStepSize")) : "CY_AUTANALOG_DAC_STEP_SEL_DISABLED") : "CY_AUTANALOG_DAC_STEP_SEL_DISABLED"}`' />
+        <Member name='statSel'       value='`${dacChan_$idx{1}_enabled ? (rangeDetection ? (getExposedMember(resource_chan_$idx{1}, "runMode") eq "3" ? getExposedMember(resource_chan_$idx{1}, "dataLimitDetection") : (getExposedMember(resource_chan_$idx{1}, "runMode") eq "2" ? getExposedMember(resource_chan_$idx{1}, "addressRangeDetection") : "CY_AUTANALOG_DAC_STATUS_SEL_DISABLED")) : "CY_AUTANALOG_DAC_STATUS_SEL_DISABLED") : "CY_AUTANALOG_DAC_STATUS_SEL_DISABLED"}`' />
       </ConfigStruct>
     </ConfigArray>
 
@@ -786,13 +799,13 @@
                                                vrefSelect == 6 ? "CY_AUTANALOG_DAC_VREF_MUX_CTB1_OA0"  :
                                                vrefSelect == 7 ? "CY_AUTANALOG_DAC_VREF_MUX_CTB1_OA1"  :
                                                                  "CY_AUTANALOG_DAC_VREF_MUX_VBGR"}`' />
-        <Member name='sampleTime'    value='`${(sampleTime - 1)}`U' />
+        <Member name='sampleTime'    value='`${sampleAndHoldEnable ? (sampleTime - 1) : 0}`U' />
         <ConfigArray name='stepVal' type='nested' const='false' public='true' include='true'>
-          <ArrayElement value='`${stepValue$idx{0} - 1}`U' count='3'/>
+          <ArrayElement value='`${enableStepValues ? (stepValue$idx{0} - 1) : 0}`U' count='3'/>
         </ConfigArray>
-        <Member name='deGlitchTime'  value='`${deglitchTime - 1}`U' />
+        <Member name='deGlitchTime'  value='`${deglitchEnable ? (deglitchTime - 1) : 0}`U' />
         <ConfigArray name='chCfg' type='nested' const='false' public='true' include='true'>
-          <ArrayElement value='`${(dacChan_$idx{0}_enabled) ? "&amp;" . getExposedMember(resource_dac, "INST_NAME_dac") . "_ch_cfg[" . $idx{0} . "U]" : "NULL"}`' count='15'/>
+          <ArrayElement value='`${(isBlockUsed("pass[" . inst_pass . "].dac[" . inst_dac . "].dacchan[" . $idx{0} . "]")) ? "&amp;" . getExposedMember(resource_dac, "INST_NAME_dac") . "_ch_cfg[" . $idx{0} . "U]" : "NULL"}`' count='15'/>
         </ConfigArray>
         <ConfigArray name='chLimitCfg' type='nested' const='false' public='true' include='true'>
           <ArrayElement value='`${rangeDetection ? "&amp;" . getExposedMember(resource_dac, "INST_NAME_dac") . "_lim_cfg[" . $idx{0} . "U]" : "NULL"}`' count='3'/>

@@ -195,7 +195,7 @@ _MTB_RECIPE_CMSIS__DFPU:=SP_FPU
 else ifeq ($(VFP_SELECT),softfloat)
 # Software FP
 _MTB_TOOLCHAIN_ARM__VFP_CFLAGS:=-mfloat-abi=soft
-_MTB_TOOLCHAIN_ARM__VFP_FLAGS:=--fpu=SoftVFP
+_MTB_TOOLCHAIN_ARM__VFP_FLAGS:=--fpu=SoftVFP+FPv5-SP
 _MTB_RECIPE_CMSIS__DFPU:=NO_FPU
 else
 # FPv5 FPU, softfp, single-precision only

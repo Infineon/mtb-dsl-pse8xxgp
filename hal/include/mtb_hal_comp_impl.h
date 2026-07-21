@@ -39,7 +39,11 @@
 #include "mtb_hal_comp_mxs40ppss_dcsg_v1.h"
 #endif
 #if ((CY_IP_MXS40MCPASS_INSTANCES) > 0)
+#if defined(CY_IP_MXS40MCPASS_VERSION) && (CY_IP_MXS40MCPASS_VERSION >= 3)
+#include "mtb_hal_comp_mxs40mcpass_csg_v3.h"
+#else
 #include "mtb_hal_comp_mxs40mcpass_csg_v1.h"
+#endif //if defined(CY_IP_MXS40MCPASS_VERSION) && (CY_IP_MXS40MCPASS_VERSION >= 3)
 #endif
 
 #if defined(__cplusplus)

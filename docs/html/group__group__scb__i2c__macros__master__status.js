@@ -6,5 +6,8 @@ var group__group__scb__i2c__macros__master__status =
     [ "CY_SCB_I2C_MASTER_DATA_NAK", "group__group__scb__i2c__macros__master__status.html#gaa1bd4bdd1345d842eafe3df3d0ada328", null ],
     [ "CY_SCB_I2C_MASTER_ARB_LOST", "group__group__scb__i2c__macros__master__status.html#ga1ce9a39fdccdb63d47aea3cc048ffb90", null ],
     [ "CY_SCB_I2C_MASTER_BUS_ERR", "group__group__scb__i2c__macros__master__status.html#ga8eeded717a61477c8f06c59c00ef3f59", null ],
-    [ "CY_SCB_I2C_MASTER_ABORT_START", "group__group__scb__i2c__macros__master__status.html#ga39e4ddb9e5a4b11b74f10ea893bf44c2", null ]
+    [ "CY_SCB_I2C_MASTER_ABORT_START", "group__group__scb__i2c__macros__master__status.html#ga39e4ddb9e5a4b11b74f10ea893bf44c2", null ],
+    [ "CY_SCB_I2C_MASTER_TIMEOUT0", "group__group__scb__i2c__macros__master__status.html#gab7cb4c32be40d46187284a28f050ed0e", null ],
+    [ "CY_SCB_I2C_MASTER_TIMEOUT1", "group__group__scb__i2c__macros__master__status.html#ga980f19dfdff6d89a35c1b9c9a09fa81d", null ],
+    [ "CY_SCB_I2C_MASTER_TIMEOUT2", "group__group__scb__i2c__macros__master__status.html#ga1383db5b7b03658cc35cb8da728fa240", null ]
 ];

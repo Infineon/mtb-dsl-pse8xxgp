@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('group__group__pdl__top.html',''); init
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
 <h1>Overview</h1>
-<p>MTB PSOC EDGE PDL provides low level device drivers for PSOC EDGE devices. The PDL integrates device header files, and peripheral drivers into a single package. The drivers abstract the hardware functions into a set of easy-to-use APIs. These are fully documented in the PDL API Reference.</p>
+<p>MTB PDL provides low level device drivers for devices. The PDL integrates device header files, and peripheral drivers into a single package. The drivers abstract the hardware functions into a set of easy-to-use APIs. These are fully documented in the PDL API Reference.</p>
 <p>The PDL reduces the need to understand register usage and bit structures, thus easing software development for the extensive set of peripherals. You configure the driver for your application, and then use API calls to initialize and use the peripheral. This documentation provides technical information on each supported peripheral driver, including:</p>
 <ul>
 <li>Configuration considerations</li>
@@ -109,14 +109,14 @@ $(document).ready(function(){initNavTree('group__group__pdl__top.html',''); init
 </ul>
 <p>The PDL conforms to the ANSI C99 standard.</p>
 <h1>ModusToolbox&trade; Libraries</h1>
-<p>ModusToolbox&trade; software is a modern, extensible development environment supporting a wide range of Infineon microcontroller devices. It provides a flexible set of tools and a diverse, high-quality collection of application-focused software. These include configuration tools, low-level drivers, libraries, and operating system support. There are many parts of ModusToolbox&trade; software that are provided as libraries. The PSOC EDGE PDL is one of those libraries. The other libraries that are closely related to it are CMSIS and HAL. </p><h3>CMSIS</h3>
-<p>The CMSIS is a hardware abstraction layer developed by Arm that help to simplify software reuse, reduce the learning curve, development costs, and time-to-market for microcontroller developers. The PSOC EDGE PDL supports following components of CMSIS :</p><ul>
+<p>ModusToolbox&trade; software is a modern, extensible development environment supporting a wide range of Infineon microcontroller devices. It provides a flexible set of tools and a diverse, high-quality collection of application-focused software. These include configuration tools, low-level drivers, libraries, and operating system support. There are many parts of ModusToolbox&trade; software that are provided as libraries. The PDL is one of those libraries. The other libraries that are closely related to it are CMSIS and HAL. </p><h3>CMSIS</h3>
+<p>The CMSIS is a hardware abstraction layer developed by Arm that help to simplify software reuse, reduce the learning curve, development costs, and time-to-market for microcontroller developers. The PDL supports following components of CMSIS :</p><ul>
 <li><a href="https://arm-software.github.io/CMSIS_5/5.8.0/Core/html/index.html">CMSIS-Core(M)</a></li>
 <li><a href="https://arm-software.github.io/CMSIS_5/5.8.0/DSP/html/index.html">CMSIS-DSP</a></li>
 <li><a href="https://arm-software.github.io/CMSIS_5/5.8.0/NN/html/index.html">CMSIS-NN</a></li>
 </ul>
 <h3>Hardware Abstraction <a class="el" href="structLayer.html">Layer</a> (HAL)</h3>
-<p>HAL package provides a set of APIs to initialize, configure, and use the PSOC EDGE MCU resources.</p>
+<p>HAL package provides a set of APIs to initialize, configure, and use the MCU resources.</p>
 <p>Refer to the <a href="https://www.infineon.com/ModusToolboxRuntimeSoftwareReferenceGuide">ModusToolbox&trade; run-time software reference guide</a> for more details about how these libraries are used in the ModusToolbox&trade; ecosystem.</p>
 <h1>Copyright</h1>
 <p>(c) 2016-2026, Infineon Technologies AG or an affiliate of Infineon Technologies AG.</p>
@@ -173,25 +173,28 @@ API Reference</h2></td></tr>
 <tr class="memitem:group__group__mipidsi"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__mipidsi.html">MIPI DSI     (MIPI Display Serial Interface)</a></td></tr>
 <tr class="memdesc:group__group__mipidsi"><td class="mdescLeft">&#160;</td><td class="mdescRight">MIPI DSI driver provides an application interface for configuring MIPI DSI IP Block. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__nnlite"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nnlite.html">NNLITE HW Accelerator (NNLITE)</a></td></tr>
-<tr class="memdesc:group__group__nnlite"><td class="mdescLeft">&#160;</td><td class="mdescRight">This driver provides NNLite accelerator pdl defines and API function definitions. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__mpc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__mpc.html">MPC          (Memory Protection Controller)</a></td></tr>
 <tr class="memdesc:group__group__mpc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Memory Protection Controller (MPC) driver allows to configure memory regions as secure or non-secure, helping to protect sensitive data and code in the application. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__ms__ctl"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__ms__ctl.html">MS_CTL       (Master Security Controller)</a></td></tr>
 <tr class="memdesc:group__group__ms__ctl"><td class="mdescLeft">&#160;</td><td class="mdescRight">MSC is the Master Security Controller which helps to protect the transactions initiated on the bus. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__nnlite"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__nnlite.html">NNLITE HW Accelerator (NNLITE)</a></td></tr>
+<tr class="memdesc:group__group__nnlite"><td class="mdescLeft">&#160;</td><td class="mdescRight">This driver provides NNLite accelerator pdl defines and API function definitions. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__pdl__srf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__pdl__srf.html">PDL SRF      (PDL Secure Request Framework)</a></td></tr>
+<tr class="memdesc:group__group__pdl__srf"><td class="mdescLeft">&#160;</td><td class="mdescRight">This file contains the cy_pdl_srf_module_register API. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__pdm__pcm__v2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__pdm__pcm__v2.html">PDM_PCM_v2   (PDM-PCM Converter)</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__ppc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__ppc.html">PPC          (Peripheral Protection Controller)</a></td></tr>
 <tr class="memdesc:group__group__ppc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Peripheral Protection Controller (PPC) is a hardware block designed to enforce security policies for peripheral access, utilizing Protection Contexts (PC) and ARM TrustZone-M technology. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__rram"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__rram.html">RRAM         (Resistive Random Access Memory)</a></td></tr>
+<tr class="memdesc:group__group__rram"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistive Random Access Memory (RRAM) is a type of non-volatile memory used on MXS22 platform devices in place of FLASH and OTP memory. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__rtc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__rtc.html">RTC          (Real-Time Clock)</a></td></tr>
 <tr class="memdesc:group__group__rtc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Real-Time Clock (RTC) driver provides an application interface for keeping track of time and date. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__rram"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__rram.html">RRAM         (Resistive Random Access Memory)</a></td></tr>
-<tr class="memdesc:group__group__rram"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistive Random Access Memory (RRAM) is a type of non-volatile memory which is going to replace FLASH and OTP memory in MXS22 platform. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__scb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb.html">SCB          (Serial Communication Block)</a></td></tr>
 <tr class="memdesc:group__group__scb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Serial Communications Block (SCB) supports three serial communication protocols: Serial Peripheral Interface (SPI), Universal Asynchronous Receiver Transmitter (UART), and Inter Integrated Circuit (I2C or IIC). <br /></td></tr>
@@ -199,13 +202,13 @@ API Reference</h2></td></tr>
 <tr class="memitem:group__group__sd__host"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__sd__host.html">SD Host      (SD Host Controller)</a></td></tr>
 <tr class="memdesc:group__group__sd__host"><td class="mdescLeft">&#160;</td><td class="mdescRight">This driver provides the user an easy method for accessing standard Host Controller Interface (HCI) registers and provides some simple functionality on top of the HCI for reading and writing data to an SD card, eMMc card or a SDIO device. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__smartio"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio.html">SmartIO      (Smart I/O)</a></td></tr>
-<tr class="memdesc:group__group__smartio"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Smart I/O driver provides an API to configure and access the Smart I/O hardware present between the GPIOs (pins) and HSIOMs (pin muxes) on select device ports. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__smif"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif.html">SMIF         (Serial Memory Interface)</a></td></tr>
 <tr class="memdesc:group__group__smif"><td class="mdescLeft">&#160;</td><td class="mdescRight">The SPI-based communication interface to the external quad SPI (QSPI) high-speed memory devices. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__smif__memnum"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum.html">SMIFNUM      (Serial MemoryNum Interface)</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__smartio"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smartio.html">SmartIO      (Smart I/O)</a></td></tr>
+<tr class="memdesc:group__group__smartio"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Smart I/O driver provides an API to configure and access the Smart I/O hardware present between the GPIOs (pins) and HSIOMs (pin muxes) on select device ports. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__startup__config"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__startup__config.html">Startup</a></td></tr>
 <tr class="memdesc:group__group__startup__config"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides device startup, system configuration, and linker script files. <br /></td></tr>
@@ -238,9 +241,6 @@ API Reference</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__wdt"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__wdt.html">WDT          (Watchdog Timer)</a></td></tr>
 <tr class="memdesc:group__group__wdt"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Watchdog timer (WDT) has a 16-bit free-running up-counter. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__pdl__srf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__pdl__srf.html">PDL SRF      (PDL Secure Request Framework)</a></td></tr>
-<tr class="memdesc:group__group__pdl__srf"><td class="mdescLeft">&#160;</td><td class="mdescRight">This file contains the cy_pdl_srf_module_register API. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

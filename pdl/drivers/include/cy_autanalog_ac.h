@@ -224,9 +224,9 @@
 #if !defined(CY_AUTANALOG_AC_H)
 #define CY_AUTANALOG_AC_H
 
+#include "cy_device.h"
+#if defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U)
 #include "cy_autanalog_common.h"
-
-#ifdef CY_IP_MXS22LPPASS
 
 #include "cy_syspm.h"
 
@@ -1394,9 +1394,9 @@ cy_en_syspm_status_t Cy_AutAnalog_DeepSleepCallback(cy_stc_syspm_callback_params
 }
 #endif
 
-#endif /* CY_IP_MXS22LPPASS */
+#endif /* defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U) */
 
-#endif /** !defined(CY_AUTANALOG_AC_H) */
+#endif /* !defined(CY_AUTANALOG_AC_H) */
 
 /** \} group_autanalog_ac */
 

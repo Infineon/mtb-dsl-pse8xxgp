@@ -26,6 +26,19 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_general_types.h"
+#include "mtb_hal_hw_types.h"
+#include "mtb_hal_system.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_SYSPM)
+
+
+
 //" *SUSPEND-FORMATTING*"
 /**
  * \addtogroup group_hal_syspm System Power Management
@@ -36,19 +49,19 @@
  * Supported MCU Power States:
  * * Active - This is the normal operating state of the MCU
  * * Sleep - In this state the MCU is no longer running. It can be woken up again
- * from an interrupt. This state is reached by calling \ref mtb_hal_syspm_sleep.
+ * from an interrupt. This state is reached by calling mtb_hal_syspm_sleep().
  * * Deep Sleep - In this state the MCU is no longer running. It can only be woken
- * up by select interrupts. This state is reached by calling \ref
- * mtb_hal_syspm_deepsleep.
+ * up by select interrupts. This state is reached by calling
+ * mtb_hal_syspm_deepsleep().
  * * Hibernate-Ram - This is intended to further reduce the power consumption from
- * deepsleep while maintaining SRAM retention. This state is reached by calling \ref
- * mtb_hal_syspm_hibernate_ram. The device can only be woken up by select interrupts
+ * deepsleep while maintaining SRAM retention. This state is reached by calling
+ * mtb_hal_syspm_hibernate_ram(). The device can only be woken up by select interrupts
  * and these can specified when entering the hibernate-ram using wakeup source
- * parameter available in \ref mtb_hal_syspm_hibernate_ram
+ * parameter available in mtb_hal_syspm_hibernate_ram()
  *
  * Some devices support multiple modes for the DeepSleep power state. The currently
- * selected DeepSleep mode, which will be entered by \ref mtb_hal_syspm_deepsleep,
- * can be determined via the \ref mtb_hal_syspm_get_deepsleep_mode function. Configuration
+ * selected DeepSleep mode, which will be entered by mtb_hal_syspm_deepsleep(),
+ * can be determined via the mtb_hal_syspm_get_deepsleep_mode() function. Configuration
  * of the DeepSleep mode can be performed via platform specific APIs (e.g. PDL).
  *
  * \note The power management functionality available depends on the availability
@@ -60,16 +73,16 @@
  * This allows peripherals, or other parts of the application, to confirm they are
  * not currently doing something that would not work in the requested power state.
  * Middleware has the option to register a callback function(s) to be called on
- * requested state transitions by callling \ref mtb_hal_syspm_register_callback.
+ * requested state transitions by callling mtb_hal_syspm_register_callback().
  * Each callback registered can specify the exact set of states
- * ( \ref mtb_hal_syspm_callback_state_t ) that it should be called for. Each callback
+ * ( #mtb_hal_syspm_callback_state_t ) that it should be called for. Each callback
  * is invoked multiple times as part of the transition process as defined by
- * \ref mtb_hal_syspm_callback_mode_t.
+ * #mtb_hal_syspm_callback_mode_t.
  *
- * At any point the code can lock the ability to enter deep sleep by calling \ref
- * mtb_hal_syspm_lock_deepsleep. This should be done in critical blocks that need to
+ * At any point the code can lock the ability to enter deep sleep by calling
+ * mtb_hal_syspm_lock_deepsleep(). This should be done in critical blocks that need to
  * continue remain active. When the critical work is complete, and the lock is no
- * longer needed, it can be released by calling \ref mtb_hal_syspm_unlock_deepsleep.
+ * longer needed, it can be released by calling mtb_hal_syspm_unlock_deepsleep().
  * The lock is a counter with a max count of USHRT_MAX. It must be locked/unlocked
  * an equal number of times before the device is actually able to enter deep sleep.
  *
@@ -111,16 +124,7 @@
  * \snippet hal_syspm.c snippet_mtb_hal_syspm_app_callback
  */
 //" *RESUME-FORMATTING*"
-#pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_general_types.h"
-#include "mtb_hal_hw_types.h"
-#include "mtb_hal_system.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_SYSPM)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -395,6 +399,6 @@ mtb_hal_syspm_system_deep_sleep_mode_t mtb_hal_syspm_get_deepsleep_mode(void);
 #include MTB_HAL_SYSPM_IMPL_HEADER
 #endif /* MTB_HAL_SYSTEM_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_SYSPM)
-
 /** \} group_hal_system */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_SYSPM)

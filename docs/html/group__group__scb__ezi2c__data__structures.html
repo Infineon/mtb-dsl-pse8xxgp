@@ -150,6 +150,13 @@ The size of the sub-address, can either be 8 or 16 bits. </td></tr>
 enableWakeFromSleep</td>
 <td class="fielddoc">
 When set, the slave will wake the device from Deep Sleep on an address match (The device datasheet must be consulted to determine which SCBs support this mode) </td></tr>
+<tr><td class="fieldtype">
+<a id="addff0470cc75ba7a78e29615b6417231" name="addff0470cc75ba7a78e29615b6417231"></a>bool</td>
+<td class="fieldname">
+enableHwEzMode</td>
+<td class="fielddoc">
+When set, enables the SCB hardware EZ mode which uses EZ_DATA dual-port memory registers for data transfer, eliminating I2C clock stretching. <p>Only applicable for devices with hardware EZ mode support. </p>
+</td></tr>
 </table>
 
 </div>

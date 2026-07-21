@@ -102,14 +102,22 @@ application_memcalc : $(_MTB_RECIPE__TARG_DEPENDENCY_FILE) | app
 # Just building the current project with build_proj or in an IDE. In this case run memory report on the current project's elf file.
 ifneq (,$(MTB_IDE__TARG_FILE))
 _MTB_RECIPE__MEMREPORT_ELF_FILES:=$(call mtb__path_normalize,$(MTB_IDE__TARG_FILE))
-_MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(notdir $(basename $(call mtb__path_normalize,$(MTB_IDE__TARG_FILE))))=$(call mtb__path_normalize,$(MTB_IDE__TARG_FILE))
+# Use the actual project directory name so multi-project IDE exports accumulate
+# memreport data even when CY_IDE_PRJNAME forces identical ELF basenames.
+_MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(_MTB_RECIPE__PROJECT_DIR_NAME)=$(call mtb__path_normalize,$(MTB_IDE__TARG_FILE))
 else
 ifeq (COMBINED,$(MTB_TYPE))
 _MTB_RECIPE__MEMREPORT_ELF_FILES:=$(_MTB_RECIPE__LAST_CONFIG_TARG_FILE)
 _MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(APPNAME)=$(_MTB_RECIPE__LAST_CONFIG_TARG_FILE)
+# Ensure the ELF copy to last_config/ completes before memreport reads it (parallel build safety).
+application_memcalc : $(_MTB_RECIPE__LAST_CONFIG_PROG_FILE)
 else
 _MTB_RECIPE__MEMREPORT_ELF_FILES:=$(_MTB_RECIPE__PRJ_HEX_DIR)/$(_MTB_RECIPE__PROJECT_DIR_NAME).$(MTB_RECIPE__SUFFIX_TARGET)
 _MTB_RECIPE__MEMREPORT_PROJECT_ELF_PAIRS:=$(_MTB_RECIPE__PROJECT_DIR_NAME)=$(_MTB_RECIPE__PRJ_HEX_DIR)/$(_MTB_RECIPE__PROJECT_DIR_NAME).$(MTB_RECIPE__SUFFIX_TARGET)
+# Ensure the ELF copy to project_hex/ completes before memreport reads it (parallel build safety).
+ifeq ($(_MTB_RECIPE__PROMOTE),true)
+application_memcalc : $(_MTB_RECIPE__COPIED_PROJECT_PROG_FILE)
+endif
 endif #ifneq (COMBINED,$(MTB_TYPE))
 endif #ifneq (,$(MTB_IDE__TARG_FILE))
 else #ifneq (,$(_MTB_RECIPE__MEMCALC_PRJ_DEP))

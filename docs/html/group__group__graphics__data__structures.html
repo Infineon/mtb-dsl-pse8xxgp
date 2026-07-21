@@ -91,7 +91,9 @@ $(document).ready(function(){initNavTree('group__group__graphics__data__structur
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">Data Structures<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a> &raquo; <a class="el" href="group__group__graphics.html">GFXSS        (Graphics Sub System)</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -123,9 +125,35 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structcy__stc__gfx__config__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__config__t">cy_stc_gfx_config_t</a></td></tr>
 <tr class="memdesc:structcy__stc__gfx__config__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Graphics Block Configuration.  <a href="group__group__graphics__data__structures.html#structcy__stc__gfx__config__t">More...</a><br /></td></tr>
 <tr class="separator:structcy__stc__gfx__config__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcy__stc__gfx__transfer__state__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__transfer__state__t">cy_stc_gfx_transfer_state_t</a></td></tr>
+<tr class="memdesc:structcy__stc__gfx__transfer__state__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">State for interrupt-driven DBI frame transfer.  <a href="group__group__graphics__data__structures.html#structcy__stc__gfx__transfer__state__t">More...</a><br /></td></tr>
+<tr class="separator:structcy__stc__gfx__transfer__state__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcy__stc__gfx__context__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">cy_stc_gfx_context_t</a></td></tr>
 <tr class="memdesc:structcy__stc__gfx__context__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Graphics internal context data.  <a href="group__group__graphics__data__structures.html#structcy__stc__gfx__context__t">More...</a><br /></td></tr>
 <tr class="separator:structcy__stc__gfx__context__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gac02a86e130c05490ca2d6670c5a40570"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__data__structures.html#gac02a86e130c05490ca2d6670c5a40570">cy_gfx_transfer_complete_callback_t</a>) (void)</td></tr>
+<tr class="memdesc:gac02a86e130c05490ca2d6670c5a40570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback function type invoked from ISR when an async DBI frame transfer completes.  <br /></td></tr>
+<tr class="separator:gac02a86e130c05490ca2d6670c5a40570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga346649316da59583bf4005123534b637"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__graphics__data__structures.html#ga346649316da59583bf4005123534b637">cy_en_gfx_transfer_phase_t</a> { <br />
+&#160;&#160;<a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a95bcd9215ae940fb20c55d885b97903b">CY_GFX_TRANSFER_IDLE</a>
+, <br />
+&#160;&#160;<a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a724e9b09e61237c51f9869fabd468d6c">CY_GFX_TRANSFER_PENDING_TE</a>
+, <br />
+&#160;&#160;<a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a28be8f48f6071446e64e6412140c8218">CY_GFX_TRANSFER_SLICES</a>
+, <br />
+&#160;&#160;<a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a07c81ed8c6598a464ee84102259ccc7d">CY_GFX_TRANSFER_REMAINDER</a>
+, <br />
+&#160;&#160;<a class="el" href="group__group__graphics__data__structures.html#gga346649316da59583bf4005123534b637a47cd7d785e397da0aa18485b30a9524e">CY_GFX_TRANSFER_COMPLETE</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ga346649316da59583bf4005123534b637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transfer phase for interrupt-driven DBI frame transfer.  <a href="group__group__graphics__data__structures.html#ga346649316da59583bf4005123534b637">More...</a><br /></td></tr>
+<tr class="separator:ga346649316da59583bf4005123534b637"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structcy__stc__gfx__cursor__config__t" id="structcy__stc__gfx__cursor__config__t"></a>
@@ -535,6 +563,137 @@ The frequency of the clock connected to the GFXSS block in Hz. </td></tr>
 
 </div>
 </div>
+<a name="structcy__stc__gfx__transfer__state__t" id="structcy__stc__gfx__transfer__state__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structcy__stc__gfx__transfer__state__t">&#9670;&#160;</a></span>cy_stc_gfx_transfer_state_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct cy_stc_gfx_transfer_state_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a2c740c92528c6b0408c2988e1716d565" name="a2c740c92528c6b0408c2988e1716d565"></a>volatile <a class="el" href="group__group__graphics__data__structures.html#ga346649316da59583bf4005123534b637">cy_en_gfx_transfer_phase_t</a></td>
+<td class="fieldname">
+phase</td>
+<td class="fielddoc">
+Current transfer phase. </td></tr>
+<tr><td class="fieldtype">
+<a id="a841ef272f6e73bdce9232792b94f2403" name="a841ef272f6e73bdce9232792b94f2403"></a>uint32_t</td>
+<td class="fieldname">
+current_slice</td>
+<td class="fielddoc">
+Current slice index. </td></tr>
+<tr><td class="fieldtype">
+<a id="a954e21e860d08ffca8286c74f44997b1" name="a954e21e860d08ffca8286c74f44997b1"></a>uint32_t</td>
+<td class="fieldname">
+total_full_slices</td>
+<td class="fielddoc">
+Total number of full slices. </td></tr>
+<tr><td class="fieldtype">
+<a id="a177de1e2bcf8e85f50bce433fa98e782" name="a177de1e2bcf8e85f50bce433fa98e782"></a>uint32_t</td>
+<td class="fieldname">
+no_of_lines</td>
+<td class="fielddoc">
+Lines per full slice. </td></tr>
+<tr><td class="fieldtype">
+<a id="a63fdcb87248665df8a757ec97e706e51" name="a63fdcb87248665df8a757ec97e706e51"></a>uint32_t</td>
+<td class="fieldname">
+remainder_lines</td>
+<td class="fielddoc">
+Lines in the last partial slice. </td></tr>
+<tr><td class="fieldtype">
+<a id="ae3bd8e4ff266d738bfedb0849b104c86" name="ae3bd8e4ff266d738bfedb0849b104c86"></a>uint32_t</td>
+<td class="fieldname">
+line_stride</td>
+<td class="fielddoc">
+Frame buffer line stride. </td></tr>
+<tr><td class="fieldtype">
+<a id="a792a8398125437c7028488d25b62337b" name="a792a8398125437c7028488d25b62337b"></a>uint32_t</td>
+<td class="fieldname">
+line_stride_overlay</td>
+<td class="fielddoc">
+Overlay0 line stride. </td></tr>
+<tr><td class="fieldtype">
+<a id="a7ea72d11440b8a6206e35e372a3318b8" name="a7ea72d11440b8a6206e35e372a3318b8"></a>uint32_t</td>
+<td class="fieldname">
+line_stride_overlay1</td>
+<td class="fielddoc">
+Overlay1 line stride. </td></tr>
+<tr><td class="fieldtype">
+<a id="ae4060b0f897ca1c117f692014c10955f" name="ae4060b0f897ca1c117f692014c10955f"></a>uint32_t</td>
+<td class="fieldname">
+uv_stride</td>
+<td class="fielddoc">
+YUV UV plane stride. </td></tr>
+<tr><td class="fieldtype">
+<a id="a200a151224c77f284eefd98894e0fcfc" name="a200a151224c77f284eefd98894e0fcfc"></a>uint32_t</td>
+<td class="fieldname">
+uv_stride_overlay</td>
+<td class="fielddoc">
+Overlay0 UV stride. </td></tr>
+<tr><td class="fieldtype">
+<a id="a6d9fb99dd1367d2ac66e3841e007dcbe" name="a6d9fb99dd1367d2ac66e3841e007dcbe"></a>uint32_t</td>
+<td class="fieldname">
+horizontal_resolution</td>
+<td class="fielddoc">
+Display horizontal resolution. </td></tr>
+<tr><td class="fieldtype">
+<a id="a97ccf3e064c835a0edbd661dd4b594be" name="a97ccf3e064c835a0edbd661dd4b594be"></a>uint32_t</td>
+<td class="fieldname">
+vertical_resolution</td>
+<td class="fielddoc">
+End line of the active transfer window (display height for full-frame, end_line_offset for partial) </td></tr>
+<tr><td class="fieldtype">
+<a id="a8b94da4e4abdf773c696aee996aad118" name="a8b94da4e4abdf773c696aee996aad118"></a>uint32_t</td>
+<td class="fieldname">
+slice_base_line</td>
+<td class="fielddoc">
+Start line of the active transfer window (0 for full-frame, start_line_offset for partial) </td></tr>
+<tr><td class="fieldtype">
+<a id="a0a0db4b37696236f7b6a442782b195b2" name="a0a0db4b37696236f7b6a442782b195b2"></a>float</td>
+<td class="fieldname">
+bytes_per_pixel_dc_output</td>
+<td class="fielddoc">
+DC output bytes per pixel. </td></tr>
+<tr><td class="fieldtype">
+<a id="ab23558f8b87d98db3409d4994fd97fe2" name="ab23558f8b87d98db3409d4994fd97fe2"></a>uint8_t</td>
+<td class="fieldname">
+packet_col_address[5]</td>
+<td class="fielddoc">
+CASET command packet. </td></tr>
+<tr><td class="fieldtype">
+<a id="a8ffd87a0cbea17542ac6857dbcb1b09a" name="a8ffd87a0cbea17542ac6857dbcb1b09a"></a>uint8_t</td>
+<td class="fieldname">
+packet_row_address[5]</td>
+<td class="fielddoc">
+RASET command packet. </td></tr>
+<tr><td class="fieldtype">
+<a id="a83e803250821b6ddd8727e818463c305" name="a83e803250821b6ddd8727e818463c305"></a>bool</td>
+<td class="fieldname">
+is_yuv_gfx</td>
+<td class="fielddoc">
+GFX layer uses YUV format. </td></tr>
+<tr><td class="fieldtype">
+<a id="a690615a91920b7228b97f2188a2135e0" name="a690615a91920b7228b97f2188a2135e0"></a>bool</td>
+<td class="fieldname">
+is_yuv_ovl0</td>
+<td class="fielddoc">
+Overlay0 uses YUV format. </td></tr>
+<tr><td class="fieldtype">
+<a id="ac2d1bc556ed9d212adc3535ca5104185" name="ac2d1bc556ed9d212adc3535ca5104185"></a><a class="el" href="group__group__graphics__data__structures.html#gac02a86e130c05490ca2d6670c5a40570">cy_gfx_transfer_complete_callback_t</a></td>
+<td class="fieldname">
+complete_callback</td>
+<td class="fielddoc">
+Optional callback invoked from ISR on transfer completion (can be NULL) </td></tr>
+</table>
+
+</div>
+</div>
 <a name="structcy__stc__gfx__context__t" id="structcy__stc__gfx__context__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structcy__stc__gfx__context__t">&#9670;&#160;</a></span>cy_stc_gfx_context_t</h2>
 
@@ -546,6 +705,54 @@ The frequency of the clock connected to the GFXSS block in Hz. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="gac02a86e130c05490ca2d6670c5a40570" name="gac02a86e130c05490ca2d6670c5a40570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac02a86e130c05490ca2d6670c5a40570">&#9670;&#160;</a></span>cy_gfx_transfer_complete_callback_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* cy_gfx_transfer_complete_callback_t) (void)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Callback function type invoked from ISR when an async DBI frame transfer completes. </p>
+<p>The application can use this to signal an RTOS semaphore, set a bare-metal volatile flag, or perform any other lightweight notification.</p>
+<dl class="section note"><dt>Note</dt><dd>This callback executes in interrupt context. Keep it short and do not call blocking APIs from within the callback. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga346649316da59583bf4005123534b637" name="ga346649316da59583bf4005123534b637"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga346649316da59583bf4005123534b637">&#9670;&#160;</a></span>cy_en_gfx_transfer_phase_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__group__graphics__data__structures.html#ga346649316da59583bf4005123534b637">cy_en_gfx_transfer_phase_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transfer phase for interrupt-driven DBI frame transfer. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga346649316da59583bf4005123534b637a95bcd9215ae940fb20c55d885b97903b" name="gga346649316da59583bf4005123534b637a95bcd9215ae940fb20c55d885b97903b"></a>CY_GFX_TRANSFER_IDLE&#160;</td><td class="fielddoc"><p>No transfer in progress. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga346649316da59583bf4005123534b637a724e9b09e61237c51f9869fabd468d6c" name="gga346649316da59583bf4005123534b637a724e9b09e61237c51f9869fabd468d6c"></a>CY_GFX_TRANSFER_PENDING_TE&#160;</td><td class="fielddoc"><p>Setup done, waiting for TE to start first slice. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga346649316da59583bf4005123534b637a28be8f48f6071446e64e6412140c8218" name="gga346649316da59583bf4005123534b637a28be8f48f6071446e64e6412140c8218"></a>CY_GFX_TRANSFER_SLICES&#160;</td><td class="fielddoc"><p>Transferring full slices. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga346649316da59583bf4005123534b637a07c81ed8c6598a464ee84102259ccc7d" name="gga346649316da59583bf4005123534b637a07c81ed8c6598a464ee84102259ccc7d"></a>CY_GFX_TRANSFER_REMAINDER&#160;</td><td class="fielddoc"><p>Transferring remainder slice. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga346649316da59583bf4005123534b637a47cd7d785e397da0aa18485b30a9524e" name="gga346649316da59583bf4005123534b637a47cd7d785e397da0aa18485b30a9524e"></a>CY_GFX_TRANSFER_COMPLETE&#160;</td><td class="fielddoc"><p>Transfer complete, ready for next frame. </p>
+</td></tr>
+</table>
 
 </div>
 </div>

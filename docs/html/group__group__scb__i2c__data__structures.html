@@ -119,6 +119,9 @@ typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>cy_cb_scb_i
 <tr class="memitem:ga183bff4f7a75507e640731f813e24fb9"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group__group__scb__i2c__enums.html#ga4600410051f7febf79d167ffbf85d7ef">cy_en_scb_i2c_command_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__i2c__data__structures.html#ga183bff4f7a75507e640731f813e24fb9">cy_cb_scb_i2c_handle_addr_t</a>) (uint32_t event)</td></tr>
 <tr class="memdesc:ga183bff4f7a75507e640731f813e24fb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the typedef for the callback function called in the <a class="el" href="group__group__scb__i2c__interrupt__functions.html#ga729b2fa4de4d44ea2e8995d7ca6a0c24">Cy_SCB_I2C_Interrupt</a> to notify the user about occurrences of <a class="el" href="group__group__scb__i2c__macros__addr__callback__events.html">I2C Address Callback Events</a>.  <br /></td></tr>
 <tr class="separator:ga183bff4f7a75507e640731f813e24fb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3709d9a624264da5fc448acfc9fcb7a6"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group__group__scb__i2c__enums.html#ga4600410051f7febf79d167ffbf85d7ef">cy_en_scb_i2c_command_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__scb__i2c__data__structures.html#ga3709d9a624264da5fc448acfc9fcb7a6">cy_cb_scb_i2c_handle_byte_t</a>) (uint8_t byteReceived)</td></tr>
+<tr class="memdesc:ga3709d9a624264da5fc448acfc9fcb7a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the typedef for the callback function called in the <a class="el" href="group__group__scb__i2c__interrupt__functions.html#ga729b2fa4de4d44ea2e8995d7ca6a0c24">Cy_SCB_I2C_Interrupt</a> to notify the user about the occurrence of a byte received event.  <br /></td></tr>
+<tr class="separator:ga3709d9a624264da5fc448acfc9fcb7a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structcy__stc__scb__i2c__config__t" id="structcy__stc__scb__i2c__config__t"></a>
@@ -180,6 +183,19 @@ The 7-bit right justified slave address, used only for the slave mode. </td></tr
 slaveAddressMask</td>
 <td class="fielddoc">
 The slave address mask is used to mask bits of the slave address during the address match procedure (it is used only for the slave mode). <p>Bit 0 of the address mask corresponds to the read/write direction bit and is always a do not care in the address match therefore must be set 0. Bit value 0 - excludes bit from address comparison. Bit value 1 - the bit needs to match with the corresponding bit of the I2C slave address. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a27f66db437f0c76af61a9ec191e1f487" name="a27f66db437f0c76af61a9ec191e1f487"></a>uint8_t</td>
+<td class="fieldname">
+multipleSlaveAddress[5u]</td>
+<td class="fielddoc">
+The 7-bit right justified slave addresses, used in multiple address slave mode. </td></tr>
+<tr><td class="fieldtype">
+<a id="a7c47466d286331f2500d85db40aef8c2" name="a7c47466d286331f2500d85db40aef8c2"></a>uint8_t</td>
+<td class="fieldname">
+multipleSlaveAddressMask[5u]</td>
+<td class="fielddoc">
+Slave address masks corresponding to the multiple slave addresses. <p>The slave address mask is used to mask bits of the slave address during the address match procedure (it is used only for the slave mode). Bit 0 of the address mask corresponds to the read/write direction bit and is always a do not care in the address match therefore must be set 0. Bit value 0 - excludes bit from address comparison. Bit value 1 - the bit needs to match with the corresponding bit of the I2C slave address. </p>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="a9074db87cce95b20f6adbaf905e05f98" name="a9074db87cce95b20f6adbaf905e05f98"></a>bool</td>
@@ -293,7 +309,24 @@ The transfer operation is pending - the stop condition will not be generated. <p
 </div><div class="memdoc">
 
 <p>Provides the typedef for the callback function called in the <a class="el" href="group__group__scb__i2c__interrupt__functions.html#ga729b2fa4de4d44ea2e8995d7ca6a0c24">Cy_SCB_I2C_Interrupt</a> to notify the user about occurrences of <a class="el" href="group__group__scb__i2c__macros__addr__callback__events.html">I2C Address Callback Events</a>. </p>
-<p>This callback must return a decision to ACK (continue transaction) or NAK (end transaction) the received address. Note if the slave is configured to accept an address in RX FIFO, it must read from it using the <a class="el" href="group__group__scb__common__functions.html#ga5d9d1b3b7d230f5d7f7982640984ab9d">Cy_SCB_ReadRxFifo</a> function. </p>
+<p>This callback must return a decision to ACK (continue transaction) or NAK (end transaction) the received address. Note if the slave is configured to accept an address in RX FIFO, it must read from it using the <a class="el" href="group__group__scb__common__general__functions.html#ga5d9d1b3b7d230f5d7f7982640984ab9d">Cy_SCB_ReadRxFifo</a> function. </p>
+
+</div>
+</div>
+<a id="ga3709d9a624264da5fc448acfc9fcb7a6" name="ga3709d9a624264da5fc448acfc9fcb7a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3709d9a624264da5fc448acfc9fcb7a6">&#9670;&#160;</a></span>cy_cb_scb_i2c_handle_byte_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="group__group__scb__i2c__enums.html#ga4600410051f7febf79d167ffbf85d7ef">cy_en_scb_i2c_command_t</a>(* cy_cb_scb_i2c_handle_byte_t) (uint8_t byteReceived)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Provides the typedef for the callback function called in the <a class="el" href="group__group__scb__i2c__interrupt__functions.html#ga729b2fa4de4d44ea2e8995d7ca6a0c24">Cy_SCB_I2C_Interrupt</a> to notify the user about the occurrence of a byte received event. </p>
+<p>This callback must return a decision to ACK (continue transaction) or NAK (end transaction) the received byte. </p>
 
 </div>
 </div>

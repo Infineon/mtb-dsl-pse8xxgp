@@ -32,13 +32,12 @@
 
 // This file applies to M0S8WCO and MCWDT IPs
 #if (MTB_HAL_DRIVER_AVAILABLE_LPTIMER) && (defined(CY_IP_M0S8WCO) || \
-    ((defined(CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || \
-    ((SRSS_NUM_MCWDT_B) == 0)) || \
+    (defined(CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || \
     defined(CY_IP_MXS40SSRSS) || defined(CY_IP_MXS28SRSS) || \
     defined(CY_IP_MXS22SRSS)) && \
     /* Exclude MCWDT_B: */ \
     !((defined (CY_IP_MXS40SRSS) && \
-    (CY_IP_MXS40SRSS_VERSION >= 2)) || ((SRSS_NUM_MCWDT_B) > 0))
+    (CY_IP_MXS40SRSS_VERSION >= 2)) || (((SRSS_NUM_MCWDT_B) > 0) && (SRSS_WDT_B_PRESENT != 0)))
 
 #if defined(__cplusplus)
 extern "C" {

@@ -157,7 +157,7 @@ cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const void *input,
                             n_output,
                             n_cell,
                             n_batch,
-                            scratch_buffers->fc_scratch_buf);
+                            scratch_buffers->fc_scratch_buf);    
     if(status != CY_NNLITE_SUCCESS) {
         return status;
     }
@@ -207,7 +207,7 @@ cy_en_nnlite_status_t cy_nn_lstm_calculate_gate_s8_s16(const void *input,
         return status;
     }
     status = 
-        Cy_NNLite_AddSubMul((const int8_t *)gate, (const int8_t*)scratch_buffers->tmp_gate_buf,
+        Cy_NNLite_AddSubMul((const int8_t *)gate, (const int8_t*)scratch_buffers->tmp_gate_buf, 
                         (int8_t *)gate,
                         &inoutDims, &inoutDims, &add_params,
                         CY_NNLITE_ADD, nnlite_activation);

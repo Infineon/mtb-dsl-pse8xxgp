@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_SDIO)
+
+
+
 
 /**
  * \addtogroup group_hal_sdio SDIO (Secure Digital Input Output)
@@ -55,8 +66,8 @@
  * \section subsection_sdio_quickstart Quick Start
  * Initialize SDIO by using the Device Configurator and selecting pins according to the target
  * device used.
- * Specify the SDIO configuration using the configuration structure (const \ref
- * mtb_hal_sdio_configurator_t * config). <br>
+ * Specify the SDIO configuration using the configuration structure (const
+ * #mtb_hal_sdio_configurator_t * config). <br>
  *
  * \section subsection_sdio_code_snippets Code Snippets
  *
@@ -70,7 +81,7 @@
  *
  * \subsubsection subsection_sdio_host_use_case_2 Snippet2: Configure Host Interrupt
  * The following snippet shows how to configure an interrupt to handle host specific events. Refer
- * \ref mtb_hal_sdio_event_t for different types of events.
+ * #mtb_hal_sdio_event_t for different types of events.
  *
  * \snippet hal_sdio.c snippet_mtb_hal_sdio_host_interrupt_callback
  *
@@ -96,7 +107,7 @@
  *
  * \subsubsection subsection_sdio_dev_use_case_2 Snippet2: Configure Device Interrupt
  * The following snippet shows how to configure an interrupt to handle device specific events. Refer
- * \ref mtb_hal_sdio_event_t for different types of events.
+ * #mtb_hal_sdio_event_t for different types of events.
  *
  * \snippet hal_sdio.c snippet_mtb_hal_sdio_dev_interrupt_callback
  *
@@ -112,14 +123,6 @@
  *
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_SDIO)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -281,7 +284,7 @@ typedef void (* mtb_hal_sdio_event_callback_t)(void* callback_arg, mtb_hal_sdio_
  * Sets up a HAL instance to use the specified hardware resource. This hardware
  * resource must have already been configured via the PDL.
  *
- * \note It is required that after calling \ref mtb_hal_sdio_setup a User must call
+ * \note It is required that after calling mtb_hal_sdio_setup() a User must call
  * Cy_SD_Host_SetHostBusWidth to set the bus width to 4 (CY_SD_HOST_BUS_WIDTH_4_BIT).
  *
  * @param[out] obj   The HAL driver instance object. The caller must allocate the
@@ -454,6 +457,6 @@ cy_rslt_t mtb_hal_sdio_host_set_io_voltage(mtb_hal_sdio_t* obj,
 #include MTB_HAL_SDIO_IMPL_HEADER
 #endif /* MTB_HAL_SDIO_IMPL_HEADER */
 
-#endif //defined(MTB_HAL_DRIVER_AVAILABLE_SDIO)
-
 /** \} group_hal_sdio */
+
+#endif //defined(MTB_HAL_DRIVER_AVAILABLE_SDIO)

@@ -121,7 +121,6 @@ cy_en_scb_ezi2c_status_t Cy_SCB_EZI2C_Init(CySCB_Type *base, cy_stc_scb_ezi2c_co
     SCB_INTR_RX_MASK(base)     = 0UL;
     SCB_INTR_TX_MASK(base)     = 0UL;
     SCB_INTR_M_MASK(base)      = 0UL;
-    SCB_INTR_S_MASK(base)      = CY_SCB_EZI2C_SLAVE_INTR;
 
     /* Initialize the context */
     context->status = 0UL;
@@ -136,6 +135,24 @@ cy_en_scb_ezi2c_status_t Cy_SCB_EZI2C_Init(CySCB_Type *base, cy_stc_scb_ezi2c_co
     context->buf2Size      = 0UL;
     context->buf2rwBoundary = 0UL;
     context->baseAddr2     = 0UL;
+
+    context->hwEzMode = config->enableHwEzMode;
+
+    if (config->enableHwEzMode)
+    {
+        /* Enable hardware EZ mode: the SCB hardware uses EZ_DATA dual-port
+         * memory registers for data transfer and automatically ACKs slave
+         * addresses and data bytes, eliminating I2C clock stretching. */
+        Cy_SCB_SetEzI2CMode(base, true);
+
+        /* Use INTR_S.I2C_WRITE_STOP for write completion detection */
+        SCB_INTR_S_MASK(base) = CY_SCB_EZI2C_SLAVE_INTR_HW_EZ;
+    }
+    else
+    {
+        /* Firmware EZI2C mode: use FIFO-based interrupt processing */
+        SCB_INTR_S_MASK(base) = CY_SCB_EZI2C_SLAVE_INTR;
+    }
 
     return CY_SCB_EZI2C_SUCCESS;
 }
@@ -772,6 +789,30 @@ void Cy_SCB_EZI2C_SetBuffer2(CySCB_Type const *base, uint8_t *buffer, uint32_t s
 *******************************************************************************/
 void Cy_SCB_EZI2C_Interrupt(CySCB_Type *base, cy_stc_scb_ezi2c_context_t *context)
 {
+    /* Hardware EZ mode: data transfer uses EZ_DATA registers automatically.
+     * Only INTR_S.I2C_WRITE_STOP is used for write completion detection. */
+    if (context->hwEzMode)
+    {
+        uint32_t slaveIntrStatus = Cy_SCB_GetSlaveInterruptStatusMasked(base);
+
+        /* Handle error conditions */
+        if (0UL != (CY_SCB_EZI2C_SLAVE_INTR_ERROR & slaveIntrStatus))
+        {
+            context->status |= CY_SCB_EZI2C_STATUS_ERR;
+            Cy_SCB_ClearSlaveInterrupt(base, CY_SCB_EZI2C_SLAVE_INTR_ERROR);
+        }
+
+        /* Handle write completion */
+        if (0UL != (CY_SCB_SLAVE_INTR_I2C_WRITE_STOP & slaveIntrStatus))
+        {
+            context->status |= CY_SCB_EZI2C_STATUS_WRITE1;
+            Cy_SCB_ClearSlaveInterrupt(base, CY_SCB_SLAVE_INTR_I2C_WRITE_STOP);
+        }
+
+        return;
+    }
+
+    /* Firmware EZI2C mode below */
     uint32_t slaveIntrStatus;
 
     /* Handle an I2C wake-up event */
@@ -812,9 +853,20 @@ void Cy_SCB_EZI2C_Interrupt(CySCB_Type *base, cy_stc_scb_ezi2c_context_t *contex
     /* Handle the receive direction (master writes data) */
     if (0UL != (CY_SCB_RX_INTR_LEVEL & Cy_SCB_GetRxInterruptStatusMasked(base)))
     {
-        HandleDataReceive(base, context);
+        /* When a second address is enabled, a matched address byte is placed in the
+        * RX FIFO and the bus is stretched until the address is acknowledged. If a
+        * delayed interrupt makes the RX level and address match events coincide, skip
+        * the data receive so the address byte is not consumed as data, which would
+        * leave the bus stretched indefinitely. The address is handled below instead.
+        */
+        if (!((0UL != context->address2) &&
+              (0UL != (CY_SCB_SLAVE_INTR_I2C_ADDR_MATCH & slaveIntrStatus)) &&
+              (Cy_SCB_GetNumInRxFifo(base) == 1UL)))
+        {
+            HandleDataReceive(base, context);
 
-        Cy_SCB_ClearRxInterrupt(base, CY_SCB_RX_INTR_LEVEL);
+            Cy_SCB_ClearRxInterrupt(base, CY_SCB_RX_INTR_LEVEL);
+        }
     }
 
     /* Handle the transaction completion */
@@ -846,6 +898,88 @@ void Cy_SCB_EZI2C_Interrupt(CySCB_Type *base, cy_stc_scb_ezi2c_context_t *contex
     }
 }
 
+
+/*******************************************************************************
+* Function Name: Cy_SCB_EZI2C_HwEzReadData
+****************************************************************************//**
+*
+* Reads data from the EZ_DATA registers into a user-supplied buffer.
+* Use this function in hardware EZ mode to read data written by the I2C master.
+*
+* \param base
+* The pointer to the EZI2C SCB instance.
+*
+* \param offset
+* The starting EZ_DATA register offset to read from (0-255).
+*
+* \param data
+* The pointer to the buffer where the read data will be stored.
+*
+* \param size
+* The number of bytes to read. offset + size must not exceed
+* \ref CY_SCB_EZI2C_EZ_DATA_SIZE (256).
+*
+* \return
+* \ref cy_en_scb_ezi2c_status_t
+*
+*******************************************************************************/
+cy_en_scb_ezi2c_status_t Cy_SCB_EZI2C_HwEzReadData(CySCB_Type const *base, uint32_t offset,
+                                                    uint8_t *data, uint32_t size)
+{
+    if ((NULL == base) || (NULL == data) || ((offset + size) > CY_SCB_EZI2C_EZ_DATA_SIZE))
+    {
+        return CY_SCB_EZI2C_BAD_PARAM;
+    }
+
+    for (uint32_t i = 0UL; i < size; i++)
+    {
+        data[i] = (uint8_t)(base->EZ_DATA[offset + i] & SCB_EZ_DATA_EZ_DATA_Msk);
+    }
+
+    return CY_SCB_EZI2C_SUCCESS;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_SCB_EZI2C_HwEzWriteData
+****************************************************************************//**
+*
+* Writes data from a user-supplied buffer into the EZ_DATA registers.
+* Use this function in hardware EZ mode to prepare response data that the
+* I2C master will read.
+*
+* \param base
+* The pointer to the EZI2C SCB instance.
+*
+* \param offset
+* The starting EZ_DATA register offset to write to (0-255).
+*
+* \param data
+* The pointer to the buffer containing the data to write.
+*
+* \param size
+* The number of bytes to write. offset + size must not exceed
+* \ref CY_SCB_EZI2C_EZ_DATA_SIZE (256).
+*
+* \return
+* \ref cy_en_scb_ezi2c_status_t
+*
+*******************************************************************************/
+cy_en_scb_ezi2c_status_t Cy_SCB_EZI2C_HwEzWriteData(CySCB_Type *base, uint32_t offset,
+                                                     const uint8_t *data, uint32_t size)
+{
+    if ((NULL == base) || (NULL == data) || ((offset + size) > CY_SCB_EZI2C_EZ_DATA_SIZE))
+    {
+        return CY_SCB_EZI2C_BAD_PARAM;
+    }
+
+    for (uint32_t i = 0UL; i < size; i++)
+    {
+        base->EZ_DATA[offset + i] = (uint32_t)data[i];
+    }
+
+    return CY_SCB_EZI2C_SUCCESS;
+}
 
 
 /*******************************************************************************

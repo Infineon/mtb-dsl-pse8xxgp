@@ -100,10 +100,10 @@ $(document).ready(function(){initNavTree('group__group__trigmux.html',''); initR
 <p>The functions and other declarations used in this driver are in cy_trigmux.h. You can include cy_pdl.h to get access to all functions and declarations in the PDL.</p>
 <p>The TrigMux driver is based on the trigger multiplexer's hardware block. The Trigger multiplexer block consists of multiple trigger multiplexers. These trigger multiplexers are grouped in trigger groups. All the trigger multiplexers in the trigger group share similar input options.</p>
 <p>The trigger multiplexer groups structure is flat - all the groups are essentially distribution multiplexers (there are no any intermediate trigger signals), so the structure is simpler in comparison with PERI_ver1, however a bit less flexible. Additionally there are another type of trigger interconnections: one-to-one trigger lines. These are not multiplexers, only single trigger wires from/to the dedicated peripherals. Multiple groups of one-to-one trigger lines significantly improve the whole triggering interconnect system flexibility.</p>
-<p>The trigger architecture of the PSoC device is explained in the technical reference manual (TRM). Refer to the TRM to better understand the trigger multiplexer routing architecture available.</p>
+<p>The trigger architecture of the PSOC device is explained in the technical reference manual (TRM). Refer to the TRM to better understand the trigger multiplexer routing architecture available.</p>
 <h1><a class="anchor" id="group_trigmux_section_Configuration_Considerations"></a>
 Configuration Considerations</h1>
-<p>To route a trigger signal from one peripheral in the PSoC device to another, the user can configure either a trigger multiplexer using <a class="el" href="group__group__trigmux__functions.html#ga3671fac144b75c3b3eddc5ab46ae96f6">Cy_TrigMux_Connect</a> or a one-to-one trigger line using <a class="el" href="group__group__trigmux__functions.html#gab7106b8fe037e2ebbbb996289ad1fb00">Cy_TrigMux_Select</a>. Only one function call is required to connect one peripheral to another (unlike for PERI_ver1).</p>
+<p>To route a trigger signal from one peripheral in the PSOC device to another, the user can configure either a trigger multiplexer using <a class="el" href="group__group__trigmux__functions.html#ga3671fac144b75c3b3eddc5ab46ae96f6">Cy_TrigMux_Connect</a> or a one-to-one trigger line using <a class="el" href="group__group__trigmux__functions.html#gab7106b8fe037e2ebbbb996289ad1fb00">Cy_TrigMux_Select</a>. Only one function call is required to connect one peripheral to another (unlike for PERI_ver1).</p>
 <p>The <a class="el" href="group__group__trigmux__functions.html#ga3671fac144b75c3b3eddc5ab46ae96f6" title="Connects an input trigger source and output trigger.">Cy_TrigMux_Connect()</a> function has two main parameters, inTrig and outTrig that refer to the input and output trigger lines connected using the multiplexer. These parameters are represented in the following format:<br  />
  </p><div class="image">
 <img src="trigmux_parameter_30_2.png" alt=""/>
@@ -127,11 +127,11 @@ More Information</h1>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>
-<tr class="memitem:group__group__trigmux__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__trigmux__macros.html">Macros</a></td></tr>
+<tr class="memitem:group__group__trigmux__enums"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__trigmux__enums.html">Enumerated Types</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__trigmux__functions"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__trigmux__functions.html">Functions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__trigmux__enums"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__trigmux__enums.html">Enumerated Types</a></td></tr>
+<tr class="memitem:group__group__trigmux__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__trigmux__macros.html">Macros</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

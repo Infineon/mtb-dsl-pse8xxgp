@@ -33,7 +33,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#if defined (CY_IP_MXI3C)
+#if defined (CY_IP_MXI3C) || defined (CY_IP_MXS40SI3C)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -349,8 +349,9 @@ typedef struct cy_stc_i3c_ccc_devctrl
 }
 #endif
 
-#endif /* CY_IP_MXI3C */
+#endif /* CY_IP_MXI3C  || CY_IP_MXS40SI3C */
 
 #endif /* (CY_I3C_CCC_H) */
 
 /* [] END OF FILE */
+

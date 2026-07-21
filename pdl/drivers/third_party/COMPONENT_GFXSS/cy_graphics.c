@@ -28,6 +28,7 @@
 #if defined(CY_IP_MXS22GFXSS)
 
 #include "cy_graphics.h"
+#include "gfxss_ip_compat.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -1351,6 +1352,482 @@ cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame( GFXSS_Type *base, cy_stc_gfx_context
         return CY_GFX_SUCCESS;
 }
 
+
+/*******************************************************************************
+* Static helpers for interrupt-driven frame transfer
+*******************************************************************************/
+
+static void _gfxss_kick_slice(GFXSS_Type *base, cy_stc_gfx_context_t *context,
+                               uint32_t start_line, uint32_t num_lines)
+{
+    cy_stc_gfx_transfer_state_t *ts = &context->transfer_state;
+    GFXSS_MIPIDSI_Type *mipi_dsi_base = &(base->GFXSS_MIPIDSI);
+
+    /* CASET - column address set (constant across slices) */
+    (void)Cy_MIPIDSI_WritePacket(mipi_dsi_base, ts->packet_col_address, 5);
+
+    /* RASET - row address set (varies per slice) */
+    ts->packet_row_address[1] = (uint8_t)((start_line >> 8) & 0xFFU);
+    ts->packet_row_address[2] = (uint8_t)(start_line & 0xFFU);
+    ts->packet_row_address[3] = (uint8_t)(((start_line + num_lines - 1U) >> 8) & 0xFFU);
+    ts->packet_row_address[4] = (uint8_t)((start_line + num_lines - 1U) & 0xFFU);
+    (void)Cy_MIPIDSI_WritePacket(mipi_dsi_base, ts->packet_row_address, 5);
+
+    /* Issue memory write command to start DBI transfer */
+    viv_hw_display_dbi_set_command(DC_CORE->hardware,
+        context->dc_context.display_format, vivDBI_COMMAND_ADDRESS, 0x2C);
+    viv_hw_display_dbi_set_command(DC_CORE->hardware,
+        context->dc_context.display_format, vivDBI_COMMAND_MEM, 0x0);
+}
+
+static void _gfxss_advance_buffers(GFXSS_Type *base, cy_stc_gfx_context_t *context,
+                                    uint32_t num_lines)
+{
+    cy_stc_gfx_transfer_state_t *ts = &context->transfer_state;
+    GFXSS_DC_Type *gfxss_dc = &(base->GFXSS_DC);
+    uint32_t tile_rows = num_lines / 8U;
+
+    if (ts->is_yuv_gfx) {
+        gfxss_dc->DCNANO.GCREGFRAMEBUFFERADDRESS += (tile_rows * ts->line_stride);
+        if (ts->uv_stride > 0U) {
+            gfxss_dc->DCNANO.GCREGDCTILEUVFRAMEBUFFERADR += (tile_rows * ts->uv_stride);
+        }
+    } else {
+        gfxss_dc->DCNANO.GCREGFRAMEBUFFERADDRESS += (num_lines * ts->line_stride);
+    }
+
+    if (ts->is_yuv_ovl0) {
+        gfxss_dc->DCNANO.GCREGOVERLAYADDRESS += (tile_rows * ts->line_stride_overlay);
+        if (ts->uv_stride_overlay > 0U) {
+            gfxss_dc->DCNANO.GCREGDCTILEUVOVERLAYADR += (tile_rows * ts->uv_stride_overlay);
+        }
+    } else {
+        gfxss_dc->DCNANO.GCREGOVERLAYADDRESS += (num_lines * ts->line_stride_overlay);
+    }
+}
+
+static void _gfxss_configure_remainder(GFXSS_Type *base, cy_stc_gfx_context_t *context)
+{
+    cy_stc_gfx_transfer_state_t *ts = &context->transfer_state;
+    GFXSS_MIPIDSI_Type *mipi_dsi_base = &(base->GFXSS_MIPIDSI);
+    GFXSS_DC_Type *gfxss_dc = &(base->GFXSS_DC);
+    uint32_t rl = ts->remainder_lines;
+    uint32_t hr = ts->horizontal_resolution;
+
+    mipi_dsi_base->DWCMIPIDSI.DBI_CMDSIZE =
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_WR_CMD_SIZE,
+                 (uint32_t)(rl * ts->bytes_per_pixel_dc_output * hr) + 1U) |
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_ALLOWED_CMD_SIZE,
+                 (uint32_t)(((uint8_t)(AXI_BURST_LENGTH / ts->bytes_per_pixel_dc_output)) *
+                  ts->bytes_per_pixel_dc_output) + 1U);
+
+    gfxss_dc->DCNANO.GCREGFRAMEBUFFERSIZE =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERSIZE_GCREGFRAMEBUFFERSIZE_WIDTH, hr) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERSIZE_GCREGFRAMEBUFFERSIZE_HEIGHT, rl);
+    gfxss_dc->DCNANO.GCREGOVERLAYSIZE =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE_GCREGOVERLAYSIZE_WIDTH, hr) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE_GCREGOVERLAYSIZE_HEIGHT, rl);
+    gfxss_dc->DCNANO.GCREGOVERLAYSIZE1 =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_WIDTH, hr) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_HEIGHT, rl);
+    gfxss_dc->DCNANO.GCREGVDISPLAY =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_DISPLAY_END, rl) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_TOTAL, (rl + 1U));
+    gfxss_dc->DCNANO.GCREGVSYNC =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_START, 0U) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_END, rl);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_Transfer_Frame_Async
+*******************************************************************************/
+cy_en_gfx_status_t Cy_GFXSS_Transfer_Frame_Async(GFXSS_Type *base, cy_stc_gfx_context_t *context)
+{
+    if ((NULL == base) || (NULL == context))
+    {
+        return CY_GFX_BAD_PARAM;
+    }
+
+    GFXSS_DC_Type *gfxss_dc = &(base->GFXSS_DC);
+    GFXSS_MIPIDSI_Type *mipi_dsi_base = &(base->GFXSS_MIPIDSI);
+    cy_stc_gfx_transfer_state_t *ts = &context->transfer_state;
+
+    uint32_t horizontal_resolution = context->dc_context.display_width;
+    uint32_t vertical_resolution   = context->dc_context.display_height;
+    uint32_t No_of_lines = 0, line_stride = 0, line_stride_overlay = 0, line_stride_overlay1 = 0;
+    bool is_yuv_gfx = false, is_yuv_ovl0 = false;
+    uint32_t uv_stride = 0, uv_stride_overlay = 0;
+    uint8_t bytes_per_pixel_framebuffer = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+    float bytes_per_pixel_dc_output = 0;
+    uint8_t bytes_per_pixel_overlay = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+    uint8_t bytes_per_pixel_overlay1 = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+
+    /* Determine output bytes per pixel */
+    switch(context->dc_context.display_format)
+    {
+    case vivD8R3G3B2:
+    case vivD16R3G3B2:
+         bytes_per_pixel_dc_output = 1.0f;
+         break;
+    case vivD8R4G4B4:
+    case vivD16R4G4B4:
+         bytes_per_pixel_dc_output = 1.5f;
+         break;
+    case vivD8R5G6B5:
+    case vivD16R5G6B5:
+         bytes_per_pixel_dc_output = 2.0f;
+         break;
+    case vivD8R6G6B6:
+    case vivD9R6G6B6:
+    case vivD16R6G6B6OP1:
+    case vivD16R6G6B6OP2:
+         bytes_per_pixel_dc_output = 2.25f;
+         break;
+    case vivD8R8G8B8:
+    case vivD16R8G8B8OP1:
+    case vivD16R8G8B8OP2:
+         bytes_per_pixel_dc_output = 3.0f;
+         break;
+    default:
+         bytes_per_pixel_dc_output = 2.0f;
+         break;
+    }
+
+    /* Configure DBI write period divider */
+    uint32_t lane_byte_clock_KHz = (context->mipidsi_context.per_lane_mbps * 1000U) / 8U;
+    uint32_t dbi_clock_KHz = lane_byte_clock_KHz / 4U;
+    uint32_t dsi_clock_KHz = context->clockHz / 2000U;
+    uint32_t divider = (dsi_clock_KHz + dbi_clock_KHz - 1) / dbi_clock_KHz;
+    divider < 3 ? divider = 3 : divider;
+
+    gfxss_dc->DCNANO.GCREGDBIWRCHAR1 &= ~GFXSS_DC_DCNANO_GCREGDBIWRCHAR1_GCREGDBIWRCHAR1_DBI_WR_PERIOD_Msk;
+    gfxss_dc->DCNANO.GCREGDBIWRCHAR1 |= _VAL2FLD(GFXSS_DC_DCNANO_GCREGDBIWRCHAR1_GCREGDBIWRCHAR1_DBI_WR_PERIOD, divider);
+
+    /* Determine YUV formats */
+    if (context->dc_context.gfx_layer_config.layer_enable) {
+        is_yuv_gfx = _viv_is_yuv_format(context->dc_context.gfx_layer_config.input_format_type);
+    }
+    if (context->dc_context.ovl0_layer_config.layer_enable) {
+        is_yuv_ovl0 = _viv_is_yuv_format(context->dc_context.ovl0_layer_config.input_format_type);
+    }
+
+    /* Calculate GFX layer stride */
+    if (is_yuv_gfx){
+        bytes_per_pixel_framebuffer = 1;
+        switch (context->dc_context.gfx_layer_config.input_format_type) {
+            case vivNV12:
+            case vivNV21:
+                line_stride = horizontal_resolution * 8;
+                uv_stride = horizontal_resolution * 4;
+                break;
+            case vivYUY2:
+            case vivUYVY:
+                line_stride = horizontal_resolution * 4;
+                uv_stride = 0;
+                break;
+            default:
+                return CY_GFX_BAD_PARAM;
+        }
+        if (line_stride % AXI_BURST_LENGTH != 0U) {
+            line_stride = AXI_BURST_LENGTH * ((line_stride / AXI_BURST_LENGTH) + 1);
+        }
+        if (uv_stride > 0 && uv_stride % AXI_BURST_LENGTH != 0U) {
+            uv_stride = AXI_BURST_LENGTH * ((uv_stride / AXI_BURST_LENGTH) + 1);
+        }
+    } else {
+        if(_FLD2VAL(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERCONFIG_GCREGFRAMEBUFFERCONFIG_FORMAT,
+                    gfxss_dc->DCNANO.GCREGFRAMEBUFFERCONFIG) == 4U) {
+            bytes_per_pixel_framebuffer = RGB_32_BIT_PIXEL_FORMAT_IN_BYTES;
+        }
+        if ((horizontal_resolution * bytes_per_pixel_framebuffer) % AXI_BURST_LENGTH != 0U) {
+            line_stride = AXI_BURST_LENGTH * (((horizontal_resolution * bytes_per_pixel_framebuffer) / AXI_BURST_LENGTH) + 1);
+        } else {
+            line_stride = horizontal_resolution * bytes_per_pixel_framebuffer;
+        }
+    }
+
+    /* Calculate Overlay0 stride */
+    if (is_yuv_ovl0){
+        bytes_per_pixel_overlay = 1;
+        switch (context->dc_context.ovl0_layer_config.input_format_type) {
+            case vivNV12:
+            case vivNV21:
+                line_stride_overlay = horizontal_resolution * 8;
+                uv_stride_overlay = horizontal_resolution * 4;
+                break;
+            case vivYUY2:
+            case vivUYVY:
+                line_stride_overlay = horizontal_resolution * 4;
+                uv_stride_overlay = 0;
+                break;
+            default:
+                return CY_GFX_BAD_PARAM;
+        }
+        if (line_stride_overlay % AXI_BURST_LENGTH != 0U) {
+            line_stride_overlay = AXI_BURST_LENGTH * ((line_stride_overlay / AXI_BURST_LENGTH) + 1);
+        }
+        if (uv_stride_overlay > 0 && uv_stride_overlay % AXI_BURST_LENGTH != 0U) {
+            uv_stride_overlay = AXI_BURST_LENGTH * ((uv_stride_overlay / AXI_BURST_LENGTH) + 1);
+        }
+    } else {
+        if(_FLD2VAL(GFXSS_DC_DCNANO_GCREGOVERLAYCONFIG_GCREGOVERLAYCONFIG_FORMAT,
+                    gfxss_dc->DCNANO.GCREGOVERLAYCONFIG) == 4U) {
+            bytes_per_pixel_overlay = RGB_32_BIT_PIXEL_FORMAT_IN_BYTES;
+        }
+        if ((horizontal_resolution * bytes_per_pixel_overlay) % AXI_BURST_LENGTH != 0U) {
+            line_stride_overlay = AXI_BURST_LENGTH * (((horizontal_resolution * bytes_per_pixel_overlay) / AXI_BURST_LENGTH) + 1);
+        } else {
+            line_stride_overlay = horizontal_resolution * bytes_per_pixel_overlay;
+        }
+    }
+
+    /* Calculate Overlay1 stride (RGB only) */
+    if(_FLD2VAL(GFXSS_DC_DCNANO_GCREGOVERLAYCONFIG1_GCREGOVERLAYCONFIG1_FORMAT,
+                gfxss_dc->DCNANO.GCREGOVERLAYCONFIG1) == 4U) {
+        bytes_per_pixel_overlay1 = RGB_32_BIT_PIXEL_FORMAT_IN_BYTES;
+    }
+    if ((horizontal_resolution * bytes_per_pixel_overlay1) % AXI_BURST_LENGTH != 0U) {
+        line_stride_overlay1 = AXI_BURST_LENGTH * (((horizontal_resolution * bytes_per_pixel_overlay1) / AXI_BURST_LENGTH) + 1);
+    } else {
+        line_stride_overlay1 = horizontal_resolution * bytes_per_pixel_overlay1;
+    }
+
+    /* Calculate lines per slice */
+    No_of_lines = (uint32_t)(DBI_SCLICE_LIMIT_IN_BYTES / (horizontal_resolution * bytes_per_pixel_dc_output));
+    if ((is_yuv_gfx || is_yuv_ovl0) && (No_of_lines % 8 != 0)) {
+        No_of_lines = (No_of_lines / 8) * 8;
+    }
+
+    /* Configure DBI command size and DC registers for full slices */
+    mipi_dsi_base->DWCMIPIDSI.DBI_CMDSIZE =
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_WR_CMD_SIZE,
+                 (uint32_t)(No_of_lines * bytes_per_pixel_dc_output * horizontal_resolution) + 1U) |
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_ALLOWED_CMD_SIZE,
+                 (uint32_t)(((uint8_t)(AXI_BURST_LENGTH / bytes_per_pixel_dc_output)) *
+                  bytes_per_pixel_dc_output) + 1U);
+    mipi_dsi_base->DWCMIPIDSI.DBI_CFG =
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_OUT_DBI_CONF, context->mipidsi_context.dpi_fmt) |
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_IN_DBI_CONF, context->mipidsi_context.dpi_fmt);
+
+    gfxss_dc->DCNANO.GCREGFRAMEBUFFERSTRIDE = line_stride;
+    gfxss_dc->DCNANO.GCREGOVERLAYSTRIDE = line_stride_overlay;
+    gfxss_dc->DCNANO.GCREGOVERLAYSTRIDE1 = line_stride_overlay1;
+    gfxss_dc->DCNANO.GCREGFRAMEBUFFERSIZE =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERSIZE_GCREGFRAMEBUFFERSIZE_WIDTH, horizontal_resolution) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERSIZE_GCREGFRAMEBUFFERSIZE_HEIGHT, No_of_lines);
+    gfxss_dc->DCNANO.GCREGOVERLAYSIZE =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE_GCREGOVERLAYSIZE_WIDTH, horizontal_resolution) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE_GCREGOVERLAYSIZE_HEIGHT, No_of_lines);
+    gfxss_dc->DCNANO.GCREGOVERLAYSIZE1 =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_WIDTH, horizontal_resolution) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_HEIGHT, No_of_lines);
+    gfxss_dc->DCNANO.GCREGVDISPLAY =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_DISPLAY_END, No_of_lines) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_TOTAL, (No_of_lines + 1));
+    gfxss_dc->DCNANO.GCREGVSYNC =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_START, 0U) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_END, No_of_lines);
+
+    if(is_yuv_gfx){
+        uint32_t yuv_tile_setup_delay_us = ((46U * lane_byte_clock_KHz) / 1000U) + 1000U;
+        Cy_SysLib_Rtos_DelayUs(yuv_tile_setup_delay_us);
+    }
+
+    /* Store transfer state for ISR-driven slice transfers */
+    ts->current_slice          = 0U;
+    ts->total_full_slices      = vertical_resolution / No_of_lines;
+    ts->no_of_lines            = No_of_lines;
+    ts->remainder_lines        = vertical_resolution % No_of_lines;
+    ts->line_stride            = line_stride;
+    ts->line_stride_overlay    = line_stride_overlay;
+    ts->line_stride_overlay1   = line_stride_overlay1;
+    ts->uv_stride              = uv_stride;
+    ts->uv_stride_overlay      = uv_stride_overlay;
+    ts->horizontal_resolution  = horizontal_resolution;
+    ts->vertical_resolution    = vertical_resolution;
+    ts->slice_base_line        = 0U;  /* full-frame: window starts at row 0 */
+    ts->bytes_per_pixel_dc_output = bytes_per_pixel_dc_output;
+    ts->is_yuv_gfx             = is_yuv_gfx;
+    ts->is_yuv_ovl0            = is_yuv_ovl0;
+
+    /* Prepare CASET packet (constant across all slices) */
+    ts->packet_col_address[0] = 0x2A;
+    ts->packet_col_address[1] = 0x00;
+    ts->packet_col_address[2] = 0x00;
+    ts->packet_col_address[3] = (uint8_t)(((horizontal_resolution - 1U) >> 8) & 0xFFU);
+    ts->packet_col_address[4] = (uint8_t)((horizontal_resolution - 1U) & 0xFFU);
+
+    /* Prepare RASET packet header */
+    ts->packet_row_address[0] = 0x2B;
+
+    /* Ensure all setup writes are visible before enabling ISR-driven transfer */
+    __DSB();
+
+    /* Enable Tearing Effect acknowledgement in the DWC MIPI DSI Host.
+     * When TEAR_FX_EN is set, the DSI host performs BTA and waits for the
+     * panel's TE signal before transmitting each DBI write command.
+     * This gates the first slice on the next panel VBlank, ensuring
+     * tear-free display updates without explicit TE interrupt handling. */
+    mipi_dsi_base->DWCMIPIDSI.CMD_MODE_CFG |=
+        GFXSS_MIPIDSI_DWCMIPIDSI_CMD_MODE_CFG_CMD_MODE_CFG_TEAR_FX_EN_Msk;
+    __DSB();
+
+    /* Kick the first slice. The DSI host will automatically wait for TE
+     * from the panel before transmitting the DBI data over the link.
+     * Subsequent slices are chained by the DC interrupt (DISP0). */
+    ts->phase = CY_GFX_TRANSFER_SLICES;
+    ts->current_slice = 0U;
+    _gfxss_kick_slice(base, context, 0U, ts->no_of_lines);
+
+    return CY_GFX_SUCCESS;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_DC_DBI_InterruptHandler
+*******************************************************************************/
+void Cy_GFXSS_DC_DBI_InterruptHandler(GFXSS_Type *base, cy_stc_gfx_context_t *context)
+{
+    if ((NULL == base) || (NULL == context))
+    {
+        return;
+    }
+
+    GFXSS_DC_Type *dc_base = &(base->GFXSS_DC);
+    cy_stc_gfx_transfer_state_t *ts = &context->transfer_state;
+
+    /* Read GCREGDISPLAYINTR — this is read-to-clear.
+     * DISP0 bit (bit 0) is set when the DC finishes using the current
+     * frame buffer for a DBI slice transfer. */
+    uint32_t disp_intr = dc_base->DCNANO.GCREGDISPLAYINTR;
+
+    if (disp_intr & GFXSS_DC_DCNANO_GCREGDISPLAYINTR_GCREGDISPLAYINTR_DISP0_Msk)
+    {
+        if (ts->phase == CY_GFX_TRANSFER_SLICES)
+        {
+            /* Advance buffers past the just-completed slice */
+            _gfxss_advance_buffers(base, context, ts->no_of_lines);
+            ts->current_slice++;
+
+            if (ts->current_slice < ts->total_full_slices)
+            {
+                /* Send next full slice (offset by slice_base_line for partial transfers) */
+                uint32_t start_line = ts->slice_base_line + ts->current_slice * ts->no_of_lines;
+                _gfxss_kick_slice(base, context, start_line, ts->no_of_lines);
+            }
+            else if (ts->remainder_lines > 0U)
+            {
+                /* Reconfigure HW for the smaller remainder slice and send it */
+                _gfxss_configure_remainder(base, context);
+                uint32_t start_line = ts->vertical_resolution - ts->remainder_lines;
+                _gfxss_kick_slice(base, context, start_line, ts->remainder_lines);
+                ts->phase = CY_GFX_TRANSFER_REMAINDER;
+            }
+            else
+            {
+                /* All slices done, no remainder — disable TE until next frame */
+                GFXSS_MIPIDSI_Type *mipi = &(base->GFXSS_MIPIDSI);
+                mipi->DWCMIPIDSI.CMD_MODE_CFG &=
+                    ~GFXSS_MIPIDSI_DWCMIPIDSI_CMD_MODE_CFG_CMD_MODE_CFG_TEAR_FX_EN_Msk;
+                ts->phase = CY_GFX_TRANSFER_COMPLETE;
+                if (ts->complete_callback != NULL)
+                {
+                    ts->complete_callback();
+                }
+            }
+        }
+        else if (ts->phase == CY_GFX_TRANSFER_REMAINDER)
+        {
+            /* Remainder slice complete — disable TE until next frame */
+            GFXSS_MIPIDSI_Type *mipi = &(base->GFXSS_MIPIDSI);
+            mipi->DWCMIPIDSI.CMD_MODE_CFG &=
+                ~GFXSS_MIPIDSI_DWCMIPIDSI_CMD_MODE_CFG_CMD_MODE_CFG_TEAR_FX_EN_Msk;
+            ts->phase = CY_GFX_TRANSFER_COMPLETE;
+            if (ts->complete_callback != NULL)
+            {
+                ts->complete_callback();
+            }
+        }
+    }
+
+    /* Clear MXDC wrapper interrupt */
+    dc_base->MXDC.INTR = CLEAR_INTERRUPT;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_MIPIDSI_TE_InterruptHandler
+*******************************************************************************/
+void Cy_GFXSS_MIPIDSI_TE_InterruptHandler(GFXSS_Type *base, cy_stc_gfx_context_t *context)
+{
+    if ((NULL == base) || (NULL == context))
+    {
+        return;
+    }
+
+    GFXSS_MIPIDSI_Type *mipidsi_base = &(base->GFXSS_MIPIDSI);
+    cy_stc_gfx_transfer_state_t *ts = &context->transfer_state;
+    uint32_t intr_status = mipidsi_base->MXMIPIDSI.INTR;
+
+    /* DBI_TE interrupt: panel signaled it is in vertical blanking */
+    if (intr_status & GFXSS_MIPIDSI_MXMIPIDSI_INTR_DBI_TE_Msk)
+    {
+        if (ts->phase == CY_GFX_TRANSFER_PENDING_TE)
+        {
+            /* TE received — kick the first slice */
+            ts->phase = CY_GFX_TRANSFER_SLICES;
+            ts->current_slice = 0U;
+            _gfxss_kick_slice(base, context, 0U, ts->no_of_lines);
+        }
+    }
+
+    /* Clear all MIPIDSI interrupts */
+    mipidsi_base->MXMIPIDSI.INTR = CLEAR_INTERRUPT;
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_Clear_MIPIDSI_Interrupt
+*******************************************************************************/
+void Cy_GFXSS_Clear_MIPIDSI_Interrupt(GFXSS_Type *base, cy_stc_gfx_context_t *context)
+{
+    CY_ASSERT(base != NULL);
+    (void)context;
+
+    GFXSS_MIPIDSI_Type *mipidsi_base = &(base->GFXSS_MIPIDSI);
+    if (mipidsi_base != NULL)
+    {
+        mipidsi_base->MXMIPIDSI.INTR = CLEAR_INTERRUPT;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_RegisterTransferCompleteCallback
+*******************************************************************************/
+void Cy_GFXSS_RegisterTransferCompleteCallback(cy_stc_gfx_context_t *context,
+                                                cy_gfx_transfer_complete_callback_t callback)
+{
+    if (context != NULL)
+    {
+        context->transfer_state.complete_callback = callback;
+    }
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_Is_DC_DBI_Transfer_Active
+*******************************************************************************/
+bool Cy_GFXSS_Is_DC_DBI_Transfer_Active(cy_stc_gfx_context_t *context)
+{
+    if (context == NULL) return false;
+    cy_en_gfx_transfer_phase_t p = context->transfer_state.phase;
+    return (p == CY_GFX_TRANSFER_SLICES) || (p == CY_GFX_TRANSFER_REMAINDER) ||
+           (p == CY_GFX_TRANSFER_PENDING_TE);
+}
+
+
 cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t start_line_offset, uint32_t end_line_offset, cy_stc_gfx_context_t *context) {
     
 
@@ -1564,6 +2041,255 @@ cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame(GFXSS_Type *base, uint32_t star
         Cy_SysLib_Rtos_DelayUs(rtos_delay_us);
     }
         return CY_GFX_SUCCESS;
+}
+
+/*******************************************************************************
+* Function Name: Cy_GFXSS_TransferPartialFrame_Async
+*******************************************************************************/
+cy_en_gfx_status_t Cy_GFXSS_TransferPartialFrame_Async(GFXSS_Type *base,
+                                                       uint32_t start_line_offset,
+                                                       uint32_t end_line_offset,
+                                                       cy_stc_gfx_context_t *context)
+{
+    if ((NULL == base) || (NULL == context) ||
+        (start_line_offset >= end_line_offset) ||
+        (end_line_offset > context->dc_context.display_height))
+    {
+        return CY_GFX_BAD_PARAM;
+    }
+
+    GFXSS_DC_Type *gfxss_dc = &(base->GFXSS_DC);
+    GFXSS_MIPIDSI_Type *mipi_dsi_base = &(base->GFXSS_MIPIDSI);
+    cy_stc_gfx_transfer_state_t *ts = &context->transfer_state;
+
+    uint32_t horizontal_resolution = context->dc_context.display_width;
+    uint32_t partial_size          = end_line_offset - start_line_offset;
+    uint32_t No_of_lines = 0, line_stride = 0, line_stride_overlay = 0, line_stride_overlay1 = 0;
+    bool     is_yuv_gfx = false, is_yuv_ovl0 = false;
+    uint32_t uv_stride = 0, uv_stride_overlay = 0;
+    uint8_t  bytes_per_pixel_framebuffer = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+    float    bytes_per_pixel_dc_output = 0;
+    uint8_t  bytes_per_pixel_overlay  = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+    uint8_t  bytes_per_pixel_overlay1 = RGB_16_BIT_PIXEL_FORMAT_IN_BYTES;
+
+    /* Determine output bytes per pixel */
+    switch(context->dc_context.display_format)
+    {
+    case vivD8R3G3B2:
+    case vivD16R3G3B2:
+         bytes_per_pixel_dc_output = 1.0f; break;
+    case vivD8R4G4B4:
+    case vivD16R4G4B4:
+         bytes_per_pixel_dc_output = 1.5f; break;
+    case vivD8R5G6B5:
+    case vivD16R5G6B5:
+         bytes_per_pixel_dc_output = 2.0f; break;
+    case vivD8R6G6B6:
+    case vivD9R6G6B6:
+    case vivD16R6G6B6OP1:
+    case vivD16R6G6B6OP2:
+         bytes_per_pixel_dc_output = 2.25f; break;
+    case vivD8R8G8B8:
+    case vivD16R8G8B8OP1:
+    case vivD16R8G8B8OP2:
+         bytes_per_pixel_dc_output = 3.0f; break;
+    default:
+         bytes_per_pixel_dc_output = 2.0f; break;
+    }
+
+    /* Configure DBI write period divider */
+    uint32_t lane_byte_clock_KHz = (context->mipidsi_context.per_lane_mbps * 1000U) / 8U;
+    uint32_t dbi_clock_KHz       = lane_byte_clock_KHz / 4U;
+    uint32_t dsi_clock_KHz       = context->clockHz / 2000U;
+    uint32_t divider             = (dsi_clock_KHz + dbi_clock_KHz - 1U) / dbi_clock_KHz;
+    if (divider < 3U) divider = 3U;
+
+    gfxss_dc->DCNANO.GCREGDBIWRCHAR1 &= ~GFXSS_DC_DCNANO_GCREGDBIWRCHAR1_GCREGDBIWRCHAR1_DBI_WR_PERIOD_Msk;
+    gfxss_dc->DCNANO.GCREGDBIWRCHAR1 |= _VAL2FLD(GFXSS_DC_DCNANO_GCREGDBIWRCHAR1_GCREGDBIWRCHAR1_DBI_WR_PERIOD, divider);
+
+    /* Determine YUV formats (mirrors Cy_GFXSS_Transfer_Frame_Async) */
+    if (context->dc_context.gfx_layer_config.layer_enable) {
+        is_yuv_gfx = _viv_is_yuv_format(context->dc_context.gfx_layer_config.input_format_type);
+    }
+    if (context->dc_context.ovl0_layer_config.layer_enable) {
+        is_yuv_ovl0 = _viv_is_yuv_format(context->dc_context.ovl0_layer_config.input_format_type);
+    }
+
+    /* GFX layer stride */
+    if (is_yuv_gfx) {
+        bytes_per_pixel_framebuffer = 1U;
+        switch (context->dc_context.gfx_layer_config.input_format_type) {
+            case vivNV12:
+            case vivNV21:
+                line_stride = horizontal_resolution * 8U;
+                uv_stride   = horizontal_resolution * 4U;
+                break;
+            case vivYUY2:
+            case vivUYVY:
+                line_stride = horizontal_resolution * 4U;
+                uv_stride   = 0U;
+                break;
+            default:
+                return CY_GFX_BAD_PARAM;
+        }
+        if (line_stride % AXI_BURST_LENGTH != 0U) {
+            line_stride = AXI_BURST_LENGTH * ((line_stride / AXI_BURST_LENGTH) + 1U);
+        }
+        if (uv_stride > 0U && uv_stride % AXI_BURST_LENGTH != 0U) {
+            uv_stride = AXI_BURST_LENGTH * ((uv_stride / AXI_BURST_LENGTH) + 1U);
+        }
+    } else {
+        if (_FLD2VAL(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERCONFIG_GCREGFRAMEBUFFERCONFIG_FORMAT,
+                     gfxss_dc->DCNANO.GCREGFRAMEBUFFERCONFIG) == 4U) {
+            bytes_per_pixel_framebuffer = RGB_32_BIT_PIXEL_FORMAT_IN_BYTES;
+        }
+        if ((horizontal_resolution * bytes_per_pixel_framebuffer) % AXI_BURST_LENGTH != 0U) {
+            line_stride = AXI_BURST_LENGTH * (((horizontal_resolution * bytes_per_pixel_framebuffer) / AXI_BURST_LENGTH) + 1U);
+        } else {
+            line_stride = horizontal_resolution * bytes_per_pixel_framebuffer;
+        }
+    }
+
+    /* Overlay0 stride */
+    if (is_yuv_ovl0) {
+        bytes_per_pixel_overlay = 1U;
+        switch (context->dc_context.ovl0_layer_config.input_format_type) {
+            case vivNV12:
+            case vivNV21:
+                line_stride_overlay = horizontal_resolution * 8U;
+                uv_stride_overlay   = horizontal_resolution * 4U;
+                break;
+            case vivYUY2:
+            case vivUYVY:
+                line_stride_overlay = horizontal_resolution * 4U;
+                uv_stride_overlay   = 0U;
+                break;
+            default:
+                return CY_GFX_BAD_PARAM;
+        }
+        if (line_stride_overlay % AXI_BURST_LENGTH != 0U) {
+            line_stride_overlay = AXI_BURST_LENGTH * ((line_stride_overlay / AXI_BURST_LENGTH) + 1U);
+        }
+        if (uv_stride_overlay > 0U && uv_stride_overlay % AXI_BURST_LENGTH != 0U) {
+            uv_stride_overlay = AXI_BURST_LENGTH * ((uv_stride_overlay / AXI_BURST_LENGTH) + 1U);
+        }
+    } else {
+        if (_FLD2VAL(GFXSS_DC_DCNANO_GCREGOVERLAYCONFIG_GCREGOVERLAYCONFIG_FORMAT,
+                     gfxss_dc->DCNANO.GCREGOVERLAYCONFIG) == 4U) {
+            bytes_per_pixel_overlay = RGB_32_BIT_PIXEL_FORMAT_IN_BYTES;
+        }
+        if ((horizontal_resolution * bytes_per_pixel_overlay) % AXI_BURST_LENGTH != 0U) {
+            line_stride_overlay = AXI_BURST_LENGTH * (((horizontal_resolution * bytes_per_pixel_overlay) / AXI_BURST_LENGTH) + 1U);
+        } else {
+            line_stride_overlay = horizontal_resolution * bytes_per_pixel_overlay;
+        }
+    }
+
+    /* Overlay1 stride (RGB only) */
+    if (_FLD2VAL(GFXSS_DC_DCNANO_GCREGOVERLAYCONFIG1_GCREGOVERLAYCONFIG1_FORMAT,
+                 gfxss_dc->DCNANO.GCREGOVERLAYCONFIG1) == 4U) {
+        bytes_per_pixel_overlay1 = RGB_32_BIT_PIXEL_FORMAT_IN_BYTES;
+    }
+    if ((horizontal_resolution * bytes_per_pixel_overlay1) % AXI_BURST_LENGTH != 0U) {
+        line_stride_overlay1 = AXI_BURST_LENGTH * (((horizontal_resolution * bytes_per_pixel_overlay1) / AXI_BURST_LENGTH) + 1U);
+    } else {
+        line_stride_overlay1 = horizontal_resolution * bytes_per_pixel_overlay1;
+    }
+
+    /* Slice height bounded by the partial-window height */
+    No_of_lines = (uint32_t)(DBI_SCLICE_LIMIT_IN_BYTES / (horizontal_resolution * bytes_per_pixel_dc_output));
+    if ((is_yuv_gfx || is_yuv_ovl0) && (No_of_lines % 8U != 0U)) {
+        No_of_lines = (No_of_lines / 8U) * 8U;
+    }
+    if (No_of_lines > partial_size) {
+        No_of_lines = partial_size;
+    }
+
+    /* DBI command size + slice geometry for full slices */
+    mipi_dsi_base->DWCMIPIDSI.DBI_CMDSIZE =
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_WR_CMD_SIZE,
+                 (uint32_t)(No_of_lines * bytes_per_pixel_dc_output * horizontal_resolution) + 1U) |
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CMDSIZE_DBI_CMDSIZE_ALLOWED_CMD_SIZE,
+                 (uint32_t)(((uint8_t)(AXI_BURST_LENGTH / bytes_per_pixel_dc_output)) *
+                  bytes_per_pixel_dc_output) + 1U);
+    mipi_dsi_base->DWCMIPIDSI.DBI_CFG =
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_OUT_DBI_CONF, context->mipidsi_context.dpi_fmt) |
+        _VAL2FLD(GFXSS_MIPIDSI_DWCMIPIDSI_DBI_CFG_DBI_CFG_IN_DBI_CONF,  context->mipidsi_context.dpi_fmt);
+
+    /* Source DMA address: framebuffer base + start_line * line_stride.
+     * The DC IRQ handler advances this pointer past each completed slice. */
+    gfxss_dc->DCNANO.GCREGFRAMEBUFFERADDRESS =
+        (uint32_t)context->dc_context.gfx_layer_config.buffer_address + (start_line_offset * line_stride);
+    /* Note: overlay addresses are left as configured by the caller. If overlays
+     * are enabled, the caller is expected to manage their absolute base via
+     * Cy_GFXSS_Set_Overlay0()/Cy_GFXSS_Set_Overlay1() prior to this call.    */
+
+    gfxss_dc->DCNANO.GCREGFRAMEBUFFERSTRIDE = line_stride;
+    gfxss_dc->DCNANO.GCREGOVERLAYSTRIDE     = line_stride_overlay;
+    gfxss_dc->DCNANO.GCREGOVERLAYSTRIDE1    = line_stride_overlay1;
+    gfxss_dc->DCNANO.GCREGFRAMEBUFFERSIZE =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERSIZE_GCREGFRAMEBUFFERSIZE_WIDTH, horizontal_resolution) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGFRAMEBUFFERSIZE_GCREGFRAMEBUFFERSIZE_HEIGHT, No_of_lines);
+    gfxss_dc->DCNANO.GCREGOVERLAYSIZE =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE_GCREGOVERLAYSIZE_WIDTH, horizontal_resolution) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE_GCREGOVERLAYSIZE_HEIGHT, No_of_lines);
+    gfxss_dc->DCNANO.GCREGOVERLAYSIZE1 =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_WIDTH, horizontal_resolution) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGOVERLAYSIZE1_GCREGOVERLAYSIZE1_HEIGHT, No_of_lines);
+    gfxss_dc->DCNANO.GCREGVDISPLAY =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_DISPLAY_END, No_of_lines) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVDISPLAY_GCREGVDISPLAY_TOTAL, (No_of_lines + 1U));
+    gfxss_dc->DCNANO.GCREGVSYNC =
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_START, 0U) |
+        _VAL2FLD(GFXSS_DC_DCNANO_GCREGVSYNC_GCREGVSYNC_END,   No_of_lines);
+
+    if (is_yuv_gfx) {
+        uint32_t yuv_tile_setup_delay_us = ((46U * lane_byte_clock_KHz) / 1000U) + 1000U;
+        Cy_SysLib_Rtos_DelayUs(yuv_tile_setup_delay_us);
+    }
+
+    /* Populate transfer state for the DC IRQ handler.
+     * vertical_resolution is set to end_line_offset so the existing remainder
+     * math `vertical_resolution - remainder_lines` yields the correct row;
+     * slice_base_line offsets each chained full slice. */
+    ts->current_slice          = 0U;
+    ts->total_full_slices      = partial_size / No_of_lines;
+    ts->no_of_lines            = No_of_lines;
+    ts->remainder_lines        = partial_size % No_of_lines;
+    ts->line_stride            = line_stride;
+    ts->line_stride_overlay    = line_stride_overlay;
+    ts->line_stride_overlay1   = line_stride_overlay1;
+    ts->uv_stride              = uv_stride;
+    ts->uv_stride_overlay      = uv_stride_overlay;
+    ts->horizontal_resolution  = horizontal_resolution;
+    ts->vertical_resolution    = end_line_offset;
+    ts->slice_base_line        = start_line_offset;
+    ts->bytes_per_pixel_dc_output = bytes_per_pixel_dc_output;
+    ts->is_yuv_gfx             = is_yuv_gfx;
+    ts->is_yuv_ovl0            = is_yuv_ovl0;
+
+    /* CASET packet (full display width, constant across all slices) */
+    ts->packet_col_address[0] = 0x2A;
+    ts->packet_col_address[1] = 0x00;
+    ts->packet_col_address[2] = 0x00;
+    ts->packet_col_address[3] = (uint8_t)(((horizontal_resolution - 1U) >> 8) & 0xFFU);
+    ts->packet_col_address[4] = (uint8_t)((horizontal_resolution - 1U) & 0xFFU);
+
+    /* RASET packet header */
+    ts->packet_row_address[0] = 0x2B;
+
+    __DSB();
+
+    /* Enable Tearing-Effect acknowledgement so the panel gates the first
+     * slice on its next vertical-blank, providing tear-free updates. */
+    mipi_dsi_base->DWCMIPIDSI.CMD_MODE_CFG |=
+        GFXSS_MIPIDSI_DWCMIPIDSI_CMD_MODE_CFG_CMD_MODE_CFG_TEAR_FX_EN_Msk;
+    __DSB();
+
+    ts->phase = CY_GFX_TRANSFER_SLICES;
+    _gfxss_kick_slice(base, context, start_line_offset, No_of_lines);
+
+    return CY_GFX_SUCCESS;
 }
 
 cy_en_gfx_status_t Cy_GFXSS_Enable_GPU( GFXSS_Type *base, cy_stc_gfx_context_t *context)

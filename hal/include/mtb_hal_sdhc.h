@@ -26,6 +26,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_SDHC)
+
+
+
 
 /**
  * \addtogroup group_hal_sdhc SDHC (SD Host Controller)
@@ -44,15 +55,15 @@
  * \section subsection_sdhc_quickstart Quick Start
  * Initialize SDHC by using Device Configurator and selecting the pins according to the target
  * device used.
- * Specify the SDHC configuration using the configuration structure (const \ref
- * mtb_hal_sdhc_configurator_t * config). <br>
+ * Specify the SDHC configuration using the configuration structure (const
+ * #mtb_hal_sdhc_configurator_t * config). <br>
  * See \ref subsection_sdhc_snippet_1
  *
  * \section subsection_sdhc_code_snippets Code Snippets
  *
  * \subsection subsection_sdhc_snippet_1 Snippet 1: SDHC Initialization and configuration
- * The following snippet is used to initialize the SDHC block. SDHC object - \ref mtb_hal_sdhc_t,
- * SDHC card configuration structure (const \ref mtb_hal_sdhc_config_t * config). The pins connected
+ * The following snippet is used to initialize the SDHC block. SDHC object - #mtb_hal_sdhc_t,
+ * SDHC card configuration structure (const #mtb_hal_sdhc_config_t * config). The pins connected
  * to the SDHC block needs to be provided by the design.modus file after using Device Configurator.
  * \snippet hal_sdhc.c snippet_mtb_hal_sdhc_setup
  *
@@ -68,14 +79,6 @@
 
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_SDHC)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -282,9 +285,9 @@ typedef struct
     uint32_t*                       data_ptr;
     //! The size of the data block
     uint32_t                        block_size;
-    //! The number of blocks with size block_size to send. Selects which auto commands are used if
-    //! any.
+    //! The number of blocks with size block_size to send.
     uint32_t                        number_of_blocks;
+    //! Selects which auto commands are used if any.
     mtb_hal_sdhc_auto_cmd_t         auto_command;
     //! true = Read from the card,false = Write to the card.
     bool                            is_read;
@@ -577,6 +580,6 @@ cy_rslt_t mtb_hal_sdhc_process_interrupt(mtb_hal_sdhc_t* obj);
 #include MTB_HAL_SDHC_IMPL_HEADER
 #endif /* MTB_HAL_SDHC_IMPL_HEADER */
 
-#endif //defined(MTB_HAL_DRIVER_AVAILABLE_SDHC)
-
 /** \} group_hal_sdhc */
+
+#endif //defined(MTB_HAL_DRIVER_AVAILABLE_SDHC)

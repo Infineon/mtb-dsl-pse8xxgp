@@ -171,7 +171,7 @@ cy_en_smif_status_t Cy_SMIF_Init(SMIF_Type *base,
             tmp_ctl |= _VAL2FLD(SMIF_CORE_CTL_SELECT_SETUP_DELAY, 1);
             tmp_ctl |= _VAL2FLD(SMIF_CORE_CTL_SELECT_HOLD_DELAY, 1);
         }
- 
+  
         SMIF_CTL(base) = tmp_ctl;
     }
 
@@ -234,15 +234,15 @@ cy_en_smif_status_t Cy_SMIF_DllConfig(volatile SMIF_Type *base,
         }
     }
 
-    /* Make sure we start from a sane default. */
-    uint32_t tmp_ctl2 = CY_SMIF_CTL2_REG_DEFAULT;
+      /* Make sure we start from a sane default. */
+        uint32_t tmp_ctl2 = CY_SMIF_CTL2_REG_DEFAULT;
 
     /* Enable the DLL, if needed.   Otherwise, enable the bypass. */
     if (config->enable_internal_dll)
     {
         /* These values are taken from the Register TRM entry for SMIF_CORE_CTL2_DLL_SPEED_MODE. */
-        static uint32_t pll_freq_bounds[] = {150u, 192u, 245u, 313u, 400u};
-        static uint32_t dll_skip_lsb_vals[] = {0U, 0U, 1U, 3U};
+        static const uint32_t pll_freq_bounds[] = {150u, 192u, 245u, 313u, 400u};
+        static const uint32_t dll_skip_lsb_vals[] = {0U, 0U, 1U, 3U};
 
 
         if (config->inputFrequencyMHz <= 150U)
@@ -261,11 +261,12 @@ cy_en_smif_status_t Cy_SMIF_DllConfig(volatile SMIF_Type *base,
             {
                 if ((pll_freq_bounds[pll_bounds_idx] <= config->inputFrequencyMHz) &&
                     (config->inputFrequencyMHz <= pll_freq_bounds[pll_bounds_idx + 1UL]))
-                {
-                    tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_DLL_SPEED_MODE, pll_bounds_idx);
-                    tmp_ctl2 |= (_VAL2FLD(SMIF_CORE_CTL2_DLL_SKIP_LSB, dll_skip_lsb_vals[pll_bounds_idx]) |
-                            SMIF_CORE_CTL2_DLL_IGNORE_LOCK_Msk |             //Recommendation from IP team
-                            _VAL2FLD(SMIF_CORE_CTL2_DLL_UNLOCK_VALUE, 5U));  //Recommendation from IP team
+                {                       tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_DLL_SPEED_MODE, pll_bounds_idx);
+
+                        tmp_ctl2 |= (_VAL2FLD(SMIF_CORE_CTL2_DLL_SKIP_LSB, dll_skip_lsb_vals[pll_bounds_idx]) |
+                                SMIF_CORE_CTL2_DLL_IGNORE_LOCK_Msk |             //Recommendation from IP team
+                                _VAL2FLD(SMIF_CORE_CTL2_DLL_UNLOCK_VALUE, 5U));  //Recommendation from IP team
+                     
                      break;
                 }
             }
@@ -276,11 +277,11 @@ cy_en_smif_status_t Cy_SMIF_DllConfig(volatile SMIF_Type *base,
         }
     }
     else
-    {
+    {   
         /* DLL runs in open loop mode */
         tmp_ctl2 |= SMIF_CORE_CTL2_DLL_BYPASS_MODE_Msk;
         tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_DLL_OPENLOOP_ENABLE, 1U);
-        SMIF_IDAC(base) = 0U; /* Set max delay for accuracy */
+         SMIF_IDAC(base) = 0U; /* Set max delay for accuracy */
     }
  
     tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_CLKOUT_DIV, config->dll_divider_value);
@@ -288,9 +289,10 @@ cy_en_smif_status_t Cy_SMIF_DllConfig(volatile SMIF_Type *base,
     tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_RX_CAPTURE_MODE, config->rx_capture_mode);
     tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_RX_CHASE_MARGIN, 2UL); /* The default value expected to always work */
     tmp_ctl2 |= _VAL2FLD(SMIF_CORE_CTL2_TX_SDR_EXTRA_SETUP, config->tx_sdr_extra);
-
+     
     /* Write the register value that has been constructed per the configuration input. */
-    SMIF_CTL2(base) = tmp_ctl2;
+        SMIF_CTL2(base) = tmp_ctl2;
+   
 
     return CY_SMIF_SUCCESS;
 }
@@ -313,12 +315,10 @@ void Cy_SMIF_DeInit(SMIF_Type *base)
 {
     uint32_t idx;
 
-    /* Configure the SMIF interface to default values.
-    * The default value is 0.
-    */
+    /* Configure the SMIF interface to default values. */
     SMIF_CTL(base) = CY_SMIF_CTL_REG_DEFAULT;
     SMIF_CTL2(base) = CY_SMIF_CTL2_REG_DEFAULT;
-     SMIF_TX_DATA_FIFO_CTL(base) = 0U;
+      SMIF_TX_DATA_FIFO_CTL(base) = 0U;
     SMIF_RX_DATA_FIFO_CTL(base) = 0U;
     SMIF_INTR_MASK(base) = 0U;
 
@@ -335,14 +335,12 @@ void Cy_SMIF_DeInit(SMIF_Type *base)
 *
 * Sets the mode of operation for the SMIF. The mode of operation can be the XIP
 * mode where the slave devices are mapped as memories and are directly accessed
-* from the PSoC register map. In the MMIO mode, the SMIF block acts as a simple
+* from the PSOC register map. In the MMIO mode, the SMIF block acts as a simple
 * SPI engine. MMIO mode and XIP modes are mutually exclusive. SMIF IP Version 3
 * and above support MMIO mode transactions even when XIP mode is enabled. However,
 * user has to ensure that XIP transaction is not issued during an ongoing MMIO
 * transaction. Rather wait for MMIO transaction to complete since few MMIO operations
 * make external flash busy and it cannot respond to XIP read transaction.
-*
-* \note With SMIF V1 IP, Interrupt and triggers are not working in XIP mode, see TRM for details
 *
 * \param base
 * Holds the base address of the SMIF block registers.
@@ -373,7 +371,7 @@ void Cy_SMIF_SetMode(SMIF_Type *base, cy_en_smif_mode_t mode)
 *
 * Reads the mode of operation for the SMIF. The mode of operation can be the
 * XIP mode where the slave devices are mapped as memories and are directly
-* accessed from the PSoC register map. In the MMIO mode, the SMIF block acts as
+* accessed from the PSOC register map. In the MMIO mode, the SMIF block acts as
 * a simple SPI engine.
 *
 * \param base
@@ -1224,7 +1222,7 @@ cy_en_smif_status_t Cy_SMIF_TransmitData_Ext(SMIF_Type *base,
             _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_MODE, CY_SMIF_CMD_FIFO_TX_COUNT_MODE) |
             _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_WIDTH, (uint32_t)transferWidth)    |
             _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_DATA_RATE, (uint32_t) dataDataRate) |
-            _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_TX_COUNT, (trUnitNum - 1UL))|
+            _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_TX_COUNT, (trUnitNum > 0UL) ? (trUnitNum - 1UL) : 0UL)|
             _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_LAST_BYTE, 1U);
 
         if (NULL != txBuffer)
@@ -1333,7 +1331,7 @@ cy_en_smif_status_t Cy_SMIF_TransmitDataBlocking_Ext(SMIF_Type *base,
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_MODE, CY_SMIF_CMD_FIFO_TX_COUNT_MODE) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_DATA_RATE, (uint32_t) dataDataRate) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_WIDTH, (uint32_t)transferWidth)    |
-                _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_TX_COUNT, (trUnitNum - 1U)) |
+                _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_TX_COUNT, (trUnitNum > 0UL) ? (trUnitNum - 1UL) : 0UL) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_LAST_BYTE, 1U);
 
             result = CY_SMIF_SUCCESS;
@@ -1462,7 +1460,7 @@ cy_en_smif_status_t Cy_SMIF_ReceiveData_Ext(SMIF_Type *base,
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_MODE, CY_SMIF_CMD_FIFO_RX_COUNT_MODE) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_WIDTH, (uint32_t)transferWidth)    |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_DATA_RATE, (uint32_t) dataRate) |
-                _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_RX_COUNT, (rxUnitNum - 1UL)) |
+                _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_RX_COUNT, (rxUnitNum > 0UL) ? (rxUnitNum - 1UL) : 0UL) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_LAST_BYTE, 1U);
 
             if (NULL != rxBuffer)
@@ -1570,7 +1568,7 @@ cy_en_smif_status_t Cy_SMIF_ReceiveDataBlocking_Ext(SMIF_Type *base,
             SMIF_TX_CMD_MMIO_FIFO_WR(base) =
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_MODE, CY_SMIF_CMD_FIFO_RX_COUNT_MODE) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_WIDTH, (uint32_t)transferWidth)    |
-                _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_RX_COUNT, (rxUnitNum - 1UL)) |
+                _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_RX_COUNT, (rxUnitNum > 0UL) ? (rxUnitNum - 1UL) : 0UL) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_DATA_RATE, (uint32_t) dataRate) |
                 _VAL2FLD(CY_SMIF_CMD_MMIO_FIFO_WR_LAST_BYTE, 1U);
 
@@ -1641,6 +1639,7 @@ cy_en_smif_status_t Cy_SMIF_SendDummyCycles_Ext(SMIF_Type *base,
     {
         result = CY_SMIF_CMD_FIFO_FULL;
         uint32_t dummyRWDS = 0U;
+        /* SMIFv4-v6: RX_CAPTURE_MODE is in SMIF_CORE.CTL2 */
         if (_FLD2VAL(SMIF_CORE_CTL2_RX_CAPTURE_MODE, (SMIF_CTL2(base))) == (uint32_t)CY_SMIF_SEL_XSPI_HYPERBUS_WITH_DQS)
         {
             dummyRWDS = 1U;
@@ -1978,6 +1977,8 @@ cy_en_smif_status_t Cy_SMIF_SetCryptoKeyRegion(SMIF_Type *base,
     SMIF_CRYPTO_IDX_KEY2(base, crypto_region_index) = region_config->key[2];
     SMIF_CRYPTO_IDX_KEY3(base, crypto_region_index) = region_config->key[3];
 
+ 
+
     SMIF_CRYPTO_IDX_ADDR(base, crypto_region_index) = (uint32_t)region_config->region_base_address;
     SMIF_CRYPTO_IDX_MASK(base, crypto_region_index) = (SMIF_DEVICE_MASK_MASK_Msk & (~(region_config->region_size) + 1UL));
 
@@ -2037,7 +2038,7 @@ cy_en_smif_status_t Cy_SMIF_SetCryptoSubRegionDisable(SMIF_Type *base,
 * Decryption is done using the input data-array identically to the encryption.
 * In the XIP mode, encryption and decryption are done without calling this
 * function. The operational scheme in the XIP mode is the same. The address
-* parameter in the XIP mode equals the actual address in the PSoC memory map.
+* parameter in the XIP mode equals the actual address in the PSOC memory map.
 * The SMIF encryption engine is designed for code storage.
 * For data storage, the encryption key can be changed.
 * For sensitive data, the Crypto block is used.
@@ -2102,6 +2103,7 @@ cy_en_smif_status_t  Cy_SMIF_Encrypt(SMIF_Type *base,
     if((NULL != data) && ((address & (~CY_SMIF_CRYPTO_ADDR_MASK)) == 0UL) )
     {
         status = CY_SMIF_SUCCESS;
+ 
         /* Fill the output array */
         for(bufIndex = 0U; bufIndex < (size / CY_SMIF_AES128_BYTES); bufIndex++)
         {
@@ -2150,7 +2152,6 @@ cy_en_smif_status_t  Cy_SMIF_Encrypt(SMIF_Type *base,
     }
     return (status);
 }
-
 
 /*******************************************************************************
 * Function Name: Cy_SMIF_CacheEnable
@@ -2363,7 +2364,7 @@ cy_en_smif_status_t Cy_SMIF_CacheInvalidate(SMIF_Type *base,
     }
     return (status);
 }
-
+ 
 #if (defined (SMIF_BRIDGE_PRESENT) && (SMIF_BRIDGE_PRESENT == 1u))
 /*******************************************************************************
  * Function Name: Cy_SMIF_IsBridgeOn
@@ -2451,9 +2452,10 @@ cy_en_smif_status_t Cy_SMIF_SetRxCaptureMode(SMIF_Type *base, cy_en_smif_capture
     }
     else
     {
+        /* SMIFv4-v6: RX_CAPTURE_MODE is in SMIF_CORE.CTL2 */
         SMIF_CTL2(base) &= ~SMIF_CORE_CTL2_RX_CAPTURE_MODE_Msk;
         SMIF_CTL2(base) |= _VAL2FLD(SMIF_CORE_CTL2_RX_CAPTURE_MODE, (uint32_t)mode);
-
+ 
         /* For RX Capture MODE 2, DDR_PIPELINE_POS_DAT must be set to 1 */
         if (CY_SMIF_SUCCESS == Cy_SMIF_ConvertSlaveSlotToIndex(slaveId, &device_idx))
         {
@@ -3490,6 +3492,7 @@ cy_en_smif_status_t Cy_SMIF_IsCacheEnabled(SMIF_CACHE_BLOCK_Type *base, bool *ca
 #endif
 }
 
+ 
  
 #endif /* defined (CY_IP_MXS40SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) */
 

@@ -207,7 +207,7 @@
 #include "cy_device_headers.h"
 #include "cy_device.h"
 
-#if defined (CY_IP_MXI3C)
+#if defined (CY_IP_MXI3C) || defined (CY_IP_MXS40SI3C)
 
 #include "cy_syspm.h"
 #include "cy_i3c_ccc.h"
@@ -326,7 +326,7 @@ extern "C" {
 */
 #define CY_I3C_INTR_BUSOWNER_UPDATED_STS I3C_CORE_INTR_STATUS_BUSOWNER_UPDATED_STS_Msk
 
-#if CY_IP_MXI3C_VERSION_MINOR == 1u
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C))
 /**
 * Target reset pattern detected.
 */
@@ -344,7 +344,7 @@ extern "C" {
 #define CY_I3C_TGT_INTR_Msk (CY_I3C_INTR_CCC_UPDATED_STS | CY_I3C_INTR_DYN_ADDR_ASSGN_STS | \
                              CY_I3C_INTR_RESP_READY_STS | CY_I3C_INTR_READ_REQ_RECV_STS )
 
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) */
 
 /** \} group_i3c_macros_intr_macros */
 
@@ -716,7 +716,7 @@ extern "C" {
 #define I3C_CORE_TGT_INTR_REQ_IBI_STS_IBI_NOT_ATTEMPTED       (0x3U)
 
 /* Interrupt Mask */
-#if CY_IP_MXI3C_VERSION_MINOR == 0u
+#if defined(CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 0u)
 #define CY_I3C_INTR_MASK ( I3C_CORE_INTR_STATUS_EN_TX_THLD_STS_EN_Msk  | \
                            I3C_CORE_INTR_STATUS_EN_RX_THLD_STS_EN_Msk  | \
                            I3C_CORE_INTR_STATUS_EN_IBI_THLD_STS_EN_Msk    | \
@@ -1692,10 +1692,10 @@ cy_en_i3c_status_t Cy_I3C_SetAASA(I3C_CORE_Type *base, cy_stc_i3c_device_t *i3cD
 cy_en_i3c_status_t Cy_I3C_ControllerSendHdrCmds(I3C_CORE_Type *base, uint8_t targetAddress, cy_stc_i3c_hdr_cmd_t *hdrCmd, cy_stc_i3c_context_t *context);
 cy_en_i3c_status_t Cy_I3C_ControllerWriteDMA(I3C_CORE_Type *base, uint8_t targetAddress, uint32_t Datalength, cy_stc_i3c_context_t *context);
 cy_en_i3c_status_t Cy_I3C_ControllerReadDMA(I3C_CORE_Type *base, uint8_t targetAddress, uint32_t Datalength, cy_stc_i3c_context_t *context);
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) || defined(CY_DOXYGEN)
 cy_en_i3c_status_t Cy_I3C_GetIbiPayload(I3C_CORE_Type *base, uint8_t *buffer, uint32_t size, cy_stc_i3c_context_t *context);
 bool CY_I3C_isIbiPayloadEnabled(I3C_CORE_Type *base, uint8_t targetAddress, cy_stc_i3c_context_t *context);
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) */
 
 /** \} group_i3c_controller_functions */
 
@@ -1704,7 +1704,7 @@ bool CY_I3C_isIbiPayloadEnabled(I3C_CORE_Type *base, uint8_t targetAddress, cy_s
 * \addtogroup group_i3c_target_functions
 * \{
 */
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) || defined(CY_DOXYGEN)
 cy_en_i3c_status_t Cy_I3C_TargetGetDynamicAddress(I3C_CORE_Type const *base, uint8_t *address, cy_stc_i3c_context_t const *context);
 uint32_t Cy_I3C_TargetGetMaxReadLength(I3C_CORE_Type const *base, cy_stc_i3c_context_t const *context);
 uint32_t Cy_I3C_TargetGetMaxWriteLength(I3C_CORE_Type const *base, cy_stc_i3c_context_t const *context);
@@ -1725,9 +1725,9 @@ cy_en_i3c_status_t Cy_I3C_TargetGetCCCData(I3C_CORE_Type *base, uint8_t *buffer,
 * \addtogroup group_i3c_secondary_controller_functions
 * \{
 */
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) || defined(CY_DOXYGEN)
 cy_en_i3c_status_t Cy_I3C_RequestControllership(I3C_CORE_Type *base, cy_stc_i3c_context_t *context);
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) */
 cy_en_i3c_status_t Cy_I3C_DeliverControllership(I3C_CORE_Type *base, uint8_t SecControllerAddress, cy_stc_i3c_context_t *context);
 
 /** \} group_i3c_secondary_controller_functions */
@@ -1736,9 +1736,9 @@ cy_en_i3c_status_t Cy_I3C_DeliverControllership(I3C_CORE_Type *base, uint8_t Sec
 * \addtogroup group_i3c_interrupt_functions
 * \{
 */
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) || defined(CY_DOXYGEN)
 void Cy_I3C_TargetInterrupt (I3C_CORE_Type *base, cy_stc_i3c_context_t *context);
-#endif
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) */
 void Cy_I3C_ControllerInterrupt (I3C_CORE_Type *base, cy_stc_i3c_context_t *context);
 /** \} group_i3c_interrupt_functions */
 
@@ -1759,7 +1759,7 @@ cy_en_syspm_status_t Cy_I3C_HibernateCallback(cy_stc_syspm_callback_params_t *ca
 * \{
 */
 
-#if CY_IP_MXI3C_VERSION_MINOR == 1u || defined(CY_DOXYGEN)
+#if (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) || defined(CY_DOXYGEN)
 /*******************************************************************************
 * Function Name: Cy_I3C_Target_GetResetMode
 ****************************************************************************//**
@@ -1875,8 +1875,8 @@ __STATIC_INLINE uint8_t Cy_I3C_Target_getTIRRemainingDataLength(I3C_CORE_Type *b
 {
     return (uint8_t)_FLD2VAL(I3C_CORE_TGT_IBI_RESP_TIR_RESP_DATA_LENGTH, base->TGT_IBI_RESP);
 }
-#endif
-/** \} group_i3c_secondary_controller_functions */
+#endif /* (defined (CY_IP_MXI3C_VERSION_MINOR) && (CY_IP_MXI3C_VERSION_MINOR == 1U)) || ( defined (CY_IP_MXS40SI3C)) */
+/** \} group_i3c_target_functions */
 
 /**
 * \addtogroup group_i3c_general_functions
@@ -2353,7 +2353,7 @@ __STATIC_INLINE void Cy_I3C_SetTxEmptyThldLevel(I3C_CORE_Type const *base, uint3
 }
 #endif
 
-#endif /* CY_IP_MXI3C */
+#endif /* CY_IP_MXI3C  || CY_IP_MXS40SI3C*/
 
 #endif /* (CY_I3C_H) */
 /** \} group_i3c */

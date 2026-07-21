@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -26,20 +26,28 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *****************************************************************************-->
-
-<Personality id='ezi2c' name='EZI2C' version='3.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v8'>
-  <Dependencies>
-    <IpBlock name='mxscb,mxscb_ver2_s40e,mxs22scb'>
-               <Version major='1'/>
-              <Version major='2' />
-              <Version major='4' />
-      <Param name='I2C' value='1' />
-      <Param name='I2C_S' value='1' />
-    </IpBlock>
-    <Resource name='scb' />
-    <OperatingMode value='MCU'/>
-  </Dependencies>
+<PersonalityTemplate id="ezi2c" name="EZI2C" version="3.0" xmlns="http://cypress.com/xsd/cyhwpersonality_v9">
+  <FittingRules>
+    <MappingRules>
+      <RequiresConnectivity>
+        <SignalGroup type="ALL">
+          <Signal port="i2c_scl[0]"/>
+          <Signal port="i2c_sda[0]"/>
+        </SignalGroup>
+      </RequiresConnectivity>
+      <IpBlock name='mxscb,mxscb_ver2_s40e,mxs22scb'>
+                 <Version major='1'/>
+                <Version major='2' />
+                <Version major='4' />
+        <Param name='I2C' value='1' />
+        <Param name='I2C_S' value='1' />
+      </IpBlock>
+      <Resource name="scb" />
+      <OperatingMode value="MCU"/>
+    </MappingRules>
+  </FittingRules>
   <ExposedMembers />
+  
   <Parameters>
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__scb__ezi2c.html' linkText='Open EZI2C (SCB) Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
@@ -101,7 +109,7 @@
     <ParamRange  id='scbClkHz' name='scbClkHz' group='Internal' default='`${getExposedMember(sourceClock, "frequency")}`' min='1' max='200000000' resolution='1' visible='false' editable='false' desc='SCB clock frequency in kHz' />
     <ParamString id='ClkFreq' name='Clock Frequency' group='Connections' default='`${(scbClkHz &lt; 1000000) ? (scbClkHz / 1000.0) . " kHz" : (scbClkHz / 1000000.0) . " MHz"}`' visible='true' editable='false' desc='Frequency of the connected clock' />
 
-    <ParamSignal port='i2c_scl[0]' name='SCL' group='Connections' visible='true' desc='Serial clock (SCL) is the master-generated I2C clock.' canBeEmpty='false'>
+    <ParamSignal port='i2c_scl[0]' name='SCL' group='Connections' visible='`${hasVisibleOption("i2c_scl[0]")}`' desc='Serial clock (SCL) is the master-generated I2C clock.' canBeEmpty='`${!hasVisibleOption("i2c_scl[0]")}`'>
       <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_OD_DRIVESLOW' />
@@ -114,7 +122,7 @@
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
     </ParamSignal>
-    <ParamSignal port='i2c_sda[0]' name='SDA' group='Connections' visible='true' desc='Serial data (SDA) is the I2C data signal.' canBeEmpty='false'>
+    <ParamSignal port='i2c_sda[0]' name='SDA' group='Connections' visible='`${hasVisibleOption("i2c_sda[0]")}`' desc='Serial data (SDA) is the I2C data signal.' canBeEmpty='`${!hasVisibleOption("i2c_sda[0]")}`'>
       <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
         <Parameter id='DriveModes' severity='DEFAULT' reason=''>
           <Fixed value='CY_GPIO_DM_OD_DRIVESLOW' />
@@ -135,6 +143,8 @@
     <ParamString id='InstNumber' name='InstNumber' group='Internal' default='`${getInstNumber("scb")}`' visible='false' editable='false' desc='SCB Instance name number.' />
     <ParamString id='version' name='version number' group='Internal' default='`${getVersion()}`' visible='false' editable='false' desc='' />
     <ParamString id='ipName' name='IP name' group='Internal' default='`${getIpBlockName()}`' visible='false' editable='false' desc='' />
+
+    <ParamBool id='EnableHwEzMode' name='Enable Hardware EZ Mode' group='General' default='false' visible='`${ipName eq "mxs22scb"}`' editable='true' desc='Enables the SCB hardware EZ mode which uses EZ_DATA registers as dual-port memory, eliminating I2C clock stretching. When enabled, the I2C controller can read/write EZ_DATA registers without firmware intervention. INTR_S.I2C_WRITE_STOP is used for write completion detection.' />
 
     <!-- Peripheral clock divider connection -->
     <ParamBool id='pclkOk' name='PCLK Valid' group='Internal' default='`${(hasVisibleOption("clock[0]")) ? (hasConnection("clock", 0) &amp;&amp; isBlockUsed(sourceClock)) : (hasConnection("clock_scb_en", 0) &amp;&amp; isBlockUsed(sourceClock))}`' visible='false' editable='false' desc='Checks whether there is a PCLK connected and enabled.' />
@@ -158,6 +168,7 @@
       <Member name='slaveAddress2' value='`${(NumOfAddr ne CY_SCB_EZI2C_ONE_ADDRESS) ? SlaveAddress2 : "0"}`U' />
       <Member name='subAddressSize' value='`${SubAddrSize}`' />
       <Member name='enableWakeFromSleep' value='`${EnableWakeup ? "true" : "false"}`' />
+      <Member name='enableHwEzMode' value='`${EnableHwEzMode ? "true" : "false"}`' />
     </ConfigStruct>
 
     <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_SCB`${InstNumber}`_PERI_NR, CY_MMIO_SCB`${InstNumber}`_GROUP_NR, CY_MMIO_SCB`${InstNumber}`_SLAVE_NR, CY_MMIO_SCB`${InstNumber}`_CLK_HF_NR);' include='`${(ipName eq "mxs22scb")}`' />
@@ -165,4 +176,4 @@
     <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriphAssignDivider(`${pclkDst}`, `${getExposedMember(sourceClock, "clockSel")}`);' include='`${((version eq 1) &amp;&amp; pclkOk &amp;&amp; (ipName ne "mxs22scb"))}`'  />
 
   </ConfigFirmware>
-</Personality>
+</PersonalityTemplate>

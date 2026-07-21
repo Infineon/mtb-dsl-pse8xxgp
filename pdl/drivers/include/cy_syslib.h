@@ -79,7 +79,7 @@
 *   <tr>
 *     <td>CY_ASSERT_CLASS_1</td>
 *     <td>CY_ASSERT_L1</td>
-*     <td>A parameter that could change between different PSoC devices
+*     <td>A parameter that could change between different PSOC devices
 *         (e.g. the number of clock paths)</td>
 *   </tr>
 *   <tr>
@@ -446,6 +446,43 @@ typedef enum
 #endif
 #endif
 
+/** Define start of the function placed to the SRAM1 area by the linker */
+#ifndef CY_SECTION_SRAM1_DATANS_BEGIN
+#if defined (__ICCARM__)
+#define CY_SECTION_SRAM1_DATANS_BEGIN CY_PRAGMA(diag_suppress = Ta023) __ramfunc
+#else
+#define CY_SECTION_SRAM1_DATANS_BEGIN CY_SECTION(".cy_sram1_data_ns")
+#endif
+#endif
+
+/** Define end of the function placed to the SRAM1 area by the linker */
+#ifndef CY_SECTION_SRAM1_DATANS_END
+#if defined (__ICCARM__)
+#define CY_SECTION_SRAM1_DATANS_END CY_PRAGMA(diag_default = Ta023)
+#else
+#define CY_SECTION_SRAM1_DATANS_END
+#endif
+#endif
+
+/** Define start of the function placed to the SRAM1 area by the linker */
+#ifndef CY_SECTION_SRAM0_DATANS_BEGIN
+#if defined (__ICCARM__)
+#define CY_SECTION_SRAM0_DATANS_BEGIN CY_PRAGMA(diag_suppress = Ta023) __ramfunc
+#else
+#define CY_SECTION_SRAM0_DATANS_BEGIN CY_SECTION(".cy_sram0_data_ns")
+#endif
+#endif
+
+/** Define end of the function placed to the SRAM1 area by the linker */
+#ifndef CY_SECTION_SRAM0_DATANS_END
+#if defined (__ICCARM__)
+#define CY_SECTION_SRAM0_DATANS_END CY_PRAGMA(diag_default = Ta023)
+#else
+#define CY_SECTION_SRAM0_DATANS_END
+#endif
+#endif
+
+
 #if (CY_CPU_CORTEX_M7 || CY_CPU_CORTEX_M55)
 /** Define start of the function placed to the ITCM area by the linker */
 #ifndef CY_SECTION_ITCM_BEGIN
@@ -559,14 +596,32 @@ typedef enum
 #define CY_SECTION_BOOTSTRAP_BSS CY_SECTION(".cy_l1bss")
 #endif
 #endif
+/** Define start of the data placed in the SRAM0 area by the linker */
+#ifndef CY_SECTION_SRAM0DATA_BEGIN
+#define CY_SECTION_SRAM0DATA_BEGIN CY_SECTION(".cy_sram0_data")
+#endif
+
+/** Define end of the function placed to the ITCM area by the linker */
+#ifndef CY_SECTION_SRAM0DATA_END
+#define CY_SECTION_SRAM0DATA_END
+#endif
 
 /** \} group_syslib_section_macros */
 
 /** \cond INTERNAL */
 
 #if defined(CY_IP_MXS22SRSS)
+#if (CY_IP_MXS22SRSS_VERSION < 2)
 typedef SRSS_Type  cy_syslib_lcs_data_t;    /**< Type of block with LCS data */
+#else
+typedef SUPCTL_MAIN_LV_Type  cy_syslib_lcs_data_t;    /**< Type of block with LCS data */
 #endif
+#endif
+#if defined(CY_IP_MXS40SSRSS)
+typedef CM33_TRC_CTI_Type cy_syslib_debug_cti_t;    /**< Type of CTI block */
+#else
+typedef void              cy_syslib_debug_cti_t;    /**< Type of CTI block */
+#endif /* defined(CY_IP_MXS40SSRSS) */
 
 typedef void (* cy_israddress)(void);   /**< Type of ISR callbacks */
 #if defined (__ICCARM__)
@@ -633,7 +688,7 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 
 /**
 * Class 1 - The highest class, safety-critical functions which rely on parameters that could be
-* changed between different PSoC devices
+* changed between different PSOC devices
 */
 #define CY_ASSERT_CLASS_1           (1U)
 
@@ -677,7 +732,7 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 *  Suppresses the unused parameter warning
 *
 * \note
-* This macro is available for devices having M33SYSCPUSS IP.
+* This macro is available for PSOC Edge devices.
 *
 *******************************************************************************/
 #define CY_UNUSED_PARAM(a) (void)(a)
@@ -691,7 +746,7 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 * \param x  Array Name
 *
 * \note
-* This macro is available for devices having M33SYSCPUSS IP.
+* This macro is available for PSOC Edge devices.
 *
 *******************************************************************************/
 #define CY_ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
@@ -710,6 +765,10 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 */
 /** A basic WatchDog Timer (WDT) reset has occurred since the last power cycle. */
 #define CY_SYSLIB_RESET_HWWDT                 (0x0001U)
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+/** A basic WatchDog Timer0 (WDT) reset has occurred since the last power cycle. */
+#define CY_SYSLIB_RESET_HWWDT0                (CY_SYSLIB_RESET_HWWDT)
+#endif
 
 /** The fault logging system requested a reset from its Active logic. */
 #define CY_SYSLIB_RESET_ACT_FAULT             (0x0002U)
@@ -719,7 +778,7 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 /** The fault logging system requested a reset from its Test Controller or debugger asserted test. */
 /**
 * \note
-* This macro is available for devices having M33SYSCPUSS IP.
+* This macro is available for PSOC Edge and XMC7xxx/T2G devices.
 **/
 #define CY_SYSLIB_RESET_TC_DBGRESET           (0x0008U)
 
@@ -756,6 +815,16 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 /** Overvoltage detection on the internal core VCCD supply.  This is a high-voltage cause bit that blocks recording of other high-voltage cause bits, except RESET_PORVDDD  *XRES, or WDT. */
 #define CY_SYSLIB_RESET_OVDVCCD               (0x400000U)
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+/** A basic WatchDog Timer1 (WDT1) reset has occurred since the last power cycle. */
+#define CY_SYSLIB_RESET_HWWDT1                (0x800000U)
+/** A basic WatchDog Timer2 (WDT2) reset has occurred since the last power cycle. */
+#define CY_SYSLIB_RESET_HWWDT2                (0x1000000)
+/** A basic WatchDog Timer3 (WDT3) reset has occurred since the last power cycle. */
+#define CY_SYSLIB_RESET_HWWDT3                (0x2000000)
+/** The reset has occurred on a wakeup from Hibernate RAM power mode. */
+#define CY_SYSLIB_RESET_HIBERNATE_RAM_WAKEUP  (0x4000000)
+#endif
 
 /** PXRES triggered.  This is a high-voltage cause bit that blocks recording of other high-voltage cause bits, except RESET_PORVDDD, *XRES, or WDT. Hardware clears this bit during POR. */
 #define CY_SYSLIB_RESET_PXRES                 (0x10000000U)
@@ -769,6 +838,8 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 #define CY_SYSLIB_HIBERNATE_TOKEN             (0x1BU)
 /** Token to detect the reset has occurred on a wakeup from DS OFF power mode. */
 #define CY_SYSLIB_DEEP_SLEEP_OFF_TOKEN        (0x3BU)
+/** Token to detect the reset has occurred on a wakeup from Hibernate RAM power mode. */
+#define CY_SYSLIB_HIBERNATE_RAM_TOKEN         (0xA5U)
 
 
 
@@ -784,47 +855,47 @@ typedef double   float64_t; /**< Specific-length typedef for the basic numerical
 */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_YEAR_Pos       (57U)    /**< The position of the DIE_YEAR  field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_MINOR_Pos      (56U)    /**< The position of the DIE_MINOR field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_SORT_Pos       (48U)    /**< The position of the DIE_SORT  field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_Y_Pos          (40U)    /**< The position of the DIE_Y     field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_X_Pos          (32U)    /**< The position of the DIE_X     field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_WAFER_Pos      (24U)    /**< The position of the DIE_WAFER field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_LOT_2_Pos      (16U)    /**< The position of the DIE_LOT_2 field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_LOT_1_Pos      (8U)     /**< The position of the DIE_LOT_1 field in the silicon Unique ID */
 /**
 * \note
-* This macro is available for devices having M4CPUSS and CY_IP_M33SYSCPUSS IP.
+* This macro is available for PSOC 4/6 and PSOC Edge devices.
 **/
 #define CY_UNIQUE_ID_DIE_LOT_0_Pos      (0U)     /**< The position of the DIE_LOT_0 field in the silicon Unique ID */
 
@@ -1020,11 +1091,10 @@ void Cy_SysLib_AssertFailed(const char_t * file, uint32_t line);
 *          [ 7: 0] - DIE_LOT[0]
 *
 * \note
-* This API is available for devices having M4CPUSS, CY_IP_M33SYSCPUSS and
-* CY_IP_M55APPCPUSS IP.
+* This API is available for PSOC 4/6 and PSOC Edge devices.
 *
 * \note
-* For CY_IP_M33SYSCPUSS IP, EFUSE must be in enabled state before
+* For PSOC Edge devices, EFUSE must be in enabled state before
 * calling this API.
 *
 * \note
@@ -1071,15 +1141,15 @@ cy_en_syslib_status_t Cy_SysLib_ResetBackupDomain(void);
 *
 * The function returns the cause for the latest reset(s) that occurred in
 * the system. The reset causes include system faults and
-* device reset on a wakeup from Hibernate mode. For M33SYSCPUSS IP,
+* device reset on a wakeup from Hibernate mode. For PSOC Edge devices,
 * the reset causes also include an HFCLK error.
 * The return results are consolidated reset causes from reading RES_CAUSE,
 * RES_CAUSE2 and PWR_HIBERNATE token registers.
 *
 * \return The cause of a system reset.
-* Return values to be checked as per the CPUSS IP of the device.
+* Return values to be checked as per the device family.
 *
-* | Name in M4CPUSS IP            | Name in M33SYSCPUSS IP       | Name in M7CPUSS IP               | Value
+* | Name in PSOC 4/6              | Name in PSOC Edge            | Name in XMC7xxx/T2G              | Value
 * |-------------------------------|------------------------------|----------------------------------|-------------------
 * | CY_SYSLIB_RESET_HWWDT         | CY_SYSLIB_RESET_HWWDT        | CY_SYSLIB_RESET_HWWDT            | 0x00001    (bit0)
 * | CY_SYSLIB_RESET_ACT_FAULT     | CY_SYSLIB_RESET_ACT_FAULT    | CY_SYSLIB_RESET_ACT_FAULT        | 0x00002    (bit1)
@@ -1113,7 +1183,7 @@ cy_en_syslib_status_t Cy_SysLib_ResetBackupDomain(void);
 * |                               |                              | CY_SYSLIB_RESET_STRUCT_XRES      | 0x20000000 (bit29)
 * |                               |                              | CY_SYSLIB_RESET_PORVDDD          | 0x40000000 (bit30)
 * | CY_SYSLIB_RESET_HIB_WAKEUP    | CY_SYSLIB_RESET_HIB_WAKEUP   | CY_SYSLIB_RESET_HIB_WAKEUP       | 0x80000000 (bit31)
-* \note This not is available for devices having M33SYSCPUSS IP
+* \note This note is applicable for PSOC Edge devices:
 *       CY_SYSLIB_RESET_CSV_WCO_LOSS, CY_SYSLIB_RESET_HFCLK_LOSS and
 *       CY_SYSLIB_RESET_HFCLK_ERR causes of a system reset available only if
 *       WCO CSV present in the device.
@@ -1159,7 +1229,11 @@ CY_SECTION_INIT_CODECOPY_BEGIN
 *******************************************************************************/
 __STATIC_INLINE cy_en_syslib_status_t Cy_SysLib_GetResetStatus (void)
 {
+    #if ((defined (CY_IP_MXS22SRSS) && (SRSS_RTC_PRESENT == 0U)) || (defined (CY_IP_MXS40SSRSS) && (SRSS_BACKUP_PRESENT == 0U))) /* No RTC present */
+    return CY_SYSLIB_UNKNOWN;
+    #else
     return ((0UL == (BACKUP_RESET & BACKUP_RESET_RESET_Msk)) ? CY_SYSLIB_SUCCESS : CY_SYSLIB_INVALID_STATE);
+    #endif
 }
 
 
@@ -1304,6 +1378,49 @@ uint16_t Cy_SysLib_GetDevice(void);
 
 
 #if  defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+#if defined (CY_IP_MXS40SSRSS)
+/*******************************************************************************
+* Function Name: Cy_SysLib_DebugSessionActive
+****************************************************************************//**
+*
+* Indicates whether a debug session is active.
+*
+* \param base The pointer to the SRSS instance.
+*
+* \return true if a debug session is active, false otherwise.
+*
+*******************************************************************************/
+bool Cy_SysLib_DebugSessionActive(SRSS_Type *base);
+
+/*******************************************************************************
+* Function Name: Cy_SysLib_DebugCtiMuxConnect
+****************************************************************************//**
+*
+* Connects or disconnects a Cross Trigger Interface (CTI) input trigger to a
+* CTI output trigger through a specified channel.
+*
+* \note Refer to the device TRM for the CTI input and output trigger indexes.
+*
+* \param base
+* Pointer to the CTI instance \ref cy_syslib_debug_cti_t.
+*
+* \param inTrig
+* Index of the CTI input trigger to be connected.
+*
+* \param outTrig
+* Index of the CTI output trigger to be connected.
+*
+* \param channel
+* Channel number to use for the connection.
+*
+* \param enable
+* Set to true to connect the input and output triggers; false to disconnect.
+*
+*******************************************************************************/
+void Cy_SysLib_DebugCtiMuxConnect(cy_syslib_debug_cti_t *base, uint32_t inTrig, uint32_t outTrig, uint8_t channel, bool enable);
+#endif /* defined (CY_IP_MXS40SSRSS) */
+
+#if !defined (CY_DEVICE_ACW)
 /*******************************************************************************
 * Function Name: Cy_SysLib_GetDeviceLCS
 ****************************************************************************//**
@@ -1314,9 +1431,36 @@ uint16_t Cy_SysLib_GetDevice(void);
 *
 * \return  \ref cy_en_syslib_lcs_mode_t
 *
+* \note
+* eFuse must be in enabled state before calling this API.
+*
 *******************************************************************************/
 cy_en_syslib_lcs_mode_t Cy_SysLib_GetDeviceLCS(cy_syslib_lcs_data_t *base);
+#else
+/*******************************************************************************
+* Function Name: Cy_SysLib_GetDeviceLCS
+****************************************************************************//**
+*
+* This function returns LCS of Device. It is preserved for compatibility
+* with AROM drivers.
+*
+* \return  \ref cy_en_syslib_lcs_mode_t
+*
+*******************************************************************************/
+cy_en_syslib_lcs_mode_t Cy_SysLib_GetDeviceLCS(void);
+#endif /* defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN) */
 
+#if defined (CY_IP_MXS22SRSS)
+/*******************************************************************************
+* Function Name: Cy_Syslib_SetWarmBootEntryPoint  (DEPRECATED)
+****************************************************************************//**
+*
+* WarmBoot path not supported on PSOC Edge using MXS22SRSS
+*******************************************************************************/
+/** \cond INTERNAL */
+void Cy_Syslib_SetWarmBootEntryPoint(uint32_t *entryPoint, bool enable);
+/** \endcond */
+#else
 /*******************************************************************************
 * Function Name: Cy_Syslib_SetWarmBootEntryPoint
 ****************************************************************************//**
@@ -1335,6 +1479,7 @@ cy_en_syslib_lcs_mode_t Cy_SysLib_GetDeviceLCS(cy_syslib_lcs_data_t *base);
 *
 *******************************************************************************/
 void Cy_Syslib_SetWarmBootEntryPoint(uint32_t *entryPoint, bool enable);
+#endif
 
 /*******************************************************************************
 * Function Name: Cy_SysLib_IsDSRAMWarmBootEntry

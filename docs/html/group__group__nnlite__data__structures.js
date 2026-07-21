@@ -1,5 +1,6 @@
 var group__group__nnlite__data__structures =
 [
+    [ "cy_nnlite_float_bits_t", "group__group__nnlite__data__structures.html#unioncy__nnlite__float__bits__t", null ],
     [ "cy_nnlite_context_t", "group__group__nnlite__data__structures.html#structcy__nnlite__context__t", [
       [ "nnliteState", "group__group__nnlite__data__structures.html#a0b648c88e21579cf17c56af130b23466", null ],
       [ "opStatus", "group__group__nnlite__data__structures.html#a308bce0effca2d03b2efea9f7c099118", null ],

@@ -51,14 +51,14 @@
 * the dedicated peripherals. Multiple groups of one-to-one trigger lines
 * significantly improve the whole triggering interconnect system flexibility.
 *
-* The trigger architecture of the PSoC device is explained in the technical reference
+* The trigger architecture of the PSOC device is explained in the technical reference
 * manual (TRM). Refer to the TRM to better understand the trigger multiplexer routing
 * architecture available.
 *
 * \section group_trigmux_section_Configuration_Considerations Configuration Considerations
 *
 *
-* To route a trigger signal from one peripheral in the PSoC device to another, the user can configure
+* To route a trigger signal from one peripheral in the PSOC device to another, the user can configure
 * either a trigger multiplexer using \ref Cy_TrigMux_Connect or a one-to-one trigger line
 * using \ref Cy_TrigMux_Select. Only one function call is required to connect one peripheral
 * to another (unlike for PERI_ver1).

@@ -108,8 +108,13 @@ extern mtb_srf_pool_t cy_pdl_srf_default_pool;
 * \{
 */
 #if !defined(CY_PDL_ENABLE_SECURE_AWARE)
-/** PDL-wide Secure Aware Driver enablement.  Set to 0 to disable all Secure Aware Drivers */
-#define CY_PDL_ENABLE_SECURE_AWARE (1)
+/** PDL-wide Secure Aware Driver enablement.  Set to 0 to disable all Secure Aware Drivers.
+ *  Defaults to enabled when COMPONENT_MW_MTB_SRF is present in the build. */
+    #if defined(COMPONENT_MW_MTB_SRF)
+        #define CY_PDL_ENABLE_SECURE_AWARE (1)
+    #else
+        #define CY_PDL_ENABLE_SECURE_AWARE (0)
+    #endif
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE) */
 
 /** SRF Integration identifier */

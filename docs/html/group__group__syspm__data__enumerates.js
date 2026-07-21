@@ -265,46 +265,6 @@ var group__group__syspm__data__enumerates =
       [ "CY_SYSPM_MISCLDO_VCCACT", "group__group__syspm__data__enumerates.html#ggaa6cefd648d76445ce14d47427b63582daf71e63b5a1696714128a3bacb2ff812c", null ],
       [ "CY_SYSPM_MISCLDO_VOUT", "group__group__syspm__data__enumerates.html#ggaa6cefd648d76445ce14d47427b63582dacf0cce5c7b5e196d2696b80fe026cded", null ]
     ] ],
-    [ "cy_en_syspm_sdr_t", "group__group__syspm__data__enumerates.html#gaadd068c13e4c6a2f850492c542b2492b", [
-      [ "CY_SYSPM_SDR_0", "group__group__syspm__data__enumerates.html#ggaadd068c13e4c6a2f850492c542b2492ba1e07a3842e5937a56cceafec5acfe3e8", null ],
-      [ "CY_SYSPM_SDR_1", "group__group__syspm__data__enumerates.html#ggaadd068c13e4c6a2f850492c542b2492bace726b70fd386dd97a0dd6eeda32484c", null ]
-    ] ],
-    [ "cy_en_syspm_sdr_voltage_t", "group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1", [
-      [ "CY_SYSPM_SDR_VOLTAGE_0_850V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a2f00780abdc8877253f6eed77c242f44", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_0_875V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a1a265f00b45f6559b6e740dc6767a847", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_0_900V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1adfbfdab4fdf9944d2c026edc122226f1", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_0_925V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ae4ca21332208b00acd3e401899b36c70", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_0_950V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ab0a96a90c2d5a8032c5a3bafbeaeb71c", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_0_975V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ae8e10f9c103d05470f0ab7006d2accf7", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_000V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a69d0f2840021fc8b14e11bd9c5810361", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_025V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a29ee67f00ce0407a5655680e73894707", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_050V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1ae17e435a3f69085f5185a5753c050875", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_075V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1acd5bf833dbfbd0e607a6f670ccf15e14", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_100V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1adf7c5f62acd0e9c659bb109651403556", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_125V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a106368774d779137b49e37a4699fc53b", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_150V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a6824a5d754a88097138e703cf5cb0c94", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_175V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a29d1cb9fc21e60e99d1c7637480d4ebd", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_200V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a5b81831090ce10548a05f67d53a65a7a", null ],
-      [ "CY_SYSPM_SDR_VOLTAGE_1_225V", "group__group__syspm__data__enumerates.html#gga5b3fa93779730eb75af8b267923d68c1a065a94ead0c12018e2b830813013b8eb", null ]
-    ] ],
-    [ "cy_en_syspm_hvldo_voltage_t", "group__group__syspm__data__enumerates.html#ga64b1d9370a07008a83b14bcbee4f731c", [
-      [ "CY_SYSPM_HVLDO_VOLTAGE_1_800V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca24ad777ed0e9e7ba1bf77061a16e5aa2", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_1_900V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cabf9ea47680e3eb17f0577cb83680815b", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_000V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731caf0e8060e9058c51ece66c4fcddba5c69", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_100V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca48490d6966bfea95acd9249ef952bb61", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_200V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca65919ad743e9a8581d6057ab00032599", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_300V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cad10d7a36512dedcbf695d64af757936f", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_400V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca15941900ad1187039f576b2bb1f096e3", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_500V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731caf65f031de63faadbe27567b1b1aab30d", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_600V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca4ab8b6a5c0558f666b77bc0cd375dff8", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_700V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca218dacec8d394ee703b6ed9831207dbb", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_800V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cabec0f2907f0a058e8993e03fb9f5a067", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_2_900V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cab1a6f4628888ba29959ca00b9d7949eb", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_3_000V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca516b23dae4cf1bc91742aaa8dcb60b23", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_3_100V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731cacee7fb8f904de100a98e492cd98bee04", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_3_200V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca4c6eb4889f33adca41bc0f591feedad3", null ],
-      [ "CY_SYSPM_HVLDO_VOLTAGE_3_300V", "group__group__syspm__data__enumerates.html#gga64b1d9370a07008a83b14bcbee4f731ca1336733b87496c94101ed74c788ee8ea", null ]
-    ] ],
     [ "cy_en_syspm_sram0_macro_t", "group__group__syspm__data__enumerates.html#ga7c6db751c1fb0b15f63af6b52811e418", [
       [ "CY_SYSPM_SRAM0_MACRO_0", "group__group__syspm__data__enumerates.html#gga7c6db751c1fb0b15f63af6b52811e418ad77cab540a00473dc249577f457b400a", null ],
       [ "CY_SYSPM_SRAM0_MACRO_1", "group__group__syspm__data__enumerates.html#gga7c6db751c1fb0b15f63af6b52811e418a21b8b44b725273c6b068cc9130631590", null ],

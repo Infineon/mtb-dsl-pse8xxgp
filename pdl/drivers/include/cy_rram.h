@@ -30,15 +30,18 @@
 * \defgroup group_rram               RRAM         (Resistive Random Access Memory)
 * \{
 *
-* Resistive Random Access Memory (RRAM) is a type of non-volatile memory which is going
-* to replace FLASH and OTP memory in MXS22 platform. RRAM is configured as NVM(512KB) + Extra(16KB) region.
-* NVM memory region is further divided into MAIN (code), Em_EEPROM, SupMEM (Supervisory), and PROTECTED sub regions.
-* The 16KB is RRAM extra area and is partitioned into lower 14KB as OTP region and the highest
-* 2KB as configuration space region.
-* OTP region is further divided into PROTECTED_OTP (including BootRow and UDS), General OTP data and
-* BISR SRAM repair OTP regions.
+* Resistive Random Access Memory (RRAM) is a type of non-volatile memory used on MXS22
+* platform devices in place of FLASH and OTP memory. RRAM is organized as an NVM region and
+* an Extra area. The NVM region is further divided into MAIN (code), Em_EEPROM, SupMEM
+* (Supervisory), and PROTECTED sub regions. The Extra area is partitioned into an OTP region
+* and a configuration space region.
+* The OTP region is further divided into PROTECTED_OTP (including BootRow and UDS), General OTP
+* data, and BISR SRAM repair OTP regions.
+* The exact sizes of the NVM and Extra regions, and of their sub regions, are device-dependent;
+* refer to the device datasheet and the technical reference manual (TRM) for the values applicable
+* to a particular device.
 *
-* RRAM driver provides API's to Read/Write from/to RRAM memory,
+* RRAM driver provides APIs to Read/Write from/to RRAM memory,
 * Enable/Disable RRAM sleep mode, Write protection.
 * The functions and other declarations used in this driver are in cy_rram.h
 * You can include cy_pdl.h to get access to all functions
@@ -57,9 +60,12 @@
 * \defgroup group_rram_enums Enums
 * \defgroup group_rram_functions Functions
 *
-* \note In order to acquire PC_LOCK from CM33 the bootrow(0x50100000) value should be updated with
+* \note To allow CM33 to acquire PC_LOCK, the BootRow at address 0x50100000 must be
+* programmed with the following 16-byte sequence (offset 0 first):
 *  0xdb, 0x00, 0x00, 0x00, 0x70, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-*  where 0xdb should be written at 0th offset. Bootrow can be updated using \ref Cy_RRAM_OtpReadByteArray() API.
+* The byte at offset 0 (0xdb) enables the PC_LOCK acquire policy for CM33; refer to the BootRow
+* specification in the device TRM for the complete field encoding of the remaining bytes.
+* The BootRow can be programmed using \ref Cy_RRAM_OtpWriteByteArray().
 */
 
 #if !defined(CY_RRAM_H)
@@ -75,9 +81,6 @@
 extern "C" {
 #endif
 
-CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 6, \
-'Value extracted from _VAL2FLD macro will not exceed enum range.')
-
 /*******************************************************************************
 *       Function Constants
 *******************************************************************************/
@@ -91,7 +94,7 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 6, \
 #define CY_RRAM_DRV_VERSION_MAJOR    1
 
 /** Driver minor version */
-#define CY_RRAM_DRV_VERSION_MINOR    0
+#define CY_RRAM_DRV_VERSION_MINOR    10
 
 /** Driver ID */
 #define CY_RRAM_ID CY_PDL_DRV_ID     (0x4DU)
@@ -263,7 +266,7 @@ typedef enum
 {
     CY_RRAM_UDS_UNLOCK    = 0x00UL,      /**< Not locked, Access to UDS_KEY */
     CY_RRAM_UDS_LOCK      = 0x0FUL       /**< Locked, No access to UDS_KEY */
-} cy_en_rram_uds_lock_t;
+} cy_en_rram_uds_lock_t;  /**< UDS = Unique Device Secret key stored in OTP region */
 
 /**
 * RRAM write protection lock for NVM region
@@ -342,10 +345,10 @@ typedef enum
 */
 typedef enum
 {
-    CY_RRAM_VMODE_UNDEFINED  = 0x0UL,     /**<Undefined voltage/frequency mode for operations.*/
-    CY_RRAM_VMODE_ULP        = 0x1UL,     /**<ULP voltage/frequency mode for operations.*/
-    CY_RRAM_VMODE_LP         = 0x2UL,     /**<LP voltage/frequency mode for operations.*/
-    CY_RRAM_VMODE_HP         = 0x3UL      /**<HP voltage/frequency mode for operations.*/
+    CY_RRAM_VMODE_UNDEFINED  = 0x0UL,     /**< Undefined voltage/frequency mode for operations.*/
+    CY_RRAM_VMODE_ULP        = 0x1UL,     /**< Ultra Low Power (ULP) voltage/frequency mode for operations.*/
+    CY_RRAM_VMODE_LP         = 0x2UL,     /**< Low Power (LP) voltage/frequency mode for operations.*/
+    CY_RRAM_VMODE_HP         = 0x3UL      /**< High Performance (HP) voltage/frequency mode for operations.*/
 } cy_en_rram_vmode_t;
 
 /**
@@ -528,7 +531,7 @@ cy_en_rram_status_t Cy_RRAM_OtpReadWord(RRAMC_Type * base, uint32_t addr, uint32
 *
 * \note OTP region is One Time Programmable. API does read-modify(OR)-write operation.
 *******************************************************************************/
-cy_en_rram_status_t Cy_RRAM_OtpWriteBlock(RRAMC_Type * base, uint32_t addr, uint8_t *data);
+cy_en_rram_status_t Cy_RRAM_OtpWriteBlock(RRAMC_Type * base, uint32_t addr, const uint8_t *data);
 
 
 /*******************************************************************************
@@ -654,7 +657,7 @@ cy_en_rram_status_t Cy_RRAM_NonBlockingNvmWriteByteArray(RRAMC_Type * base, uint
 * \snippet rram/snippet/main.c snippet_Cy_RRAM_NvmWriteBlock
 *
 *******************************************************************************/
-cy_en_rram_status_t Cy_RRAM_NvmWriteBlock(RRAMC_Type * base, uint32_t addr, uint8_t *data);
+cy_en_rram_status_t Cy_RRAM_NvmWriteBlock(RRAMC_Type * base, uint32_t addr, const uint8_t *data);
 
 
 /*******************************************************************************
@@ -875,6 +878,7 @@ __STATIC_INLINE uint32_t Cy_RRAM_GetStatus(RRAMC_Type * base)
 *******************************************************************************/
 __STATIC_INLINE bool Cy_RRAM_IsBusy(RRAMC_Type * base)
 {
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to bool.');
     return (bool)_FLD2VAL(RRAMC_RRAM_SFR_NVM_STATUS_BUSY, RRAM_NVM_STATUS(base));
 }
 
@@ -900,6 +904,7 @@ __STATIC_INLINE cy_en_rram_hresp_t Cy_RRAM_GetAHBError(RRAMC_Type * base)
 {
     CY_ASSERT_L1(NULL != base);
 
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to cy_en_rram_hresp_t enum.');
     return (cy_en_rram_hresp_t)_FLD2VAL(RRAMC_RRAMC_AHB_HRESP_HRESP, RRAM_AHB_HRESP(base));
 }
 
@@ -970,6 +975,7 @@ __STATIC_INLINE cy_en_rram_sleep_t Cy_RRAM_GetSleepStatus(RRAMC_Type * base)
 {
     CY_ASSERT_L1(NULL != base);
 
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to cy_en_rram_sleep_t enum.');
     return (cy_en_rram_sleep_t)_FLD2VAL(RRAMC_RRAM_SFR_NVM_STATUS_SLEEP, RRAM_NVM_STATUS(base));
 }
 
@@ -1068,6 +1074,7 @@ __STATIC_INLINE cy_en_rram_wp_lock_t Cy_RRAM_GetWPLockState(RRAMC_Type * base)
 {
     CY_ASSERT_L1(NULL != base);
 
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to cy_en_rram_wp_lock_t enum.');
     return (cy_en_rram_wp_lock_t)_FLD2VAL(RRAMC_RRAM_SFR_NVM_CONF1_WPLCK, RRAM_NVM_CONF1(base));
 }
 
@@ -1093,9 +1100,14 @@ __STATIC_INLINE void Cy_RRAM_SetVoltageMode(RRAMC_Type * base, cy_en_rram_vmode_
 {
     CY_ASSERT_L1(NULL != base);
 
+    uint32_t interruptState = Cy_SysLib_EnterCriticalSection();
+
     /* Sets voltage/frequency mode */
     uint32_t temp = RRAM_NVM_VMODE(base) & ~ RRAMC_RRAM_SFR_NVM_VMODE_VMODE_Msk;
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'cy_en_rram_vmode_t enum value fits in the target bit-field.');
     RRAM_NVM_VMODE(base) = temp | _VAL2FLD(RRAMC_RRAM_SFR_NVM_VMODE_VMODE, vmode);
+
+    Cy_SysLib_ExitCriticalSection(interruptState);
 }
 
 
@@ -1121,6 +1133,7 @@ __STATIC_INLINE cy_en_rram_vmode_t Cy_RRAM_GetVoltageMode(RRAMC_Type * base)
     CY_ASSERT_L1(NULL != base);
 
     /* Get voltage/frequency mode */
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to cy_en_rram_vmode_t enum.');
     return (cy_en_rram_vmode_t)_FLD2VAL(RRAMC_RRAM_SFR_NVM_VMODE_VMODE, RRAM_NVM_VMODE(base));
 }
 
@@ -1145,9 +1158,14 @@ __STATIC_INLINE void Cy_RRAM_SetTemperature(RRAMC_Type * base, cy_en_rram_temper
 {
     CY_ASSERT_L1(NULL != base);
 
+    uint32_t interruptState = Cy_SysLib_EnterCriticalSection();
+
     /* Sets junction temperature */
     uint32_t temp = RRAM_NVM_PROG(base) & ~ RRAMC_RRAM_SFR_NVM_PROG_TEMP_Msk;
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'cy_en_rram_temperature_t enum value fits in the target bit-field.');
     RRAM_NVM_PROG(base) = temp | _VAL2FLD(RRAMC_RRAM_SFR_NVM_PROG_TEMP, temperature);
+
+    Cy_SysLib_ExitCriticalSection(interruptState);
 }
 
 /*******************************************************************************
@@ -1172,6 +1190,7 @@ __STATIC_INLINE cy_en_rram_temperature_t Cy_RRAM_GetTemperature(RRAMC_Type * bas
     CY_ASSERT_L1(NULL != base);
 
     /* Get junction temperature */
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to cy_en_rram_temperature_t enum.');
     return (cy_en_rram_temperature_t)_FLD2VAL(RRAMC_RRAM_SFR_NVM_PROG_TEMP, RRAM_NVM_PROG(base));
 }
 
@@ -1256,7 +1275,9 @@ __STATIC_INLINE void Cy_RRAM_SetProtLock(RRAMC_Type * base)
 {
     CY_ASSERT_L1(NULL != base);
 
+    uint32_t interruptState = Cy_SysLib_EnterCriticalSection();
     RRAM_PROTECTED_LOCKABLE_LOCK(base) |= RRAMC_RRAMC_PROTECTED_LOCKABLE_LOCK_LOCK_Msk;
+    Cy_SysLib_ExitCriticalSection(interruptState);
 }
 
 
@@ -1284,6 +1305,7 @@ __STATIC_INLINE cy_en_rram_protected_lock_t Cy_RRAM_GetProtLockState(RRAMC_Type 
 {
     CY_ASSERT_L1(NULL != base);
 
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to cy_en_rram_protected_lock_t enum.');
     return (cy_en_rram_protected_lock_t)_FLD2VAL(RRAMC_RRAMC_PROTECTED_LOCKABLE_LOCK_LOCK, RRAM_PROTECTED_LOCKABLE_LOCK(base));
 }
 
@@ -1310,7 +1332,9 @@ __STATIC_INLINE void Cy_RRAM_SetUDSLock(RRAMC_Type * base)
 {
     CY_ASSERT_L1(NULL != base);
 
+    uint32_t interruptState = Cy_SysLib_EnterCriticalSection();
     RRAM_UDS_CTL(base) |= RRAMC_RRAMC_UDS_CTL_LOCK_Msk;
+    Cy_SysLib_ExitCriticalSection(interruptState);
 }
 
 
@@ -1339,6 +1363,7 @@ __STATIC_INLINE cy_en_rram_uds_lock_t Cy_RRAM_GetUDSLockState(RRAMC_Type * base)
 {
     CY_ASSERT_L1(NULL != base);
 
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8', 'Intentional typecast of bit-field value to cy_en_rram_uds_lock_t enum.');
     return (cy_en_rram_uds_lock_t)_FLD2VAL(RRAMC_RRAMC_UDS_CTL_LOCK, RRAM_UDS_CTL(base));
 }
 
@@ -1369,6 +1394,8 @@ __STATIC_INLINE void Cy_RRAM_SetUDSConfig(RRAMC_Type * base, bool config)
 {
     CY_ASSERT_L1(NULL != base);
 
+    uint32_t interruptState = Cy_SysLib_EnterCriticalSection();
+
     if(config)
     {
         RRAM_UDS_CTL(base) |= RRAMC_RRAMC_UDS_CTL_CONFIG_Msk;
@@ -1377,6 +1404,8 @@ __STATIC_INLINE void Cy_RRAM_SetUDSConfig(RRAMC_Type * base, bool config)
     {
         RRAM_UDS_CTL(base) &= ~RRAMC_RRAMC_UDS_CTL_CONFIG_Msk;
     }
+
+    Cy_SysLib_ExitCriticalSection(interruptState);
 }
 
 
@@ -1402,15 +1431,13 @@ __STATIC_INLINE void Cy_RRAM_ForceRelPCLock(RRAMC_Type * base)
 
 /** \} group_rram_functions */
 
-    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8')
-
 #if defined(__cplusplus)
 }
 #endif
 
 #endif /* CY_IP_MXS22RRAMC */
 
-#endif /* CY_rram_H */
+#endif /* CY_RRAM_H */
 
 /** \} group_rram */
 

@@ -873,6 +873,7 @@ cy_en_sd_host_status_t Cy_SD_Host_InitCard(SDHC_Type *base,
             *config->cardType = context->cardType;
             *config->cardCapacity = context->cardCapacity;
             context->busWidth = config->busWidth;
+            context->lowVoltageSignaling = config->lowVoltageSignaling;
         }
         else
         {
@@ -5197,7 +5198,7 @@ cy_en_sd_host_status_t Cy_SD_Host_InitDataTransfer(SDHC_Type *base,
 ****************************************************************************//**
 *
 *  Changes the logic level on the sd_io_volt_sel line. It assumes that
-*  this line is used to control a regulator connected to the VDDIO of the PSoC.
+*  this line is used to control a regulator connected to the VDDIO of the PSOC.
 *  This regulator allows for switching between the 3.3V and 1.8V signaling.
 *
 * \note The dedicated io_volt_sel pin is used to change the regulator supplying
@@ -5392,9 +5393,6 @@ cy_en_syspm_status_t Cy_SD_Host_DeepSleepCallback(cy_stc_syspm_callback_params_t
 {
     cy_en_syspm_status_t ret = CY_SYSPM_FAIL;
     SDHC_Type *locBase = (SDHC_Type *) (callbackParams->base);
-#if (defined SDHC_RETENTION_PRESENT && (SDHC_RETENTION_PRESENT == 0)) || (defined SDHC1_RETENTION_PRESENT && (SDHC1_RETENTION_PRESENT == 0))
-    cy_stc_sd_host_context_t *locContext = (cy_stc_sd_host_context_t *) callbackParams->context;
-#endif /* (defined SDHC_RETENTION_PRESENT && (SDHC_RETENTION_PRESENT == 0)) */
     switch(mode)
     {
         case CY_SYSPM_CHECK_READY:
@@ -5456,40 +5454,28 @@ cy_en_syspm_status_t Cy_SD_Host_DeepSleepCallback(cy_stc_syspm_callback_params_t
 #endif
            /* Enable the SDHC block */
             Cy_SD_Host_Enable(locBase);
-            cy_stc_sd_host_init_config_t local_config;
-            local_config.emmc             = false;
-            local_config.dmaType          = locContext->dmaType;
-            local_config.enableLedControl = false;
 
-            cy_en_sd_host_status_t result;
-            result = Cy_SD_Host_Init(locBase, &local_config, locContext);
-            if(result == CY_SD_HOST_SUCCESS)
-            {
-                ret = CY_SYSPM_SUCCESS;
-            }
-            /* valid card was present before DS, re init card */
-            if (locContext->RCA != 0U)
-            {
-                cy_stc_sd_host_sd_card_config_t cardConfig;
-                cardConfig.rca = &locContext->RCA;
-                cardConfig.cardType = &locContext->cardType;
-                cardConfig.cardCapacity = &locContext->cardCapacity;
-                cardConfig.busWidth = locContext->busWidth;
-                result = Cy_SD_Host_InitCard(locBase, &cardConfig, locContext);
-                if(result == CY_SD_HOST_SUCCESS)
-                {
-                  ret = CY_SYSPM_SUCCESS;
-                }
-            }
-            else
-            {
-                SDHC_CORE_CLK_CTRL_R(locBase) = clk_ctl_r;
-                Cy_SD_Host_SetNormalInterruptMask(locBase, normal_mask);
-                Cy_SD_Host_SetErrorInterruptMask(locBase, error_mask);
-                SDHC_CORE_HOST_CTRL1_R(locBase) = ctrl1;
-                SDHC_CORE_HOST_CTRL2_R(locBase) = ctrl2;
-                SDHC_CORE_GP_OUT_R(locBase) = gp_out;
-            }
+            /* Restore saved host registers (no card re-enumeration needed
+             * since card power was maintained during deep sleep) */
+            SDHC_CORE_CLK_CTRL_R(locBase) = clk_ctl_r;
+            Cy_SD_Host_SetNormalInterruptMask(locBase, normal_mask);
+            Cy_SD_Host_SetErrorInterruptMask(locBase, error_mask);
+            SDHC_CORE_HOST_CTRL1_R(locBase) = ctrl1;
+            SDHC_CORE_HOST_CTRL2_R(locBase) = ctrl2;
+            SDHC_CORE_GP_OUT_R(locBase) = gp_out;
+
+            /* Restore registers not saved but lost during deep sleep */
+            SDHC_CORE_TOUT_CTRL_R(locBase) = _CLR_SET_FLD8U(SDHC_CORE_TOUT_CTRL_R(locBase),
+                                                SDHC_CORE_TOUT_CTRL_R_TOUT_CNT,
+                                                CY_SD_HOST_MAX_TIMEOUT);
+            Cy_SD_Host_SetNormalInterruptEnable(locBase, CY_SD_HOST_NORMAL_INT_MSK);
+            Cy_SD_Host_SetErrorInterruptEnable(locBase, CY_SD_HOST_ERROR_INT_MSK);
+
+            /* Re-enable the SD clock with the previous divider */
+            Cy_SD_Host_EnableSdClk(locBase);
+
+            /* Wait for clock to stabilize */
+            Cy_SysLib_DelayUs(CY_SD_HOST_CLK_RAMP_UP_TIME_US_WAKEUP);
 
 #if (defined SDHC1_RETENTION_PRESENT && (SDHC1_RETENTION_PRESENT == 0))
         }

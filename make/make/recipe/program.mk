@@ -97,4 +97,21 @@ _MTB_RECIPE__OPENOCD_DEBUG_ARGS=$(_MTB_RECIPE__OPENOCD_SCRIPTS) $(_MTB_RECIPE__O
 
 _MTB_RECIPE__JLINK_DEBUG_ARGS=-if $(_MTB_RECIPE__PROBE_INTERFACE) -device $(_MTB_RECIPE__JLINK_DEVICE_CFG) -endian little -speed auto -port 2331 -swoport 2332 -telnetport 2333 -vd -ir -localhostonly 1 -singlerun -strict -timeout 0 -nogui
 
+CY_QSPI_FLM_DIR_OUTPUT?=$(CY_QSPI_FLM_DIR)
+
+# Advanced KitProg3 Programming extra arguments
+# Use CY_DBG_CERTIFICATE_PATH if user-provided; otherwise default based on project structure.
+_MTB_RECIPE__DBG_CERT_FOR_ADVANCED_PROGRAM:=$(CY_DBG_CERTIFICATE_PATH)
+ifeq ($(_MTB_RECIPE__DBG_CERT_FOR_ADVANCED_PROGRAM),)
+_MTB_RECIPE__DBG_CERT_FOR_ADVANCED_PROGRAM:=./packets/debug_token.bin
+ifneq (,$(_MTB_RECIPE__IS_MULTI_CORE_APPLICATION))
+_MTB_RECIPE__DBG_CERT_FOR_ADVANCED_PROGRAM:=../packets/debug_token.bin
+endif
+endif
+_MTB_RECIPE__ADVANCED_PROGRAM_EXTRA_ARGS:=--debug-cert="$(call mtb__path_normalize,$(_MTB_RECIPE__DBG_CERT_FOR_ADVANCED_PROGRAM))" --qspi-flm "$(call mtb__path_normalize,$(patsubst %/,%,$(CY_QSPI_FLM_DIR_OUTPUT))/PSE84_SMIF.FLM)"
+
+################################################################################
+# Include device specific programming makefile
+################################################################################
+
 include $(MTB_TOOLS__RECIPE_DIR)/make/recipe/program_pse8xxgp.mk

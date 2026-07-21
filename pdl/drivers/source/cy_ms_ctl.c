@@ -174,6 +174,22 @@ cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgResp(en_ms_ctl_master_sc_acg_t busMa
             sec_mask  = MS_CTL_DMAC1_MSC_ACG_CTL_SEC_RESP_VX_Msk;
             sec_pos   = MS_CTL_DMAC1_MSC_ACG_CTL_SEC_RESP_VX_Pos;
             break;
+    #if defined (CY_IP_M33SYSCPUSS_VERSION) && (CY_IP_M33SYSCPUSS_VERSION >= 5)
+        case NNLITE_MS0_MSC:
+            reg = (uint32_t *)&MS_CTL_NNLITE_MS0_MSC_ACG_CTL_VX;
+            gate_mask = MS_CTL_NNLITE_MS0_MSC_ACG_CTL_CFG_GATE_RESP_VX_Msk;
+            gate_pos  = MS_CTL_NNLITE_MS0_MSC_ACG_CTL_CFG_GATE_RESP_VX_Pos;
+            sec_mask  = MS_CTL_NNLITE_MS0_MSC_ACG_CTL_SEC_RESP_VX_Msk;
+            sec_pos   = MS_CTL_NNLITE_MS0_MSC_ACG_CTL_SEC_RESP_VX_Pos;
+            break;
+        case NNLITE_MS1_MSC:
+            reg = (uint32_t *)&MS_CTL_NNLITE_MS1_MSC_ACG_CTL_VX;
+            gate_mask = MS_CTL_NNLITE_MS1_MSC_ACG_CTL_CFG_GATE_RESP_VX_Msk;
+            gate_pos  = MS_CTL_NNLITE_MS1_MSC_ACG_CTL_CFG_GATE_RESP_VX_Pos;
+            sec_mask  = MS_CTL_NNLITE_MS1_MSC_ACG_CTL_SEC_RESP_VX_Msk;
+            sec_pos   = MS_CTL_NNLITE_MS1_MSC_ACG_CTL_SEC_RESP_VX_Pos;
+            break;
+    #endif
         default:
             return CY_MS_CTL_BAD_PARAM;
     }
@@ -182,6 +198,20 @@ cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgResp(en_ms_ctl_master_sc_acg_t busMa
 
     return CY_MS_CTL_SUCCESS;
 }
+
+#if ((CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
+
+uint32_t Cy_Ms_Ctl_GetActivePC_S(en_ms_ctl_master_t busMaster)
+{
+    return ((uint32_t)_FLD2VAL(MS_PC_PC_READ_MIR_PC, MS_CTL_PC_READ_MIRROR_VX_S(busMaster)));
+}
+
+uint32_t Cy_Ms_Ctl_GetSavedPC_S(en_ms_ctl_master_t busMaster)
+{
+    return ((uint32_t)_FLD2VAL(MS_PC_PC_READ_MIR_PC_SAVED, MS_CTL_PC_READ_MIRROR_VX_S(busMaster)));
+}
+
+#endif // ((CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
 
 
 /*******************************************************************************
@@ -433,6 +463,59 @@ cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgRespV1(en_ms_ctl_master_sc_acg_v1_t 
             sec_mask  = MS_CTL_EXP_MS3_MSC_ACG_CTL_SEC_RESP_V1_Msk;
             sec_pos   = MS_CTL_EXP_MS3_MSC_ACG_CTL_SEC_RESP_V1_Pos;
             break;
+    #if defined (CY_IP_M55APPCPUSS_VERSION) && (CY_IP_M55APPCPUSS_VERSION >= 1)
+    #if defined (CY_IP_M55APPCPUSS_VERSION_MINOR) && (CY_IP_M55APPCPUSS_VERSION_MINOR >= 2)
+        case APP_AXI_MS4_MSC:
+             reg = (uint32_t *)&MS_CTL_AXI_MS4_MSC_ACG_CTL_V1;
+             gate_mask = MS_CTL_AXI_MS4_MSC_ACG_CTL_CFG_GATE_RESP_V1_Msk;
+             gate_pos  = MS_CTL_AXI_MS4_MSC_ACG_CTL_CFG_GATE_RESP_V1_Pos;
+             sec_mask  = MS_CTL_AXI_MS4_MSC_ACG_CTL_SEC_RESP_V1_Msk;
+             sec_pos   = MS_CTL_AXI_MS4_MSC_ACG_CTL_SEC_RESP_V1_Pos;
+             break;
+        case APP_AXI_MS5_MSC:
+             reg = (uint32_t *)&MS_CTL_AXI_MS5_MSC_ACG_CTL_V1;
+             gate_mask = MS_CTL_AXI_MS5_MSC_ACG_CTL_CFG_GATE_RESP_V1_Msk;
+             gate_pos  = MS_CTL_AXI_MS5_MSC_ACG_CTL_CFG_GATE_RESP_V1_Pos;
+             sec_mask  = MS_CTL_AXI_MS5_MSC_ACG_CTL_SEC_RESP_V1_Msk;
+             sec_pos   = MS_CTL_AXI_MS5_MSC_ACG_CTL_SEC_RESP_V1_Pos;
+             break;
+        case APP_AXI_MS6_MSC:
+             reg = (uint32_t *)&MS_CTL_AXI_MS6_MSC_ACG_CTL_V1;
+             gate_mask = MS_CTL_AXI_MS6_MSC_ACG_CTL_CFG_GATE_RESP_V1_Msk;
+             gate_pos  = MS_CTL_AXI_MS6_MSC_ACG_CTL_CFG_GATE_RESP_V1_Pos;
+             sec_mask  = MS_CTL_AXI_MS6_MSC_ACG_CTL_SEC_RESP_V1_Msk;
+             sec_pos   = MS_CTL_AXI_MS6_MSC_ACG_CTL_SEC_RESP_V1_Pos;
+             break;
+        case APP_AXI_MS7_MSC:
+             reg = (uint32_t *)&MS_CTL_AXI_MS7_MSC_ACG_CTL_V1;
+             gate_mask = MS_CTL_AXI_MS7_MSC_ACG_CTL_CFG_GATE_RESP_V1_Msk;
+             gate_pos  = MS_CTL_AXI_MS7_MSC_ACG_CTL_CFG_GATE_RESP_V1_Pos;
+             sec_mask  = MS_CTL_AXI_MS7_MSC_ACG_CTL_SEC_RESP_V1_Msk;
+             sec_pos   = MS_CTL_AXI_MS7_MSC_ACG_CTL_SEC_RESP_V1_Pos;
+             break;
+        case APP_AXI_MS8_MSC:
+             reg = (uint32_t *)&MS_CTL_AXI_MS8_MSC_ACG_CTL_V1;
+             gate_mask = MS_CTL_AXI_MS8_MSC_ACG_CTL_CFG_GATE_RESP_V1_Msk;
+             gate_pos  = MS_CTL_AXI_MS8_MSC_ACG_CTL_CFG_GATE_RESP_V1_Pos;
+             sec_mask  = MS_CTL_AXI_MS8_MSC_ACG_CTL_SEC_RESP_V1_Msk;
+             sec_pos   = MS_CTL_AXI_MS8_MSC_ACG_CTL_SEC_RESP_V1_Pos;
+             break;
+        case APP_AXI_MS9_MSC:
+             reg = (uint32_t *)&MS_CTL_AXI_MS9_MSC_ACG_CTL_V1;
+             gate_mask = MS_CTL_AXI_MS9_MSC_ACG_CTL_CFG_GATE_RESP_V1_Msk;
+             gate_pos  = MS_CTL_AXI_MS9_MSC_ACG_CTL_CFG_GATE_RESP_V1_Pos;
+             sec_mask  = MS_CTL_AXI_MS9_MSC_ACG_CTL_SEC_RESP_V1_Msk;
+             sec_pos   = MS_CTL_AXI_MS9_MSC_ACG_CTL_SEC_RESP_V1_Pos;
+             break;
+        case APP_AXI_MS10_MSC:
+             reg = (uint32_t *)&MS_CTL_AXI_MS10_MSC_ACG_CTL_V1;
+             gate_mask = MS_CTL_AXI_MS10_MSC_ACG_CTL_CFG_GATE_RESP_V1_Msk;
+             gate_pos  = MS_CTL_AXI_MS10_MSC_ACG_CTL_CFG_GATE_RESP_V1_Pos;
+             sec_mask  = MS_CTL_AXI_MS10_MSC_ACG_CTL_SEC_RESP_V1_Msk;
+             sec_pos   = MS_CTL_AXI_MS10_MSC_ACG_CTL_SEC_RESP_V1_Pos;
+             break;
+    #endif /* CY_IP_M55APPCPUSS_VERSION_MINOR >= 2 */
+    #endif /* CY_IP_M55APPCPUSS_VERSION >= 1 */
         default:
             return CY_MS_CTL_BAD_PARAM;
     }

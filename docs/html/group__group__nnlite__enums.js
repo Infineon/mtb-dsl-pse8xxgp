@@ -7,7 +7,8 @@ var group__group__nnlite__enums =
       [ "CY_NNLITE_SATURATION_EVENT", "group__group__nnlite__enums.html#gga8714c4a5105d4130fb67c76b0d9a1920ab8bc41bb0c65e514acff19498a81729b", null ],
       [ "CY_NNLITE_BAD_PARAM", "group__group__nnlite__enums.html#gga8714c4a5105d4130fb67c76b0d9a1920a7b85db8201d0151fcca24b15ccd1f215", null ],
       [ "CY_NNLITE_BAD_STATE", "group__group__nnlite__enums.html#gga8714c4a5105d4130fb67c76b0d9a1920ad03f3b539bb8b3ea7517d8e26c2ac354", null ],
-      [ "CY_NNLITE_EXTERN_API_ERR", "group__group__nnlite__enums.html#gga8714c4a5105d4130fb67c76b0d9a1920a93eacc1ad403a12ec82e9212375c41f8", null ]
+      [ "CY_NNLITE_EXTERN_API_ERR", "group__group__nnlite__enums.html#gga8714c4a5105d4130fb67c76b0d9a1920a93eacc1ad403a12ec82e9212375c41f8", null ],
+      [ "CY_NNLITE_INVALID_RANGE", "group__group__nnlite__enums.html#gga8714c4a5105d4130fb67c76b0d9a1920ab8b34ce09be976fd38403e7c15d55a33", null ]
     ] ],
     [ "cy_en_nnlite_fused_activation_t", "group__group__nnlite__enums.html#ga384cb7d2feea111076bbd75ae43e60f6", [
       [ "CY_NNLITE_ACTIVATION_NONE", "group__group__nnlite__enums.html#gga384cb7d2feea111076bbd75ae43e60f6a57ecb39adaa0ea97a7c8e8da86b8e44f", null ],

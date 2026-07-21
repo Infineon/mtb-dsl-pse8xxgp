@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2024-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2024-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -113,6 +113,14 @@
                  <Entry name='VBGR (0.9 V)'  value='CY_AUTANALOG_PRB_VBGR' visible='true'/>
     </ParamChoice>
 
+    <ParamString id='prbOut0VbgrAccuracyInfo'
+                 name='VBGR Reference Accuracy'
+                 group='PRB Output 0'
+                 visible='`${prbOut0Enable &amp;&amp; (prbOut0Vref eq CY_AUTANALOG_PRB_VBGR)}`'
+                 editable='false'
+                 desc='Accuracy specification of the internal VBGR 0.9V reference'
+                 default='VBGR 0.9 V: typical &#177;1%, max &#177;2% over temperature'/>
+
     <ParamString id='prbOut0VrefVal'
                  name='prbOut0VrefVal'
                  group='Internal'
@@ -174,6 +182,14 @@
                  <Entry name='VDDA' value='CY_AUTANALOG_PRB_VDDA' visible='true'/>
                  <Entry name='VBGR (0.9 V)' value='CY_AUTANALOG_PRB_VBGR' visible='true'/>
     </ParamChoice>
+
+    <ParamString id='prbOut1VbgrAccuracyInfo'
+                 name='VBGR Reference Accuracy'
+                 group='PRB Output 1'
+                 visible='`${prbOut1Enable &amp;&amp; (prbOut1Vref eq CY_AUTANALOG_PRB_VBGR)}`'
+                 editable='false'
+                 desc='Accuracy specification of the internal VBGR 0.9V reference'
+                 default='VBGR 0.9 V: typical &#177;1%, max &#177;2% over temperature'/>
 
     <ParamString id='prbOut1VrefVal'
                  name='prbOut1VrefVal'

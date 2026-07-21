@@ -26,11 +26,20 @@
 #define ETHOSU_ARCH u55
 #endif
 
-/* This is a feature flag available only for PSoC Edge devices supporting Cy_SysClk_PeriGroupSlaveInit
+/* the below define will enable cache maintenance API for ETHOS U55 */
+#define ETHOSU_USE_CACHE
+
+/* This is a feature flag available only for PSOC Edge devices supporting Cy_SysClk_PeriGroupSlaveInit
 */
 #define CY_DEVICE_CONFIGURATOR_IP_ENABLE_FEATURE
 
-/* The SW workaround for RRAM on PSE84 silicon */
+/* Silicon erratum PM_0159902-6 (PSE84 A0 / mxs22rramc IP v1 only):
+ * On A0 silicon the hardware PC lock (RRAMC_PC_MASK_PC_LOCK) does not
+ * reliably serialize indirect RRAM access between CM33 and CM55. The
+ * RRAM driver works around this by layering an IPC semaphore
+ * (CY_IPC_CHAN_RRAM_LOCK, defined below) on top of the hardware lock.
+ * Fixed in B0 silicon (mxs22rramc IP v2+); CM0+ does not race on this
+ * path and is excluded. */
 #if (defined(CY_IP_MXS22RRAMC_VERSION) && (CY_IP_MXS22RRAMC_VERSION) < 2) && !defined(COMPONENT_CM0P)
 #define WA__PM_0159902_6
 #endif
@@ -568,6 +577,47 @@ typedef CRYPTO_V2_Type CRYPTO_Type;
 #define SMIF_DQ0_PORT(base)             (((base) == SMIF0_CORE) ? ((void *)SMIF0_CORE_SMIF_GPIO_SMIF_PRT0) : ((void *)SMIF1_CORE_SMIF_GPIO_SMIF_PRT0))
 #endif
 
+#if defined (CY_IP_MXSMIF)
+#if (CY_IP_MXSMIF_VERSION == 5)
+    #define SMIF_INST0_PRT0 SMIF0_CORE0_SMIF_GPIO_SMIF_PRT0
+    #define SMIF_INST0_PRT1 SMIF0_CORE0_SMIF_GPIO_SMIF_PRT1
+    #define SMIF_INST0_PRT2 SMIF0_CORE0_SMIF_GPIO_SMIF_PRT2
+    #define SMIF_INST1_PRT0 SMIF0_CORE1_SMIF_GPIO_SMIF_PRT0
+    #define SMIF_INST1_PRT1 SMIF0_CORE1_SMIF_GPIO_SMIF_PRT1
+    #define SMIF_INST1_PRT2 SMIF0_CORE1_SMIF_GPIO_SMIF_PRT2
+    #define SMIF_INST_OFFSET SMIF_CORE_SECTION_SIZE
+#endif
+#if (CY_IP_MXSMIF_VERSION == 6)
+    #define SMIF_INST0_PRT0 SMIF0_CORE_SMIF_GPIO_SMIF_PRT0
+    #define SMIF_INST0_PRT1 SMIF0_CORE_SMIF_GPIO_SMIF_PRT1
+    #define SMIF_INST0_PRT2 SMIF0_CORE_SMIF_GPIO_SMIF_PRT2
+    #define SMIF_INST1_PRT0 SMIF1_CORE_SMIF_GPIO_SMIF_PRT0
+    #define SMIF_INST1_PRT1 SMIF1_CORE_SMIF_GPIO_SMIF_PRT1
+    #define SMIF_INST1_PRT2 SMIF1_CORE_SMIF_GPIO_SMIF_PRT2
+    #define SMIF_INST_OFFSET SMIF_SECTION_SIZE
+#endif
+
+/*Defines the ports that are SMIF ports, used by GPIO drivers to detect a SMIF port at runtime*/
+#ifndef CY_GPIO_IS_SMIF_GPIO
+#define CY_GPIO_IS_SMIF_GPIO(baseAddress)       (((void *)(baseAddress) == (void *)SMIF_INST0_PRT0) || \
+                                                 ((void *)(baseAddress) == (void *)SMIF_INST0_PRT1)  || \
+                                                 ((void *)(baseAddress) == (void *)SMIF_INST0_PRT2) || \
+                                                 ((void *)(baseAddress) == (void *)SMIF_INST1_PRT0)  || \
+                                                 ((void *)(baseAddress) == (void *)SMIF_INST1_PRT1) || \
+                                                 ((void *)(baseAddress) == (void *)SMIF_INST1_PRT2))
+#endif
+
+#define CY_GPIO_SMIF_PRT_SECTION_SIZE           SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE
+#define CY_GPIO_SMIF_HSIOM_PRT_SECTION_SIZE     SMIF_CORE_SMIF_HSIOM_SMIF_PRT_SECTION_SIZE
+#define CY_GPIO_SMIF_HSIOM_SEC_PRT_SECTION_SIZE SMIF_CORE_SMIF_HSIOM_SMIF_SECURE_PRT_SECTION_SIZE
+#define CY_GPIO_SMIF_INST1_PRT0                 SMIF_INST1_PRT0
+#define CY_GPIO_SMIF_INST_OFFSET                SMIF_INST_OFFSET
+#endif /* CY_IP_MXSMIF */
+
+/* All GPIO ports use IOSS register layout */
+#define CY_GPIO_IS_IOSS_GPIO(baseAddress)       (1U)
+
+typedef GPIO_PRT_Type  CY_GPIO_IOSS_PRT_Type;
 
 /* CY_XIP_BASE remaps the native XIP Base address definition below
    in order to match the API of other devices. */

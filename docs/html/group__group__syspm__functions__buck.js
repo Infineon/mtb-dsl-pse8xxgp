@@ -19,7 +19,5 @@ var group__group__syspm__functions__buck =
     [ "Cy_SysPm_SramLdoConfigure", "group__group__syspm__functions__buck.html#gae47b07338a5a094f57fea26a5079b276", null ],
     [ "Cy_SysPm_SramLdoEnable", "group__group__syspm__functions__buck.html#gaa5337590f58acfdfa0d7f3b825614797", null ],
     [ "Cy_SysPm_SramLdoSetVoltage", "group__group__syspm__functions__buck.html#ga2d4cc70ff3cc5d53827d44dd530d0d0b", null ],
-    [ "Cy_SysPm_SramLdoGetVoltage", "group__group__syspm__functions__buck.html#ga18be6726d10fb0431746018472d46d69", null ],
-    [ "Cy_SysPm_MiscLdoStatus", "group__group__syspm__functions__buck.html#ga4e82ae81d78610493eddefbb8b24d5e6", null ],
-    [ "Cy_SysPm_MiscLdoConfigure", "group__group__syspm__functions__buck.html#ga31401649e6a772f1f40b1c6d10edcb45", null ]
+    [ "Cy_SysPm_SramLdoGetVoltage", "group__group__syspm__functions__buck.html#ga18be6726d10fb0431746018472d46d69", null ]
 ];

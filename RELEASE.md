@@ -1,9 +1,18 @@
-# ModusToolbox™ PSE8xxGP Device Support Library 1.5.0
+# ModusToolbox™ PSE8xxGP Device Support Library 1.6.0
 ## What's Included?
 
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
 ## Change log
+### v1.6.0
+* Added SCB EZI2C hardware mode for I2C driver.
+* Added SCB SPI EZ mode support.
+* Added SCB SPI External Clock support.
+* Added new API in Graphics to support Tearing Effect interrupt based frame transfers.
+* Added new API Cy_Mpc_GetViolationResponse in PPC driver.
+* Added additional call for RX Error handling in Ethernet driver.
+* Added Peripheral Driver Component Datasheets (CDS) documentation entry for PDL drivers.
+* Bug Fixes and documentation updates.
 ### v1.5.0
 #### Driver updates
 * Added support for per channel channel quantization for Fully Connected layer
@@ -46,17 +55,17 @@ Refer to the [README.md](./README.md) for a complete description of the ModusToo
 
 ## Supported Software and Tools
 
-This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.2.0 was validated for the compatibility with the following Software and Tools:
+This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.6.0 was validated for the compatibility with the following Software and Tools:
 
 | Software and Tools                                                            | Version      |
 | :---                                                                          | :----        |
 | [Infineon Core Library](https://github.com/Infineon/core-lib)                 | 1.5.0        |
 | CMSIS                                                                         | 6.1.0        |
 | GCC Compiler                                                                  | 14.2.1       |
-| IAR Compiler                                                                  | 9.50.2       |
+| IAR Compiler                                                                  | 9.70         |
 | ARM Compiler 6                                                                | 6.22         |
 | LLVM_ARM Compiler                                                             | 19.1.5       |
-| FreeRTOS                                                                      | 10.6.2       |
+| FreeRTOS                                                                      | 10.6.202     |
 
 ## More information
 

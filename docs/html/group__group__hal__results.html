@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('group__group__hal__results.html',''); 
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
 <p>HAL specific return codes definitions for all drivers. </p>
-<p>HAL drivers are generally built on top of a lower level driver. In this case the errors returned from the HAL could be one of the values below or a value from that lower level driver. See the device specific documentation for details about the other error codes. The HAL uses the same <a class="el" href="group__group__result.html#ga711a53e03635b4f3e21c41aaf9459251">CY_RSLT_CREATE</a> macro to define result codes using the standard <a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> format. All HAL results use the module ID <a class="el" href="group__group__result.html#gga9008565cba0207520330a1cb8509a8d0a79b500d6463aadd493b3812f779f75df">CY_RSLT_MODULE_ABSTRACTION_HAL</a>. Driver distinction is done as part of the 16-bit code field. The HAL splits this into individual bytes. The upper byte signifies the HAL driver using values from the <a class="el" href="group__group__hal__results.html#ga282238a3cd4da88799258412ba837ceb">mtb_hal_rslt_module_chip</a> enum. The lower byte is defined by each HAL driver. </p>
+<p>HAL drivers are generally built on top of a lower level driver. In this case the errors returned from the HAL could be one of the values below or a value from that lower level driver. See the device specific documentation for details about the other error codes. The HAL uses the same CY_RSLT_CREATE macro to define result codes using the standard cy_rslt_t format. All HAL results use the module ID CY_RSLT_MODULE_ABSTRACTION_HAL. Driver distinction is done as part of the 16-bit code field. The HAL splits this into individual bytes. The upper byte signifies the HAL driver using values from the <a class="el" href="group__group__hal__results.html#ga282238a3cd4da88799258412ba837ceb" title="Enum to specify module IDs for cy_rslt_t values returned from the HAL.">mtb_hal_rslt_module_chip</a> enum. The lower byte is defined by each HAL driver. </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>
@@ -150,11 +150,11 @@ API Reference</h2></td></tr>
 <tr class="memitem:group__group__hal__results__system"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__results__system.html">SYSTEM HAL Results</a></td></tr>
 <tr class="memdesc:group__group__hal__results__system"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYSTEM specific return codes. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:group__group__hal__results__timer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__results__timer.html">Timer HAL Results</a></td></tr>
-<tr class="memdesc:group__group__hal__results__timer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer specific return codes. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__hal__results__trng"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__results__trng.html">TRNG HAL Results</a></td></tr>
 <tr class="memdesc:group__group__hal__results__trng"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRNG specific return codes. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__hal__results__timer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__results__timer.html">Timer HAL Results</a></td></tr>
+<tr class="memdesc:group__group__hal__results__timer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer specific return codes. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__hal__results__uart"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__hal__results__uart.html">UART HAL Results</a></td></tr>
 <tr class="memdesc:group__group__hal__results__uart"><td class="mdescLeft">&#160;</td><td class="mdescRight">UART specific return codes. <br /></td></tr>
@@ -208,7 +208,7 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="group__group__hal__results.html#gga282238a3cd4da88799258412ba837cebad838d684eda467625c308fd0c9947507">MTB_HAL_RSLT_MODULE_UART</a> = (0x16)
 <br />
  }</td></tr>
-<tr class="memdesc:ga282238a3cd4da88799258412ba837ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to specify module IDs for <a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> values returned from the HAL.  <a href="group__group__hal__results.html#ga282238a3cd4da88799258412ba837ceb">More...</a><br /></td></tr>
+<tr class="memdesc:ga282238a3cd4da88799258412ba837ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum to specify module IDs for cy_rslt_t values returned from the HAL.  <a href="group__group__hal__results.html#ga282238a3cd4da88799258412ba837ceb">More...</a><br /></td></tr>
 <tr class="separator:ga282238a3cd4da88799258412ba837ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -224,7 +224,7 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Enum to specify module IDs for <a class="el" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> values returned from the HAL. </p>
+<p>Enum to specify module IDs for cy_rslt_t values returned from the HAL. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga282238a3cd4da88799258412ba837ceba0fb2a348d3639460b493dba0ac01520b" name="gga282238a3cd4da88799258412ba837ceba0fb2a348d3639460b493dba0ac01520b"></a>MTB_HAL_RSLT_MODULE_ADC&#160;</td><td class="fielddoc"><p>An error occurred in ADC module. </p>
 </td></tr>

@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -345,8 +345,8 @@
     <!--Smart Card-->
     <ParamBool id='SmCardRetryOnNack' name='Retry on Nack' group='Advanced' default='false' visible='`${SmartCard}`' editable='true' desc='This parameter defines whether to send a message again when a NACK response is received. Only applicable when Com Mode is SmartCard.' />
 
-    <!--IrDA-->
-    <ParamChoice id='IrdaPolarity' name='Invert RX' group='Advanced' default='NON_INVERTING' visible='`${IrDA}`' editable='true' desc='This parameter enables the inversion of the incoming RX line signal. Only applicable when Com Mode is IrDA.'>
+    <!--RX Polarity-->
+    <ParamChoice id='RxPolarity' name='Invert RX' group='Advanced' default='NON_INVERTING' visible='`${!SmartCard}`' editable='true' desc='This parameter enables the inversion of the incoming RX line signal. Applicable for Standard and IrDA modes.'>
       <Entry name='Non-Inverting' value='NON_INVERTING' visible='true' />
       <Entry name='Inverting' value='INVERTING' visible='true' />
     </ParamChoice>
@@ -441,7 +441,7 @@
       <Member name='uartMode' value='`${ComMode}`' />
       <Member name='enableMultiProcessorMode' value='`${MultiProc ? "true" : "false"}`' />
       <Member name='smartCardRetryOnNack' value='`${(SmartCard &amp;&amp; SmCardRetryOnNack) ? "true" : "false"}`' />
-      <Member name='irdaInvertRx' value='`${(IrDA &amp;&amp; (IrdaPolarity eq INVERTING)) ? "true" : "false"}`' />
+      <Member name='irdaInvertRx' value='`${(RxPolarity eq INVERTING) ? "true" : "false"}`' />
       <Member name='irdaEnableLowPowerReceiver' value='`${(IrDA &amp;&amp; IrdaLowPower) ? "true" : "false"}`' />
 
       <Member name='halfDuplexMode' value='`${EnableHalfDuplex}`' include='`${(version &gt; 3) &amp;&amp; (ipName eq "mxscb")}`' />

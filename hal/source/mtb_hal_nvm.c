@@ -37,6 +37,15 @@ extern "C" {
 #endif /* __cplusplus */
 
 /*******************************************************************************
+*      Internal function declarations
+*******************************************************************************/
+static cy_rslt_t _mtb_hal_nvm_erase_impl(mtb_hal_nvm_t* obj, uint32_t address, bool blocking);
+static cy_rslt_t _mtb_hal_nvm_write_impl(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data,
+                                         bool blocking);
+static cy_rslt_t _mtb_hal_nvm_program_impl(mtb_hal_nvm_t* obj, uint32_t address,
+                                           const uint32_t* data, bool blocking);
+
+/*******************************************************************************
 *       Functions
 *******************************************************************************/
 
@@ -51,6 +60,39 @@ void mtb_hal_nvm_get_info(mtb_hal_nvm_t* obj, mtb_hal_nvm_info_t* info)
 
     info->region_count = _mtb_hal_flash_get_mem_region_count();
     info->regions = _mtb_hal_flash_get_mem_region();
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_nvm_get_region_for_address
+//--------------------------------------------------------------------------------------------------
+const mtb_hal_nvm_region_info_t* mtb_hal_nvm_get_region_for_address(mtb_hal_nvm_t* obj,
+                                                                    uint32_t addr, uint32_t length)
+{
+    mtb_hal_nvm_info_t nvm_info;
+    mtb_hal_nvm_get_info(obj, &nvm_info);
+
+    for (uint32_t region = 0; region < nvm_info.region_count; region++)
+    {
+        if (((addr >= nvm_info.regions[region].start_address) &&
+             (addr < (nvm_info.regions[region].start_address + nvm_info.regions[region].size)) &&
+             (addr + length <=
+              (nvm_info.regions[region].start_address + nvm_info.regions[region].size)))
+            #if defined(CY_FLASH_CBUS_BASE) && defined(SBUS_ALIAS_OFFSET)
+            || ((addr >= FLASH_SBUS_ALIAS_ADDRESS(nvm_info.regions[region].start_address)) &&
+                (addr < FLASH_SBUS_ALIAS_ADDRESS(nvm_info.regions[region].start_address) +
+                 nvm_info.regions[region].size) &&
+                (addr + length <=
+                 (FLASH_SBUS_ALIAS_ADDRESS(nvm_info.regions[region].start_address) +
+                  nvm_info.regions[region].size)))
+            #endif
+            )
+        {
+            return &nvm_info.regions[region];
+        }
+    }
+
+    return NULL;
 }
 
 
@@ -117,7 +159,82 @@ cy_rslt_t mtb_hal_nvm_read(mtb_hal_nvm_t* obj, uint32_t address, uint8_t* data, 
 //--------------------------------------------------------------------------------------------------
 cy_rslt_t mtb_hal_nvm_erase(mtb_hal_nvm_t* obj, uint32_t address)
 {
+    return _mtb_hal_nvm_erase_impl(obj, address, true);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_nvm_write
+//--------------------------------------------------------------------------------------------------
+cy_rslt_t mtb_hal_nvm_write(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data)
+{
+    return _mtb_hal_nvm_write_impl(obj, address, data, true);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_nvm_program
+//--------------------------------------------------------------------------------------------------
+cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data)
+{
+    return _mtb_hal_nvm_program_impl(obj, address, data, true);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_nvm_erase_nb
+//--------------------------------------------------------------------------------------------------
+cy_rslt_t mtb_hal_nvm_erase_nb(mtb_hal_nvm_t* obj, uint32_t address)
+{
+    return _mtb_hal_nvm_erase_impl(obj, address, false);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_nvm_write_nb
+//--------------------------------------------------------------------------------------------------
+cy_rslt_t mtb_hal_nvm_write_nb(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data)
+{
+    return _mtb_hal_nvm_write_impl(obj, address, data, false);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_nvm_program_nb
+//--------------------------------------------------------------------------------------------------
+cy_rslt_t mtb_hal_nvm_program_nb(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data)
+{
+    return _mtb_hal_nvm_program_impl(obj, address, data, false);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+// mtb_hal_nvm_is_operation_complete
+//--------------------------------------------------------------------------------------------------
+bool mtb_hal_nvm_is_operation_complete(mtb_hal_nvm_t* obj)
+{
     CY_ASSERT(NULL != obj);
+    CY_UNUSED_PARAMETER(obj);
+
+    return _mtb_hal_nvm_is_operation_complete();
+}
+
+
+/*******************************************************************************
+*       Internal Functions
+*******************************************************************************/
+
+//--------------------------------------------------------------------------------------------------
+// _mtb_hal_nvm_erase_impl
+//--------------------------------------------------------------------------------------------------
+static cy_rslt_t _mtb_hal_nvm_erase_impl(mtb_hal_nvm_t* obj, uint32_t address, bool blocking)
+{
+    CY_ASSERT(NULL != obj);
+
+    #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_RRAM) || (_MTB_HAL_DRIVER_AVAILABLE_NVM_OTP)
+    /* Non-blocking RRAM and OTP NVM operations in HAL are not implemented */
+    CY_UNUSED_PARAMETER(blocking);
+    #endif /* (_MTB_HAL_DRIVER_AVAILABLE_NVM_RRAM) || (_MTB_HAL_DRIVER_AVAILABLE_NVM_OTP) */
 
     const mtb_hal_nvm_region_info_t* _mtb_hal_nvm_current_block_info;
     cy_rslt_t status = MTB_HAL_NVM_RSLT_ERR_NOT_SUPPORTED;
@@ -135,7 +252,7 @@ cy_rslt_t mtb_hal_nvm_erase(mtb_hal_nvm_t* obj, uint32_t address)
     #endif // defined(MTB_HAL_DISABLE_ERR_CHECK)
     {
         #if (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_FLASH)
-        status = _mtb_hal_nvm_erase_helper_flash(address);
+        status = _mtb_hal_nvm_erase_helper_flash(address, blocking);
         #elif (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_RRAM)
         status = _mtb_hal_nvm_erase_helper_rram();
         #elif (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_OTP)
@@ -144,7 +261,7 @@ cy_rslt_t mtb_hal_nvm_erase(mtb_hal_nvm_t* obj, uint32_t address)
         if (MTB_HAL_NVM_TYPE_FLASH == _mtb_hal_nvm_current_block_info->nvm_type)
         {
             #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_FLASH)
-            status = _mtb_hal_nvm_erase_helper_flash(address);
+            status = _mtb_hal_nvm_erase_helper_flash(address, blocking);
             #endif /* #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_FLASH) */
         }
         else if (MTB_HAL_NVM_TYPE_RRAM == _mtb_hal_nvm_current_block_info->nvm_type)
@@ -171,12 +288,18 @@ cy_rslt_t mtb_hal_nvm_erase(mtb_hal_nvm_t* obj, uint32_t address)
 
 
 //--------------------------------------------------------------------------------------------------
-// mtb_hal_nvm_write
+// _mtb_hal_nvm_write_impl
 //--------------------------------------------------------------------------------------------------
-cy_rslt_t mtb_hal_nvm_write(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data)
+static cy_rslt_t _mtb_hal_nvm_write_impl(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data,
+                                         bool blocking)
 {
     CY_ASSERT(NULL != obj);
     CY_UNUSED_PARAMETER(obj);
+
+    #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_RRAM) || (_MTB_HAL_DRIVER_AVAILABLE_NVM_OTP)
+    /* Non-blocking RRAM and OTP NVM operations in HAL are not implemented */
+    CY_UNUSED_PARAMETER(blocking);
+    #endif /* (_MTB_HAL_DRIVER_AVAILABLE_NVM_RRAM) || (_MTB_HAL_DRIVER_AVAILABLE_NVM_OTP) */
 
     const mtb_hal_nvm_region_info_t* _mtb_hal_nvm_current_block_info;
     cy_rslt_t status = MTB_HAL_NVM_RSLT_ERR_NOT_SUPPORTED;
@@ -194,7 +317,7 @@ cy_rslt_t mtb_hal_nvm_write(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t
     #endif // defined(MTB_HAL_DISABLE_ERR_CHECK)
     {
         #if (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_FLASH)
-        status = _mtb_hal_nvm_write_helper_flash(address, data);
+        status = _mtb_hal_nvm_write_helper_flash(address, data, blocking);
         #elif (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_RRAM)
         status = _mtb_hal_nvm_write_helper_rram(address, data);
         #elif (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_OTP)
@@ -203,7 +326,7 @@ cy_rslt_t mtb_hal_nvm_write(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t
         if (MTB_HAL_NVM_TYPE_FLASH == _mtb_hal_nvm_current_block_info->nvm_type)
         {
             #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_FLASH)
-            status = _mtb_hal_nvm_write_helper_flash(address, data);
+            status = _mtb_hal_nvm_write_helper_flash(address, data, blocking);
             #endif /* #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_FLASH) */
         }
         else if (MTB_HAL_NVM_TYPE_RRAM == _mtb_hal_nvm_current_block_info->nvm_type)
@@ -233,12 +356,18 @@ cy_rslt_t mtb_hal_nvm_write(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t
 
 
 //--------------------------------------------------------------------------------------------------
-// mtb_hal_nvm_program
+// _mtb_hal_nvm_program_impl
 //--------------------------------------------------------------------------------------------------
-cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t* obj, uint32_t address, const uint32_t* data)
+static cy_rslt_t _mtb_hal_nvm_program_impl(mtb_hal_nvm_t* obj, uint32_t address,
+                                           const uint32_t* data, bool blocking)
 {
     CY_ASSERT(NULL != obj);
     CY_UNUSED_PARAMETER(obj);
+
+    #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_RRAM) || (_MTB_HAL_DRIVER_AVAILABLE_NVM_OTP)
+    /* Non-blocking RRAM and OTP NVM operations in HAL are not implemented */
+    CY_UNUSED_PARAMETER(blocking);
+    #endif /* (_MTB_HAL_DRIVER_AVAILABLE_NVM_RRAM) || (_MTB_HAL_DRIVER_AVAILABLE_NVM_OTP) */
 
     const mtb_hal_nvm_region_info_t* _mtb_hal_nvm_current_block_info;
     cy_rslt_t status = MTB_HAL_NVM_RSLT_ERR_NOT_SUPPORTED;
@@ -256,7 +385,7 @@ cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t* obj, uint32_t address, const uint32
     #endif // defined(MTB_HAL_DISABLE_ERR_CHECK)
     {
         #if (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_FLASH)
-        status = _mtb_hal_nvm_program_helper_flash(address, data);
+        status = _mtb_hal_nvm_program_helper_flash(address, data, blocking);
         #elif (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_RRAM)
         status = _mtb_hal_nvm_program_helper_rram(address, data);
         #elif (_MTB_HAL_NVM_SINGLE_MEMORY_TYPE_OTP)
@@ -265,7 +394,7 @@ cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t* obj, uint32_t address, const uint32
         if (MTB_HAL_NVM_TYPE_FLASH == _mtb_hal_nvm_current_block_info->nvm_type)
         {
             #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_FLASH)
-            status = _mtb_hal_nvm_program_helper_flash(address, data);
+            status = _mtb_hal_nvm_program_helper_flash(address, data, blocking);
             #endif /* _MTB_HAL_DRIVER_AVAILABLE_NVM_FLASH */
         }
         else if (MTB_HAL_NVM_TYPE_RRAM == _mtb_hal_nvm_current_block_info->nvm_type)
@@ -291,39 +420,6 @@ cy_rslt_t mtb_hal_nvm_program(mtb_hal_nvm_t* obj, uint32_t address, const uint32
         #endif /* Not _MTB_HAL_NVM_SINGLE_MEMORY_TYPE_FLASH, _RRAM, or _OTP */
     }
     return status;
-}
-
-
-//--------------------------------------------------------------------------------------------------
-// mtb_hal_nvm_get_region_for_address
-//--------------------------------------------------------------------------------------------------
-const mtb_hal_nvm_region_info_t* mtb_hal_nvm_get_region_for_address(mtb_hal_nvm_t* obj,
-                                                                    uint32_t addr, uint32_t length)
-{
-    mtb_hal_nvm_info_t nvm_info;
-    mtb_hal_nvm_get_info(obj, &nvm_info);
-
-    for (uint32_t region = 0; region < nvm_info.region_count; region++)
-    {
-        if (((addr >= nvm_info.regions[region].start_address) &&
-             (addr < (nvm_info.regions[region].start_address + nvm_info.regions[region].size)) &&
-             (addr + length <=
-              (nvm_info.regions[region].start_address + nvm_info.regions[region].size)))
-            #if defined(CY_FLASH_CBUS_BASE) && defined(SBUS_ALIAS_OFFSET)
-            || ((addr >= FLASH_SBUS_ALIAS_ADDRESS(nvm_info.regions[region].start_address)) &&
-                (addr < FLASH_SBUS_ALIAS_ADDRESS(nvm_info.regions[region].start_address) +
-                 nvm_info.regions[region].size) &&
-                (addr + length <=
-                 (FLASH_SBUS_ALIAS_ADDRESS(nvm_info.regions[region].start_address) +
-                  nvm_info.regions[region].size)))
-            #endif
-            )
-        {
-            return &nvm_info.regions[region];
-        }
-    }
-
-    return NULL;
 }
 
 

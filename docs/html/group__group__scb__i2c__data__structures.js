@@ -6,6 +6,8 @@ var group__group__scb__i2c__data__structures =
       [ "useTxFifo", "group__group__scb__i2c__data__structures.html#a2c4bded993c3b334fbc2321952ab99f5", null ],
       [ "slaveAddress", "group__group__scb__i2c__data__structures.html#a9e0bf167c747280bb8a1c2f4f134889b", null ],
       [ "slaveAddressMask", "group__group__scb__i2c__data__structures.html#a3578fa3852e87ead95db3c0c13064d71", null ],
+      [ "multipleSlaveAddress", "group__group__scb__i2c__data__structures.html#a27f66db437f0c76af61a9ec191e1f487", null ],
+      [ "multipleSlaveAddressMask", "group__group__scb__i2c__data__structures.html#a7c47466d286331f2500d85db40aef8c2", null ],
       [ "acceptAddrInFifo", "group__group__scb__i2c__data__structures.html#a9074db87cce95b20f6adbaf905e05f98", null ],
       [ "ackGeneralAddr", "group__group__scb__i2c__data__structures.html#a7a705499e24c5dade7143d1c339389af", null ],
       [ "enableWakeFromSleep", "group__group__scb__i2c__data__structures.html#a5349cece2450d79a40dbe36dda778bd7", null ],
@@ -21,5 +23,6 @@ var group__group__scb__i2c__data__structures =
       [ "xferPending", "group__group__scb__i2c__data__structures.html#a2e158df2a2854d193d589021c2128aa4", null ]
     ] ],
     [ "cy_cb_scb_i2c_handle_events_t", "group__group__scb__i2c__data__structures.html#gaac5a8aafa71f0114f8217f3d9565165f", null ],
-    [ "cy_cb_scb_i2c_handle_addr_t", "group__group__scb__i2c__data__structures.html#ga183bff4f7a75507e640731f813e24fb9", null ]
+    [ "cy_cb_scb_i2c_handle_addr_t", "group__group__scb__i2c__data__structures.html#ga183bff4f7a75507e640731f813e24fb9", null ],
+    [ "cy_cb_scb_i2c_handle_byte_t", "group__group__scb__i2c__data__structures.html#ga3709d9a624264da5fc448acfc9fcb7a6", null ]
 ];

@@ -49,9 +49,13 @@ static uint32_t get_buffer_planes(vg_lite_buffer_t *buffer,
         case VG_LITE_RGBA4444:
         case VG_LITE_BGRA4444:
         case VG_LITE_BGRA5551:
-        case VG_LITE_A8:
-        case VG_LITE_L8:
+        case VG_LITE_A1:
+        case VG_LITE_A2:
         case VG_LITE_A4:
+        case VG_LITE_A8:
+        case VG_LITE_L4:
+        case VG_LITE_L8:
+        case VG_LITE_A8L8:
         case VG_LITE_INDEX_1:
         case VG_LITE_INDEX_2:
         case VG_LITE_INDEX_4:
@@ -128,7 +132,9 @@ vg_lite_error_t vg_lite_upload_buffer(vg_lite_buffer_t  *buffer,
                                       vg_lite_uint32_t stride[3])
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_upload_buffer)(buffer, data, stride);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_upload_buffer)(buffer, data, stride);
+    }
 #endif
 
     vg_lite_error_t error = VG_LITE_SUCCESS;
@@ -261,7 +267,9 @@ vg_lite_error_t vg_lite_get_transform_matrix(vg_lite_float_point4_t src, vg_lite
 vg_lite_error_t vg_lite_set_scissor(vg_lite_int32_t x, vg_lite_int32_t y, vg_lite_int32_t right, vg_lite_int32_t bottom)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_set_scissor)(x, y, right, bottom);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_set_scissor)(x, y, right, bottom);
+    }
 #endif
 
 #if gcFEATURE_VG_SCISSOR
@@ -290,7 +298,9 @@ vg_lite_error_t vg_lite_set_scissor(vg_lite_int32_t x, vg_lite_int32_t y, vg_lit
 vg_lite_error_t vg_lite_enable_scissor()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_enable_scissor)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_enable_scissor)();
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -315,7 +325,9 @@ vg_lite_error_t vg_lite_enable_scissor()
 vg_lite_error_t vg_lite_disable_scissor()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_disable_scissor)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_disable_scissor)();
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -396,7 +408,9 @@ vg_lite_error_t vg_lite_set_CLUT(vg_lite_uint32_t count, vg_lite_uint32_t* color
 vg_lite_error_t vg_lite_source_global_alpha(vg_lite_global_alpha_t alpha_mode, vg_lite_uint8_t alpha_value)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_source_global_alpha)(alpha_mode, alpha_value);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_source_global_alpha)(alpha_mode, alpha_value);
+    }
 #endif
 
 #if gcFEATURE_VG_GLOBAL_ALPHA
@@ -422,7 +436,9 @@ vg_lite_error_t vg_lite_source_global_alpha(vg_lite_global_alpha_t alpha_mode, v
 vg_lite_error_t vg_lite_dest_global_alpha(vg_lite_global_alpha_t alpha_mode, vg_lite_uint8_t alpha_value)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_dest_global_alpha)(alpha_mode, alpha_value);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_dest_global_alpha)(alpha_mode, alpha_value);
+    }
 #endif
 
 #if gcFEATURE_VG_GLOBAL_ALPHA
@@ -448,7 +464,9 @@ vg_lite_error_t vg_lite_dest_global_alpha(vg_lite_global_alpha_t alpha_mode, vg_
 vg_lite_error_t vg_lite_set_color_key(vg_lite_color_key4_t colorkey)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_set_color_key)(colorkey);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_set_color_key)(colorkey);
+    }
 #endif
 
 #if gcFEATURE_VG_COLOR_KEY
@@ -465,21 +483,27 @@ vg_lite_error_t vg_lite_set_color_key(vg_lite_color_key4_t colorkey)
     /* Set color key states. */
     for (i = 0; i < 4; i++)
     {
-        /* Set gcregVGPEColorKeyLow. Layout "E/R/G/B". */
-        r = colorkey[i].low_r;
-        g = colorkey[i].low_g;
-        b = colorkey[i].low_b;
-        e = colorkey[i].enable;
-        value_low = (e << 24) | (r << 16) | (g << 8) | b;
-        VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A90 + i, value_low));
+        if(colorkey[i].enable == 1) {   
+            /* Set gcregVGPEColorKeyLow. Layout "E/R/G/B". */
+            r = colorkey[i].low_r;
+            g = colorkey[i].low_g;
+            b = colorkey[i].low_b;
+            e = colorkey[i].enable;
+            value_low = (e << 24) | (r << 16) | (g << 8) | b;
+            VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A90 + i, value_low));
 
-        /* Set gcregVGPEColorKeyHigh. Layout "A/R/G/B". */
-        r = colorkey[i].hign_r;
-        g = colorkey[i].hign_g;
-        b = colorkey[i].hign_b;
-        a = colorkey[i].alpha;
-        value_high = (a << 24) | (r << 16) | (g << 8) | b;
-        VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A94 + i, value_high));
+            /* Set gcregVGPEColorKeyHigh. Layout "A/R/G/B". */
+            r = colorkey[i].high_r;
+            g = colorkey[i].high_g;
+            b = colorkey[i].high_b;
+            a = colorkey[i].alpha;
+            value_high = (a << 24) | (r << 16) | (g << 8) | b;
+            VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A94 + i, value_high));
+        }
+        else {
+            VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A90 + i, 0));
+            VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A94 + i, 0));
+        }
     }
 
     return error;
@@ -491,7 +515,9 @@ vg_lite_error_t vg_lite_set_color_key(vg_lite_color_key4_t colorkey)
 vg_lite_error_t vg_lite_enable_dither()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_enable_dither)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_enable_dither)();
+    }
 #endif
 
 #if gcFEATURE_VG_DITHER
@@ -515,7 +541,9 @@ vg_lite_error_t vg_lite_enable_dither()
 vg_lite_error_t vg_lite_disable_dither()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_disable_dither)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_disable_dither)();
+    }
 #endif
 
 #if gcFEATURE_VG_DITHER
@@ -537,7 +565,9 @@ vg_lite_error_t vg_lite_disable_dither()
 vg_lite_error_t vg_lite_enable_masklayer()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_enable_masklayer)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_enable_masklayer)();
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -558,7 +588,9 @@ vg_lite_error_t vg_lite_enable_masklayer()
 vg_lite_error_t vg_lite_disable_masklayer()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_disable_masklayer)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_disable_masklayer)();
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -579,7 +611,9 @@ vg_lite_error_t vg_lite_disable_masklayer()
 vg_lite_error_t vg_lite_create_masklayer(vg_lite_buffer_t* masklayer, vg_lite_uint32_t width, vg_lite_uint32_t height)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_create_masklayer)(masklayer, width, height);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_create_masklayer)(masklayer, width, height);
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -595,7 +629,7 @@ vg_lite_error_t vg_lite_create_masklayer(vg_lite_buffer_t* masklayer, vg_lite_ui
     masklayer->format = VG_LITE_A8;
     VG_LITE_RETURN_ERROR(vg_lite_allocate(masklayer));
 
-    VG_LITE_RETURN_ERROR(vg_lite_clear(masklayer, NULL, 0xFF << 24));
+    VG_LITE_RETURN_ERROR(vg_lite_clear(masklayer, NULL, (vg_lite_color_t)(0xFF << 24)));
 
     return error;
 #else
@@ -606,7 +640,9 @@ vg_lite_error_t vg_lite_create_masklayer(vg_lite_buffer_t* masklayer, vg_lite_ui
 vg_lite_error_t vg_lite_fill_masklayer(vg_lite_buffer_t* masklayer, vg_lite_rectangle_t* rect, vg_lite_uint8_t value)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_fill_masklayer)(masklayer, rect, value);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_fill_masklayer)(masklayer, rect, value);
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -632,7 +668,9 @@ vg_lite_error_t vg_lite_blend_masklayer(
 )
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_blend_masklayer)(dst_masklayer, src_masklayer, operation, rect);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_blend_masklayer)(dst_masklayer, src_masklayer, operation, rect);
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -654,7 +692,7 @@ vg_lite_error_t vg_lite_blend_masklayer(
         VG_LITE_RETURN_ERROR(vg_lite_clear(dst_masklayer, &area, 0x0));
         break;
     case VG_LITE_FILL_MASK:
-        VG_LITE_RETURN_ERROR(vg_lite_clear(dst_masklayer, &area, 0xFF << 24));
+        VG_LITE_RETURN_ERROR(vg_lite_clear(dst_masklayer, &area, (vg_lite_color_t)(0xFF << 24)));
         break;
     case VG_LITE_SET_MASK:
         area.x = 0;
@@ -686,10 +724,12 @@ vg_lite_error_t vg_lite_blend_masklayer(
 #endif
 }
 
-vg_lite_error_t vg_lite_set_masklayer(vg_lite_buffer_t* masklayer)
+vg_lite_error_t vg_lite_set_masklayer(vg_lite_buffer_t* masklayer, vg_lite_int32_t x, vg_lite_int32_t y)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_set_masklayer)(masklayer);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_set_masklayer)(masklayer);
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -699,8 +739,13 @@ vg_lite_error_t vg_lite_set_masklayer(vg_lite_buffer_t* masklayer)
     VGLITE_LOG("vg_lite_set_masklayer %p\n", masklayer);
 #endif
 
+    if (x < 0 || y < 0)
+        return VG_LITE_INVALID_ARGUMENT;
+
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A14, masklayer->address));
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A15, masklayer->stride));
+    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AF2, y << 16 | x));
+    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AF3, masklayer->height << 16 | masklayer->width));
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A1B, 0x00000010));
 
     return error;
@@ -719,7 +764,9 @@ vg_lite_error_t vg_lite_render_masklayer(
 )
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_render_masklayer)(masklayer, operation, path, fill_rule, color, matrix);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_render_masklayer)(masklayer, operation, path, fill_rule, color, matrix);
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -739,7 +786,7 @@ vg_lite_error_t vg_lite_render_masklayer(
         VG_LITE_RETURN_ERROR(vg_lite_draw(masklayer, path, fill_rule, matrix, VG_LITE_BLEND_NONE, 0));
         break;
     case VG_LITE_FILL_MASK:
-        VG_LITE_RETURN_ERROR(vg_lite_draw(masklayer, path, fill_rule, matrix, VG_LITE_BLEND_NONE, 0xFF << 24));
+        VG_LITE_RETURN_ERROR(vg_lite_draw(masklayer, path, fill_rule, matrix, VG_LITE_BLEND_NONE, (vg_lite_color_t)(0xFF << 24)));
         break;
     case VG_LITE_SET_MASK:
         VG_LITE_RETURN_ERROR(vg_lite_draw(masklayer, path, fill_rule, matrix, VG_LITE_BLEND_NONE, color << 24));
@@ -766,7 +813,9 @@ vg_lite_error_t vg_lite_render_masklayer(
 vg_lite_error_t vg_lite_destroy_masklayer(vg_lite_buffer_t* masklayer)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_destroy_masklayer)(masklayer);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_destroy_masklayer)(masklayer);
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
@@ -774,6 +823,10 @@ vg_lite_error_t vg_lite_destroy_masklayer(vg_lite_buffer_t* masklayer)
 
 #if gcFEATURE_VG_TRACE_API
     VGLITE_LOG("vg_lite_destroy_masklayer %p\n", masklayer);
+#endif
+
+#if DUMP_CAPTURE
+    vglitemDUMP_BUFFER("masklayer", (size_t)masklayer->address, masklayer->memory, 0, (masklayer->stride) * (masklayer->height));
 #endif
 
     VG_LITE_RETURN_ERROR(vg_lite_free(masklayer));
@@ -787,7 +840,9 @@ vg_lite_error_t vg_lite_destroy_masklayer(vg_lite_buffer_t* masklayer)
 vg_lite_error_t vg_lite_set_pixel_matrix(vg_lite_pixel_matrix_t matrix, vg_lite_pixel_channel_enable_t* channel)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_set_pixel_matrix)(matrix, channel);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_set_pixel_matrix)(matrix, channel);
+    }
 #endif
 
 #if gcFEATURE_VG_PIXEL_MATRIX
@@ -824,7 +879,9 @@ vg_lite_error_t vg_lite_set_pixel_matrix(vg_lite_pixel_matrix_t matrix, vg_lite_
 vg_lite_error_t vg_lite_gaussian_filter(vg_lite_float_t w0, vg_lite_float_t w1, vg_lite_float_t w2)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_gaussian_filter)(w0, w1, w2);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_gaussian_filter)(w0, w1, w2);
+    }
 #endif
 
 #if gcFEATURE_VG_GAUSSIAN_BLUR
@@ -834,9 +891,12 @@ vg_lite_error_t vg_lite_gaussian_filter(vg_lite_float_t w0, vg_lite_float_t w1, 
     VGLITE_LOG("vg_lite_gaussian_filter %f %f %f\n", w0, w1, w2);
 #endif
 
-    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AD2 + 1, (uint32_t)(w0 * 256)));
+    if (fabs(w0 + 4 * w1 + 4 * w2 - 1.0) > 0.000001 || w0 < 0 || w1 < 0 || w2 < 0)
+        return VG_LITE_INVALID_ARGUMENT;
+
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AD4 + 1, (uint32_t)(w1 * 256)));
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AD6 + 1, (uint32_t)(w2 * 256)));
+    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AD2 + 1, (uint32_t)(256 - floor(w1 * 256) * 4 - floor(w2 * 256) * 4)));
 
     return error;
 #else
@@ -844,15 +904,55 @@ vg_lite_error_t vg_lite_gaussian_filter(vg_lite_float_t w0, vg_lite_float_t w1, 
 #endif
 }
 
+#if gcFEATURE_VG_NEW_ROI_MASK
+static vg_lite_error_t findMinBoundingRect(vg_lite_rectangle_t* rects, vg_lite_buffer_t* target, vg_lite_uint32_t nums, vg_lite_rectangle_t* boundingRect) {
+    if (nums == 0)
+    {
+        return VG_LITE_INVALID_ARGUMENT;
+    }
+
+    int minX = rects[0].x;
+    int minY = rects[0].y;
+    int maxX = rects[0].x + rects[0].width;
+    int maxY = rects[0].y + rects[0].width;
+
+    for (int i = 1; i < nums; i++) {
+
+        if (rects[i].x < minX)
+            minX = rects[i].x;
+
+        if (rects[i].y < minY)
+            minY = rects[i].y;
+
+        if (rects[i].x + rects[i].width > maxX)
+            maxX = rects[i].x + rects[i].width;
+
+        if (rects[i].y + rects[i].height > maxY)
+            maxY = rects[i].y + rects[i].height;
+    }
+    minX = minX < 0 ? 0 : minX;
+    minY = minY < 0 ? 0 : minY;
+    maxX = maxX > target->width ? target->width : maxX;
+    maxY = maxY > target->height ? target->height : maxY;
+    boundingRect->x = minX;
+    boundingRect->y = minY;
+    boundingRect->width = maxX - minX;
+    boundingRect->height = maxY - minY;
+    return VG_LITE_SUCCESS;
+}
+#endif
+
 vg_lite_error_t vg_lite_scissor_rects(vg_lite_buffer_t *target, vg_lite_uint32_t nums, vg_lite_rectangle_t rect[])
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_scissor_rects)(target, nums, rect);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_scissor_rects)(target, nums, rect);
+    }
 #endif
 
 #if gcFEATURE_VG_MASK
     vg_lite_error_t error = VG_LITE_SUCCESS;
-    vg_lite_rectangle_t rect_clamp, rect_draw;
+    vg_lite_rectangle_t rect_clamp, rect_draw, rect_scissor_layer;
     vg_lite_int32_t left_x, right_x, left_len, middle_len, right_len, stride, j, max_x, max_y;
     vg_lite_uint8_t alpha;
     vg_lite_uint32_t i;
@@ -863,14 +963,28 @@ vg_lite_error_t vg_lite_scissor_rects(vg_lite_buffer_t *target, vg_lite_uint32_t
     }
 #endif
 
+    //initial range
+    if (nums == 0 && rect != NULL) {
+        s_context.scissor_layer_range[0] = 0;
+        s_context.scissor_layer_range[1] = 0;
+        s_context.scissor_layer_range[2] = 0;
+        s_context.scissor_layer_range[3] = 0;
+    }
+    else if (nums > 0 && rect != NULL) {
+        s_context.scissor_layer_range[0] = rect[0].x;
+        s_context.scissor_layer_range[1] = rect[0].y;
+        s_context.scissor_layer_range[2] = rect[0].x + rect[0].width;
+        s_context.scissor_layer_range[3] = rect[0].y + rect[0].height;
+    }
+    else
+        return VG_LITE_INVALID_ARGUMENT;
+
     /* Record scissor enable flag and disable scissor. */
     vg_lite_uint8_t enable = s_context.scissor_enable;
     s_context.scissor_enable = 0;
 
     /* Free the old scissor layer if its size is too small for target */
-    if (s_context.scissor_layer &&
-       (s_context.scissor_layer->width < ((target->width + 7) / 8) || s_context.scissor_layer->height < target->height))
-    {
+    if (s_context.scissor_layer && (((s_context.scissor_layer->width < ((target->width + 7) / 8) || s_context.scissor_layer->height < target->height)) || gcFEATURE_VG_NEW_ROI_MASK)) {
         vg_lite_free(s_context.scissor_layer);
         vg_lite_os_free(s_context.scissor_layer);
         s_context.scissor_layer = NULL;
@@ -885,8 +999,14 @@ vg_lite_error_t vg_lite_scissor_rects(vg_lite_buffer_t *target, vg_lite_uint32_t
 
         memset(s_context.scissor_layer, 0, sizeof(vg_lite_buffer_t));
         s_context.scissor_layer->scissor_buffer = 1;
+#if gcFEATURE_VG_NEW_ROI_MASK
+        VG_LITE_RETURN_ERROR(findMinBoundingRect(rect, target, nums, &rect_scissor_layer));
+        s_context.scissor_layer->width = (rect_scissor_layer.width + 7) / 8;
+        s_context.scissor_layer->height = rect_scissor_layer.height;
+#else
         s_context.scissor_layer->width = (target->width + 7) / 8;
         s_context.scissor_layer->height = target->height;
+#endif
         s_context.scissor_layer->format = VG_LITE_A8;
         VG_LITE_RETURN_ERROR(vg_lite_allocate(s_context.scissor_layer));
     }
@@ -901,6 +1021,39 @@ vg_lite_error_t vg_lite_scissor_rects(vg_lite_buffer_t *target, vg_lite_uint32_t
 
     /* Draw rectangle to scissor layer, one bit data of scissor layer corresponds to one pixel. */
     for (i = 0; i < nums; ++i) {
+
+#if gcFEATURE_VG_NEW_ROI_MASK
+        /* Clamp the rect relative to the scissor_layer coordinates. */
+        memcpy(&rect_clamp, &rect[i], sizeof(vg_lite_rectangle_t));
+        {
+            if (rect_clamp.x < rect_scissor_layer.x) {
+                rect_clamp.width += (rect_clamp.x - rect_scissor_layer.x);
+                rect_clamp.x = rect_scissor_layer.x;
+            }
+            if (rect_clamp.y < rect_scissor_layer.y) {
+                rect_clamp.height += (rect_clamp.y - rect_scissor_layer.y);
+                rect_clamp.y = rect_scissor_layer.y;
+            }
+            if (rect_clamp.x >= (rect_scissor_layer.x + max_x)) {
+                rect_clamp.x = rect_scissor_layer.x;
+            }
+            if (rect_clamp.y >= (rect_scissor_layer.y + max_y)) {
+                rect_clamp.y = rect_scissor_layer.y;
+            }
+            if (rect_clamp.width <= 0 || rect_clamp.height <= 0) {
+                rect_clamp.width = rect_clamp.height = 0;
+            }
+            if (rect_clamp.x + rect_clamp.width > rect_scissor_layer.x + max_x) {
+                rect_clamp.width = rect_scissor_layer.x + max_x - rect_clamp.x;
+            }
+            if (rect_clamp.y + rect_clamp.height > rect_scissor_layer.y + max_y) {
+                rect_clamp.height = rect_scissor_layer.y + max_y - rect_clamp.y;
+            }
+        }
+        /* Convert the starting point of rect to the coordinates relative to the scissor_layer. */
+        rect_clamp.x = rect_clamp.x - rect_scissor_layer.x;
+        rect_clamp.y = rect_clamp.y - rect_scissor_layer.y;
+#else
         /* Clamp the rect */
         memcpy(&rect_clamp, &rect[i], sizeof(vg_lite_rectangle_t));
         {
@@ -919,6 +1072,8 @@ vg_lite_error_t vg_lite_scissor_rects(vg_lite_buffer_t *target, vg_lite_uint32_t
                 rect_clamp.height = max_y - rect_clamp.y;
             }
         }
+
+#endif
 
         if (((rect_clamp.x + rect_clamp.width) >> 3) == (rect_clamp.x >> 3)) {
             rect_draw.x = rect_clamp.x / 8;
@@ -975,9 +1130,25 @@ vg_lite_error_t vg_lite_scissor_rects(vg_lite_buffer_t *target, vg_lite_uint32_t
                 }
             }
         }
-    }
+
+        //update scissor_layer_range
+        if (i != 0) {
+            s_context.scissor_layer_range[0] = MIN(rect[i].x, s_context.scissor_layer_range[0]);
+            s_context.scissor_layer_range[1] = MIN(rect[i].y, s_context.scissor_layer_range[1]);
+            s_context.scissor_layer_range[2] = MAX(rect[i].x + rect[i].width, s_context.scissor_layer_range[2]);
+            s_context.scissor_layer_range[3] = MAX(rect[i].y + rect[i].height, s_context.scissor_layer_range[3]);
+            }
+
+        }
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A16, s_context.scissor_layer->address));
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A17, s_context.scissor_layer->stride));
+#if gcFEATURE_VG_NEW_ROI_MASK
+    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AF4, (rect_scissor_layer.y << 16) | rect_scissor_layer.x));
+    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AF5, (rect_scissor_layer.height) << 16 | rect_scissor_layer.width));
+#else
+    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AF4, 0x0));
+    VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0AF5, max_y << 16 | max_x));
+#endif
     VG_LITE_RETURN_ERROR(push_state(&s_context, 0x0A1B, 0x00000100));
     vg_lite_finish();
     s_context.scissor_enable = enable;
@@ -992,7 +1163,9 @@ vg_lite_error_t vg_lite_scissor_rects(vg_lite_buffer_t *target, vg_lite_uint32_t
 vg_lite_error_t vg_lite_set_mirror(vg_lite_orientation_t orientation)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_set_mirror)(orientation);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_set_mirror)(orientation);
+    }
 #endif
 
 #if gcFEATURE_VG_MIRROR
@@ -1014,7 +1187,9 @@ vg_lite_error_t vg_lite_set_mirror(vg_lite_orientation_t orientation)
 vg_lite_error_t vg_lite_set_gamma(vg_lite_gamma_conversion_t gamma_value)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_set_gamma)(gamma_value);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_set_gamma)(gamma_value);
+    }
 #endif
 
 #if gcFEATURE_VG_GAMMA
@@ -1210,7 +1385,9 @@ vg_lite_void save_st_gamma_src_dest(vg_lite_buffer_t *source, vg_lite_buffer_t *
 vg_lite_error_t vg_lite_enable_color_transform()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_enable_color_transform)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_enable_color_transform)();
+    }
 #endif
 
 #if gcFEATURE_VG_COLOR_TRANSFORMATION
@@ -1231,7 +1408,9 @@ vg_lite_error_t vg_lite_enable_color_transform()
 vg_lite_error_t vg_lite_disable_color_transform()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_disable_color_transform)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_disable_color_transform)();
+    }
 #endif
 
 #if gcFEATURE_VG_COLOR_TRANSFORMATION
@@ -1252,7 +1431,9 @@ vg_lite_error_t vg_lite_disable_color_transform()
 vg_lite_error_t vg_lite_set_color_transform(vg_lite_color_transform_t* values)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_enable_color_transform)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_enable_color_transform)();
+    }
 #endif
 
 #if gcFEATURE_VG_COLOR_TRANSFORMATION
@@ -1299,7 +1480,7 @@ typedef struct {
 
 int colorToInt(float c, int maxc)
 {
-    return MIN(MAX((int)floor(c * (float)maxc + 0.5f), 0), maxc);
+    return MIN(MAX((int)floor((double)(c * (float)maxc + 0.5f)), 0), maxc);
 }
 
 float intToColor(unsigned int i, unsigned int maxi)
@@ -1860,7 +2041,7 @@ void writePixel(vg_lite_buffer_t* temp, int x, int y, Color* c)
 
 vg_lite_void setup_lvgl_image(vg_lite_buffer_t* dst, vg_lite_buffer_t* src, vg_lite_buffer_t* lvgl_buf, vg_lite_blend_t operation)
 {
-    Color c_src, c_dst, c_temp;
+    Color c_src = {0}, c_dst = {0}, c_temp = {0};
     /* copy source region to tmp dst */
     for (int j = 0; j < src->height; j++)
     {
@@ -1895,6 +2076,12 @@ vg_lite_void setup_lvgl_image(vg_lite_buffer_t* dst, vg_lite_buffer_t* src, vg_l
                 c_temp.g = c_src.g * c_dst.g * c_src.a;
                 c_temp.b = c_src.b * c_dst.b * c_src.a;
                 break;
+            case VG_LITE_BLEND_DIFFERENCE_LVGL:
+                c_temp.a = c_src.a;
+                c_temp.r = c_src.r < c_dst.r ? (c_dst.r - c_src.r) * c_src.a : (c_src.r - c_dst.r) * c_src.a;
+                c_temp.g = c_src.g < c_dst.g ? (c_dst.g - c_src.g) * c_src.a : (c_src.g - c_dst.g) * c_src.a;
+                c_temp.b = c_src.b < c_dst.b ? (c_dst.b - c_src.b) * c_src.a : (c_src.b - c_dst.b) * c_src.a;
+                break;
             default:
                 break;
             }
@@ -1917,7 +2104,9 @@ vg_lite_void setup_lvgl_image(vg_lite_buffer_t* dst, vg_lite_buffer_t* src, vg_l
 vg_lite_error_t vg_lite_flexa_enable()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_flexa_enable)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_flexa_enable)();
+    }
 #endif
 
 #if gcFEATURE_VG_FLEXA
@@ -1963,7 +2152,9 @@ vg_lite_error_t vg_lite_flexa_enable()
 vg_lite_error_t vg_lite_flexa_set_stream(vg_lite_uint8_t stream_id)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_flexa_set_stream)(stream_id);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_flexa_set_stream)(stream_id);
+    }
 #endif
 
 #if gcFEATURE_VG_FLEXA
@@ -1984,7 +2175,9 @@ vg_lite_error_t vg_lite_flexa_set_stream(vg_lite_uint8_t stream_id)
 vg_lite_error_t vg_lite_flexa_bg_buffer(vg_lite_uint8_t stream_id, vg_lite_buffer_t* buffer, vg_lite_uint32_t bg_seg_count, vg_lite_uint32_t bg_seg_size)
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_flexa_bg_buffer)(stream_id, buffer, bg_seg_count, bg_seg_size);
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_flexa_bg_buffer)(stream_id, buffer, bg_seg_count, bg_seg_size);
+    }
 #endif
 
 #if gcFEATURE_VG_FLEXA
@@ -2014,7 +2207,9 @@ vg_lite_error_t vg_lite_flexa_bg_buffer(vg_lite_uint8_t stream_id, vg_lite_buffe
 vg_lite_error_t vg_lite_flexa_stop_frame()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_flexa_stop_frame)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_flexa_stop_frame)();
+    }
 #endif
 
 #if gcFEATURE_VG_FLEXA
@@ -2039,7 +2234,9 @@ vg_lite_error_t vg_lite_flexa_stop_frame()
 vg_lite_error_t vg_lite_flexa_disable()
 {
 #if DUMP_API
-    FUNC_DUMP(vg_lite_flexa_disable)();
+    if (dump_api_flag) {
+        FUNC_DUMP(vg_lite_flexa_disable)();
+    }
 #endif
 
 #if gcFEATURE_VG_FLEXA

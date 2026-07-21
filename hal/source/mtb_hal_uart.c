@@ -184,6 +184,26 @@ static void _mtb_hal_uart_irq_handler(mtb_hal_uart_t* obj)
             obj->context->cbEvents((uint32_t)MTB_HAL_UART_IRQ_RX_FIFO);
         }
     }
+
+    /* TX_EMPTY safety guard: check live status to catch events that fired during PDL processing */
+    if (0UL != (CY_SCB_UART_TX_EMPTY & Cy_SCB_GetTxInterruptStatusMasked(obj->base)))
+    {
+        /* Disable the mask first so we don't re-enter on the way out. */
+        Cy_SCB_SetTxInterruptMask(obj->base,
+                                  Cy_SCB_GetTxInterruptMask(
+                                      obj->base) & ~CY_SCB_UART_TX_EMPTY);
+        Cy_SCB_ClearTxInterrupt(obj->base, CY_SCB_UART_TX_EMPTY);
+        obj->irq_cause &= ~(uint32_t)MTB_HAL_UART_IRQ_TX_EMPTY;
+
+        mtb_hal_uart_event_callback_t callback =
+            (mtb_hal_uart_event_callback_t)obj->callback_data.callback;
+        if (NULL != callback)
+        {
+            callback(obj->callback_data.callback_arg,
+                     (mtb_hal_uart_event_t)MTB_HAL_UART_IRQ_TX_EMPTY);
+        }
+    }
+
     _mtb_hal_uart_irq_obj = old_irq_obj;
 }
 
@@ -277,6 +297,8 @@ cy_rslt_t _mtb_hal_uart_async_transfer_handler(void* obj)
     cy_rslt_t     result = CY_RSLT_SUCCESS;
     mtb_hal_uart_t* uart_obj = (mtb_hal_uart_t*)obj;
 
+    CY_MISRA_DEVIATE_LINE('MISRA C-2023 Rule 14.3',
+                          'uart_obj is validated non-NULL by caller before invoking this handler.');
     CY_ASSERT(NULL != uart_obj);
 
     uint32_t txMasked = Cy_SCB_GetTxInterruptStatusMasked(uart_obj->base);
@@ -292,7 +314,7 @@ cy_rslt_t _mtb_hal_uart_async_transfer_handler(void* obj)
     {
         direction |= MTB_ASYNC_TRANSFER_DIRECTION_WRITE;
     }
-    if (direction)
+    if ((0U != direction) && (NULL != uart_obj->async_ctx))
     {
         result =
             mtb_async_transfer_process_fifo_level_event(uart_obj->async_ctx,
@@ -891,14 +913,6 @@ void mtb_hal_uart_enable_event(mtb_hal_uart_t* obj, mtb_hal_uart_event_t event, 
         rx_mask |= CY_SCB_UART_RX_TRIGGER;
     }
 
-    if (enable)
-    {
-        obj->irq_cause |= event;
-    }
-    else
-    {
-        obj->irq_cause &= ~event;
-    }
     if (event == MTB_HAL_UART_IRQ_NONE)
     {
         /* "No interrupt" is equivalent for both "enable" and "disable" */
@@ -908,6 +922,19 @@ void mtb_hal_uart_enable_event(mtb_hal_uart_t* obj, mtb_hal_uart_event_t event, 
     }
 
     uint32_t savedIntrStatus = mtb_hal_system_critical_section_enter();
+
+    /* irq_cause must be modified inside the critical section to prevent a race between
+       the TX task and RX task both calling enable_event concurrently. A non-atomic RMW
+       on irq_cause can lose the TX_EMPTY bit, causing _mtb_hal_uart_cb_wrapper's AND
+       gate to fail and leaving TX_EMPTY masked-on indefinitely. */
+    if (enable)
+    {
+        obj->irq_cause |= event;
+    }
+    else
+    {
+        obj->irq_cause &= ~event;
+    }
     //Get and modify TX events
     uint32_t current_tx_mask = Cy_SCB_GetTxInterruptMask(obj->base);
     if (enable && tx_mask)

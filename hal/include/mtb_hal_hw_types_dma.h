@@ -95,27 +95,27 @@ typedef struct
     union
     {
         #if defined (_MTB_HAL_DRIVER_AVAILABLE_DMA_DW)
-        _mtb_hal_dw_base_t* dw_base;
+        _mtb_hal_dw_base_t* dw_base; /**< Datawire base address */
         #endif
         #if defined (_MTB_HAL_DRIVER_AVAILABLE_DMA_DMAC)
-        _mtb_hal_dmac_base_t* dmac_base;
+        _mtb_hal_dmac_base_t* dmac_base; /**< DMAC base address */
         #endif
-    } base;
+    } base; /**< DMA base address */
     union
     {
         #if defined (_MTB_HAL_DRIVER_AVAILABLE_DMA_DW)
-        _mtb_hal_dw_descriptor_t* dw;
+        _mtb_hal_dw_descriptor_t* dw; /**< Datawire descriptor */
         #endif
         #if defined (_MTB_HAL_DRIVER_AVAILABLE_DMA_DMAC)
-        _mtb_hal_dmac_descriptor_t* dmac;
+        _mtb_hal_dmac_descriptor_t* dmac; /**< DMAC descriptor */
         #endif
-    } descriptor;
-    mtb_hal_dma_type_t                       dma_type;
-    uint32_t                                 channel;
-    uint16_t                                 expected_bursts;
-    uint32_t                                 direction; /* really a mtb_hal_dma_direction_t */
-    uint32_t                                 irq_cause;
-    _mtb_hal_event_callback_data_t           callback_data;
+    } descriptor; /**< DMA descriptor */
+    mtb_hal_dma_type_t                       dma_type; /**< DMA type (DW or DMAC) */
+    uint32_t                                 channel; /**< Channel number */
+    uint16_t                                 expected_bursts; /**< Expected number of bursts */
+    uint32_t                                 direction; /**< Transfer direction (mtb_hal_dma_direction_t) */
+    uint32_t                                 irq_cause; /**< IRQ cause */
+    _mtb_hal_event_callback_data_t           callback_data; /**< Callback data */
 } mtb_hal_dma_t;
 
 /**
@@ -128,30 +128,30 @@ typedef struct
  */
 typedef struct
 {
-    mtb_hal_dma_type_t                       dma_type;
-    uint32_t                                 channel;
+    mtb_hal_dma_type_t                       dma_type; /**< DMA type (DW or DMAC) */
+    uint32_t                                 channel; /**< Channel number */
     struct
     {
         union
         {
             #if defined(_MTB_HAL_DRIVER_AVAILABLE_DMA_DW)
-            _mtb_hal_dw_base_t const*         dw_base;
+            _mtb_hal_dw_base_t const*         dw_base; /**< Datawire base address */
             #endif
             #if defined(_MTB_HAL_DRIVER_AVAILABLE_DMA_DMAC)
-            _mtb_hal_dmac_base_t const*       dmac_base;
+            _mtb_hal_dmac_base_t const*       dmac_base; /**< DMAC base address */
             #endif
         };
 
         union
         {
             #if defined(_MTB_HAL_DRIVER_AVAILABLE_DMA_DW)
-            _mtb_hal_dw_descriptor_t *   dw_descriptor;
+            _mtb_hal_dw_descriptor_t *   dw_descriptor; /**< Datawire descriptor */
             #endif
             #if defined(_MTB_HAL_DRIVER_AVAILABLE_DMA_DMAC)
-            _mtb_hal_dmac_descriptor_t * dmac_descriptor;
+            _mtb_hal_dmac_descriptor_t * dmac_descriptor; /**< DMAC descriptor */
             #endif
         };
-    };
+    }; /**< Implementation-specific configuration */
 } mtb_hal_dma_configurator_t;
 
 #endif // defined(MTB_HAL_DRIVER_AVAILABLE_DMA)

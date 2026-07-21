@@ -56,14 +56,14 @@
       <Entry name='CLK_TIMER' value='timerclk' />
       <Entry name='CLK_HF`${"m55appcpuss" eq getIpBlockName() ? "1" : "0"}`' value='hfclk' visible='`${("mxs40ssrss" eq getIpBlockName()) || ("m0seccpuss" eq getIpBlockName()) || ("m33syscpuss" eq getIpBlockName()) || ("m55appcpuss" eq getIpBlockName())}`'/>
     </ParamChoice>
-    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[`${("m55appcpuss" eq getIpBlockName()&amp;&amp; (sourceClock eq hfclk)) ? "1" : "0"}`]' />
-    <ParamString id='guardStr' default='`${"m0seccpuss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M0P)" : "mxs40srss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M4)" : "mxs40srss_ver3" eq getIpBlockName() ? " (CY_CPU_CORTEX_M7)" : "m55appcpuss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M55)" : "systick_s" eq getBlockType(1) ? " (CY_CPU_CORTEX_M33) &amp;&amp; defined(CY_PDL_TZ_ENABLED)" : "(CY_CPU_CORTEX_M33) &amp;&amp; !defined(CY_PDL_TZ_ENABLED)"}`' />
+    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[`${("m55appcpuss" eq getIpBlockName()&amp;&amp; (sourceClock eq hfclk)) ? "1" : "0"}`]' desc='Resource path of the selected CLK_ALT_SYS_TICK source clock' />
+    <ParamString id='guardStr' default='`${"m0seccpuss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M0P)" : "mxs40srss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M4)" : "mxs40srss_ver3" eq getIpBlockName() ? " (CY_CPU_CORTEX_M7)" : "m55appcpuss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M55)" : "systick_s" eq getBlockType(1) ? " (CY_CPU_CORTEX_M33) &amp;&amp; defined(CY_PDL_TZ_ENABLED)" : "(CY_CPU_CORTEX_M33) &amp;&amp; !defined(CY_PDL_TZ_ENABLED)"}`' desc='Preprocessor guard expression selecting the CPU core for the generated SysTick configuration' />
     <ParamString id='sourceClockRscName' default='`${sourceClock eq lfclk ? "LF" :
                                                      sourceClock eq imo   ? "IMO" :
                                                      sourceClock eq hfclk ? "CPU" :
-                                                     sourceClock eq eco ? "ECO" : "TIMER"}`' />
-    <ParamString id='frequency' default='`${(("mxs40srss" ne getIpBlockName()) &amp;&amp; (sourceClock eq timerclk)) ? (1000000) : (getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0))}`' />
-    <ParamString id='accuracy' default='`${(("mxs40srss" ne getIpBlockName()) &amp;&amp; (sourceClock eq timerclk)) ? (0) : (getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0))}`' />
+                                                     sourceClock eq eco ? "ECO" : "TIMER"}`' desc='PDL API source suffix for the selected SysTick clock used in generated configuration' />
+    <ParamString id='frequency' default='`${(("mxs40srss" ne getIpBlockName()) &amp;&amp; (sourceClock eq timerclk)) ? (1000000) : (getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0))}`' desc='Resulting SysTick frequency, fixed at 1 MHz for CLK_TIMER on non-mxs40srss devices otherwise taken from the source clock' />
+    <ParamString id='accuracy' default='`${(("mxs40srss" ne getIpBlockName()) &amp;&amp; (sourceClock eq timerclk)) ? (0) : (getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0))}`' desc='SysTick source accuracy, zero for CLK_TIMER on non-mxs40srss devices otherwise taken from the source clock' />
 
     <!-- If the frequency is less than one MHz, display its value in kHz -->
     <ParamString id='frequencyInfo' name='Frequency' group='General' default='`${formatFrequency(frequency,accuracy)}`' visible='true' editable='false' desc='The resulting CLK_ALT_SYS_TICK output clock frequency' />

@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -29,10 +29,11 @@
 
 <Personality id='smif_core' name='Quad Serial Peripheral Interface (QSPI)' version='1.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v7'>
   <Dependencies>
-    <IpBlock name='mxsmif'>
+    <IpBlock name='mxsmif,smif'>
       <Version major='4' />
       <Version major='5' />
       <Version major='6' />
+      <Version major='7' />
     </IpBlock>
     <Resource name='smif\.core' />
   </Dependencies>
@@ -45,7 +46,8 @@
 
     <!-- Differentiation variable for SMIFv4 and SMIFv5 values -->
     <ParamBool id='isSmifV4' name='isSmifV4' group='' default='`${("4" eq getVersion())}`' visible='false' editable='false' desc='True if the IP version is SMIFv4.' />
-    <ParamBool id='isSmifV5or6' name='isSmifV5or6' group='' default='`${("5" eq getVersion()) || ("6" eq getVersion())}`' visible='false' editable='false' desc='True if the IP version is SMIFv5 or greater.' />
+    <ParamBool id='isSmifV5or6' name='isSmifV5or6' group='' default='`${("5" eq getVersion()) || ("6" eq getVersion()) || ("7" eq getVersion())}`' visible='false' editable='false' desc='True if the IP version is SMIFv5 or greater.' />
+    <ParamBool id='isSmifV7' name='isSmifV7' group='' default='`${("7" eq getVersion())}`' visible='false' editable='false' desc='True if the IP version is SMIFv7.' />
 
     <!-- External tools -->
     <ParamString id='cfgFileName' name='cfgFileName' group='External Tools' default='design.cyqspi' visible='false' editable='false' desc='' />
@@ -58,14 +60,15 @@
     </ParamCustom>
 
     <!-- Clocks -->
-    <ParamSignal port='clk_pll_normal[0]' name='Interface Clock Source' group='Clocks' visible='true' desc='Transmission interface clock.Divides HF clock supplied internally by 2.' canBeEmpty='false' />
-    <ParamString id='smifIfSource' name='smifIfSource' group='Internal' default='`${getBlockFromSignal("clk_pll_normal[0]")}`' visible='false' editable='false' desc='Interface Source Clock Resource' />
+    <ParamSignal port='clk_pll_normal[0]' name='Interface Clock Source' group='Clocks' visible='`${!isSmifV7}`' desc='Transmission interface clock. Divides HF clock supplied internally by 2.' canBeEmpty='`${isSmifV7}`' />
+    <ParamSignal port='clk_pll[0]' name='Interface Clock Source' group='Clocks' visible='`${isSmifV7}`' desc='Transmission interface clock for SMIFv7. Divides HF clock supplied internally by 2.' canBeEmpty='`${!isSmifV7}`' />
+    <ParamString id='smifIfSource' name='smifIfSource' group='Internal' default='`${getBlockFromSignal(isSmifV7 ? "clk_pll[0]" : "clk_pll_normal[0]")}`' visible='false' editable='false' desc='Interface Source Clock Resource' />
     <ParamString id='core' name='core number' group='Internal' default='`${getInstNumber("core")}`' visible='false' editable='false' desc='' />
-    <ParamRange id='smif_ip_version' name='SMIF IP Version' group='System' default='`${getVersion()}`' min='4' max='6' resolution='1' visible='false' editable='false' desc='SMIF IP Version' />
+    <ParamRange id='smif_ip_version' name='SMIF IP Version' group='System' default='`${getVersion()}`' min='4' max='7' resolution='1' visible='false' editable='false' desc='SMIF IP Version' />
 
     <ParamSignal port='spihb_clk[0]' name='SPI Clock' group='Clocks' visible='`${isSmifV4}`' desc='The Serial Clock (SCLK) to the slave devices' canBeEmpty='`${!isSmifV4}`'>
       <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
-        <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
+        <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG' />
         </Parameter>
       </Constraint>
@@ -83,8 +86,8 @@
     <ParamRange  id='divider_value' name='Divider Value' group='Internal' visible='false' editable='false'
                  default='`${use_dll ? (2 * pow(2,(divider_enum eq CY_SMIF_DLL_DIVIDE_BY_2 ? 0 :
                                                   (divider_enum eq CY_SMIF_DLL_DIVIDE_BY_4 ? 1 :
-                                                  (divider_enum eq CY_SMIF_DLL_DIVIDE_BY_8 ? 2 : 3))))) : 1}`'
-                 min='1' max='16' resolution='1' desc='computed divider value based on user selection' />
+                                                  (divider_enum eq CY_SMIF_DLL_DIVIDE_BY_8 ? 2 : 3))))) : 2}`'
+                 min='2' max='16' resolution='1' desc='computed divider value based on user selection' />
 
     <ParamString id='smif_if_clk' name='Interface Clock Frequency' group='Clocks' default='`${(formatFrequency(getExposedMember(smifIfSource, "frequency") / divider_value))}`' visible='true' editable='false' desc='Interface Clock frequency' />
     <ParamChoice id='capture_mode' name='RX Capture Mode' group='Clocks' default='CY_SMIF_SEL_NORMAL_SPI' visible='true' editable='true' desc='Receive Capture mode'>
@@ -114,7 +117,7 @@
 
     <ParamRange id='numDevicesPerCore' name='Number of devices per SMIF CORE' group='' default='`${isSmifV4 ? lookupExpression("CORE.DEVICE_NR") : lookupExpression("DEVICE_NR")}`' min='0' max='4' resolution='1' visible='false' editable='false' desc='The number of devices supported by each SMIF CORE.' />
     <Repeat count='4'>
-      <ParamChoice id='device$idx_sdl_tap' name='Device[$idx] SDL Pos/Neg Tap Selection' group='Clocks' default='CY_SMIF_SDL_8_TAP_DELAY' visible='`${numDevicesPerCore &gt; 0}`' editable='true' desc='Determines the amount of delay through the &apos;neg&apos; SDL for the receive clock coming from the pins in terms of the number of tap delays. There are 16 SDL taps and the delay resolution of each tap is controlled by and thus closely mimics the delay resolution of the MDL.'>
+      <ParamChoice id='device$idx_sdl_tap' name='Device[$idx] SDL Pos/Neg Tap Selection' group='Clocks' default='CY_SMIF_SDL_1_TAP_DELAY' visible='`${numDevicesPerCore &gt; 0 &amp;&amp; use_dll}`' editable='`${use_dll}`' desc='Determines the amount of delay through the &apos;neg&apos; SDL for the receive clock coming from the pins in terms of the number of tap delays. There are 16 SDL taps and the delay resolution of each tap is controlled by and thus closely mimics the delay resolution of the MDL.'>
         <Entry name='1 Tap Delay' value='CY_SMIF_SDL_1_TAP_DELAY' visible='true'/>
         <Entry name='2 Tap Delays' value='CY_SMIF_SDL_2_TAP_DELAY' visible='true'/>
         <Entry name='3 Tap Delays' value='CY_SMIF_SDL_3_TAP_DELAY' visible='true'/>
@@ -134,7 +137,7 @@
       </ParamChoice>
     </Repeat>
 
-    <ParamChoice id='tx_sdr_extra' name='TX SDR Extra' group='Clocks' default='CY_SMIF_TX_TWO_PERIOD_AHEAD' visible='true' editable='true' desc='Launches transmit data nominally one or two PLL clock periods ahead of the rising edge of the clock.&lt;br&gt;&lt;br&gt;With &apos;Divide by 2&apos;, One Period Ahead=&apos;launch from negedge&apos; and Two Periods Ahead=&apos;launch from posedge&apos;.'>
+    <ParamChoice id='tx_sdr_extra' name='TX SDR Extra' group='Clocks' default='CY_SMIF_TX_ONE_PERIOD_AHEAD' visible='true' editable='true' desc='Launches transmit data nominally one or two PLL clock periods ahead of the rising edge of the clock.&lt;br&gt;&lt;br&gt;With &apos;Divide by 2&apos;, One Period Ahead=&apos;launch from negedge&apos; and Two Periods Ahead=&apos;launch from posedge&apos;.'>
       <Entry name='One Period Ahead' value='CY_SMIF_TX_ONE_PERIOD_AHEAD' visible='true'/>
       <Entry name='Two Periods Ahead' value='CY_SMIF_TX_TWO_PERIOD_AHEAD' visible='true'/>
     </ParamChoice>
@@ -156,7 +159,7 @@
 
     <!-- SPI Data - SMIFv5 (which uses spihb_dataX_pad[] naming convention) -->
     <Repeat count='8'>
-      <ParamSignal port='spihb_data$idx_pad[0]' name='SPI Data[$idx]' group='Data Lines' visible='`${(CHIP_TOP.DATA8_PRESENT == 1) &amp;&amp; hasVisibleOption("spihb_data$idx_pad[0]")}`' desc='Data line $idx to be used by the QSPI block, must be used in conjunction with Data line `${$idx % 1 ? $idx - 1 : $idx + 1}`' canBeEmpty='true'>
+      <ParamSignal port='spihb_data$idx_pad[0]' name='SPI Data[$idx]' group='Data Lines' visible='`${isSmifV7 || ((CHIP_TOP.DATA8_PRESENT == 1) &amp;&amp; hasVisibleOption("spihb_data$idx_pad[0]"))}`' desc='Data line $idx to be used by the QSPI block, must be used in conjunction with Data line `${$idx % 1 ? $idx - 1 : $idx + 1}`' canBeEmpty='true'>
         <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' >
           <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive&apos; or &apos;Pull Up&apos; with input buffer ON.'>
             <Choice>
@@ -177,7 +180,7 @@
     <!-- CORE0 SPI Select -->
     <ParamSignal port='spihb_select0[0]' name='SPI Slave Select 0' group='Slave Select' visible='`${hasVisibleOption("spihb_select0[0]")}`' desc='Select signal 0 to specify which memory device to communicate with' canBeEmpty='true'>
       <Constraint type='ACCEPT' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='`${isSmifV5or6}`' >
-        <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer off&apos;.'>
+        <Parameter id='DriveModes' severity='ERROR' reason='Drive Mode must be set to &apos;Strong Drive. Input buffer on&apos;.'>
           <Fixed value='CY_GPIO_DM_STRONG_IN_OFF' />
         </Parameter>
       </Constraint>
@@ -235,7 +238,7 @@
     <!-- CORE-0 DMA Triggers -->
     <ParamSignal port='tr_rx_req[0]' name='RX Trigger Output' group='DMA Triggers' visible='true' desc='Enables the RX trigger output terminal (tr_rx_req)' canBeEmpty='true' />
     <ParamRange id='rxTriggerLevel' name='RX FIFO Trigger Level' group='DMA Triggers' default='0' min='0' max='7' resolution='1' visible='true' editable='true' desc='The level that can trigger the RX FIFO to trigger an interrupt or a DMA request' />
-    <ParamSignal port='tr_tx_req[0]' name='TX Trigger Output' group='DMA Triggers' visible='true' desc='enables the TX trigger output terminal (tr_tx_req)' canBeEmpty='true' />
+    <ParamSignal port='tr_tx_req[0]' name='TX Trigger Output' group='DMA Triggers' visible='true' desc='Enables the TX trigger output terminal (tr_tx_req)' canBeEmpty='true' />
     <ParamRange id='txTriggerLevel' name='TX FIFO Trigger Level' group='DMA Triggers' default='0' min='0' max='7' resolution='1' visible='true' editable='true' desc='The level that can trigger the TX FIFO to trigger an interrupt or a DMA request' />
 
     <ParamString id='dmaRxTriggerOut' name='dmaRxTriggerOut' group='Internal' default='`${getBlockFromSignal("tr_rx_req[0]")}`' visible='false' editable='false' desc='' />
@@ -250,7 +253,7 @@
     <!-- SMIF instance number -->
     <ParamString id='InstNumber' name='InstNumber' group='Internal' default='`${getInstNumber("smif")}`' visible='false' editable='false' desc='SMIF Instance name number.' />
     <ParamString id='Core_InstNumber' name='Core_InstNumber' group='Internal' default='`${getInstNumber("core")}`' visible='false' editable='false' desc='SMIF Instance name number.' />
-    <ParamString id='Core_SlavePeriInstNumber' name='Block_InstNumber' group='Internal' default='`${InstNumber eq "1" ? "0" : ""}`' visible='false' editable='false' desc='SMIF Instance name number.' />
+    <ParamString id='Core_SlavePeriInstNumber' name='Block_InstNumber' group='Internal' default='`${isSmifV7 ? "" : (InstNumber eq "1" ? "0" : "")}`' visible='false' editable='false' desc='SMIF Instance name number.' />
 
     <!-- Other -->
     <ParamBool id='inFlash' name='Store Config in Flash' group='Advanced' default='true' visible='true' editable='true' desc='Controls whether the configuration structure is stored in flash (const, true) or SRAM (not const, false).' />
@@ -281,15 +284,15 @@
     <DRC type='ERROR' text='SPI Data[4] and SPI Data[5] must be used together' condition='`${hasConnection4 != hasConnection5 &amp;&amp; hasConnection5}`' paramId='spihb_data4[0]' />
     <DRC type='ERROR' text='SPI Data[6] and SPI Data[7] must be used together' condition='`${hasConnection6 != hasConnection7 &amp;&amp; hasConnection6}`' paramId='spihb_data6[0]' />
     <DRC type='ERROR' text='SPI Data[6] and SPI Data[7] must be used together' condition='`${hasConnection6 != hasConnection7 &amp;&amp; hasConnection7}`' paramId='spihb_data5[0]' />
-    <DRC type='ERROR' text='At least two SPI Data signal must be connected' condition='`${!(hasConnection0 || hasConnection2 || hasConnection4 || hasConnection6)}`' paramId='spihb_data0[0]' />
-    <DRC type='ERROR' text='At least two SPI Data signal must be connected' condition='`${!(hasConnection1 || hasConnection3 || hasConnection5 || hasConnection7)}`' paramId='spihb_data1[0]' />
+    <DRC type='ERROR' text='At least two SPI Data signal must be connected' condition='`${(isSmifV7 || (CHIP_TOP.DATA8_PRESENT == 1)) &amp;&amp; !(hasConnection0 || hasConnection2 || hasConnection4 || hasConnection6)}`' paramId='spihb_data0[0]' />
+    <DRC type='ERROR' text='At least two SPI Data signal must be connected' condition='`${(isSmifV7 || (CHIP_TOP.DATA8_PRESENT == 1)) &amp;&amp; !(hasConnection1 || hasConnection3 || hasConnection5 || hasConnection7)}`' paramId='spihb_data1[0]' />
     <DRC type='ERROR' text='At least one SPI Select signal must be connected' condition='`${!(requireMultipleSelects || hasSelect0 || hasSelect1 || hasSelect2 || hasSelect3)}`' paramId='spihb_select0[0]' />
-    <DRC type='ERROR' text='At least two SPI Select signal must be connected' condition='`${requireMultipleSelects &amp;&amp; !((hasSelect0 &amp;&amp; hasSelect1) || (hasSelect0 &amp;&amp; hasSelect2) || (hasSelect0 &amp;&amp; hasSelect3) || (hasSelect1 &amp;&amp; hasSelect2) || (hasSelect1 &amp;&amp; hasSelect3) || (hasSelect2 &amp;&amp; hasSelect3))}`' paramId='spihb_select0[0]'/>
+    <DRC type='ERROR' text='At least two SPI Select signals must be connected' condition='`${requireMultipleSelects &amp;&amp; !((hasSelect0 &amp;&amp; hasSelect1) || (hasSelect0 &amp;&amp; hasSelect2) || (hasSelect0 &amp;&amp; hasSelect3) || (hasSelect1 &amp;&amp; hasSelect2) || (hasSelect1 &amp;&amp; hasSelect3) || (hasSelect2 &amp;&amp; hasSelect3))}`' paramId='spihb_select0[0]'/>
     <DRC type='ERROR' text='DLL bypass mode cannot be used in Hyperbus/xSPI DDR mode.' condition='`${capture_mode eq CY_SMIF_SEL_XSPI_HYPERBUS_WITH_DQS &amp;&amp; !use_dll}`' paramId='capture_mode' />
     <DRC type='ERROR' text='Minimum SMIF input frequency is 160MHz.' condition='`${(getExposedMember(smifIfSource, "frequency") &lt; 160000000) &amp;&amp; isSmifV4}`' paramId='smif_if_clk' />
     <DRC type='INFO' text='Minimum SMIF input frequency for DLL lock is 150MHz. The SMIF DLL will operate in open loop mode.' condition='`${(getExposedMember(smifIfSource, "frequency") &lt; 150000000) &amp;&amp; isSmifV5or6 &amp;&amp; use_dll}`' paramId='smif_if_clk' />
 
-    <DRC type='INFO' text='PD1 power domain has to be enabled' condition='`${(smif_ip_version == 6) &amp;&amp; !pd1Enable}`' paramId='pd1Enable' />
+    <DRC type='INFO' text='PD1 power domain has to be enabled' condition='`${(smif_ip_version >= 6) &amp;&amp; (InstNumber eq "1") &amp;&amp; !pd1Enable}`' paramId='pd1Enable' />
   </DRCs>
 
   <ConfigFirmware>
@@ -297,9 +300,9 @@
     <ConfigInclude value='cycfg_qspi_memslot.h' include='true' />
     <ConfigInclude value='mtb_hal.h' include='true' guard='defined (COMPONENT_MTB_HAL)' />
     <ConfigInclude value='cy_sysclk.h' include='true' />
-    <ConfigDefine name='`${toUpper(INST_NAME)}`_HW' value='`${(smif_ip_version == 6) ? "SMIF" . InstNumber . "_CORE" : "SMIF" . InstNumber . "_CORE" . Core_InstNumber}`' public='true' include='true' />
-    <ConfigDefine name='`${toUpper(INST_NAME)}`_IRQ' value='`${(smif_ip_version == 6) ? "smif_" . InstNumber . "_smif0_interrupt_nsec_IRQn" : "smif_" . InstNumber . "_smif" . Core_InstNumber ."_interrupt_IRQn"}`' public='true' include='true' />
-    <ConfigDefine name='`${toUpper(INST_NAME)}`_MEMORY_MODE_ALIGMENT_ERROR' value='`${isrAlignment ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
+    <ConfigDefine name='`${toUpper(INST_NAME)}`_HW' value='`${(smif_ip_version >= 6) ? "SMIF" . InstNumber . "_CORE" : "SMIF" . InstNumber . "_CORE" . Core_InstNumber}`' public='true' include='true' />
+    <ConfigDefine name='`${toUpper(INST_NAME)}`_IRQ' value='`${(smif_ip_version >= 6) ? "smif_" . InstNumber . "_smif0_interrupt_nsec_IRQn" : "smif_" . InstNumber . "_smif" . Core_InstNumber ."_interrupt_IRQn"}`' public='true' include='true' />
+    <ConfigDefine name='`${toUpper(INST_NAME)}`_MEMORY_MODE_ALIGNMENT_ERROR' value='`${isrAlignment ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${toUpper(INST_NAME)}`_RX_DATA_FIFO_UNDERFLOW' value='`${isrUnderflow ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${toUpper(INST_NAME)}`_TX_COMMAND_FIFO_OVERFLOW' value='`${isrCmdOverflow ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${toUpper(INST_NAME)}`_TX_DATA_FIFO_OVERFLOW' value='`${isrDataOverflow ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
@@ -347,11 +350,11 @@
     </ConfigStruct>
 
     <ConfigStruct name='`${toUpper(INST_NAME)}`_hal_config' type='mtb_hal_memoryspi_configurator_t' const='`${inFlash}`' public='true' include='true' guard='defined (COMPONENT_MTB_HAL) &amp;&amp; (MTB_HAL_DRIVER_AVAILABLE_MEMORYSPI)'>
-      <Member name='base' value='`${(smif_ip_version == 6) ? "SMIF" . InstNumber . "_CORE" : "SMIF" . InstNumber . "_CORE" . Core_InstNumber}`' />
+      <Member name='base' value='`${(smif_ip_version >= 6) ? "SMIF" . InstNumber . "_CORE" : "SMIF" . InstNumber . "_CORE" . Core_InstNumber}`' />
       <Member name='clock' value='&amp;`${INST_NAME}`_hal_clock' />
       <Member name='config' value='&amp;`${toUpper(INST_NAME)}`_config' />
       <Member name='csel' value='{`${ssel0Pin &amp;&amp; hasExposedMember(ssel0Pin, "halPortPin") ? "true" : "false"}`, `${ssel1Pin &amp;&amp; hasExposedMember(ssel1Pin, "halPortPin") ? "true" : "false"}`, `${ssel2Pin &amp;&amp; hasExposedMember(ssel2Pin, "halPortPin") ? "true" : "false"}`, `${ssel3Pin &amp;&amp; hasExposedMember(ssel3Pin, "halPortPin") ? "true" : "false"}`}' />
-      <Member name='irqs' value='`${toUpper(INST_NAME)}`_MEMORY_MODE_ALIGMENT_ERROR &#60;&#60; 5 | `${toUpper(INST_NAME)}`_RX_DATA_FIFO_UNDERFLOW &#60;&#60; 4 | `${toUpper(INST_NAME)}`_TX_COMMAND_FIFO_OVERFLOW &#60;&#60; 3 | `${toUpper(INST_NAME)}`_TX_DATA_FIFO_OVERFLOW &#60;&#60; 2 | (uint8_t)(`${toUpper(INST_NAME)}`_RX_FIFO_TRIGGER_LEVEL != 0) &#60;&#60; 1 | (uint8_t)(`${toUpper(INST_NAME)}`_TX_FIFO_TRIGGER_LEVEL != 0) &#60;&#60; 0' />
+      <Member name='irqs' value='`${toUpper(INST_NAME)}`_MEMORY_MODE_ALIGNMENT_ERROR &#60;&#60; 5 | `${toUpper(INST_NAME)}`_RX_DATA_FIFO_UNDERFLOW &#60;&#60; 4 | `${toUpper(INST_NAME)}`_TX_COMMAND_FIFO_OVERFLOW &#60;&#60; 3 | `${toUpper(INST_NAME)}`_TX_DATA_FIFO_OVERFLOW &#60;&#60; 2 | (uint8_t)(`${toUpper(INST_NAME)}`_RX_FIFO_TRIGGER_LEVEL != 0) &#60;&#60; 1 | (uint8_t)(`${toUpper(INST_NAME)}`_TX_FIFO_TRIGGER_LEVEL != 0) &#60;&#60; 0' />
       <Member name='dmas' value='`${toUpper(INST_NAME)}`_RX_DMA_TRIGGER_OUT_USED &#60;&#60; 1 | `${toUpper(INST_NAME)}`_TX_DMA_TRIGGER_OUT_USED &#60;&#60; 0' />
     </ConfigStruct>
 

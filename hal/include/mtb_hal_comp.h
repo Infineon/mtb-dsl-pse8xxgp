@@ -25,6 +25,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "mtb_hal_gpio.h"
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_COMP)
+
+
+
 
 /**
  * \addtogroup group_hal_comp COMP (Analog Comparator)
@@ -42,11 +54,11 @@
  * These abilities can be used in any combination.
  *
  * \section mtb_hal_comp_quickstart Quickstart
- * Call \ref mtb_hal_comp_setup to initialize the HAL for a peripheral instance. The peripheral
+ * Call mtb_hal_comp_setup() to initialize the HAL for a peripheral instance. The peripheral
  * must]
  * have already been initialized and configured using the PDL.
  *
- * Use \ref mtb_hal_comp_read to read the comparator state from firmware.
+ * Use mtb_hal_comp_read() to read the comparator state from firmware.
  *
  * \section subsection_comp_snippets Code Snippets:
  * \note Error checking is omitted for clarity
@@ -56,15 +68,6 @@
  *
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "mtb_hal_gpio.h"
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_COMP)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -206,6 +209,6 @@ cy_rslt_t mtb_hal_comp_process_interrupt(mtb_hal_comp_t* obj);
 #include MTB_HAL_COMP_IMPL_HEADER
 #endif /* MTB_HAL_COMP_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_COMP)
-
 /** \} group_hal_comp */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_COMP)

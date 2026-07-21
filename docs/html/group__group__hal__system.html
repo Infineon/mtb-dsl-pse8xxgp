@@ -109,16 +109,16 @@ Features</h1>
 <h1><a class="anchor" id="subsection_system_quickstart"></a>
 Quick Start</h1>
 <ul>
-<li>mtb_hal_system_critical_section_enter and mtb_hal_system_critical_section_exit are used to enable/disable global interrupts</li>
-<li><a class="el" href="group__group__hal__system.html#ga17d686e00a410c8309b7d644065f6456">mtb_hal_system_delay_ms</a> and mtb_hal_system_delay_us are delay functions used to halt the CPU exectution for a specified period of time</li>
-<li><a class="el" href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8">mtb_hal_system_get_reset_reason</a> gets the cause of latest system reset</li>
+<li><a class="el" href="group__group__hal__system.html#gab273ced03ec4f2cb0907a68de5d8c145" title="Enter a critical section.">mtb_hal_system_critical_section_enter()</a> and mtb_hal_system_critical_section_exit() are used to enable/disable global interrupts</li>
+<li><a class="el" href="group__group__hal__system.html#ga17d686e00a410c8309b7d644065f6456" title="Requests that the current operation delays for at least the specified length of time.">mtb_hal_system_delay_ms()</a> and mtb_hal_system_delay_us() are delay functions used to halt the CPU exectution for a specified period of time</li>
+<li><a class="el" href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8" title="Gets the cause of the latest reset or resets that occurred in the system.">mtb_hal_system_get_reset_reason()</a> gets the cause of latest system reset</li>
 </ul>
 <h1><a class="anchor" id="subsection_system_codesnippet"></a>
 Code Snippets</h1>
 <h2><a class="anchor" id="subsection_system_snippet1"></a>
 Snippet 1: Critical Section</h2>
 <p>Critical section is a portion in the code where all active interrupts are disabled. This is usually provided in places where the code execution must not be disturbed by an interrupt. An example is a firmware controlled communication protocol where timing of each byte must be maintained and any interrupt might cause loss of data. <br  />
- mtb_hal_system_critical_section_enter returns the current state of interrupts which denote the active interrupts in the system. This must be passed as argument to mtb_hal_system_critical_section_exit while exiting the critical section. </p><div class="fragment"><div class="line">    <span class="comment">// Disables all interrupts</span></div>
+ <a class="el" href="group__group__hal__system.html#gab273ced03ec4f2cb0907a68de5d8c145" title="Enter a critical section.">mtb_hal_system_critical_section_enter()</a> returns the current state of interrupts which denote the active interrupts in the system. This must be passed as argument to mtb_hal_system_critical_section_exit() while exiting the critical section. </p><div class="fragment"><div class="line">    <span class="comment">// Disables all interrupts</span></div>
 <div class="line">    uint32_t state = mtb_hal_system_critical_section_enter();</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Application code where interrupts must be disabled</span></div>
@@ -127,7 +127,7 @@ Snippet 1: Critical Section</h2>
 <div class="line">    mtb_hal_system_critical_section_exit(state);</div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_system_snippet2"></a>
 Snippet 2: Reset reason</h2>
-<p><a class="el" href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8">mtb_hal_system_get_reset_reason</a> must be called at the beginning of the main to determine the reason for reset. The return parameters are present in <a class="el" href="group__group__hal__system.html#gadda8b3736fe48da7c06681aa03a46e66">mtb_hal_reset_reason_t</a>. </p><div class="fragment"><div class="line">    <span class="keywordflow">if</span> (<a class="code hl_enumvalue" href="group__group__hal__system.html#ggadda8b3736fe48da7c06681aa03a46e66aaafc521f12b052ab1f39ce1c401c3bda">MTB_HAL_SYSTEM_RESET_WDT</a> == <a class="code hl_function" href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8">mtb_hal_system_get_reset_reason</a>())</div>
+<p><a class="el" href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8" title="Gets the cause of the latest reset or resets that occurred in the system.">mtb_hal_system_get_reset_reason()</a> must be called at the beginning of the main to determine the reason for reset. The return parameters are present in <a class="el" href="group__group__hal__system.html#gadda8b3736fe48da7c06681aa03a46e66" title="Flags enum of possible system reset causes.">mtb_hal_reset_reason_t</a>. </p><div class="fragment"><div class="line">    <span class="keywordflow">if</span> (<a class="code hl_enumvalue" href="group__group__hal__system.html#ggadda8b3736fe48da7c06681aa03a46e66aaafc521f12b052ab1f39ce1c401c3bda">MTB_HAL_SYSTEM_RESET_WDT</a> == <a class="code hl_function" href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8">mtb_hal_system_get_reset_reason</a>())</div>
 <div class="line">    {</div>
 <div class="line">        <span class="comment">// WDT caused system reset</span></div>
 <div class="line"> </div>
@@ -138,8 +138,8 @@ Snippet 2: Reset reason</h2>
 <div class="line">        <span class="comment">// Reset reason is not WDT Could be POR or XRES.  Specify application code to perform some</span></div>
 <div class="line">        <span class="comment">// action to indicate WDT was not the reset reaon</span></div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup__group__hal__system_html_ga91667a3bdbbae46cf9eb9846c46ee0a8"><div class="ttname"><a href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8">mtb_hal_system_get_reset_reason</a></div><div class="ttdeci">mtb_hal_reset_reason_t mtb_hal_system_get_reset_reason(void)</div><div class="ttdoc">Gets the cause of the latest reset or resets that occurred in the system.</div><div class="ttdef"><b>Definition:</b> mtb_hal_system.c:79</div></div>
-<div class="ttc" id="agroup__group__hal__system_html_ggadda8b3736fe48da7c06681aa03a46e66aaafc521f12b052ab1f39ce1c401c3bda"><div class="ttname"><a href="group__group__hal__system.html#ggadda8b3736fe48da7c06681aa03a46e66aaafc521f12b052ab1f39ce1c401c3bda">MTB_HAL_SYSTEM_RESET_WDT</a></div><div class="ttdeci">@ MTB_HAL_SYSTEM_RESET_WDT</div><div class="ttdoc">A watchdog timer (WDT) reset has occurred.</div><div class="ttdef"><b>Definition:</b> mtb_hal_system.h:102</div></div>
+<div class="ttc" id="agroup__group__hal__system_html_ga91667a3bdbbae46cf9eb9846c46ee0a8"><div class="ttname"><a href="group__group__hal__system.html#ga91667a3bdbbae46cf9eb9846c46ee0a8">mtb_hal_system_get_reset_reason</a></div><div class="ttdeci">mtb_hal_reset_reason_t mtb_hal_system_get_reset_reason(void)</div><div class="ttdoc">Gets the cause of the latest reset or resets that occurred in the system.</div><div class="ttdef"><b>Definition:</b> mtb_hal_system.c:78</div></div>
+<div class="ttc" id="agroup__group__hal__system_html_ggadda8b3736fe48da7c06681aa03a46e66aaafc521f12b052ab1f39ce1c401c3bda"><div class="ttname"><a href="group__group__hal__system.html#ggadda8b3736fe48da7c06681aa03a46e66aaafc521f12b052ab1f39ce1c401c3bda">MTB_HAL_SYSTEM_RESET_WDT</a></div><div class="ttdeci">@ MTB_HAL_SYSTEM_RESET_WDT</div><div class="ttdoc">A watchdog timer (WDT) reset has occurred.</div><div class="ttdef"><b>Definition:</b> mtb_hal_system.h:105</div></div>
 </div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 API Reference</h2></td></tr>

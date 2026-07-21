@@ -11,8 +11,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2018-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2018-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -37,7 +37,7 @@
   <ExposedMembers />
 
   <Parameters>
-    <ParamDoc id='pdlDoc' name='Application Notes' group='Overview' default='https://www.infineon.com/AN235279' linkText='Performing ETM and ITM Trace on PSoC 6 MCU' visible='`${hasMatch(getIpBlockName(), "m4cpuss.*")}`' desc='Opens the application note for Debug module.' />
+    <ParamDoc id='pdlDoc' name='Application Notes' group='Overview' default='https://www.infineon.com/AN235279' linkText='Performing ETM and ITM Trace on PSOC 6 MCU' visible='`${hasMatch(getIpBlockName(), "m4cpuss.*")}`' desc='Opens the application note for Debug module.' />
     <ParamChoice id='dbgMode' name='Debug Mode' group='General' default='SWD' visible='true' editable='true' desc='Controls what pins need to be reserved for debugging.'>
       <Entry name='Disabled' value='NONE' visible='true' />
       <Entry name='SWD' value='SWD' visible='true' />

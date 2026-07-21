@@ -41,7 +41,11 @@
 #elif defined(CY_IP_MXS40PPSS_INSTANCES)
 #include  "mtb_hal_adc_mxs40ppss_v1.h"
 #elif defined(CY_IP_MXS40MCPASS_INSTANCES)
+#if defined(CY_IP_MXS40MCPASS_VERSION) && (CY_IP_MXS40MCPASS_VERSION >= 3)
+#include  "mtb_hal_adc_mxs40mcpass_v3.h"
+#else
 #include  "mtb_hal_adc_mxs40mcpass_v1.h"
+#endif //if defined(CY_IP_MXS40MCPASS_VERSION) && (CY_IP_MXS40MCPASS_VERSION >= 3)
 #endif // if defined(CY_IP_MXS40PASS_SAR_INSTANCES)
 
 #if defined(__cplusplus)

@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) (2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -121,7 +121,7 @@
                   name='FIFO$idx Level Detect'
                   group='FIFO Configuration'
                   min='1'
-                  max='256'
+                  max='512'
                   resolution='1'
                   visible='`${numberOfFifosChoice eq CY_AUTANALOG_FIFO_SPLIT2}`'
                   editable='true'
@@ -134,7 +134,7 @@
                   name='FIFO$idx Level Detect'
                   group='FIFO Configuration'
                   min='1'
-                  max='128'
+                  max='512'
                   resolution='1'
                   visible='`${numberOfFifosChoice eq CY_AUTANALOG_FIFO_SPLIT4}`'
                   editable='true'
@@ -147,7 +147,7 @@
                   name='FIFO$idx Level Detect'
                   group='FIFO Configuration'
                   min='1'
-                  max='64'
+                  max='512'
                   resolution='1'
                   visible='`${numberOfFifosChoice eq CY_AUTANALOG_FIFO_SPLIT8}`'
                   editable='true'
@@ -173,6 +173,25 @@
   <DRCs>
     <DRC type='ERROR' text='Enable and configure a parent resource for ADC FIFO buffer.' condition='`${!isBlockUsed(resource_sar)}`' >
       <FixIt action='ENABLE_BLOCK' target='`${resource_sar}`' value='lppass_adc-1.0' valid='true' />
+    </DRC>
+    <!-- DRIVERS-20770: Validate FIFO level detect values against the current split mode.
+         The ParamRange max is set to 512 (maximum for any mode) to prevent blocking validation
+         errors when the engine preserves stale values across split-mode changes. These DRCs
+         enforce the real hardware limits and provide auto-fix to reset. -->
+    <DRC type='ERROR' text='FIFO Level Detect value exceeds the maximum of 256 entries for Two-FIFO mode.'
+         repeatCount='2'
+         condition='`${(numberOfFifosChoice eq CY_AUTANALOG_FIFO_SPLIT2) &amp;&amp; (fifo$idxLevelDetectSplit2 &gt; 256)}`' >
+      <FixIt action='SET_PARAM' target='fifo$idxLevelDetectSplit2' value='256' valid='true' />
+    </DRC>
+    <DRC type='ERROR' text='FIFO Level Detect value exceeds the maximum of 128 entries for Four-FIFO mode.'
+         repeatCount='4'
+         condition='`${(numberOfFifosChoice eq CY_AUTANALOG_FIFO_SPLIT4) &amp;&amp; (fifo$idxLevelDetectSplit4 &gt; 128)}`' >
+      <FixIt action='SET_PARAM' target='fifo$idxLevelDetectSplit4' value='128' valid='true' />
+    </DRC>
+    <DRC type='ERROR' text='FIFO Level Detect value exceeds the maximum of 64 entries for Eight-FIFO mode.'
+         repeatCount='8'
+         condition='`${(numberOfFifosChoice eq CY_AUTANALOG_FIFO_SPLIT8) &amp;&amp; (fifo$idxLevelDetectSplit8 &gt; 64)}`' >
+      <FixIt action='SET_PARAM' target='fifo$idxLevelDetectSplit8' value='64' valid='true' />
     </DRC>
   </DRCs>
 

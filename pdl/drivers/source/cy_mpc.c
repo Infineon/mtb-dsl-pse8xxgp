@@ -51,11 +51,24 @@
 /** Init in progress check attempts value */
 #define CY_MPC_INIT_IN_PROG_ATTEMPTS    (10000UL)
 /** Get size of block for a particular region size */
-#define CY_MPC_GET_BLOCK_SIZE(base) \
+#define CY_MPC_GET_ROT_BLOCK_SIZE(base) \
     (1UL << \
         ((uint32_t)(_FLD2VAL(RAMC_MPC_ROT_BLK_CFG_BLOCK_SIZE, (base)->ROT_BLK_CFG)) + 5UL))
 /** Get index of a block for a particular address offset and region size */
+#define CY_MPC_GET_ROT_BLOCK_INDEX(offset, base)  ((offset)/CY_MPC_GET_ROT_BLOCK_SIZE(base))
+
+/** Get size of a block for a particular region size */
+#define CY_MPC_GET_BLOCK_SIZE(base) \
+    (1UL << \
+        ((uint32_t)(_FLD2VAL(RAMC_MPC_BLK_CFG_BLOCK_SIZE, (base)->BLK_CFG)) + 5UL))
+/** Get index of a block for a particular address offset and region size */
 #define CY_MPC_GET_BLOCK_INDEX(offset, base)  ((offset)/CY_MPC_GET_BLOCK_SIZE(base))
+
+/** FLASHC size */
+#if defined (CPUSS_FLASHC_ROWS_PER_SECTOR)
+#define FLASHC_ROW_SIZE         (512u)
+#define CY_MPC_FLASH_SIZE       (CPUSS_FLASHC_ROWS_PER_SECTOR  * CPUSS_FLASHC_SECTOR_M * FLASHC_ROW_SIZE)
+#endif /* defined (CPUSS_FLASHC_ROWS_PER_SECTOR) */
 
 /** RAMC0 macro size */
 #if defined(CPUSS_CHIP_TOP_RAMC0_SIZE)
@@ -66,6 +79,13 @@
 #if defined(CPUSS_CHIP_TOP_RAMC1_SIZE)
 #define CY_MPC_RAMC_1_SIZE             (CPUSS_CHIP_TOP_RAMC1_SIZE * 1024UL)
 #endif /* defined(CPUSS_CHIP_TOP_RAMC1_SIZE) */
+
+/** PPCA RAMC macro sizes */
+#define CY_MPC_PPCA_RAMC_0_SIZE        (0x00008000UL)
+#define CY_MPC_PPCA_RAMC_1_SIZE        (0x00004000UL)
+#define CY_MPC_PPCA_RAMC_2_SIZE        (0x00008000UL)
+#define CY_MPC_PPCA_RAMC_3_SIZE        (0x00004000UL)
+#define CY_MPC_PPCA_RAMC_4_SIZE        (0x00004000UL)
 
 
 /*******************************************************************************
@@ -112,15 +132,27 @@ static uint32_t _Cy_Mpc_GetMemSize(MPC_Type* base) {
     {
         maxSize = CY_SOCMEM_RAM_SIZE;
     }
+    #if (defined(CY_IP_MXSOCMEM_VERSION) && (CY_IP_MXSOCMEM_VERSION >= 3))
+    if (base == (MPC_Type*)SOCMEM1_SRAM_MPC0)
+    {
+        maxSize = CY_SOCMEM_RAM_SIZE;
+    }
+    #endif
     #endif /* SOCMEM_SRAM_MPC0 */
+    #if defined (FLASHC_MPC0)
+    if (base == (MPC_Type *)FLASHC_MPC0)
+    {
+        maxSize = CY_MPC_FLASH_SIZE;
+    }
+    #endif /* FLASHC_MPC0 */
     #if defined (RAMC0_MPC0)
-    if (base == RAMC0_MPC0)
+    if (base == (MPC_Type *)RAMC0_MPC0)
     {
         maxSize = CY_MPC_RAMC_0_SIZE;
     }
     #endif /* RAMC0_MPC0 */
     #if defined (RAMC1_MPC0)
-    if (base == RAMC1_MPC0)
+    if (base == (MPC_Type *)RAMC1_MPC0)
     {
         maxSize = CY_MPC_RAMC_1_SIZE;
     }
@@ -137,6 +169,66 @@ static uint32_t _Cy_Mpc_GetMemSize(MPC_Type* base) {
         maxSize = CY_RRAM_SIZE;
     }
     #endif /* RRAMC0_MPC1 */
+    #if defined (PPCA_CPUSS_CNFG_RAMC0_MPC0)
+    if (base == (MPC_Type*)PPCA_CPUSS_CNFG_RAMC0_MPC0)
+    {
+        maxSize = CY_MPC_PPCA_RAMC_0_SIZE;
+    }
+    #endif /* PPCA_CPUSS_CNFG_RAMC0_MPC0 */
+    #if defined (PPCA_CPUSS_CNFG_RAMC1_MPC0)
+    if (base == (MPC_Type*)PPCA_CPUSS_CNFG_RAMC1_MPC0)
+    {
+        maxSize = CY_MPC_PPCA_RAMC_1_SIZE;
+    }
+    #endif /* PPCA_CPUSS_CNFG_RAMC1_MPC0 */
+    #if defined (PPCA_CPUSS_CNFG_RAMC2_MPC0)
+    if (base == (MPC_Type*)PPCA_CPUSS_CNFG_RAMC2_MPC0)
+    {
+        maxSize = CY_MPC_PPCA_RAMC_2_SIZE;
+    }
+    #endif /* PPCA_CPUSS_CNFG_RAMC2_MPC0 */
+    #if defined (PPCA_CPUSS_CNFG_RAMC3_MPC0)
+    if (base == (MPC_Type*)PPCA_CPUSS_CNFG_RAMC3_MPC0)
+    {
+        maxSize = CY_MPC_PPCA_RAMC_3_SIZE;
+    }
+    #endif /* PPCA_CPUSS_CNFG_RAMC3_MPC0 */
+    #if defined (PPCA_CPUSS_CNFG_RAMC4_MPC0)
+    if (base == (MPC_Type*)PPCA_CPUSS_CNFG_RAMC4_MPC0)
+    {
+        maxSize = CY_MPC_PPCA_RAMC_4_SIZE;
+    }
+    #endif /* PPCA_CPUSS_CNFG_RAMC4_MPC0 */
+    #if defined (RRAMC0_MPC2)
+    if (base == (MPC_Type*)RRAMC0_MPC2)
+    {
+        maxSize = CY_RRAM_SIZE;
+    }
+    #endif /* RRAMC0_MPC2 */
+    #if defined (DCDRAMIF_MPC_MAIN0)
+    if (base == (MPC_Type*)DCDRAMIF_MPC_MAIN0)
+    {
+        maxSize = CY_DCDRAM_SIZE;
+    }
+    #endif /* DCDRAMIF_MPC_MAIN0 */
+    #if defined (DCDRAMIF_MPC_MAIN1)
+    if (base == (MPC_Type*)DCDRAMIF_MPC_MAIN1)
+    {
+        maxSize = CY_DCDRAM_SIZE;
+    }
+    #endif /* DCDRAMIF_MPC_MAIN1 */
+    #if defined (DCDRAMIF_MPC_MAIN2)
+    if (base == (MPC_Type*)DCDRAMIF_MPC_MAIN2)
+    {
+        maxSize = CY_DCDRAM_SIZE;
+    }
+    #endif /* DCDRAMIF_MPC_MAIN2 */
+    #if defined (DCDRAMIF_MPC_MAIN3)
+    if (base == (MPC_Type*)DCDRAMIF_MPC_MAIN3)
+    {
+        maxSize = CY_DCDRAM_SIZE;
+    }
+    #endif /* DCDRAMIF_MPC_MAIN3 */
 
     return maxSize;
 }
@@ -212,14 +304,14 @@ static cy_en_mpc_status_t _Cy_Mpc_WaitForInitCompletion(MPC_Type* base)
 * \param base
 * Base address of MPC being configured
 *
-* \param start 
+* \param start
 * The first block to be configured for provided blkIdx
 *
 * \param end
 * The last block to be configured for provided blkIdx
 *
 * \param mask
-* Mask to set to, for RoT version: 
+* Mask to set to, for RoT version:
 *   - bit[0] : NS/S
 *   - bit[1] : R
 *   - bit[2] : W
@@ -229,13 +321,13 @@ static cy_en_mpc_status_t _Cy_Mpc_WaitForInitCompletion(MPC_Type* base)
 *
 * \param blkIdx
 * Block index to configure
-* 
+*
 * \param rot
-* Specifies whether ROT or non-ROT version is to be configured 
+* Specifies whether ROT or non-ROT version is to be configured
 *
 * \param isPartial
 * Specifies whether not whole IDX is to be configured, if true masks new value of with an old one
-* Partial initialization is ignored during non ROT configuration  
+* Partial initialization is ignored during non ROT configuration
 *
 *******************************************************************************/
 static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uint32_t end, const uint32_t mask, uint32_t blkIdx, bool rot, bool isPartial)
@@ -243,8 +335,8 @@ static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uin
     CY_ASSERT(base != NULL);
     uint32_t fieldMaskVal = 0UL, value = 0UL;
     uint32_t fieldMask = (rot) ? 0xFUL : 0x1UL;
-    uint32_t blockBitCount = (rot) 
-        ? CY_MPC_ROT_BLOCK_BIT_COUNT 
+    uint32_t blockBitCount = (rot)
+        ? CY_MPC_ROT_BLOCK_BIT_COUNT
         : CY_MPC_BLOCK_BIT_COUNT;
 
     for (uint32_t i = start; i <= end; i++)
@@ -252,7 +344,7 @@ static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uin
         fieldMaskVal |= (fieldMask << (blockBitCount * i));
         value |= (mask << (blockBitCount * i));
     }
-    
+
     if (rot) {
         base->ROT_BLK_IDX = blkIdx;
         base->ROT_BLK_LUT = ((isPartial) ? ((base->ROT_BLK_LUT & ~fieldMaskVal) | value) : value);
@@ -285,7 +377,7 @@ static void _Cy_Mpc_ConfigHelper(MPC_Type* base, const uint32_t start, const uin
 * Mask to set to
 *
 * \param rot
-* Specifies whether ROT or non-ROT version is to be configured 
+* Specifies whether ROT or non-ROT version is to be configured
 *
 *******************************************************************************/
 static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, const uint32_t size, const uint32_t blockSize, const uint32_t mask, bool rot)
@@ -295,7 +387,7 @@ static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, c
     uint32_t totalBlocks = size/blockSize;
     uint32_t freeBlocks = blocksPerIdx - start;
 
-    uint32_t end = 0, newAddr = 0, newSize = 0; 
+    uint32_t end = 0, newAddr = 0, newSize = 0;
     if (totalBlocks <= freeBlocks)
     {
         end = (totalBlocks + start - 1UL) % blocksPerIdx;
@@ -306,7 +398,7 @@ static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, c
         newAddr = ((address/(blocksPerIdx * blockSize)) + 1UL) * blockSize * blocksPerIdx;
         newSize = size - (freeBlocks * blockSize);
     }
-    
+
     uint32_t blkIdx = address/(blockSize * blocksPerIdx);
     _Cy_Mpc_ConfigHelper(base, start, end, mask, blkIdx, rot, true);
 
@@ -334,7 +426,7 @@ static void _Cy_Mpc_ConfigStructHelper(MPC_Type* base, const uint32_t address, c
 * Function Name: Cy_Mpc_ConfigRotMpcStruct
 ****************************************************************************//**
 *
-* \brief Initializes the referenced mpc by setting the Protection Context (PC), 
+* \brief Initializes the referenced mpc by setting the Protection Context (PC),
 * NS/S and RW/R/W permissions. This is called by ROT (Root of Trust) module.
 *
 *
@@ -358,6 +450,19 @@ cy_en_mpc_status_t Cy_Mpc_ConfigRotMpcStruct(MPC_Type* base, const uint32_t addO
 {
     CY_ASSERT(base != NULL);
 
+#if defined(CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED)
+    /* On devices where some MPC ROT configurations are locked before application code
+     * runs (e.g. PSC3_P8, where Flash MPC ROT is PC0-only and not runtime configurable),
+     * even READ accesses to ROT registers of a locked MPC cause a bus fault.
+     * Guard by pointer comparison before touching any register. */
+    #if defined(FLASHC_MPC0)
+    if (base == (MPC_Type*)FLASHC_MPC0)
+    {
+        return CY_MPC_FAILURE;
+    }
+    #endif /* FLASHC_MPC0 */
+#endif /* CY_DEVICE_FEATURE_SOME_MPC_ROT_LOCKED */
+
     uint32_t maxSize = _Cy_Mpc_GetMemSize(base);
 
     if (((addOffset + size) > maxSize) ||
@@ -367,8 +472,8 @@ cy_en_mpc_status_t Cy_Mpc_ConfigRotMpcStruct(MPC_Type* base, const uint32_t addO
         return CY_MPC_BAD_PARAM;
     }
 
-    uint32_t blockSize = CY_MPC_GET_BLOCK_SIZE(base);
-    
+    uint32_t blockSize = CY_MPC_GET_ROT_BLOCK_SIZE(base);
+
     /* Check address and size boundaries */
     if ((addOffset%(blockSize) != 0UL) ||
         (size%(blockSize))){
@@ -389,7 +494,7 @@ cy_en_mpc_status_t Cy_Mpc_ConfigRotMpcStruct(MPC_Type* base, const uint32_t addO
     - bit[2] : W (0 indicates write access not allowed, 1 indicates write access allowed)
     - bit[3] : Reserved
     */
-    if (((uint32_t)rotConfig->secure <= (uint32_t)CY_MPC_NON_SECURE) ||
+    if (((uint32_t)rotConfig->secure <= (uint32_t)CY_MPC_NON_SECURE) &&
         ((uint32_t)rotConfig->access <= (uint32_t)CY_MPC_ACCESS_RW))
     {
         mask = ((uint32_t)rotConfig->secure |
@@ -471,9 +576,9 @@ cy_en_mpc_status_t Cy_Mpc_ConfigMpcStruct(MPC_Type* base, const uint32_t addOffs
     {
         return CY_MPC_INVALID_STATE;
     }
-    
+
     /* Disable auto increment */
-    uint8_t autoInc = (uint8_t)_FLD2VAL(RAMC_MPC_CTRL_AUTO_INC, base->ROT_CTRL);
+    uint8_t autoInc = (uint8_t)_FLD2VAL(RAMC_MPC_CTRL_AUTO_INC, base->CTRL);
     Cy_Mpc_AutoInc(base, 0u);
 
     _Cy_Mpc_ConfigStructHelper(base, addOffset, size, blockSize, (uint32_t)config->secure, false);
@@ -522,7 +627,7 @@ cy_en_mpc_status_t Cy_Mpc_GetRotBlockAttr(MPC_Type* base, const cy_en_mpc_prot_c
         return CY_MPC_INVALID_STATE;
     }
 
-    uint32_t block_idx   = CY_MPC_GET_BLOCK_INDEX(addOffset, base);
+    uint32_t block_idx   = CY_MPC_GET_ROT_BLOCK_INDEX(addOffset, base);
     /* block_idx is calculated as address divided by block size; its quotient gives
     * the 32-block group index for BLK_IDX, and its remainder is used to shift
     * BLK_LUT to extract block attributes. Used in both index and attribute

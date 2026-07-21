@@ -1,10 +1,10 @@
 var group__group__tcpwm__macros__common =
 [
-    [ "TCPWM Input Selection", "group__group__tcpwm__input__selection.html", "group__group__tcpwm__input__selection" ],
-    [ "Input Modes", "group__group__tcpwm__input__modes.html", "group__group__tcpwm__input__modes" ],
-    [ "Output Trigger Modes", "group__group__tcpwm__output__trigger__modes.html", "group__group__tcpwm__output__trigger__modes" ],
-    [ "Interrupt Sources", "group__group__tcpwm__interrupt__sources.html", "group__group__tcpwm__interrupt__sources" ],
     [ "Default registers constants", "group__group__tcpwm__reg__const.html", "group__group__tcpwm__reg__const" ],
+    [ "Input Modes", "group__group__tcpwm__input__modes.html", "group__group__tcpwm__input__modes" ],
+    [ "Interrupt Sources", "group__group__tcpwm__interrupt__sources.html", "group__group__tcpwm__interrupt__sources" ],
+    [ "Output Trigger Modes", "group__group__tcpwm__output__trigger__modes.html", "group__group__tcpwm__output__trigger__modes" ],
+    [ "TCPWM Input Selection", "group__group__tcpwm__input__selection.html", "group__group__tcpwm__input__selection" ],
     [ "CY_TCPWM_DRV_VERSION_MAJOR", "group__group__tcpwm__macros__common.html#gac20d09f45b8417cccfac3d17cb786f56", null ],
     [ "CY_TCPWM_DRV_VERSION_MINOR", "group__group__tcpwm__macros__common.html#gaa498c3ce94f17af0b794720e82f4ae25", null ],
     [ "CY_TCPWM_ID", "group__group__tcpwm__macros__common.html#ga823d91f0671e708a981701d012ec6433", null ],

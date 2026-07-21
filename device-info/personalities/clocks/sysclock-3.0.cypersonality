@@ -9,9 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -41,6 +40,16 @@
 
     <Variable id='is_psoc64' value='`${isMXS40 &amp;&amp; getOrDefault((getDeviceAttr("Security") ne "NA"), false)}`' />
     <Variable id='is_mxs22srssv2_1' value='`${isMXS22 &amp;&amp; (getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 1)}`' />
+
+    <!-- Map CLK_LF source (lowercase enum from lfclk.sourceClock) to PDL WDT clock-source API suffix. -->
+    <Variable id='clkLfSource' value='`${getOrDefault(getExposedMember("srss[0].clock[0].lfclk[0]", "sourceClockDisplayName"), "")}`' />
+    <Variable id='wdtClkSourceApi' value='`${clkLfSource eq "ilo"           ? "ILO" :
+                                              clkLfSource eq "wco"           ? "WCO" :
+                                              clkLfSource eq "ilo0"          ? "ILO" :
+                                              clkLfSource eq "ilo1"          ? "ILO1" :
+                                              clkLfSource eq "ecoprescaler"  ? "ECO_PRESCALER" :
+                                              clkLfSource eq "altlf"         ? "ALTLF" :
+                                              clkLfSource eq "lpecoprescaler"? "LPECO_PRESCALER" : "PILO"}`' />
   </Variables>
 
   <DRCs>
@@ -251,6 +260,10 @@
       <Line value='#endif /* CY_CFG_SYSCLK_CLKHF1_FREQ_MHZ */' />
       <Line value='SystemCoreClockSetup((CY_SYSCLK_CLK_CORE_HF_PATH_NUM == 0 ? clk_hf0_freq_hz : clk_hf1_freq_hz), clk_hf0_freq_hz);' />
       <Line value='' />
+      <Line value='#ifdef CY_CFG_SYSCLK_CLKALTSYSTICK_ENABLED' />
+      <Line value='    Cy_SysClk_ClkAltSysTickInit();' />
+      <Line value='#endif' />
+      <Line value='' />
       <Line value='#endif /* (!defined(COMPONENT_SECURE_DEVICE)) */' />
     </ConfigFunction>
 
@@ -304,12 +317,21 @@
     <ConfigInstruction value='Cy_SysClk_ClkPeriSetDivider(1U);' purpose='INITIALIZE' include='`${hasBlock("srss[0].clock[0].periclk[0]")}`' />
     <ConfigInstruction value='Cy_SysClk_ClkSlowSetDivider(0U);' purpose='INITIALIZE' include='`${hasBlock("srss[0].clock[0].slowclk[0]")}`' />
     <ConfigInstruction value='(void)Cy_BLE_EcoReset();' purpose='INITIALIZE' include='`${isBlockUsed("srss[0].clock[0].eco[0]") &amp;&amp; isMXS40}`' />
-    <!-- TODO: Make sure this handles all types of PLL -->
+    <!-- Disable all PLLs unconditionally — covers PLL200/PLL400/DPLL-LP/DPLL-HP via Cy_SysClk_PllDisable dispatcher -->
     <ConfigInstruction value='for (uint32_t pll = CY_SRSS_NUM_PLL; pll > 0UL; --pll) /* PLL 1 is the first PLL. 0 is invalid. */' purpose='INITIALIZE' include='`${isMXS40}`' />
     <ConfigInstruction value='for (uint32_t pll = 0; pll &lt; (CY_SRSS_NUM_PLL); ++pll) /* PLL 0 is the first PLL. */' purpose='INITIALIZE' include='`${isMXS22}`' />
     <ConfigInstruction value='{' purpose='INITIALIZE' />
     <ConfigInstruction value='    (void)Cy_SysClk_PllDisable(pll);' purpose='INITIALIZE' />
     <ConfigInstruction value='}' purpose='INITIALIZE' />
+
+    <!-- Explicitly disable unused DPLL-LP/HP instances that will NOT be re-enabled by PLL init calls.
+         This ensures PLLs left enabled by boot code are properly disabled when the design does not use them.
+         Without this, an NS-side app inherits boot-enabled PLLs whose init functions are never generated. -->
+    <ConfigInstruction value='/* Explicitly disable unused DPLLs not re-enabled below */' purpose='INITIALIZE' include='`${isMXS22}`' />
+    <ConfigInstruction value='(void)Cy_SysClk_DpllLpDisable(0U);' purpose='INITIALIZE' include='`${isMXS22 &amp;&amp; hasBlock("srss[0].clock[0].pll250m[0]") &amp;&amp; !(isBlockUsed("srss[0].clock[0].dpll250[0]") || isBlockUsed("srss[0].clock[0].pll250m[0]"))}`' />
+    <ConfigInstruction value='(void)Cy_SysClk_DpllLpDisable(1U);' purpose='INITIALIZE' include='`${isMXS22 &amp;&amp; hasBlock("srss[0].clock[0].pll250m[1]") &amp;&amp; !(isBlockUsed("srss[0].clock[0].dpll250[1]") || isBlockUsed("srss[0].clock[0].pll250m[1]"))}`' />
+    <ConfigInstruction value='(void)Cy_SysClk_DpllHpDisable(0U);' purpose='INITIALIZE' include='`${isMXS22 &amp;&amp; hasBlock("srss[0].clock[0].pll500m[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pll500m[0]")}`' />
+    <ConfigInstruction value='(void)Cy_SysClk_DpllHpDisable(1U);' purpose='INITIALIZE' include='`${isMXS22 &amp;&amp; hasBlock("srss[0].clock[0].pll500m[1]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pll500m[1]")}`' />
     <ConfigInstruction value='' purpose='INITIALIZE' />
 
     <!-- Enable all source clocks -->
@@ -426,6 +448,16 @@
     <!-- Disable any unused clock sources -->
     <ConfigInstruction value='/* Disable unused clock sources */' purpose='INITIALIZE' />
     <ConfigInstruction value='Cy_SysClk_IhoDisable();' purpose='INITIALIZE' include='`${hasBlock("srss[0].clock[0].iho[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].iho[0]")}`' />
+    <ConfigInstruction value='/* Configure WDT clock source from CLK_LF */' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='SRSS_WDT_CTL(WDT_STRUCT0) = (SRSS_WDT_CTL(WDT_STRUCT0) &amp; ~(WDT_MAIN_WDT_CTL_WDT_EN_Msk | WDT_MAIN_WDT_CTL_WDT_CLK_SEL_Msk)) | ((uint32_t)CY_WDT_CLK_SOURCE_`${wdtClkSourceApi}` &lt;&lt; WDT_MAIN_WDT_CTL_WDT_CLK_SEL_Pos);' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='Cy_SysLib_DelayUs(200U); /* Allow WDT sync domain to latch CLK_SEL */' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='SRSS_WDT_CTL(WDT_STRUCT0) |= WDT_MAIN_WDT_CTL_WDT_EN_Msk;' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='#if defined(SRSS_NUM_WDT_A) &amp;&amp; (SRSS_NUM_WDT_A > 1)' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='SRSS_WDT_CTL(WDT_STRUCT1) = (SRSS_WDT_CTL(WDT_STRUCT1) &amp; ~(WDT_MAIN_WDT_CTL_WDT_EN_Msk | WDT_MAIN_WDT_CTL_WDT_CLK_SEL_Msk)) | ((uint32_t)CY_WDT_CLK_SOURCE_`${wdtClkSourceApi}` &lt;&lt; WDT_MAIN_WDT_CTL_WDT_CLK_SEL_Pos);' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='Cy_SysLib_DelayUs(200U);' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='SRSS_WDT_CTL(WDT_STRUCT1) |= WDT_MAIN_WDT_CTL_WDT_EN_Msk;' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='#endif /* defined(SRSS_NUM_WDT_A) &amp;&amp; (SRSS_NUM_WDT_A > 1) */' purpose='INITIALIZE' include='`${is_mxs22srssv2_1 &amp;&amp; hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]") &amp;&amp; isBlockUsed("srss[0].clock[0].lfclk[0]")}`' />
+    <ConfigInstruction value='Cy_SysClk_PiloDisable();' purpose='INITIALIZE' include='`${hasBlock("srss[0].clock[0].pilo[0]") &amp;&amp; !isBlockUsed("srss[0].clock[0].pilo[0]")}`' />
     <ConfigInstruction value='/* Wait 4 ILO cycles in case of unfinished CLKLF clock source transition */' purpose='INITIALIZE' />
     <ConfigInstruction value='Cy_SysLib_DelayUs(200U);' purpose='INITIALIZE' include='`${!isBlockUsed("srss[0].clock[0].ilo[0]")}`' /> <!--DRIVERS 3401-->
     <ConfigInstruction value='Cy_SysClk_IloDisable();' purpose='INITIALIZE' include='`${!isBlockUsed("srss[0].clock[0].ilo[0]") &amp;&amp; "mxs40srss" eq getIpBlockName()}`' />

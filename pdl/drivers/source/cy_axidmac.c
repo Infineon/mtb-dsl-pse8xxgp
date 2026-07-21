@@ -109,6 +109,8 @@ cy_en_axidmac_status_t Cy_AXIDMAC_Descriptor_Init(cy_stc_axidmac_descriptor_t * 
 *******************************************************************************/
 void Cy_AXIDMAC_Descriptor_DeInit(cy_stc_axidmac_descriptor_t * descriptor)
 {
+    CY_ASSERT_L1(NULL != descriptor);
+
     descriptor->ctl = 0UL;
     descriptor->src = 0UL;
     descriptor->dst = 0UL;
@@ -161,6 +163,7 @@ cy_en_axidmac_status_t Cy_AXIDMAC_Channel_Init(AXI_DMAC_Type * base, uint32_t ch
 *******************************************************************************/
 void Cy_AXIDMAC_Channel_DeInit(AXI_DMAC_Type * base, uint32_t channel)
 {
+    CY_ASSERT_L1(NULL != base);
     CY_ASSERT_L1(CY_AXIDMAC_IS_CH_NR_VALID(channel));
 
     AXIDMAC_CH_CTL(base, channel) = 0UL;
@@ -211,7 +214,7 @@ void Cy_AXIDMAC_Descriptor_SetXloopDataCount(cy_stc_axidmac_descriptor_t * descr
 
 
 /*******************************************************************************
-* Function Name: Cy_DMAC_Descriptor_SetNextDescriptor
+* Function Name: Cy_AXIDMAC_Descriptor_SetNextDescriptor
 ****************************************************************************//**
 *
 * Sets a Next Descriptor parameter for the specified descriptor.
@@ -252,7 +255,7 @@ void Cy_AXIDMAC_Descriptor_SetNextDescriptor(cy_stc_axidmac_descriptor_t * descr
 
 
 /*******************************************************************************
-* Function Name: Cy_DMAC_Descriptor_GetNextDescriptor
+* Function Name: Cy_AXIDMAC_Descriptor_GetNextDescriptor
 ****************************************************************************//**
 *
 * Returns a next descriptor address of the specified descriptor.

@@ -38,6 +38,14 @@
 #include "mtb_srf.h"
 #include "cycfg_ppc.h"
 
+/* Provide defaults for PPC macros that may not be defined by cycfg_ppc.h (MISRA C-2012 Rule 20.9) */
+#if !defined(CYCFG_PPC_SECURED_SRSS_HIB_DATA)
+#define CYCFG_PPC_SECURED_SRSS_HIB_DATA          (0)
+#endif
+#if !defined(CYCFG_PPC_SECURED_PWRMODE_PWRMODE)
+#define CYCFG_PPC_SECURED_PWRMODE_PWRMODE        (0)
+#endif
+
 #if !defined(CY_PDL_ENABLE_SECURE_AWARE_SYSPM)
 /** SYSPM Secure Aware Driver enablement.  Set to 0 via Makefile defines to disable. When not manually set,
  * defaults to the PDL-wide Secure Aware Driver enablement status.
@@ -60,11 +68,19 @@
  * CY_PDL_SYSPM_OP_SYSCM55RESET: CYCFG_PPC_SECURED_MXCM55_CM55/CYCFG_PPC_SECURED_MXCM55_CM55_NS
  * CY_PDL_SYSPM_OP_SYSCM55DISABLE: CYCFG_PPC_SECURED_M55APPCPUSS
  */
+#if defined(CY_IP_M55APPCPUSS)
 #define _CY_PDL_SYSPM_PPC_SECURED               (CYCFG_PPC_SECURED_SRSS_MAIN || CYCFG_PPC_SECURED_SRSS_HIB_DATA || CYCFG_PPC_SECURED_PWRMODE_PWRMODE || CYCFG_PPC_SECURED_M55APPCPUSS)
+#else
+#define _CY_PDL_SYSPM_PPC_SECURED               (CYCFG_PPC_SECURED_SRSS_MAIN || CYCFG_PPC_SECURED_SRSS_HIB_DATA || CYCFG_PPC_SECURED_PWRMODE_PWRMODE)
+#endif /* defined(CY_IP_M55APPCPUSS) */
 #endif /* !defined(_CY_PDL_SYSPM_PPC_SECURED) */
 
 #if !defined(_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55)
+#if defined(CY_IP_MXCM55)
 #define _CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55   (CYCFG_PPC_SECURED_MXCM55_CM55 || CYCFG_PPC_SECURED_MXCM55_CM55_NS)
+#else
+#define _CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55   (0)
+#endif /* defined(CY_IP_MXCM55) */
 #endif /* !defined(_CY_PDL_SYSPM_PPC_SECURED_MXCM55_CM55) */
 
 #if (CY_PDL_ENABLE_SECURE_AWARE_SYSPM && _CY_PDL_SYSPM_PPC_SECURED)
@@ -73,14 +89,25 @@
 #endif
 
 #if defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
-#if !((CYCFG_PPC_SECURED_SRSS_MAIN && CYCFG_PPC_SECURED_SRSS_HIB_DATA && CYCFG_PPC_SECURED_PWRMODE_PWRMODE && CYCFG_PPC_SECURED_M55APPCPUSS && CYCFG_PPC_SECURED_APPCPUSS_AP) || \
-      (!CYCFG_PPC_SECURED_SRSS_MAIN && !CYCFG_PPC_SECURED_SRSS_HIB_DATA && !CYCFG_PPC_SECURED_PWRMODE_PWRMODE && !CYCFG_PPC_SECURED_M55APPCPUSS && !CYCFG_PPC_SECURED_APPCPUSS_AP))
-    #error "Unsupported PPC regions' security state: SRSS_MAIN, SRSS_HIB_DATA, PWRMODE_PWRMODE, APPCPUSS_AP and M55APPCPUSS PPC regions must all be configured to the same security state"
+/* Validate that common PPC regions share the same security state */
+#if !((CYCFG_PPC_SECURED_SRSS_MAIN && CYCFG_PPC_SECURED_SRSS_HIB_DATA && CYCFG_PPC_SECURED_PWRMODE_PWRMODE) || \
+      (!CYCFG_PPC_SECURED_SRSS_MAIN && !CYCFG_PPC_SECURED_SRSS_HIB_DATA && !CYCFG_PPC_SECURED_PWRMODE_PWRMODE))
+    #error "Unsupported PPC regions' security state: SRSS_MAIN, SRSS_HIB_DATA and PWRMODE_PWRMODE PPC regions must all be configured to the same security state"
 #endif
 
+#if defined(CY_IP_M55APPCPUSS)
+/* On devices with M55, also validate M55APPCPUSS and APPCPUSS_AP match the common regions */
+#if !((CYCFG_PPC_SECURED_SRSS_MAIN && CYCFG_PPC_SECURED_M55APPCPUSS && CYCFG_PPC_SECURED_APPCPUSS_AP) || \
+      (!CYCFG_PPC_SECURED_SRSS_MAIN && !CYCFG_PPC_SECURED_M55APPCPUSS && !CYCFG_PPC_SECURED_APPCPUSS_AP))
+    #error "Unsupported PPC regions' security state: SRSS_MAIN, APPCPUSS_AP and M55APPCPUSS PPC regions must all be configured to the same security state"
+#endif
+#endif /* defined(CY_IP_M55APPCPUSS) */
+
+#if defined(CY_IP_MXCM55)
 #if !((CYCFG_PPC_SECURED_MXCM55_CM55 && CYCFG_PPC_SECURED_MXCM55_CM55_NS) || (!CYCFG_PPC_SECURED_MXCM55_CM55 && !CYCFG_PPC_SECURED_MXCM55_CM55_NS))
     #error "Unsupported PPC regions' security state: MXCM55_CM55 and MXCM55_CM55_NS PPC regions must all be configured to the same security state"
 #endif
+#endif /* defined(CY_IP_MXCM55) */
 #endif
 
 #if !defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)

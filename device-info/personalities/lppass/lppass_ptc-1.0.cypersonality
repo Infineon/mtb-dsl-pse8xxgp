@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2024-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2024-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -321,12 +321,12 @@
                    visible='`${(postProcess$idxInput ne "CY_AUTANALOG_PTCOMP_PP_IN_SRC_DISABLED")}`'
                    editable='`${(postProcess$idxInput ne "CY_AUTANALOG_PTCOMP_PP_IN_SRC_DISABLED")}`'
                    desc='The post-processor LUT function.'
-                   default='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A'>
+                   default='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_AND_B'>
+        <Entry name='PP0 AND PP1' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_AND_B' visible='true'/>
+        <Entry name='PP0 AND (PP1)&apos;' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_AND_B_BAR' visible='true'/>
         <Entry name='PP0' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A' visible='true'/>
         <Entry name='(PP0)&apos; AND PP1' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_BAR_AND_B' visible='true'/>
         <Entry name='PP1' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_B' visible='true'/>
-        <Entry name='PP0 AND PP1' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_AND_B' visible='true'/>
-        <Entry name='PP0 AND (PP1)&apos;' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_AND_B_BAR' visible='true'/>
         <Entry name='PP0 XOR PP1' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_XOR_B' visible='true'/>
         <Entry name='PP0 OR PP1' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_OR_B' visible='true'/>
         <Entry name='PP0 NOR PP1' value='CY_AUTANALOG_PTCOMP_PP_DATA_FUNC_A_NOR_B' visible='true'/>

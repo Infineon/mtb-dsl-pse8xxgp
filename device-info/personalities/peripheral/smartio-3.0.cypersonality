@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2018-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2018-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -311,8 +311,8 @@
     <ParamString id='ipblockName' name='IP Block Name' group='Internal' default='`${getIpBlockName()}`' visible='false' editable='false' desc='Gets the name of the IP Block.' />
     <ParamBool id='mxs40iossIpblock' name='IP Block Name Check' group='Internal' default='`${(ipblockName eq "mxs40ioss")}`' visible='false' editable='false' desc='Checks if mxs40ioss is the IP Block.' />
     <ParamString id='version' name='version number' group='Internal' default='`${getVersion()}`' visible='false' editable='false' desc='' />
-    <ParamString id='pclkDst1' name='PCLK Destination 1' group='Internal' default='PCLK_SMARTIO`${getInstNumber("port")}`_CLOCK' visible='false' editable='false' desc='Clock connection macro for CAT1A and CAT1C devices' />
-    <ParamString id='pclkDst2' name='PCLK Destination 2' group='Internal' default='PCLK_IOSS_CLOCK_SMARTIO_PCLK_POS_EN`${getInstNumber("port")}`' visible='false' editable='false' desc='Clock connection macro for CAT1B and CAT1D devices' />
+    <ParamString id='pclkDst1' name='PCLK Destination 1' group='Internal' default='PCLK_SMARTIO`${getInstNumber("port")}`_CLOCK' visible='false' editable='false' desc='Clock connection macro for PSOC and XMC devices' />
+    <ParamString id='pclkDst2' name='PCLK Destination 2' group='Internal' default='PCLK_IOSS_CLOCK_SMARTIO_PCLK_POS_EN`${getInstNumber("port")}`' visible='false' editable='false' desc='Clock connection macro for PSC and PSE devices' />
     <ParamString id='pclkDst' name='PCLK Destination' group='Internal' default='`${(mxs40iossIpblock ? pclkDst1 : pclkDst2)}`' visible='false' editable='false' desc='Generates PCLK connection define.' />
   </Parameters>
 

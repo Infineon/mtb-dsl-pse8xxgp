@@ -33,6 +33,71 @@
 extern "C" {
 #endif
 
+#ifdef AROM_SUPPORTED
+/*******************************************************************************
+* Function Name: Cy_SCB_GetNumInRxFifo
+****************************************************************************//**
+*
+* Returns the number of data elements currently in the RX FIFO.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \return
+* The number or data elements in RX FIFO.
+*
+*******************************************************************************/
+uint32_t Cy_SCB_GetNumInRxFifo(CySCB_Type const *base)
+{
+    return _FLD2VAL(SCB_RX_FIFO_STATUS_USED, SCB_RX_FIFO_STATUS(base));
+}
+
+/*******************************************************************************
+* Function Name: Cy_SCB_GetNumInTxFifo
+****************************************************************************//**
+*
+* Returns the number of data elements currently in the TX FIFO.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \return
+* The number or data elements in the TX FIFO.
+*
+*******************************************************************************/
+uint32_t Cy_SCB_GetNumInTxFifo(CySCB_Type const *base)
+{
+    return _FLD2VAL(SCB_TX_FIFO_STATUS_USED, SCB_TX_FIFO_STATUS(base));
+}
+
+/** \cond INTERNAL */
+/*******************************************************************************
+* Function Name: Cy_SCB_GetFifoSize
+****************************************************************************//**
+*
+* Returns the RX and TX FIFO depth.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \return
+* FIFO depth.
+*
+*******************************************************************************/
+uint32_t Cy_SCB_GetFifoSize(CySCB_Type const *base)
+{
+#if((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=2)) || defined (CY_IP_MXS22SCB))
+    {return (((uint32_t)(CY_SCB_FIFO_SIZE)) >> _FLD2VAL(SCB_CTRL_MEM_WIDTH, SCB_CTRL(base)));}
+#elif(defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION==1))
+    {return (_FLD2BOOL(SCB_CTRL_BYTE_MODE, SCB_CTRL(base)) ? (CY_SCB_FIFO_SIZE) : (CY_SCB_FIFO_SIZE / 2UL));}
+#else
+    return 0;
+#endif /* ((CY_IP_MXSCB_VERSION>=2) || defined (CY_IP_MXS22SCB)) */
+
+}
+/** \endcond */
+#endif
+
 /*******************************************************************************
 * Function Name: Cy_SCB_ReadArrayNoCheck
 ****************************************************************************//**
@@ -499,6 +564,139 @@ uint32_t Cy_SCB_WriteDefaultArray(CySCB_Type *base, uint32_t txData, uint32_t si
 
     return (numToCopy);
 }
+
+#if ((defined(CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN))
+
+/*******************************************************************************
+* Function Name: Cy_SCB_TGSx_Init
+****************************************************************************//**
+*
+* Initializes the Timeout Generation support in SCB.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \param config
+* The pointer to the configuration structure \ref cy_stc_scb_tgs_config_t.
+*
+* \return
+* \ref cy_en_scb_tgs_status_t
+*
+* \note
+* If SCB is already enabled, ensure that the SCB block is disabled \ref Cy_SCB_I2C_Disable
+* before calling this function.
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+cy_en_scb_tgs_status_t Cy_SCB_TGSx_Init(CySCB_Type *base, uint8_t cntNum, cy_stc_scb_tgs_config_t const *config)
+{
+    if ((NULL == base) || (NULL == config) || (cntNum >= CY_SCB_TGS_CNT_MAX))
+    {
+        return CY_SCB_TGS_BAD_PARAM;
+    }
+
+    uint32_t tgs_ctl = _BOOL2FLD(SCB_TGS_CTL0_TR_TXFIFO, config->reloadTx) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_RXFIFO, config->reloadRx) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_FCLK, config->reloadClkFall) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_RCLK, config->reloadClkRise) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_UART_S, config->reloadUartStart) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_SPI_S, config->reloadSpiSel) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_I2C_S, config->reloadI2cStart) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_RI2CACK, config->reloadI2cAckRise) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_FI2CACK, config->reloadI2cAckFall) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_DPSLP2ACT, config->reloadWakeup) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_CLK_H, config->gateClkHigh) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_CLK_L, config->gateClkLow) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_FRAME, config->gateFrame) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_FRAME_N, config->gateFrameN) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_FCLK_P, config->stopClkFall) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_RCLK_P, config->stopClkRise) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_UART_P, config->stopUartStop) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_SPI_NS, config->stopSpiSel) |
+                        _BOOL2FLD(SCB_TGS_CTL0_TR_I2C_P, config->stopI2cStop) |
+                        _BOOL2FLD(SCB_TGS_CTL0_SEL_UART_TX, config->uartDirection) |
+                        _BOOL2FLD(SCB_TGS_CTL0_STATE_RST, config->enableReset);
+
+    switch (cntNum)
+    {
+        case 0u:
+            SCB_TGS_CTL0(base) = tgs_ctl;
+            SCB_TGS_CNT0(base) = config->count;
+            SCB_TGS_REL0(base) = config->reload;
+            break;
+        case 1u:
+            SCB_TGS_CTL1(base) = tgs_ctl;
+            SCB_TGS_CNT1(base) = config->count;
+            SCB_TGS_REL1(base) = config->reload;
+            break;
+        case 2u:
+            SCB_TGS_CTL2(base) = tgs_ctl;
+            SCB_TGS_CNT2(base) = config->count;
+            SCB_TGS_REL2(base) = config->reload;
+            break;
+        default:
+            /* Not supported counter number */
+            break;
+    }
+
+    /* Enable interrupt source */
+    SCB_INTR_TGS_MASK(base) |= 1UL << cntNum;
+
+    return CY_SCB_TGS_SUCCESS;
+}
+
+
+/*******************************************************************************
+*  Function Name: Cy_SCB_TGSx_DeInit
+****************************************************************************//**
+*
+* De-initializes the Timeout Generation Support block and returns the register values to default.
+*
+* \param base
+* The pointer to the SCB instance.
+*
+* \param cntNum
+* The counter number (0, 1, 2).
+*
+* \note
+* This API is only available for devices containing TGS functionality.
+*
+*******************************************************************************/
+void Cy_SCB_TGSx_DeInit(CySCB_Type *base, uint8_t cntNum)
+{
+    /* Returns block registers into the default state */
+    switch (cntNum)
+    {
+        case 0u:
+            SCB_TGS_CTL0(base) = 0UL;
+            SCB_TGS_CNT0(base) = 0UL;
+            SCB_TGS_REL0(base) = 0UL;
+            break;
+        case 1u:
+            SCB_TGS_CTL1(base) = 0UL;
+            SCB_TGS_CNT1(base) = 0UL;
+            SCB_TGS_REL1(base) = 0UL;
+            break;
+        case 2u:
+            SCB_TGS_CTL2(base) = 0UL;
+            SCB_TGS_CNT2(base) = 0UL;
+            SCB_TGS_REL2(base) = 0UL;
+            break;
+        default:
+            /* Not supported counter number */
+            break;
+    }
+
+    /* Disable interrupt source */
+    SCB_INTR_TGS_MASK(base) &= ~(1UL << cntNum);
+}
+
+#endif /* (((CY_IP_MXSCB_VERSION>=4) && (CY_IP_MXSCB_VERSION_MINOR>=4)) || defined (CY_DOXYGEN)) */
 
 #if defined(__cplusplus)
 }

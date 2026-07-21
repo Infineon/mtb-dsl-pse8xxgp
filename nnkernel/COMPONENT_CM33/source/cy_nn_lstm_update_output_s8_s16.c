@@ -95,12 +95,12 @@ cy_en_nnlite_status_t cy_nn_lstm_update_output_s8_s16(const int n_batch,
             return CY_NNLITE_BAD_PARAM;
     }
     cy_nn_pwise_binary_params_t mul_params;
-    mul_params.lhsOffset = 0;
-    mul_params.rhsOffset = 0;
-    mul_params.outputOffset = lstm->hidden_offset;
+    mul_params.lhsOffset = 0;   
+    mul_params.rhsOffset = 0;     
+    mul_params.outputOffset = lstm->hidden_offset;        
     mul_params.outClipping.min = -(1<<clip_bits);
     mul_params.outClipping.max = (1<<clip_bits)-1;
-    mul_params.inputSize = CY_NNLITE_ACTIVATION_16BIT;
+    mul_params.inputSize = CY_NNLITE_ACTIVATION_16BIT;      
     mul_params.outputSize = (cy_en_nnlite_output_size_t)lstm->output_size;
     mul_params.scaling.pre_mac_scaling_mode = CY_NNLITE_RESCALE_NONE;
     mul_params.scaling.pre_mac_scale = 1.0f;

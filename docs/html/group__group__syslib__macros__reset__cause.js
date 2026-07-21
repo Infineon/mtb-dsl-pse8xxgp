@@ -25,5 +25,6 @@ var group__group__syslib__macros__reset__cause =
     [ "CY_SYSLIB_RESET_PORVDDD", "group__group__syslib__macros__reset__cause.html#ga35546f2d5563315369a1b7378245bb70", null ],
     [ "CY_SYSLIB_RESET_HIB_WAKEUP", "group__group__syslib__macros__reset__cause.html#gad30b17c4bd7e48fd4628d4ee56cace84", null ],
     [ "CY_SYSLIB_HIBERNATE_TOKEN", "group__group__syslib__macros__reset__cause.html#ga5f29c5d154bc8d9bd44896a6cebca0d4", null ],
-    [ "CY_SYSLIB_DEEP_SLEEP_OFF_TOKEN", "group__group__syslib__macros__reset__cause.html#ga092706377d4182fc83f6b3bb99b7bd4c", null ]
+    [ "CY_SYSLIB_DEEP_SLEEP_OFF_TOKEN", "group__group__syslib__macros__reset__cause.html#ga092706377d4182fc83f6b3bb99b7bd4c", null ],
+    [ "CY_SYSLIB_HIBERNATE_RAM_TOKEN", "group__group__syslib__macros__reset__cause.html#gaa87a9959ec28e06ec96692930106b5db", null ]
 ];

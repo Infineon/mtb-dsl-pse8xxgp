@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2018-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2018-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -236,6 +236,11 @@
     <DRC type='ERROR' text='Bus Idle Condition should be atleast 200us' paramId='BusIdleTime' condition='`${(Target &amp;&amp; ((BusIdleTime * (1000000000 / i3cClkHz)) &lt; 200000)) ? "1" : "0"}`' /> <!-- tIDLE least is 200us -->
 
     <DRC type='ERROR' text='I3C Clock input signal cannot exceed 125 MHz' condition='`${i3cClkHz &gt; 125000000}`' />
+
+	 <!-- DRC: peripheral clock must be fast enough to achieve the selected Push Pull Data Rate in automatic (non-manual) mode.
+         The Synopsys I3C block requires a minimum of 5 clock cycles for the push-pull high period and 5 for the low period
+         (10 cycles per bit total), so the required peripheral clock >= PushPullDataRate(kbps) * 10000 Hz. -->
+    <DRC type='INFO' text='The peripheral clock frequency is insufficient to achieve the selected Push Pull Data Rate for I3C. A minimum clock frequency of 10x the Push Pull Data Rate is required (e.g. 125 MHz for 12500 kbps). Refer the "Actual Data Rate" section for the current possible push-pull data rate and open drain data rate corresponding to the I3C clock setting.' paramId='PushPullDataRate' condition='`${(Controller &amp;&amp; !ManualDataRateCtrl &amp;&amp; (I3CBusMode ne CY_I3C_BUS_MIXED_SLOW) &amp;&amp; (i3cClkHz &lt; (PushPullDataRate * 10000 - 10))) ? "1" : "0"}`' />
 
   </DRCs>
 

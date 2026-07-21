@@ -110,4 +110,36 @@
 #define gcFEATURE_VG_SINGLE_COMMAND_BUFFER   0
 #define gcFEATURE_VG_COMMAND_BUFFER_CACHE   0
 
+/* ---------------------------------------------------------------------------
+ * PSE8X7-compat shim (Infineon addition, not from upstream unified_pdl)
+ *
+ * The following flags exist in the PSE8X7 vg_lite_options.h but
+ * are absent from this upstream PSE84 header. The shared VGLite driver
+ * (vg_lite.c, vg_lite_image.c) references some of them outside `#if`
+ * preprocessor blocks (e.g. as values in a `bool[]` feature-bit array
+ * around vg_lite.c:340-368), so they must be defined for PSE84 to
+ * compile. All are forced to 0 because none of these features are present
+ * in the PSE84 GCNANO IP (REV 0x1003 / CID 0x410).
+ *
+ * If upstream PSE84 options.h ever adds any of these natively, REMOVE
+ * the corresponding line from this block to avoid a redefinition warning.
+ * --------------------------------------------------------------------------- */
+#define gcFEATURE_VG_A124_A8L8                       0
+#define gcFEATURE_VG_BOUNDARY_FILTER_BYPASS          0
+#define gcFEATURE_VG_CMD_CALL_FIX                    0
+#define gcFEATURE_VG_DEC_COMPRESS_2_1                0
+#define gcFEATURE_VG_DEC_COMPRESS_2_2                0
+#define gcFEATURE_VG_DST_24BIT_PLANAR_ALIGNED_1      0
+#define gcFEATURE_VG_DST_ADDRESS_DETAIL_ALIGNED      0
+#define gcFEATURE_VG_MESH_FOR_FRAME                  0
+#define gcFEATURE_VG_NEW_FACTOR                      0
+#define gcFEATURE_VG_NEW_ROI_MASK                    0
+#define gcFEATURE_VG_PE_PREFETCH                     0
+#define gcFEATURE_VG_RGB8_ETC2_EAC                   0
+#define gcFEATURE_VG_SCREEN_COPY_FIX                 0
+#define gcFEATURE_VG_SRC_ADDRESS_DETAIL_ALIGNED_1    0
+#define gcFEATURE_VG_TILE_PE_LINEAR                  0
+#define gcFEATURE_VG_YUV_DETAIL_ALIGNED_CHECK        0
+#define gcFEATURE_VG_YUV_HEIGHT_ALIGNED_CHECK        0
+
 #endif

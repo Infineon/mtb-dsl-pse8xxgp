@@ -13,6 +13,7 @@ var searchData=
   ['rtc_20interrupt_20sources_10',['RTC Interrupt sources',['../group__group__rtc__macros__interrupts.html',1,'']]],
   ['rtc_20srf_20_20_20_20_20_20_28rtc_20secure_20request_20framework_29_11',['RTC SRF      (RTC Secure Request Framework)',['../group__group__rtc__srf.html',1,'']]],
   ['rtc_20status_20definitions_12',['RTC Status definitions',['../group__group__rtc__busy__status.html',1,'']]],
-  ['rx_20interrupt_20masks_13',['RX Interrupt masks',['../group__group__canfd__rx__interrupt__masks.html',1,'']]],
-  ['rx_20interrupt_20statuses_14',['RX Interrupt Statuses',['../group__group__scb__common__macros__rx__intr.html',1,'']]]
+  ['rx_20error_20event_20flags_13',['RX Error Event Flags',['../group__group__ethif__rx__error__events.html',1,'']]],
+  ['rx_20interrupt_20masks_14',['RX Interrupt masks',['../group__group__canfd__rx__interrupt__masks.html',1,'']]],
+  ['rx_20interrupt_20statuses_15',['RX Interrupt Statuses',['../group__group__scb__common__macros__rx__intr.html',1,'']]]
 ];

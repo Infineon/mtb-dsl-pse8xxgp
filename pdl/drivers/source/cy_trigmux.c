@@ -30,7 +30,7 @@
 #include "cy_trigmux.h"
 
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 14.3', 4, \
-'CY_PERI_V1 is not available for CAT1B devices.')
+'CY_PERI_V1 is not available for PSC devices.')
 
 
 /*******************************************************************************
@@ -81,7 +81,7 @@ cy_en_trigmux_status_t Cy_TrigMux_Connect(uint32_t inTrig, uint32_t outTrig, boo
     CY_ASSERT_L2(CY_TRIGMUX_IS_OUTTRIG_VALID(outTrig));
 
     /* inTrig and outTrig should be in the same group */
-    if ((inTrig & PERI_TR_CMD_GROUP_SEL_Msk) == (outTrig & PERI_TR_CMD_GROUP_SEL_Msk))
+    if (((inTrig & PERI_TR_CMD_GROUP_SEL_Msk) == (outTrig & PERI_TR_CMD_GROUP_SEL_Msk)) || (inTrig == 0UL))
     {
         uint32_t interruptState = Cy_SysLib_EnterCriticalSection();
 

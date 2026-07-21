@@ -73,7 +73,7 @@
 * The SD, eMMC, and SDIO cards have the similar physical interface:
 * clock, command line, and data lines.
 * The SD card is removable and requires the SD card connector to connect
-* to the PSoC device. This connector also has the card_mech_write_prot switch
+* to the PSOC device. This connector also has the card_mech_write_prot switch
 * for mechanical write protection and the card_detect_n switch for card detection.
 * The eMMC card also has DAT4-DAT7 pins for 8-bit mode and the EMMC_RESET pin.
 * \image html sd_card_connector.png
@@ -235,8 +235,8 @@
 * When lowVoltageSignaling is true, the SD Host driver sets UHS-I mode
 * during the card initialization. The SD Host driver always starts talking
 * to the card at 3.3V and then later switches to 1.8V. There is no internal
-* regulator in the PSoC 6 to change SD signals from 3.3V to 1.8V.
-* Thus, an external regulator is needed for the VDDIO of the PSoC device
+* regulator in the PSOC 6 to change SD signals from 3.3V to 1.8V.
+* Thus, an external regulator is needed for the VDDIO of the PSOC device
 * to provide the ability to go from 3.3V to 1.8V.
 * The SD Host driver sets the io_volt_sel pin to high which is used to
 * control the external regulator.
@@ -1406,6 +1406,7 @@ typedef struct
     cy_en_sd_host_card_type_t     cardType;     /**< The card type. */
     uint32_t                      csd[4];       /**< The Card-Specific Data register. */
     cy_en_sd_host_bus_width_t     busWidth;     /**< card bus width. */
+    bool                          lowVoltageSignaling; /**< The low voltage signaling mode (1.8V if true). */
 
 }cy_stc_sd_host_context_t;
 

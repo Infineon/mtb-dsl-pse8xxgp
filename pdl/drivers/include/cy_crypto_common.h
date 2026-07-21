@@ -187,8 +187,8 @@ extern "C" {
 #endif
 
 /** \cond INTERNAL */
-#define CY_REMAP_ADDRESS_FOR_CRYPTO(addr)   (CY_REMAP_ADDRESS_CBUS_TO_SAHB(addr))
-#define CY_REMAP_ADDRESS_FOR_CPU(addr)      (CY_REMAP_ADDRESS_SAHB_TO_CBUS(addr))
+#define CY_REMAP_ADDRESS_FOR_CRYPTO(addr)   (CY_REMAP_CRYPTO_ADDRESS_CBUS_TO_SAHB(addr))
+#define CY_REMAP_ADDRESS_FOR_CPU(addr)      (CY_REMAP_CRYPTO_ADDRESS_SAHB_TO_CBUS(addr))
 /** \endcond */
 
 /** Pad size for the SHA256 mode (in bytes)   */

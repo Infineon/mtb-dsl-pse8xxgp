@@ -110,9 +110,17 @@ cy_en_scb_spi_status_t Cy_SCB_SPI_Init(CySCB_Type *base, cy_stc_scb_spi_config_t
     bool byteMode = (config->rxDataWidth <= CY_SCB_BYTE_WIDTH) && (config->txDataWidth <= CY_SCB_BYTE_WIDTH);
 #endif /* CY_IP_MXSCB_VERSION */
     /* Configure an SPI interface */
-    SCB_CTRL(base) =_BOOL2FLD(SCB_CTRL_EC_AM_MODE, config->enableWakeFromSleep) |
+    SCB_CTRL(base) =_BOOL2FLD(SCB_CTRL_EC_AM_MODE, (config->enableWakeFromSleep || config->enableExternalClock)) |
                  _VAL2FLD(SCB_CTRL_OVS, (config->oversample - 1UL))          |
                  _VAL2FLD(SCB_CTRL_MODE, CY_SCB_CTRL_MODE_SPI);
+    /* EZ_MODE enables the EZ protocol on the SPI slave where the first byte
+     * is the command and subsequent bytes are data with auto-increment.
+     * EC_OP_MODE enables externally clocked operation for EZ mode.
+     * CMD_RESP_MODE is mutually exclusive with EZ_MODE. */
+    SCB_CTRL(base) |= _BOOL2FLD(SCB_CTRL_EZ_MODE, config->enableEzMode) |
+                      _BOOL2FLD(SCB_CTRL_CMD_RESP_MODE,
+                                (config->enableExternalClock && !config->enableEzMode)) |
+                      _BOOL2FLD(SCB_CTRL_EC_OP_MODE, config->enableExternalClock);
 #if((defined (CY_IP_MXSCB_VERSION) && (CY_IP_MXSCB_VERSION>=2)) || defined (CY_IP_MXS22SCB))
     Cy_SCB_SetMemWidth(base, memWidth_type);
 #elif((defined (CY_IP_MXSCB_VERSION) && CY_IP_MXSCB_VERSION==1))
@@ -695,7 +703,10 @@ cy_en_scb_spi_status_t Cy_SCB_SPI_Transfer(CySCB_Type *base, void *txBuffer, voi
             * - If the transfer size is equal to or less than FIFO, trigger at the end of the transfer.
             * - If the transfer size is greater than FIFO, trigger 1 byte earlier than the TX interrupt.
             */
-            Cy_SCB_SetRxFifoLevel(base, (size > fifoSize) ? ((fifoSize / 2UL) - 2UL) : (size - 1UL));
+            Cy_SCB_SetRxFifoLevel(base,
+                                  (size > fifoSize) ?
+                                  (((fifoSize / 2UL) > 1UL) ? ((fifoSize / 2UL) - 2UL) : 0UL) :
+                                  (size - 1UL));
 
             Cy_SCB_SetMasterInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
 
@@ -709,7 +720,10 @@ cy_en_scb_spi_status_t Cy_SCB_SPI_Transfer(CySCB_Type *base, void *txBuffer, voi
             * - If the transfer size is equal to or less than half of FIFO, trigger ??at the end of the transfer.
             * - If the transfer size is greater than half of FIFO, trigger 1 byte earlier than a TX interrupt.
             */
-            Cy_SCB_SetRxFifoLevel(base, (size > (fifoSize / 2UL)) ? ((fifoSize / 2UL) - 2UL) : (size - 1UL));
+            Cy_SCB_SetRxFifoLevel(base,
+                                  (size > (fifoSize / 2UL)) ?
+                                  (((fifoSize / 2UL) > 1UL) ? ((fifoSize / 2UL) - 2UL) : 0UL) :
+                                  (size - 1UL));
 
             Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_SLAVE_INTR_SPI_BUS_ERROR);
 

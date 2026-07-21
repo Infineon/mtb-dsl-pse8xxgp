@@ -466,6 +466,7 @@
 #define CY_AUTANALOG_DAC_H
 
 #include "cy_device.h"
+#if !(defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION >= 2U))
 
 #ifdef CY_IP_MXS22LPPASS_DAC
 
@@ -1540,6 +1541,7 @@ void Cy_AutAnalog_DAC_Data_SetDriveModeAll(uint8_t dacIdx, const cy_en_autanalog
 #endif /* CY_IP_MXS22LPPASS_DAC */
 
 #endif /** !defined(CY_AUTANALOG_DAC_H) */
+#endif
 
 /** \} group_autanalog_dac */
 

@@ -11,8 +11,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -30,7 +30,8 @@
 
 <Personality id='mxs40smif_intrinsic' name='Quad Serial Peripheral Interface (QSPI) Intrinsic' intrinsic='true' version='1.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v7'>
   <Dependencies>
-    <IpBlock name='mxsmif,mxsmif_ver2_s40e'>
+    <IpBlock name='mxsmif,mxsmif_ver2_s40e,smif'>
+        <Version major='7' />
         <Version major='6' />
         <Version major='5' />
         <Version major='4' />
@@ -40,8 +41,11 @@
     </IpBlock>
     <Resource name='smif' />
   </Dependencies>
-  <ExposedMembers/>
+  <ExposedMembers>
+    <ExposedMember key='smif_ip_version' paramId='smif_ip_version' />
+  </ExposedMembers>
   <Parameters>
+    <ParamRange id='smif_ip_version' name='SMIF IP Version' group='Internal' default='`${getVersion()}`' min='1' max='7' resolution='1' visible='false' editable='false' desc='SMIF IP Version' />
     <ParamString id='cfgFileName' name='cfgFileName' group='External Tools' default='design.cyqspi' visible='false' editable='false' desc='' />
     <ParamString id='cfgFilePath' name='cfgFilePath' group='External Tools' default='`${cy_design_path() . "/" . cfgFileName}`' visible='false' editable='false' desc='' />
     <ParamBool id='qspiUsed' name='qspiUsed' group='Internal' default='`${fileExists(cy_design_path() . "/design.cyqspi")}`' visible='false' editable='false' desc='' />

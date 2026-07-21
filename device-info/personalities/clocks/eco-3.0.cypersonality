@@ -9,9 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -53,18 +52,18 @@
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__eco.html' linkText='Open ECO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
-    <ParamBool id='is40srss_ver2or3Available' default='`${(("mxs40srss_ver2" eq getIpBlockName()) || ("mxs40srss_ver3" eq getIpBlockName()))}`' />
+    <ParamBool id='is40srss_ver2or3Available' default='`${(("mxs40srss_ver2" eq getIpBlockName()) || ("mxs40srss_ver3" eq getIpBlockName()))}`' desc='True when the device IP block is mxs40srss version 2 or 3' />
 
-    <ParamRange id='ecoFrequency' name='Frequency (MHz)' group='General' default='24.0000' visible='true' min='`${(is40srss_ver2or3Available ? 8 : 16)}`' max='`${(is40srss_ver2or3Available ? 33.34 : 35)}`' resolution='0.0001' desc='' />
+    <ParamRange id='ecoFrequency' name='Frequency (MHz)' group='General' default='24.0000' visible='true' min='`${(is40srss_ver2or3Available ? 8 : 16)}`' max='`${(is40srss_ver2or3Available ? 33.34 : 35)}`' resolution='0.0001' desc='The frequency of the external crystal connected to the ECO' />
     <ParamString id='frequency' default='`${ecoFrequency * 1000000}`' />
 
     <ParamRange id='accuracyPpm' name='Accuracy (±ppm)' group='General' default='0' min='0' max='1000000' resolution='1' visible='true' desc='Clock accuracy in ppm' />
     <ParamString id='accuracyPct' name='Accuracy (±%)' group='General' default='`${accuracyPpm/10000.0}`' visible='true' editable='false' desc='Clock accuracy in %' />
 
-    <ParamRange id='driveLevel' name='Drive Level (uW)' group='General' default='100' min='1' max='1000' resolution='1' visible='true' desc='' />
-    <ParamRange id='esr' name='Equivalent Series Resistance ESR (ohm)' group='General' default='50' min='1' max='1000' resolution='1' visible='true' desc='' />
-    <ParamRange id='c0' name='Crystal Shunt Capacitance C0 (pF)' group='General' default='0' min='0' max='100' resolution='1' visible='true' desc='' />
-    <ParamRange id='cLoad' name='Parallel Load Capacitance Cload (pF)' group='General' default='18' min='1' max='100' resolution='1' visible='true' desc='' />
+    <ParamRange id='driveLevel' name='Drive Level (uW)' group='General' default='100' min='1' max='1000' resolution='1' visible='true' desc='The maximum drive level specified by the crystal manufacturer, in microwatts' />
+    <ParamRange id='esr' name='Equivalent Series Resistance ESR (ohm)' group='General' default='50' min='1' max='1000' resolution='1' visible='true' desc='The equivalent series resistance of the crystal specified by the manufacturer, in ohms' />
+    <ParamRange id='c0' name='Crystal Shunt Capacitance C0 (pF)' group='General' default='0' min='0' max='100' resolution='1' visible='true' desc='The shunt (parallel) capacitance of the crystal specified by the manufacturer, in picofarads' />
+    <ParamRange id='cLoad' name='Parallel Load Capacitance Cload (pF)' group='General' default='18' min='1' max='100' resolution='1' visible='true' desc='The parallel load capacitance of the crystal specified by the manufacturer, in picofarads' />
 
     <!-- Restrict ECO connections to pins -->
     <ParamSignal port='eco_in[0]' name='Input' group='Connections' visible='true' desc='The input/passive terminal of the internal ECO circuitry' canBeEmpty='false' requirePreferred='true'>
@@ -74,7 +73,7 @@
       <Constraint type='REQUIRE' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
     </ParamSignal>
 
-    <ParamBool id='suppressCodeGen' default='true' />
+    <ParamBool id='suppressCodeGen' default='true' desc='Flags the clock framework to skip automatic code generation for this clock' />
   </Parameters>
 
   <Variables>

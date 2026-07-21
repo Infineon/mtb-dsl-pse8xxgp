@@ -164,7 +164,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns a day of the week for a year, month, and day of month that are passed through parameters. </p>
-<p>Zeller's congruence is used to calculate the day of the week. RTC HW block does not provide the converting function for day of week. This function should be called before <a class="el" href="group__group__rtc__general__functions.html#ga47268d3ac315e0d41b4795362bc444a8" title="Sets the time and date values into the RTC_TIME and RTC_DATE registers.">Cy_RTC_SetDateAndTime()</a> to get the day of week.</p>
+<p>Zeller's congruence is used to calculate the day of the week. RTC HW block does not provide the converting function for day of week. This function should be called before Cy_RTC_SetDateAndTime() to get the day of week.</p>
 <p>For the Georgian calendar, Zeller's congruence is: h = (q + [13 * (m + 1)] + K + [K/4] + [J/4] - 2J) mod 7</p>
 <p>h - The day of the week (0 = Saturday, 1 = Sunday, 2 = Monday, ., 6 = Friday). q - The day of the month. m - The month (3 = March, 4 = April, 5 = May, ..., 14 = February) K - The year of the century (year mod 100). J - The zero-based century (actually [year/100]) For example, the zero-based centuries for 1995 and 2000 are 19 and 20 respectively (not to be confused with the common ordinal century enumeration which indicates 20th for both cases).</p>
 <dl class="section note"><dt>Note</dt><dd>In this algorithm January and February are counted as months 13 and 14 of the previous year.</dd>
@@ -366,7 +366,7 @@ This API is Secure Aware. On devices with ARM TrustZone enabled, it is safe to c
 
 <p>The function checks the reset cause and returns the Boolean result. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the reset reason is the power cycle and the XRES (external reset). False if the reset reason is other than power cycle and the XRES.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Based on a return value the RTC time and date can be updated or skipped after the device reset. For example, you should skip the <a class="el" href="group__group__rtc__alarm__functions.html#ga92807dc709c679c70c07d44cf0331a94" title="Sets alarm time and date values into the ALMx_TIME and ALMx_DATE registers.">Cy_RTC_SetAlarmDateAndTime()</a> call function if internal WDT reset occurs. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Based on a return value the RTC time and date can be updated or skipped after the device reset. For example, you should skip the Cy_RTC_SetAlarmDateAndTime() call function if internal WDT reset occurs. </dd></dl>
 
 </div>
 </div>

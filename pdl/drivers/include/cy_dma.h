@@ -1204,7 +1204,7 @@ __STATIC_INLINE void Cy_DMA_Descriptor_SetXloopDataCount(cy_stc_dma_descriptor_t
     CY_ASSERT_L1(CY_DMA_SINGLE_TRANSFER != Cy_DMA_Descriptor_GetDescriptorType(descriptor));
     CY_ASSERT_L2(CY_DMA_IS_LOOP_COUNT_VALID(xCount));
     /* Convert the data count from the user's range (1-256) into the machine range (0-255). */
-    CY_REG32_CLR_SET(descriptor->xCtl, CY_DMA_CTL_COUNT, xCount - 1UL);
+    CY_REG32_CLR_SET(descriptor->xCtl, CY_DMA_CTL_COUNT, (xCount > 0UL) ? (xCount - 1UL) : 0UL);
 }
 
 

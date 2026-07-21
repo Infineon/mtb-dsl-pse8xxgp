@@ -23,12 +23,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#include "cy_device.h"
+#if defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U)
 #include <string.h>
 #include "cy_autanalog.h"
 
-#ifdef CY_IP_MXS22LPPASS
-
+#if defined (CY_IP_MXS22RRAMC) && (CY_IP_MXS22RRAMC_VERSION == 2)
+#include "cy_v2_systrimm.h"
+#else
 #include "cy_systrimm.h"
+#endif
 
 /* Helper macros for range validation */
 #define AUTANALOG_PRB_IDX(value)                                    ((value) < CY_AUTANALOG_PRB_NUM)
@@ -1293,5 +1297,5 @@ static void Analog_UpdateTimerTable_SAR(uint8_t stateIdx, const cy_stc_autanalog
 }
 #endif
 
-#endif /* CY_IP_MXS22LPPASS */
+#endif /* defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U) */
 /* [] END OF FILE */

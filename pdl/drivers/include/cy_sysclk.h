@@ -50,12 +50,6 @@
 * devices/include/\<series\>_config.h. (E.g.
 * devices/include/pse84_config.h).
 *
-* As an illustration of the clocking system, the following diagram shows the
-* PSOC EDGE E8 clock tree. 
-* The actual tree may vary depending on the device series.
-* Consult the Technical Reference Manual for your device for details.
-*
-* ![](sysclk_pse_tree.png)*
 * The sysclk driver supports multiple peripheral clocks, as well as the fast
 * clock, slow clock, backup domain clock, timer clock, and pump clock. The API
 * for any given clock contains the functions to manage that clock. Functions
@@ -65,11 +59,6 @@
 * The availability of clock functions depend on the availability of the chip
 * resources that support those functions. Consult the device TRM before
 * attempting to use these functions.
-*
-* \warning
-* On the diagram above, the yellow muxes are glitch-safe. All glitch-safe
-* mux transitions take four cycles of the source clock.
-* It is not allowed to turn off the source clock during that time.
 *
 *
 * \section group_sysclk_section_secure_aware Secure Aware SysCLK
@@ -132,7 +121,7 @@
 *
 * \note
 * Two models are possible for ECO as shown in the diagram below
-* ![](sysclk_eco_cat1d.png)
+* ![](sysclk_eco_psoc.png)
 *
 *   \defgroup group_sysclk_eco_macros    Macros
 *   \defgroup group_sysclk_eco_funcs     Functions
@@ -144,7 +133,7 @@
 *   to drive multiple clocking resources down the chain. These paths are
 *   used for active domain clocks that are not operational during chip
 *   Deep Sleep, hibernate and off modes. Illustrated below is a diagram
-*   of the clock paths for the PSoC 63 series, showing the first three
+*   of the clock paths for the PSOC 63 series, showing the first three
 *   clock paths. The source clocks for these paths are highlighted in
 *   the red box.
 *
@@ -163,7 +152,7 @@
 *
 *   \note The PDL driver cannot configure a clock path to use Digital Signal
 *   Interconnect (DSI) outputs as sources. This must be done through DSI
-*   configuration tool such as PSoC Creator.
+*   configuration tool such as PSOC Creator.
 *
 *   \defgroup group_sysclk_path_src_funcs     Functions
 *   \defgroup group_sysclk_path_src_enums     Enumerated Types
@@ -271,7 +260,7 @@
 * \defgroup group_sysclk_clk_hf          High-Frequency Clocks
 * \{
 *   Multiple high frequency clocks (CLK_HF) are available in the device. For example,
-*   PSoC 63 series has five high-frequency root clocks. Each CLK_HF has a particular
+*   PSOC 63 series has five high-frequency root clocks. Each CLK_HF has a particular
 *   connection and chip-specific destination on the device.
 *
 *   |Name     |Description                                             |
@@ -304,7 +293,7 @@
 *   There are multiple peripheral clock dividers that, in effect, create
 *   multiple separate peripheral clocks. The available dividers vary per device
 *   series.
-*  The PSoC™ Edge E84 MCU has 26 peripheral clock dividers:
+*  The PSOC™ Edge E84 MCU has 26 peripheral clock dividers:
 *
 *  - Fourteen 8-bit dividers
 *  - Five 16-bit integer dividers
@@ -388,7 +377,7 @@
 * \}
 * \defgroup group_sysclk_iho         Internal High Frequency(IHO) Clock
 * \{
-*   The IHO Clock is Internal High-speed Oscillator, which is present in CAT1B(48MHz)
+*   The IHO Clock is Internal High-speed Oscillator, which is present in PSC(48MHz)
 *   and PSE8(50MHz) devices.
 *
 *   \defgroup group_sysclk_iho_funcs   Functions
@@ -453,6 +442,7 @@ extern "C" {
 
 
 
+
 #if defined (CY_IP_MXS22SRSS)
 /** Timer clock frequency */
 #define CY_SYSCLK_TIMER_CLK_FREQ  (1000000UL) /* Hz */
@@ -479,12 +469,22 @@ extern "C" {
 *******************************************************************************/
 #if defined (CY_IP_MXS22SRSS)
 /* Macro to validate parameters in Cy_SysClk_ClkPathSetSource() function */
+#if defined (CY_IP_MXS22SRSS) && (((CY_IP_MXS22SRSS_VERSION == (2u)) && CY_IP_MXS22SRSS_VERSION_MINOR == (0u)))
+#define CY_SYSCLK_IS_CLKPATH_SOURCE_VALID(clkSrc)        (((clkSrc) == CY_SYSCLK_CLKPATH_IN_IHO)   || \
+                                                         ((clkSrc) == CY_SYSCLK_CLKPATH_IN_EXT)    || \
+                                                         ((clkSrc) == CY_SYSCLK_CLKPATH_IN_ECO)    || \
+                                                         ((clkSrc) == CY_SYSCLK_CLKPATH_IN_IMO)    || \
+                                                         ((clkSrc) == CY_SYSCLK_CLKPATH_IN_WCO)    || \
+                                                         ((clkSrc) == CY_SYSCLK_CLKPATH_IN_ALTHF0) || \
+                                                         ((clkSrc) == CY_SYSCLK_CLKPATH_IN_PILO))
+#else
 #define CY_SYSCLK_IS_CLKPATH_SOURCE_VALID(clkSrc)        (((clkSrc) == CY_SYSCLK_CLKPATH_IN_IHO) || \
                                                          ((clkSrc) == CY_SYSCLK_CLKPATH_IN_EXT)  || \
                                                          ((clkSrc) == CY_SYSCLK_CLKPATH_IN_ECO) || \
                                                          ((clkSrc) == CY_SYSCLK_CLKPATH_IN_IMO)  || \
                                                          ((clkSrc) == CY_SYSCLK_CLKPATH_IN_WCO) || \
                                                          ((clkSrc) == CY_SYSCLK_CLKPATH_IN_PILO))
+#endif
 #endif
 
 
@@ -830,6 +830,7 @@ typedef enum
     CY_SYSCLK_CLKPATH_IN_EXT,    /**< Select the EXT as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_ECO,    /**< Select the ECO as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_IMO,    /**< Select the IMO as the output of the path mux */
+    CY_SYSCLK_CLKPATH_IN_ALTHF   /**< Same as CY_SYSCLK_CLKPATH_IN_ALTHF0 */
     CY_SYSCLK_CLKPATH_IN_ALTHF0, /**< Select the ALTHF0 as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_ALTHF1, /**< Select the ALTHF1 as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_LPECO,  /**< Select the LPECO as the output of the path mux */
@@ -852,6 +853,7 @@ typedef enum
     CY_SYSCLK_CLKPATH_IN_EXT    =     1U, /**< Select the EXT as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_ECO    =     2U, /**< Select the ECO as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_IMO    =     3U, /**< Select the IMO as the output of the path mux */
+    CY_SYSCLK_CLKPATH_IN_ALTHF  =     4U, /**< Same as CY_SYSCLK_CLKPATH_IN_ALTHF0 */
     CY_SYSCLK_CLKPATH_IN_ALTHF0 =     4U, /**< Select the ALTHF0 as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_ALTHF1 =     5U, /**< Select the ALTHF1 as the output of the path mux */
     CY_SYSCLK_CLKPATH_IN_DSIMUX =     7U, /**< Select the DSI MUX output as the output of the path mux */
@@ -1046,7 +1048,7 @@ typedef struct
     uint32_t                        kpFrac;        /**< CONFIG5 register, Gain of P/I loop filter integrator path for FRACT operation */
     uint32_t                        kpSscg;        /**< CONFIG5 register, Gain of P/I loop filter integrator path for SSCG operation */
 
-#elif defined (CY_IP_MXS22SRSS) && CY_IP_MXS22SRSS_VERSION_MINOR == (1u)
+#elif defined (CY_IP_MXS22SRSS) && (((CY_IP_MXS22SRSS_VERSION == (1u)) && CY_IP_MXS22SRSS_VERSION_MINOR == (1u)) || (CY_IP_MXS22SRSS_VERSION == (2u)))
     uint32_t                        dcoCode;       /**< CONFIG4 register, DCO_CODE bits */
     bool                            disableBias;   /**< CONFIG4 register, PLL_CS_PB2_DIS bit */
     uint32_t                        pllTg;         /**< CONFIG4 register,   TG_MODE bits */
@@ -1414,7 +1416,7 @@ bool Cy_SysClk_PllLostLock(uint32_t clkPath);
 *
 * Disables the selected PLL.
 *
-* \param clkPath Selects which PLL to disable.
+* \param clkPath Selects which PLL to disable. 1 is the first PLL; 0 is invalid.
 *
 * \return Error / status code: \n
 * CY_SYSCLK_SUCCESS - PLL successfully disabled \n
@@ -2096,6 +2098,58 @@ void Cy_SysClk_PiloDisable(void);
 /** \} group_sysclk_pilo_funcs */
 
 
+/* ========================================================================== */
+/* ==========================    ALTHF SECTION    =========================== */
+/* ========================================================================== */
+/**
+* \addtogroup group_sysclk_alt_hf_funcs
+* \{
+*/
+#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+/*******************************************************************************
+* Function Name: Cy_SysClk_AltHfGetFrequency
+****************************************************************************//**
+*
+* Reports the frequency of the Alternative High-Frequency Clock
+*
+* \funcusage
+* \snippet bleclk/snippet/main.c BLE ECO clock API: Cy_BLE_EcoConfigure()
+*
+*******************************************************************************/
+uint32_t Cy_SysClk_AltHfGetFrequency(void);
+#endif
+
+#if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+/*******************************************************************************
+* Function Name: Cy_SysClk_AltHfEnable
+****************************************************************************//**
+*
+* Enables the ALTHF.
+*
+* \return Error / status code: \n
+* CY_SYSCLK_SUCCESS - ALTHF successfully disabled \n
+* CY_SYSCLK_TIMEOUT - ALTHF enabling failed due to timeout
+*
+*******************************************************************************/
+cy_en_sysclk_status_t Cy_SysClk_AltHfEnable(uint32_t timeoutus);
+
+/*******************************************************************************
+* Function Name: Cy_SysClk_IsAltHfEnabled
+****************************************************************************//**
+*
+* Reports if ALTHF is enabled or not
+*
+* \return Status of ALTHF \n
+* true = Enabled \n
+* false = Not Enabled
+*
+*******************************************************************************/
+bool Cy_SysClk_IsAltHfEnabled(void);
+
+#endif /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) */
+
+/** \} group_sysclk_alt_hf_funcs */
+
 
 /* ========================================================================== */
 /* ==========================    ALTLF SECTION    =========================== */
@@ -2498,6 +2552,33 @@ void Cy_SysClk_WcoBypass(cy_en_wco_bypass_modes_t bypass);
 /* ============================    MF SECTION    ============================ */
 /* ========================================================================== */
 
+/**
+* \addtogroup group_sysclk_mf_enums
+* \{
+*/
+#if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS28SRSS) || defined(CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+
+/**
+* Medium frequency (clkMf) input sources. See CLK_MF_SELECT register, MFCLK_SEL bits.
+* Used with functions \ref Cy_SysClk_ClkMfSetSource, and \ref Cy_SysClk_ClkMfGetSource.
+*/
+#if defined(CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
+
+typedef enum
+{
+    CY_SYSCLK_CLKMF_IN_IMO               = 0U, /**< clkMf is sourced by the internal low speed oscillator (IMO) */
+    CY_SYSCLK_CLKMF_IN_ILO               = 1U, /**< clkMf is sourced by the internal low speed oscillator (ILO) */
+    CY_SYSCLK_CLKMF_IN_WCO               = 2U, /**< clkMf is sourced by the watch crystal oscillator (WCO) */
+    CY_SYSCLK_CLKMF_IN_ALTLF             = 3U, /**< clkMf is sourced by the Alternate Low Frequency Clock (ALTLF) */
+    CY_SYSCLK_CLKMF_IN_PILO              = 4U, /**< clkMf is sourced by the precision low speed oscillator (PILO) */
+    CY_SYSCLK_CLKMF_IN_ECO_PRESCALER     = 5U, /**< clkMf is sourced by the External Clock Oscillator (ECO Prescaler) */
+    CY_SYSCLK_CLKMF_IN_IHO               = 6U, /**< clkMf is sourced by the internal high speed oscillator (IHO) */
+} cy_en_clkmf_in_sources_t;
+
+#endif
+
+#endif /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS28SRSS) || defined (CY_DOXYGEN) */
+
 /** \} group_sysclk_mf_enums */
 
 
@@ -2505,10 +2586,49 @@ void Cy_SysClk_WcoBypass(cy_en_wco_bypass_modes_t bypass);
 #define CY_SYSCLK_MF_DIVIDER_MIN                  (1U)
 #define CY_SYSCLK_MF_DIVIDER_MAX                  (256U)
 #define CY_SYSCLK_IS_MF_DIVIDER_VALID(locDiv)     ((CY_SYSCLK_MF_DIVIDER_MIN <= (locDiv)) && ((locDiv) <= CY_SYSCLK_MF_DIVIDER_MAX))
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
+#define CY_SYSCLK_IF_MF_SOURCE_VALID(mfClkSrc)    (((mfClkSrc) == CY_SYSCLK_CLKMF_IN_ILO) || \
+                                                    ((mfClkSrc) == CY_SYSCLK_CLKMF_IN_WCO) || \
+                                                    ((mfClkSrc) == CY_SYSCLK_CLKMF_IN_ALTLF) || \
+                                                    ((mfClkSrc) == CY_SYSCLK_CLKMF_IN_PILO) || \
+                                                    ((mfClkSrc) == CY_SYSCLK_CLKMF_IN_IHO) || \
+                                                    ((mfClkSrc) == CY_SYSCLK_CLKMF_IN_ECO_PRESCALER))
 
+#endif
 /** \endcond */
 
 
+/**
+* \addtogroup group_sysclk_mf_funcs
+* \{
+*/
+#if (defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 == 0UL)) || defined (CY_IP_MXS28SRSS) || (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)) || defined (CY_DOXYGEN)
+
+/*******************************************************************************
+* Function Name: Cy_SysClk_ClkMfSetSource
+****************************************************************************//**
+*
+* Sets the source for the Medium frequency clock(clkMf).
+*
+* \param source \ref cy_en_clkmf_in_sources_t
+*
+*******************************************************************************/
+void Cy_SysClk_ClkMfSetSource(cy_en_clkmf_in_sources_t source);
+
+
+/*******************************************************************************
+* Function Name: Cy_SysClk_ClkMfGetSource
+****************************************************************************//**
+*
+* Reports the source for the Medium frequency clock (clkMf).
+*
+* \return \ref cy_en_clkmf_in_sources_t
+*
+*******************************************************************************/
+cy_en_clkmf_in_sources_t Cy_SysClk_ClkMfGetSource(void);
+
+#endif /* (defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 == 0UL)) || defined (CY_IP_MXS28SRSS) */
+/** \} group_sysclk_mf_funcs */
 
 /* ========================================================================== */
 /* =========================    clkHf[n] SECTION    ========================= */
@@ -2657,9 +2777,9 @@ typedef struct
 * \param clkHf Selects which clkHf to enable.
 *
 * \return \ref cy_en_sysclk_status_t
-* CY_PRA_STATUS_* - For the PSoC 64 devices there are possible situations when
+* CY_PRA_STATUS_* - For the PSOC 64 devices there are possible situations when
 * function returns the PRA error status code \ref cy_en_pra_status_t instead of
-* \ref cy_en_sysclk_status_t. This is because for PSoC 64 devices the function
+* \ref cy_en_sysclk_status_t. This is because for PSOC 64 devices the function
 * uses the PRA driver to change the protected registers. Refer to
 * \ref cy_en_pra_status_t for more details.
 *
@@ -2678,9 +2798,9 @@ cy_en_sysclk_status_t Cy_SysClk_ClkHfEnable(uint32_t clkHf);
 * \param clkHf Selects which clkHf to enable.
 *
 * \return \ref cy_en_sysclk_status_t
-* CY_PRA_STATUS_* - For the PSoC 64 devices there are possible situations when
+* CY_PRA_STATUS_* - For the PSOC 64 devices there are possible situations when
 * function returns the PRA error status code \ref cy_en_pra_status_t instead of
-* \ref cy_en_sysclk_status_t. This is because for PSoC 64 devices the function
+* \ref cy_en_sysclk_status_t. This is because for PSOC 64 devices the function
 * uses the PRA driver to change the protected registers. Refer to
 * \ref cy_en_pra_status_t for more details.
 *
@@ -2742,9 +2862,9 @@ cy_en_sysclk_status_t Cy_SysClk_ClkHfDisable(uint32_t clkHf);
 * \param source \ref cy_en_clkhf_in_sources_t
 *
 * \return \ref cy_en_sysclk_status_t
-* CY_PRA_STATUS_* - For the PSoC 64 devices there are possible situations when
+* CY_PRA_STATUS_* - For the PSOC 64 devices there are possible situations when
 * function returns the PRA error status code \ref cy_en_pra_status_t instead of
-* \ref cy_en_sysclk_status_t. This is because for PSoC 64 devices the function
+* \ref cy_en_sysclk_status_t. This is because for PSOC 64 devices the function
 * uses the PRA driver to change the protected registers. Refer to
 * \ref cy_en_pra_status_t for more details.
 *
@@ -2802,9 +2922,9 @@ cy_en_clkhf_in_sources_t Cy_SysClk_ClkHfGetSource(uint32_t clkHf);
 * \param divider \ref cy_en_clkhf_dividers_t
 *
 * \return \ref cy_en_sysclk_status_t
-* CY_PRA_STATUS_* - For the PSoC 64 devices there are possible situations when
+* CY_PRA_STATUS_* - For the PSOC 64 devices there are possible situations when
 * function returns the PRA error status code \ref cy_en_pra_status_t instead of
-* \ref cy_en_sysclk_status_t. This is because for PSoC 64 devices the function
+* \ref cy_en_sysclk_status_t. This is because for PSOC 64 devices the function
 * uses the PRA driver to change the protected registers. Refer to
 * \ref cy_en_pra_status_t for more details.
 *
@@ -4209,6 +4329,16 @@ bool Cy_SysClk_IsClkLfCsvEnabled(void);
 /** \} group_sysclk_clk_lf_funcs */
 
 
+
+
+/* ========================================================================== */
+/* ========================    clk_timer SECTION    ========================= */
+/* ========================================================================== */
+
+
+/** \} group_sysclk_clk_timer_funcs */
+
+
 /* ========================================================================== */
 /* ==========================    clk_bak SECTION    ========================= */
 /* ========================================================================== */
@@ -4227,9 +4357,9 @@ typedef enum
     CY_SYSCLK_BAK_IN_CLKLF,  /**< Backup domain clock input is clkLf */
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || defined (CY_IP_MXS22SRSS)
     CY_SYSCLK_BAK_IN_ILO,               /**< Backup domain clock input is ILO */
-    CY_SYSCLK_BAK_IN_PILO               /**< Backup domain clock input is PILO */
+    CY_SYSCLK_BAK_IN_PILO,              /**< Backup domain clock input is PILO */
 #endif /* CY_IP_MXS28SRSS, CY_IP_MXS40SSRSS, (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 3), CY_IP_MXS22SRSS */
-
+    CY_SYSCLK_BAK_INVALID
 } cy_en_clkbak_in_sources_t;
 /** \} group_sysclk_clk_bak_enums */
 
@@ -4238,6 +4368,29 @@ typedef enum
 * \addtogroup group_sysclk_clk_bak_funcs
 * \{
 */
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)
+/*******************************************************************************
+* Function Name: Cy_SysClk_ClkBakSetSource
+****************************************************************************//**
+*
+* Sets the source for the backup domain clock (clk_bak).
+*
+* \param source \ref cy_en_clkbak_in_sources_t
+*
+* \note
+* clkLf is not available in all power modes.  For this reason, WCO is the
+* preferred source. If the WCO is routed through the clkLf multiplexer
+* (see \ref Cy_SysClk_ClkLfSetSource), select WCO directly - do not select clkLf.
+*
+* \return
+* Result of clock source update. See \ref cy_en_sysclk_status_t.
+*
+* \funcusage
+* \snippet sysclk/snippet/main.c snippet_Cy_SysClk_ClkBakSetSource
+*
+*******************************************************************************/
+cy_en_sysclk_status_t Cy_SysClk_ClkBakSetSource(cy_en_clkbak_in_sources_t source);
+#else
 /*******************************************************************************
 * Function Name: Cy_SysClk_ClkBakSetSource
 ****************************************************************************//**
@@ -4256,6 +4409,7 @@ typedef enum
 *
 *******************************************************************************/
 void Cy_SysClk_ClkBakSetSource(cy_en_clkbak_in_sources_t source);
+#endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) */
 
 /*******************************************************************************
 * Function Name: Cy_SysClk_ClkBakGetSource

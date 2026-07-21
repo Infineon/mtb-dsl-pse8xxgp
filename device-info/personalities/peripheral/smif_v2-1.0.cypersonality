@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -211,7 +211,7 @@
     <!-- DMA -->
     <ParamSignal port='tr_rx_req[0]' name='RX Trigger Output' group='DMA Triggers' visible='true' desc='Enables the RX trigger output terminal (tr_rx_req)' canBeEmpty='true' />
     <ParamRange id='rxTriggerLevel' name='RX FIFO Trigger Level' group='DMA Triggers' default='0' min='0' max='7' resolution='1' visible='true' editable='true' desc='The level that can trigger the RX FIFO to trigger an interrupt or a DMA request' />
-    <ParamSignal port='tr_tx_req[0]' name='TX Trigger Output' group='DMA Triggers' visible='true' desc='enables the TX trigger output terminal (tr_tx_req)' canBeEmpty='true' />
+    <ParamSignal port='tr_tx_req[0]' name='TX Trigger Output' group='DMA Triggers' visible='true' desc='Enables the TX trigger output terminal (tr_tx_req)' canBeEmpty='true' />
     <ParamRange id='txTriggerLevel' name='TX FIFO Trigger Level' group='DMA Triggers' default='0' min='0' max='7' resolution='1' visible='true' editable='true' desc='The level that can trigger the TX FIFO to trigger an interrupt or a DMA request' />
 
     <ParamString id='dmaRxTriggerOut' name='dmaRxTriggerOut' group='Internal' default='`${getBlockFromSignal("tr_rx_req[0]")}`' visible='false' editable='false' desc='' />
@@ -242,11 +242,11 @@
     <DRC type='ERROR' text='SPI Data[4] and SPI Data[5] must be used together' condition='`${hasConnection4 != hasConnection5 &amp;&amp; hasConnection4}`' paramId='spihb_data5[0]' />
     <DRC type='ERROR' text='SPI Data[4] and SPI Data[5] must be used together' condition='`${hasConnection4 != hasConnection5 &amp;&amp; hasConnection5}`' paramId='spihb_data4[0]' />
     <DRC type='ERROR' text='SPI Data[6] and SPI Data[7] must be used together' condition='`${hasConnection6 != hasConnection7 &amp;&amp; hasConnection6}`' paramId='spihb_data6[0]' />
-    <DRC type='ERROR' text='SPI Data[6] and SPI Data[7] must be used together' condition='`${hasConnection6 != hasConnection7 &amp;&amp; hasConnection7}`' paramId='spihb_data5[0]' />
-    <DRC type='ERROR' text='At least two SPI Data signal must be connected' condition='`${!(hasConnection0 || hasConnection2 || hasConnection4 || hasConnection6)}`' paramId='spihb_data0[0]' />
-    <DRC type='ERROR' text='At least two SPI Data signal must be connected' condition='`${!(hasConnection1 || hasConnection3 || hasConnection5 || hasConnection7)}`' paramId='spihb_data1[0]' />
+    <DRC type='ERROR' text='SPI Data[6] and SPI Data[7] must be used together' condition='`${hasConnection6 != hasConnection7 &amp;&amp; hasConnection7}`' paramId='spihb_data6[0]' />
+    <DRC type='ERROR' text='At least two SPI Data signals must be connected' condition='`${!(hasConnection0 || hasConnection2 || hasConnection4 || hasConnection6)}`' paramId='spihb_data0[0]' />
+    <DRC type='ERROR' text='At least two SPI Data signals must be connected' condition='`${!(hasConnection1 || hasConnection3 || hasConnection5 || hasConnection7)}`' paramId='spihb_data1[0]' />
     <DRC type='ERROR' text='At least one SPI Select signal must be connected' condition='`${!(requireMultipleSelects || hasSelect0 || hasSelect1 || hasSelect2 || hasSelect3)}`' paramId='spihb_select0[0]' />
-    <DRC type='ERROR' text='At least two SPI Select signal must be connected' condition='`${requireMultipleSelects &amp;&amp; !((hasSelect0 &amp;&amp; hasSelect1) || (hasSelect0 &amp;&amp; hasSelect2) || (hasSelect0 &amp;&amp; hasSelect3) || (hasSelect1 &amp;&amp; hasSelect2) || (hasSelect1 &amp;&amp; hasSelect3) || (hasSelect2 &amp;&amp; hasSelect3))}`' paramId='spihb_select0[0]'/>
+    <DRC type='ERROR' text='At least two SPI Select signals must be connected' condition='`${requireMultipleSelects &amp;&amp; !((hasSelect0 &amp;&amp; hasSelect1) || (hasSelect0 &amp;&amp; hasSelect2) || (hasSelect0 &amp;&amp; hasSelect3) || (hasSelect1 &amp;&amp; hasSelect2) || (hasSelect1 &amp;&amp; hasSelect3) || (hasSelect2 &amp;&amp; hasSelect3))}`' paramId='spihb_select0[0]'/>
   </DRCs>
 
   <ConfigFirmware>
@@ -254,15 +254,15 @@
     <ConfigInclude value='mtb_hal.h' include='true' guard='defined (COMPONENT_MTB_HAL)' />
     <ConfigDefine name='`${INST_NAME}`_HW' value='SMIF`${InstNumber}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_IRQ' value='`${getVersion() eq 2 ? "smif_0_interrupt_IRQn" : "smif_interrupt_normal_IRQn"}`' public='true' include='true' />
-    <ConfigDefine name='`${INST_NAME}`_MEMORY_MODE_ALIGMENT_ERROR' value='`${isrAlignment ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
+    <ConfigDefine name='`${INST_NAME}`_MEMORY_MODE_ALIGNMENT_ERROR' value='`${isrAlignment ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_RX_DATA_FIFO_UNDERFLOW' value='`${isrUnderflow ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_TX_COMMAND_FIFO_OVERFLOW' value='`${isrCmdOverflow ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_TX_DATA_FIFO_OVERFLOW' value='`${isrDataOverflow ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_RX_DMA_TRIGGER_OUT_USED' value='`${dmaRxTriggerOut ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_TX_DMA_TRIGGER_OUT_USED' value='`${dmaTxTriggerOut ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
 
-    <ConfigDefine name='`${INST_NAME}`_RX_FIFO_TRIGEER_LEVEL' value='(`${rxTriggerLevel}`UL)' public='true' include='true' />
-    <ConfigDefine name='`${INST_NAME}`_TX_FIFO_TRIGEER_LEVEL' value='(`${txTriggerLevel}`UL)' public='true' include='true' />
+    <ConfigDefine name='`${INST_NAME}`_RX_FIFO_TRIGGER_LEVEL' value='(`${rxTriggerLevel}`UL)' public='true' include='true' />
+    <ConfigDefine name='`${INST_NAME}`_TX_FIFO_TRIGGER_LEVEL' value='(`${txTriggerLevel}`UL)' public='true' include='true' />
 
     <ConfigDefine name='`${INST_NAME}`_DATALINES0_1' value='`${hasConnection0 ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
     <ConfigDefine name='`${INST_NAME}`_DATALINES2_3' value='`${hasConnection2 ? "(1UL)" : "(0UL)"}`' public='true' include='true' />
@@ -299,7 +299,7 @@
       <Member name='clock' value='&amp;`${INST_NAME}`_hal_clock' />
       <Member name='config' value='&amp;`${toUpper(INST_NAME)}`_config' />
       <Member name='csel' value='{`${ssel0Pin &amp;&amp; hasExposedMember(ssel0Pin, "halPortPin") ? "true" : "false"}`, `${ssel1Pin &amp;&amp; hasExposedMember(ssel1Pin, "halPortPin") ? "true" : "false"}`, `${ssel2Pin &amp;&amp; hasExposedMember(ssel2Pin, "halPortPin") ? "true" : "false"}`, `${ssel3Pin &amp;&amp; hasExposedMember(ssel3Pin, "halPortPin") ? "true" : "false"}`}' />
-      <Member name='irqs' value='`${toUpper(INST_NAME)}`_MEMORY_MODE_ALIGMENT_ERROR &#60;&#60; 5 | `${toUpper(INST_NAME)}`_RX_DATA_FIFO_UNDERFLOW &#60;&#60; 4 | `${toUpper(INST_NAME)}`_TX_COMMAND_FIFO_OVERFLOW &#60;&#60; 3 | `${toUpper(INST_NAME)}`_TX_DATA_FIFO_OVERFLOW &#60;&#60; 2 | (uint8_t)(`${toUpper(INST_NAME)}`_RX_FIFO_TRIGEER_LEVEL != 0) &#60;&#60; 1 | (uint8_t)(`${toUpper(INST_NAME)}`_TX_FIFO_TRIGEER_LEVEL != 0) &#60;&#60; 0' />
+      <Member name='irqs' value='`${toUpper(INST_NAME)}`_MEMORY_MODE_ALIGNMENT_ERROR &#60;&#60; 5 | `${toUpper(INST_NAME)}`_RX_DATA_FIFO_UNDERFLOW &#60;&#60; 4 | `${toUpper(INST_NAME)}`_TX_COMMAND_FIFO_OVERFLOW &#60;&#60; 3 | `${toUpper(INST_NAME)}`_TX_DATA_FIFO_OVERFLOW &#60;&#60; 2 | (uint8_t)(`${toUpper(INST_NAME)}`_RX_FIFO_TRIGGER_LEVEL != 0) &#60;&#60; 1 | (uint8_t)(`${toUpper(INST_NAME)}`_TX_FIFO_TRIGGER_LEVEL != 0) &#60;&#60; 0' />
       <Member name='dmas' value='`${toUpper(INST_NAME)}`_RX_DMA_TRIGGER_OUT_USED &#60;&#60; 1 | `${toUpper(INST_NAME)}`_TX_DMA_TRIGGER_OUT_USED &#60;&#60; 0' />
     </ConfigStruct>
 

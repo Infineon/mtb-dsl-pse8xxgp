@@ -15,6 +15,5 @@ var group__group__gpio__driveModes =
     [ "CY_GPIO_DM_OD_DRIVESLOW", "group__group__gpio__driveModes.html#ga4c713a8cb3c1e444153829c5ea94b34f", null ],
     [ "CY_GPIO_DM_OD_DRIVESHIGH", "group__group__gpio__driveModes.html#ga1dd094f945123e3b81b8a0ea039061f1", null ],
     [ "CY_GPIO_DM_STRONG", "group__group__gpio__driveModes.html#ga9e554ee7c43ac65a6d48274455b53823", null ],
-    [ "CY_GPIO_DM_PULLUP_DOWN", "group__group__gpio__driveModes.html#gad02c6679b9f71d136796b2cdcf1ae754", null ],
-    [ "CY_GPIO_DM_CFGOUT3_STRONG_PULLUP_HIGHZ", "group__group__gpio__driveModes.html#ga46bbc90c46a5ffb05166a0da28dec610", null ]
+    [ "CY_GPIO_DM_PULLUP_DOWN", "group__group__gpio__driveModes.html#gad02c6679b9f71d136796b2cdcf1ae754", null ]
 ];

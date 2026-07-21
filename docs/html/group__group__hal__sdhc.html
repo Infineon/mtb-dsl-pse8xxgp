@@ -110,13 +110,13 @@ Features</h1>
 </ul>
 <h1><a class="anchor" id="subsection_sdhc_quickstart"></a>
 Quick Start</h1>
-<p>Initialize SDHC by using Device Configurator and selecting the pins according to the target device used. Specify the SDHC configuration using the configuration structure (const <a class="el" href="structmtb__hal__sdhc__configurator__t.html">mtb_hal_sdhc_configurator_t</a> * config). <br  />
+<p>Initialize SDHC by using Device Configurator and selecting the pins according to the target device used. Specify the SDHC configuration using the configuration structure (const <a class="el" href="structmtb__hal__sdhc__configurator__t.html" title="SDHC configurator struct.">mtb_hal_sdhc_configurator_t</a> * config). <br  />
  See <a class="el" href="group__group__hal__sdhc.html#subsection_sdhc_snippet_1">Snippet 1: SDHC Initialization and configuration</a></p>
 <h1><a class="anchor" id="subsection_sdhc_code_snippets"></a>
 Code Snippets</h1>
 <h2><a class="anchor" id="subsection_sdhc_snippet_1"></a>
 Snippet 1: SDHC Initialization and configuration</h2>
-<p>The following snippet is used to initialize the SDHC block. SDHC object - <a class="el" href="group__group__hal__availability.html#structmtb__hal__sdhc__t">mtb_hal_sdhc_t</a>, SDHC card configuration structure (const <a class="el" href="group__group__hal__sdhc.html#structmtb__hal__sdhc__config__t">mtb_hal_sdhc_config_t</a> * config). The pins connected to the SDHC block needs to be provided by the design.modus file after using Device Configurator. </p><div class="fragment"><div class="line"> </div>
+<p>The following snippet is used to initialize the SDHC block. SDHC object - <a class="el" href="group__group__hal__availability.html#structmtb__hal__sdhc__t" title="SDHC object.">mtb_hal_sdhc_t</a>, SDHC card configuration structure (const <a class="el" href="group__group__hal__sdhc.html#structmtb__hal__sdhc__config__t" title="Defines configuration options for the SDHC block.">mtb_hal_sdhc_config_t</a> * config). The pins connected to the SDHC block needs to be provided by the design.modus file after using Device Configurator. </p><div class="fragment"><div class="line"> </div>
 <div class="line">    <a class="code hl_typedef" href="group__group__result.html#gaca79700fcc701534ce61778a9bcf57d1">cy_rslt_t</a> rslt = <a class="code hl_define" href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a>;</div>
 <div class="line">    <a class="code hl_struct" href="group__group__hal__availability.html#structmtb__hal__sdhc__t">mtb_hal_sdhc_t</a> sdhc_object;</div>
 <div class="line">    <a class="code hl_struct" href="group__group__sd__host__data__structures.html#structcy__stc__sd__host__context__t">cy_stc_sd_host_context_t</a> sdhc_context;</div>
@@ -156,11 +156,11 @@ Snippet 1: SDHC Initialization and configuration</h2>
 <div class="ttc" id="agroup__group__result_html_gaf58fac450d9fff4472f03ad68f6e546e"><div class="ttname"><a href="group__group__result.html#gaf58fac450d9fff4472f03ad68f6e546e">CY_RSLT_SUCCESS</a></div><div class="ttdeci">#define CY_RSLT_SUCCESS</div><div class="ttdoc">cy_rslt_t return value indicating success</div><div class="ttdef"><b>Definition:</b> cy_result.h:486</div></div>
 <div class="ttc" id="agroup__group__sd__host__data__structures_html_structcy__stc__sd__host__context__t"><div class="ttname"><a href="group__group__sd__host__data__structures.html#structcy__stc__sd__host__context__t">cy_stc_sd_host_context_t</a></div><div class="ttdoc">Context structure.</div><div class="ttdef"><b>Definition:</b> cy_sd_host.h:1401</div></div>
 <div class="ttc" id="agroup__group__sd__host__high__level__functions_html_ga9d72dcc2426210eef77fa5b95eefb986"><div class="ttname"><a href="group__group__sd__host__high__level__functions.html#ga9d72dcc2426210eef77fa5b95eefb986">Cy_SD_Host_InitCard</a></div><div class="ttdeci">cy_en_sd_host_status_t Cy_SD_Host_InitCard(SDHC_Type *base, cy_stc_sd_host_sd_card_config_t *config, cy_stc_sd_host_context_t *context)</div><div class="ttdoc">Initializes a card if it is connected.</div><div class="ttdef"><b>Definition:</b> cy_sd_host.c:652</div></div>
-<div class="ttc" id="agroup__group__sd__host__low__level__functions_html_ga7e46a2df218aebc23faac7acdf5260da"><div class="ttname"><a href="group__group__sd__host__low__level__functions.html#ga7e46a2df218aebc23faac7acdf5260da">Cy_SD_Host_Init</a></div><div class="ttdeci">cy_en_sd_host_status_t Cy_SD_Host_Init(SDHC_Type *base, const cy_stc_sd_host_init_config_t *config, cy_stc_sd_host_context_t *context)</div><div class="ttdoc">Initializes the SD host module.</div><div class="ttdef"><b>Definition:</b> cy_sd_host.c:2949</div></div>
-<div class="ttc" id="agroup__group__sd__host__low__level__functions_html_gad14bf4c715eaa282580d89bd2be1a420"><div class="ttname"><a href="group__group__sd__host__low__level__functions.html#gad14bf4c715eaa282580d89bd2be1a420">Cy_SD_Host_Enable</a></div><div class="ttdeci">void Cy_SD_Host_Enable(SDHC_Type *base)</div><div class="ttdoc">Enables the SD host block.</div><div class="ttdef"><b>Definition:</b> cy_sd_host.c:4274</div></div>
+<div class="ttc" id="agroup__group__sd__host__low__level__functions_html_ga7e46a2df218aebc23faac7acdf5260da"><div class="ttname"><a href="group__group__sd__host__low__level__functions.html#ga7e46a2df218aebc23faac7acdf5260da">Cy_SD_Host_Init</a></div><div class="ttdeci">cy_en_sd_host_status_t Cy_SD_Host_Init(SDHC_Type *base, const cy_stc_sd_host_init_config_t *config, cy_stc_sd_host_context_t *context)</div><div class="ttdoc">Initializes the SD host module.</div><div class="ttdef"><b>Definition:</b> cy_sd_host.c:2950</div></div>
+<div class="ttc" id="agroup__group__sd__host__low__level__functions_html_gad14bf4c715eaa282580d89bd2be1a420"><div class="ttname"><a href="group__group__sd__host__low__level__functions.html#gad14bf4c715eaa282580d89bd2be1a420">Cy_SD_Host_Enable</a></div><div class="ttdeci">void Cy_SD_Host_Enable(SDHC_Type *base)</div><div class="ttdoc">Enables the SD host block.</div><div class="ttdef"><b>Definition:</b> cy_sd_host.c:4275</div></div>
 <div class="ttc" id="agroup__group__sysint__data__structures_html_a6da08d81da65a7f93d3e4c46a4b8d950"><div class="ttname"><a href="group__group__sysint__data__structures.html#a6da08d81da65a7f93d3e4c46a4b8d950">cy_stc_sysint_t::intrSrc</a></div><div class="ttdeci">IRQn_Type intrSrc</div><div class="ttdoc">Interrupt source.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:229</div></div>
 <div class="ttc" id="agroup__group__sysint__data__structures_html_structcy__stc__sysint__t"><div class="ttname"><a href="group__group__sysint__data__structures.html#structcy__stc__sysint__t">cy_stc_sysint_t</a></div><div class="ttdoc">Initialization configuration structure for a single interrupt channel.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:227</div></div>
-<div class="ttc" id="agroup__group__sysint__functions_html_gab2ff6820a898e9af3f780000054eea5d"><div class="ttname"><a href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a></div><div class="ttdeci">cy_en_sysint_status_t Cy_SysInt_Init(const cy_stc_sysint_t *config, cy_israddress userIsr)</div><div class="ttdoc">Initializes the referenced interrupt by setting the priority and the interrupt vector.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:80</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_gab2ff6820a898e9af3f780000054eea5d"><div class="ttname"><a href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a></div><div class="ttdeci">cy_en_sysint_status_t Cy_SysInt_Init(const cy_stc_sysint_t *config, cy_israddress userIsr)</div><div class="ttdoc">Initializes the referenced interrupt by setting the priority and the interrupt vector.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:82</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="subsection_sdhc_snippet_2"></a>
 Snippet 2: Reading a block of data from an SD Card</h2>
 <p>The following snippet reads a block of data from the SD Card. The setup steps from <a class="el" href="group__group__hal__sdhc.html#subsection_sdhc_snippet_1">Snippet 1: SDHC Initialization and configuration</a> must be followed before reading. </p><div class="fragment"><div class="line"><span class="preprocessor">    #define DEFAULT_BLOCKSIZE 512</span></div>
@@ -472,13 +472,13 @@ The size of the data block. </td></tr>
 <td class="fieldname">
 number_of_blocks</td>
 <td class="fielddoc">
-The number of blocks with size block_size to send. Selects which auto commands are used if any. </td></tr>
+The number of blocks with size block_size to send. </td></tr>
 <tr><td class="fieldtype">
 <a id="a17c88804ea0092febc6c476802387458" name="a17c88804ea0092febc6c476802387458"></a><a class="el" href="group__group__hal__sdhc.html#ga299b4c428eba88c5aecbb39139c85b75">mtb_hal_sdhc_auto_cmd_t</a></td>
 <td class="fieldname">
 auto_command</td>
 <td class="fielddoc">
-</td></tr>
+Selects which auto commands are used if any. </td></tr>
 <tr><td class="fieldtype">
 <a id="aab20ebc57e99f79bf47db0a71fc02ba3" name="aab20ebc57e99f79bf47db0a71fc02ba3"></a>bool</td>
 <td class="fieldname">

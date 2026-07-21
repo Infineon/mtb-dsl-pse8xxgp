@@ -131,10 +131,15 @@ static struct ethosu_driver *registered_drivers = NULL;
  */
 void __attribute__((weak)) ethosu_flush_dcache(uint32_t *p, size_t bytes)
 {
-  if (p)
-    SCB_CleanDCache_by_Addr(p, bytes);
-  else
-    SCB_CleanDCache();
+#if defined(ETHOSU_USE_CACHE)
+    if (p)
+        SCB_CleanDCache_by_Addr(p, bytes);
+    else
+        SCB_CleanDCache();
+#else
+    (void)p;
+    (void)bytes;
+#endif
 }
 
 /*
@@ -143,11 +148,15 @@ void __attribute__((weak)) ethosu_flush_dcache(uint32_t *p, size_t bytes)
  */
 void __attribute__((weak)) ethosu_invalidate_dcache(uint32_t *p, size_t bytes)
 {
-
-  if (p)
-    SCB_InvalidateDCache_by_Addr(p, bytes);
-  else
-    SCB_InvalidateDCache();
+#if defined(ETHOSU_USE_CACHE)
+    if (p)
+        SCB_InvalidateDCache_by_Addr(p, bytes);
+    else
+        SCB_InvalidateDCache();
+#else
+    (void)p;
+    (void)bytes;
+#endif
 }
 
 /******************************************************************************

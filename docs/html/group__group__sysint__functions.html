@@ -177,7 +177,7 @@ CM55<br  />
 <div class="line">    NVIC_EnableIRQ(intrCfg.intrSrc);</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__sysint__functions_html_gab2ff6820a898e9af3f780000054eea5d"><div class="ttname"><a href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a></div><div class="ttdeci">cy_en_sysint_status_t Cy_SysInt_Init(const cy_stc_sysint_t *config, cy_israddress userIsr)</div><div class="ttdoc">Initializes the referenced interrupt by setting the priority and the interrupt vector.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:80</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_gab2ff6820a898e9af3f780000054eea5d"><div class="ttname"><a href="group__group__sysint__functions.html#gab2ff6820a898e9af3f780000054eea5d">Cy_SysInt_Init</a></div><div class="ttdeci">cy_en_sysint_status_t Cy_SysInt_Init(const cy_stc_sysint_t *config, cy_israddress userIsr)</div><div class="ttdoc">Initializes the referenced interrupt by setting the priority and the interrupt vector.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:82</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -236,8 +236,8 @@ CM55<br  />
 <div class="line">        (void)<a class="code hl_function" href="group__group__sysint__functions.html#ga6628d90db5d0e0e8801535e2f1519266">Cy_SysInt_SetVector</a>(intrCfg.intrSrc, &amp;Interrupt_Handler_Port0);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__sysint__functions_html_ga6628d90db5d0e0e8801535e2f1519266"><div class="ttname"><a href="group__group__sysint__functions.html#ga6628d90db5d0e0e8801535e2f1519266">Cy_SysInt_SetVector</a></div><div class="ttdeci">cy_israddress Cy_SysInt_SetVector(IRQn_Type IRQn, cy_israddress userIsr)</div><div class="ttdoc">Changes the ISR vector for the interrupt.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:105</div></div>
-<div class="ttc" id="agroup__group__sysint__functions_html_gac3feeb7969667eebe109ecab98dbfbb2"><div class="ttname"><a href="group__group__sysint__functions.html#gac3feeb7969667eebe109ecab98dbfbb2">Cy_SysInt_GetVector</a></div><div class="ttdeci">cy_israddress Cy_SysInt_GetVector(IRQn_Type IRQn)</div><div class="ttdoc">Gets the address of the current ISR vector for the interrupt.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:127</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_ga6628d90db5d0e0e8801535e2f1519266"><div class="ttname"><a href="group__group__sysint__functions.html#ga6628d90db5d0e0e8801535e2f1519266">Cy_SysInt_SetVector</a></div><div class="ttdeci">cy_israddress Cy_SysInt_SetVector(IRQn_Type IRQn, cy_israddress userIsr)</div><div class="ttdoc">Changes the ISR vector for the interrupt.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:110</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_gac3feeb7969667eebe109ecab98dbfbb2"><div class="ttname"><a href="group__group__sysint__functions.html#gac3feeb7969667eebe109ecab98dbfbb2">Cy_SysInt_GetVector</a></div><div class="ttdeci">cy_israddress Cy_SysInt_GetVector(IRQn_Type IRQn)</div><div class="ttdoc">Gets the address of the current ISR vector for the interrupt.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:136</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -336,8 +336,8 @@ CM55<br  />
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="ttc" id="agroup__group__sysint__enums_html_gga07f7e918a4abcd8e1da910e9642e6ccbafc6fdeffd7f2d0d790358985ecd3d997"><div class="ttname"><a href="group__group__sysint__enums.html#gga07f7e918a4abcd8e1da910e9642e6ccbafc6fdeffd7f2d0d790358985ecd3d997">CY_SYSINT_NMI1</a></div><div class="ttdeci">@ CY_SYSINT_NMI1</div><div class="ttdoc">NMI source input 1.</div><div class="ttdef"><b>Definition:</b> cy_sysint.h:206</div></div>
-<div class="ttc" id="agroup__group__sysint__functions_html_ga7408282c7e26c82dcf6fe0949c393dcf"><div class="ttname"><a href="group__group__sysint__functions.html#ga7408282c7e26c82dcf6fe0949c393dcf">Cy_SysInt_SetNmiSource</a></div><div class="ttdeci">void Cy_SysInt_SetNmiSource(cy_en_sysint_nmi_t nmiNum, IRQn_Type intrSrc)</div><div class="ttdoc">Sets the interrupt source of the CPU core NMI.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:42</div></div>
-<div class="ttc" id="agroup__group__sysint__functions_html_gac6f71ee79199c4da9f084985e2bbbb7d"><div class="ttname"><a href="group__group__sysint__functions.html#gac6f71ee79199c4da9f084985e2bbbb7d">Cy_SysInt_GetNmiSource</a></div><div class="ttdeci">IRQn_Type Cy_SysInt_GetNmiSource(cy_en_sysint_nmi_t nmiNum)</div><div class="ttdoc">Gets the interrupt source of the CPU core NMI for the given NMI source number.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:63</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_ga7408282c7e26c82dcf6fe0949c393dcf"><div class="ttname"><a href="group__group__sysint__functions.html#ga7408282c7e26c82dcf6fe0949c393dcf">Cy_SysInt_SetNmiSource</a></div><div class="ttdeci">void Cy_SysInt_SetNmiSource(cy_en_sysint_nmi_t nmiNum, IRQn_Type intrSrc)</div><div class="ttdoc">Sets the interrupt source of the CPU core NMI.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:44</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_gac6f71ee79199c4da9f084985e2bbbb7d"><div class="ttname"><a href="group__group__sysint__functions.html#gac6f71ee79199c4da9f084985e2bbbb7d">Cy_SysInt_GetNmiSource</a></div><div class="ttdeci">IRQn_Type Cy_SysInt_GetNmiSource(cy_en_sysint_nmi_t nmiNum)</div><div class="ttdoc">Gets the interrupt source of the CPU core NMI for the given NMI source number.</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:65</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
@@ -419,7 +419,7 @@ CM55<br  />
 <div class="line">    <span class="comment">/* Enter processor user mode */</span></div>
 <div class="line">    __set_CONTROL(1);</div>
 <div class="line"> </div>
-<div class="ttc" id="agroup__group__sysint__functions_html_gab2c1e70c5151e021f2e7283408617acd"><div class="ttname"><a href="group__group__sysint__functions.html#gab2c1e70c5151e021f2e7283408617acd">Cy_SysInt_SoftwareTrig</a></div><div class="ttdeci">void Cy_SysInt_SoftwareTrig(IRQn_Type IRQn)</div><div class="ttdoc">Triggers an interrupt using software (Not applicable for CM0+).</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:146</div></div>
+<div class="ttc" id="agroup__group__sysint__functions_html_gab2c1e70c5151e021f2e7283408617acd"><div class="ttname"><a href="group__group__sysint__functions.html#gab2c1e70c5151e021f2e7283408617acd">Cy_SysInt_SoftwareTrig</a></div><div class="ttdeci">void Cy_SysInt_SoftwareTrig(IRQn_Type IRQn)</div><div class="ttdoc">Triggers an interrupt using software (Not applicable for CM0+).</div><div class="ttdef"><b>Definition:</b> cy_sysint_v2.c:159</div></div>
 </div><!-- fragment --></dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Only privileged software can enable unprivileged access to the Software Trigger Interrupt Register (STIR). This function is not available for devices with an M7 CPU. </dd></dl>
 

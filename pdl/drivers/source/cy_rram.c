@@ -34,13 +34,19 @@
 /*******************************************************************************
 *       Internal Defines
 *******************************************************************************/
-/* Time out value is calculated considering worst case cycles required for 10ms with max core freq of 400MHz */
-/* Make sure this delay is multiple of CY_RRAM_STATUS_CHECK_DELAY */
+/* Timeout in CPU cycles: worst-case 10 ms at maximum core frequency of 400 MHz.
+ * 10 ms * 400 MHz = 4,000,000 cycles. Must be a multiple of CY_RRAM_STATUS_CHECK_DELAY.
+ * The RRAM IP state machine is guaranteed to complete, so this timeout is a safety measure. */
 #define CY_RRAM_OPERATION_TIMEOUT                  (4000000UL)
 /* Delay in cpu cycles before repeating the status check */
 #define CY_RRAM_STATUS_CHECK_DELAY                 (50UL)
-/* Maximum number of write trials */
+/* Maximum number of write trials.
+ * Up to 3 attempts are made to handle correctable ECC errors (1-bit and 2-bit).
+ * After the final trial, a 2-bit error is accepted as correctable by hardware ECC. */
 #define CY_RRAM_MAX_WRITE_TRIALS                   (3UL)
+
+/* Mask for extracting the byte offset within a 16-byte RRAM block */
+#define CY_RRAM_BLOCK_OFFSET_MASK                  (CY_RRAM_BLOCK_SIZE_BYTES - 1UL)
 
 /* RRAM read operation ECC fail status */
 #define CY_RRAM_ECC_READ_NO_FAIL                   (0x00000000UL)                         /**< Read is success without any ECC fail */
@@ -58,6 +64,10 @@
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 2, \
 'Value extracted from _VAL2FLD macro will not exceed enum range.')
 
+/* MISRA Rule 14.3 deviation: The work and sflash subsection sizes are zero on current
+ * devices (CY_RRAM_WORK_Z=0, CY_RRAM_FLASH_Y=0), making some conditions always false.
+ * This is expected and correct - the conditions become true on future devices with
+ * non-zero work/sflash regions. */
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 14.3', 12, \
 'Because the size of work, flash subsection is zero but will be true if devices have valid size.')
 
@@ -487,14 +497,14 @@ static cy_en_rram_status_t Cy_RRAM_SubRegionReadData(cy_stc_rram_config_t * conf
     }
 
     /* Offset in bytes from block boundary */
-    uint32_t offsetStart = config->addr & 0x0FUL;
+    uint32_t offsetStart = config->addr & CY_RRAM_BLOCK_OFFSET_MASK;
 
     /* If the address is not aligned to the block boundary or the number of bytes to
     * read is less than one block
     */
     if (0UL != offsetStart)
     {
-        uint32_t blkAlignedAddr = config->addr & ~0x0FUL;
+        uint32_t blkAlignedAddr = config->addr & ~CY_RRAM_BLOCK_OFFSET_MASK;
         uint32_t bytesInFirstBlk = CY_RRAM_BLOCK_SIZE_BYTES - offsetStart;
 
         /* If there is more room in this block than the number of bytes to read */
@@ -535,10 +545,12 @@ static cy_en_rram_status_t Cy_RRAM_SubRegionReadData(cy_stc_rram_config_t * conf
 }
 
 /*
- * By default ECC Check is Enabled. This API is not meant for user. This API is used only during very early stage of
- * pre-silicon bring-up activity. During bring-up, RRAM test application can override this and disable ECC checking when tag
- * bits are being reset. Once the tag bits are reset, the test app can enable it so that ECC can be checked for normal
- * functionality of the driver.
+ * Weak function controlling ECC validation during read operations.
+ * By default ECC check is enabled (returns true). This function is overridden
+ * only during very early pre-silicon bring-up when tag bits are being reset.
+ * Application code should NOT override this in production.
+ *
+ * \return true if ECC errors should be checked, false to bypass ECC validation.
  */
 
 __WEAK bool cy_rram_should_check_ecc(void)
@@ -645,6 +657,14 @@ static cy_en_rram_status_t Cy_RRAM_UpdateBlock(cy_stc_rram_config_t * config, co
                 nvm_addr[wordCount] = blk.w[wordCount];
             }
 
+            /* Flush D-Cache so the writes above reach the RRAMC write buffer before
+             * the program command is issued. Without this, dirty cache lines may be
+             * evicted after the programming window closes, causing an AXI slave error
+             * (imprecise BusFault) on CM55. */
+            #if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
+            SCB_CleanDCache_by_Addr((uint32_t *)nvm_addr, (int32_t)CY_RRAM_BLOCK_SIZE_BYTES);
+            #endif
+
             Cy_RRAM_StartOperation(config->base);
 
             timeout = CY_RRAM_OPERATION_TIMEOUT / CY_RRAM_STATUS_CHECK_DELAY;
@@ -697,6 +717,15 @@ static cy_en_rram_status_t Cy_RRAM_UpdateBlock(cy_stc_rram_config_t * config, co
         {
             nvm_addr[wordCount] = blk.w[wordCount];
         }
+
+        /* Flush D-Cache so the writes above reach the RRAMC write buffer before
+         * the program command is issued. Without this, dirty cache lines may be
+         * evicted after the programming window closes, causing an AXI slave error
+         * (imprecise BusFault) on CM55. */
+        #if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
+        SCB_CleanDCache_by_Addr((uint32_t *)nvm_addr, (int32_t)CY_RRAM_BLOCK_SIZE_BYTES);
+        #endif
+
         Cy_RRAM_StartOperation(config->base);
         status = CY_RRAM_SUCCESS;
     }
@@ -736,14 +765,14 @@ static cy_en_rram_status_t Cy_RRAM_SubRegionWriteData(cy_stc_rram_config_t * con
     Cy_RRAM_SetOperationMode(config->base, CY_RRAM_INDIRECT_WRITE);
 
     /* Offset in bytes from block boundary */
-    uint32_t offsetStart = config->addr & 0x0FUL;
+    uint32_t offsetStart = config->addr & CY_RRAM_BLOCK_OFFSET_MASK;
 
     /* If the address is not aligned to the block boundary or the number of bytes to
     * write is less than one block
     */
     if (0UL != offsetStart)
     {
-        uint32_t blkAlignedAddr = config->addr & ~0x0FUL;
+        uint32_t blkAlignedAddr = config->addr & ~CY_RRAM_BLOCK_OFFSET_MASK;
         uint32_t bytesInFirstBlk = CY_RRAM_BLOCK_SIZE_BYTES - offsetStart;
 
         /* If there is more room in this block than the number of bytes to write */
@@ -882,7 +911,7 @@ cy_en_rram_status_t Cy_RRAM_OtpReadByteArray(RRAMC_Type * base, uint32_t addr, u
 *******************************************************************************/
 cy_en_rram_status_t Cy_RRAM_OtpWriteWord(RRAMC_Type * base, uint32_t addr, uint32_t data)
 {
-    return Cy_RRAM_OtpWriteByteArray(base, addr, (uint8_t *)(&data), 4UL);
+    return Cy_RRAM_OtpWriteByteArray(base, addr, (const uint8_t *)(&data), sizeof(uint32_t));
 }
 
 
@@ -896,7 +925,7 @@ cy_en_rram_status_t Cy_RRAM_OtpWriteWord(RRAMC_Type * base, uint32_t addr, uint3
 *******************************************************************************/
 cy_en_rram_status_t Cy_RRAM_OtpReadWord(RRAMC_Type * base, uint32_t addr, uint32_t * data)
 {
-    return Cy_RRAM_OtpReadByteArray(base, addr, (uint8_t *)(data), 4UL);
+    return Cy_RRAM_OtpReadByteArray(base, addr, (uint8_t *)(data), sizeof(uint32_t));
 }
 
 
@@ -909,7 +938,7 @@ cy_en_rram_status_t Cy_RRAM_OtpReadWord(RRAMC_Type * base, uint32_t addr, uint32
 * The address should fall in General OTP or Protected OTP subsection.
 *
 *******************************************************************************/
-cy_en_rram_status_t Cy_RRAM_OtpWriteBlock(RRAMC_Type * base, uint32_t addr, uint8_t *data)
+cy_en_rram_status_t Cy_RRAM_OtpWriteBlock(RRAMC_Type * base, uint32_t addr, const uint8_t *data)
 {
     cy_en_rram_status_t status = CY_RRAM_BAD_PARAM;
 
@@ -1033,7 +1062,7 @@ cy_en_rram_status_t Cy_RRAM_NonBlockingNvmWriteByteArray(RRAMC_Type * base, uint
 * The address should fall in Main or Work or Sflash or Protected NVM subsection.
 *
 *******************************************************************************/
-cy_en_rram_status_t Cy_RRAM_NvmWriteBlock(RRAMC_Type * base, uint32_t addr, uint8_t * data)
+cy_en_rram_status_t Cy_RRAM_NvmWriteBlock(RRAMC_Type * base, uint32_t addr, const uint8_t * data)
 {
     cy_en_rram_status_t status = CY_RRAM_BAD_PARAM;
 

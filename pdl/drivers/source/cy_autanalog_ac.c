@@ -24,9 +24,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#include "cy_device.h"
+#if defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U)
 #include "cy_autanalog_ac.h"
-
-#ifdef CY_IP_MXS22LPPASS
 
 /* Acknowledge delay for changing of operation mode for the FIFO */
 #define AUTANALOG_MMIO_FIFO_MODE_ACK_DELAY                          (5U) /* MAX 5uS for acknowledge */
@@ -271,5 +271,5 @@ cy_en_syspm_status_t Cy_AutAnalog_DeepSleepCallback(cy_stc_syspm_callback_params
     return (ret);
 }
 
-#endif /* CY_IP_MXS22LPPASS */
+#endif /* defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U) */
 /* [] END OF FILE */

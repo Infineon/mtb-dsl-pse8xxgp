@@ -33,7 +33,7 @@
 #include <stddef.h>
 #include "cy_device.h"
 #include "cmsis_compiler.h"
-#include "armv8m_mpu.h"
+#include "cy_device_headers.h"
 
 
 /** \addtogroup group_cmsis_utils

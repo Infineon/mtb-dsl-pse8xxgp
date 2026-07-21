@@ -224,8 +224,18 @@ uint32_t mtb_hal_clock_get_peri_src_clock_freq(const void* clk)
 {
     CY_ASSERT(NULL != clk);
     en_clk_dst_t clk_dst = ((mtb_hal_peri_div_t*)clk)->clk_dst;
+    uint32_t src_freq = 0u;
 
-    uint32_t src_freq = Cy_SysClk_ClkHfGetFrequency(Cy_Sysclk_PeriPclkGetClkHfNum(clk_dst));
+    #if defined(CY_IP_MXS40SRSS) && \
+    defined(CY_IP_MXS40SRSS_VERSION) && (CY_IP_MXS40SRSS_VERSION <= 2)
+    /* Devices with CY_IP_MXS40SRSS_VERSION 2 have only one PERI group and
+       the CLK_PERI is clocked by HF0
+     */
+    src_freq = Cy_SysClk_ClkHfGetFrequency(0UL);
+    #else
+    src_freq = Cy_SysClk_ClkHfGetFrequency(Cy_Sysclk_PeriPclkGetClkHfNum(clk_dst));
+    #endif /* CY_IP_MXS40SRSS_VERSION <= 2 */
+
     #if defined(CY_IP_MXS40SRSS)
     // May have a PERI clock between the HF and the peri divider, if so adjust for its divider
     uint32_t peri_grpNum = (((uint32_t)clk_dst) & PERI_PCLK_GR_NUM_Msk) >> PERI_PCLK_GR_NUM_Pos;

@@ -1145,7 +1145,7 @@ __STATIC_INLINE void Cy_SCB_UART_DisableSkipStart(CySCB_Type *base)
 * The pointer to the UART SCB instance.
 *
 * \note
-* This API is available for PSoC C3 devices.
+* This API is available for PSOC C3 devices.
 *
 *******************************************************************************/
 __STATIC_INLINE void Cy_SCB_UART_EnableSingleWireHalfDuplex(CySCB_Type *base)
@@ -1165,7 +1165,7 @@ __STATIC_INLINE void Cy_SCB_UART_EnableSingleWireHalfDuplex(CySCB_Type *base)
 * The pointer to the UART SCB instance.
 *
 * \note
-* This API is available for PSoC C3 devices.
+* This API is available for PSOC C3 devices.
 *
 *******************************************************************************/
 __STATIC_INLINE void Cy_SCB_UART_DisableSingleWireHalfDuplex(CySCB_Type *base)

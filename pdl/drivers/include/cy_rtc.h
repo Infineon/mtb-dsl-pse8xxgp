@@ -371,7 +371,11 @@ typedef enum
 typedef enum
 {
     CY_RTC_CLK_SELECT_WCO              ,  /**< Select WCO as input to RTC */
+#if defined (CY_IP_MXS22SRSS)  && (CY_IP_MXS22SRSS_VERSION == 2)  
+    CY_RTC_CLK_SELECT_CLKLF            ,  /**< Select CLK_LF as input to RTC */
+#else
     CY_RTC_CLK_SELECT_ALTBAK           ,  /**< Select ALTBAK as input to RTC */
+#endif
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2)) || defined (CY_IP_MXS22SRSS)
     CY_RTC_CLK_SELECT_ILO,              /**< Select ILO as input to RTC */
     CY_RTC_CLK_SELECT_PILO              /**< Select PILO as input to RTC */
@@ -542,7 +546,11 @@ cy_en_rtc_status_t Cy_RTC_SetHoursFormat(cy_en_rtc_hours_format_t hoursFormat);
 #if defined (CY_IP_MXS40SRSS_RTC) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
 void Cy_RTC_SelectFrequencyPrescaler(cy_en_rtc_clock_freq_t clkSel);
 #endif
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)
+cy_en_rtc_status_t Cy_RTC_SelectClockSource(cy_en_rtc_clk_select_sources_t clkSel);
+#else
 void Cy_RTC_SelectClockSource(cy_en_rtc_clk_select_sources_t clkSel);
+#endif
 cy_en_rtc_status_t Cy_RTC_CalibrationControlEnable(uint8_t calib_val, cy_en_rtc_calib_sign_t calib_sign, cy_en_rtc_calib_sel_t calib_sel);
 cy_en_rtc_status_t Cy_RTC_CalibrationControlDisable(void);
 
@@ -799,11 +807,19 @@ extern uint8_t const cy_RTC_daysInMonthTbl[CY_RTC_MONTHS_PER_YEAR];
 
 
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)
+/* Internal macro to validate parameters in Cy_RTC_SelectClockSource() function */
+#define CY_RTC_IS_SRC_CLK_SELECT_VALID(clkSel)               (((clkSel) == CY_RTC_CLK_SELECT_WCO) || \
+                                                   ((clkSel) == CY_RTC_CLK_SELECT_CLKLF) || \
+                                                   ((clkSel) == CY_RTC_CLK_SELECT_ILO) || \
+                                                   ((clkSel) == CY_RTC_CLK_SELECT_PILO))
+#else
 /* Internal macro to validate parameters in Cy_RTC_SelectClockSource() function */
 #define CY_RTC_IS_SRC_CLK_SELECT_VALID(clkSel)               (((clkSel) == CY_RTC_CLK_SELECT_WCO) || \
                                                    ((clkSel) == CY_RTC_CLK_SELECT_ALTBAK) || \
                                                    ((clkSel) == CY_RTC_CLK_SELECT_ILO) || \
                                                    ((clkSel) == CY_RTC_CLK_SELECT_PILO))
+#endif
 #endif
 /* Internal macro to validate parameters in Cy_RTC_SetHoursFormat() function */
 #define CY_RTC_IS_HRS_FORMAT_VALID(hoursFormat)    (((hoursFormat) == CY_RTC_24_HOURS) || \
@@ -929,8 +945,11 @@ __STATIC_INLINE uint32_t Cy_RTC_ConvertDayOfWeek(uint32_t day, uint32_t month, u
     }
 
     /* Calculates Day of Week using Zeller's congruence algorithms */
-    retVal =
-    (day + (((month + 1UL) * 26UL) / 10UL) + year + (year / 4UL) + (6UL * (year / 100UL)) + (year / 400UL)) % 7UL;
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3', 'Result of modulo 7 is always in range 0-6, safe narrowing from uint64_t to uint32_t');
+    retVal = (uint32_t)
+            (((uint64_t)day + ((((uint64_t)month + 1ULL) * 26ULL) / 10ULL) +
+                (uint64_t)year + ((uint64_t)year / 4ULL) +
+                (6ULL * ((uint64_t)year / 100ULL)) + ((uint64_t)year / 400ULL)) % 7ULL);
 
     /* Makes correction for Saturday. Saturday number should be 7 instead of 0*/
     if (0u == retVal)
@@ -1225,8 +1244,8 @@ __STATIC_INLINE cy_en_rtc_hours_format_t Cy_RTC_GetHoursFormat(void)
 *******************************************************************************/
 __STATIC_INLINE bool Cy_RTC_IsExternalResetOccurred(void)
 {
-     return(0u == Cy_SysLib_GetResetReason());
- }
+    return(0u != ((CY_SYSLIB_RESET_XRES | CY_SYSLIB_RESET_PORVDDD) & Cy_SysLib_GetResetReason()));
+}
 
 
 /*******************************************************************************

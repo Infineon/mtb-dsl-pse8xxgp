@@ -52,18 +52,18 @@
     </ParamChoice>
 
     <!-- If the FLL/PLL are enabled, their output drive the corresponding clock path -->
-    <ParamBool id='isFllUsed' default='`${(sourceClockNumber == 0) &amp;&amp; isBlockUsed("srss[0].clock[0].fll[0]")}`' />
-    <ParamBool id='isPllUsed' default='`${(sourceClockNumber &gt; 0) &amp;&amp; (sourceClockNumber &lt;= NUM_PLL) &amp;&amp; isBlockUsed("srss[0].clock[0].pll[" . (sourceClockNumber-1) . "]")}`' />
+    <ParamBool id='isFllUsed' default='`${(sourceClockNumber == 0) &amp;&amp; isBlockUsed("srss[0].clock[0].fll[0]")}`' desc='True when the FLL drives clock path 0 selected as the CLK_PUMP source' />
+    <ParamBool id='isPllUsed' default='`${(sourceClockNumber &gt; 0) &amp;&amp; (sourceClockNumber &lt;= NUM_PLL) &amp;&amp; isBlockUsed("srss[0].clock[0].pll[" . (sourceClockNumber-1) . "]")}`' desc='True when a PLL drives the clock path selected as the CLK_PUMP source' />
 
     <ParamString id='sourceClock' default='`${isFllUsed ? "fll[0]" :
                                               isPllUsed ? "pll[" . (sourceClockNumber-1) . "]" :
-                                                          "pathmux[" . sourceClockNumber . "]"}`' />
+                                                          "pathmux[" . sourceClockNumber . "]"}`' desc='Resource sub-path of the FLL, PLL, or clock path feeding CLK_PUMP' />
 
-    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' />
-    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`' />
+    <ParamString id='sourceClockDisplayName' default='`${getParamValueDisplay("sourceClock")}`' desc='Human-readable display name of the selected source clock' />
+    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`' desc='Full resource path of the selected CLK_PUMP source clock' />
     <!-- Use default values in case of error -->
-    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Source clock frequency in Hz used for DRCs and code generation' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFreq,accuracy)}`' visible='true' editable='false' desc='Source clock frequency' />
     <ParamChoice id='divider' name='Divider' group='General' default='1' visible='true' desc='The source clock frequency divider'>
       <Entry name='1'  value='1' />

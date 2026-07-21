@@ -237,11 +237,20 @@ extern "C" {
 #define CY_WDT_DRV_VERSION_MINOR                       90
 
 #if !(defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION==2))
+
+/** The internal define for the first iteration of WDT unlocking */
+#define CY_SRSS_WDT_LOCK_BIT0                           ((uint32_t)0x01U)
+
+/** The internal define for the second iteration of WDT unlocking */
+#define CY_SRSS_WDT_LOCK_BIT1                           ((uint32_t)0x02U)
+#else
 /** The internal define for the first iteration of WDT unlocking */
 #define CY_SRSS_WDT_LOCK_BIT0                           ((uint32_t)0x01U << 30U)
 
 /** The internal define for the second iteration of WDT unlocking */
 #define CY_SRSS_WDT_LOCK_BIT1                           ((uint32_t)0x01U << 31U)
+#endif
 #endif
 
 /** The WDT default match value */
@@ -271,17 +280,43 @@ extern "C" {
 
 
  /* Internal macro to validate match value */
+#if defined(SRSS_NUM_WDT_A_BITS) && (SRSS_NUM_WDT_A_BITS >= 32U)
+ /* All uint32_t values are valid when WDT counter is 32-bit */
+ #define CY_WDT_IS_MATCH_VAL_VALID(match)        (true)
+#else
  #define CY_WDT_IS_MATCH_VAL_VALID(match)        ((match) <= (WDT_MAX_MATCH_VALUE))
+#endif
 
 /* Internal macro to validate match value */
 #define CY_WDT_IS_IGNORE_BITS_VALID(bitsNum)     ((bitsNum) <= WDT_MAX_IGNORE_BITS)
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)
+/* The WDT needs 5 cycles(three cycles of the originally selected
+   clock plus two cycles of the newly selected clock) to switch
+   away from existing source. The source clock of wdt is fixed to
+   32KHz. So 5 cycles become ~153us */
+#define CY_WDT_SRC_CLK_SWITCH_DELAY              (153UL)
+#else
 /* The WDT needs 4 cycles to switch away from existing source.
  * The source clock of wdt is fixed to 32KHz. So 4 cycles become 122us */
 #define CY_WDT_SRC_CLK_SWITCH_DELAY              (122UL)
+#endif
 
 
-#if defined (CY_IP_MXS22SRSS)
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)
+/* Internal macro to validate match value */
+#define CY_WDT_IS_CLK_SRC_VALID(src)         (((src) == CY_WDT_CLK_SOURCE_ILO)  || \
+                                              ((src) == CY_WDT_CLK_SOURCE_PILO) || \
+                                              ((src) == CY_WDT_CLK_SOURCE_WCO))
+/** WDT driver retry macros. WDT busy bet is set for three clock cycles
+ *  (~92us) after writing to WDT_CNT.COUNTER or after writing to
+ *  WDT_INTR_SET (set) or WDT_INTR (clear).*/
+#define CY_WDT_ACCESS_BUSY_RETRY_COUNT    (92u)
+
+/** WDT driver retry delay value */
+#define CY_WDT_BUSY_RETRY_DELAY_US         (1u)     /* 1 usec */
+
+#elif defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION <= 2)
 /* Internal macro to validate match value */
 #define CY_WDT_IS_CLK_SRC_VALID(src)         (((src) == CY_WDT_CLK_SOURCE_PILO)  || \
                                               ((src) == CY_WDT_CLK_SOURCE_BAK))
@@ -301,19 +336,51 @@ extern "C" {
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) ||defined (CY_DOXYGEN)
 
+/** WDT status enumeration */
+typedef enum
+ {
+    CY_WDT_SUCCESS       = 0x00U,    /**< Successful */
+    CY_WDT_BAD_PARAM     = CY_WDT_ID | CY_PDL_STATUS_ERROR | 0x01U,    /**< One or more invalid parameters */
+    CY_WDT_TIMEOUT       = CY_WDT_ID | CY_PDL_STATUS_ERROR | 0x02U,    /**< Time-out occurs */
+    CY_WDT_LOCKED        = CY_WDT_ID | CY_PDL_STATUS_ERROR | 0x03U,    /**< WDT is in locked state */
+    CY_WDT_UNKNOWN       = CY_WDT_ID | CY_PDL_STATUS_ERROR | 0xFFU     /**< Unknown failure */
+} cy_en_wdt_status_t;
+
+
+
 typedef enum
 {
-#if defined (CY_IP_MXS40SSRSS)
+#if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS_VERSION) && (CY_IP_MXS22SRSS_VERSION ==2 )
     CY_WDT_CLK_SOURCE_ILO       =     0U, /**< Select the ILO as clock source to WDT */
 #endif
     CY_WDT_CLK_SOURCE_PILO      =     1U, /**< Select the PILO as clock source to WDT */
+#if defined (CY_IP_MXS22SRSS_VERSION) && (CY_IP_MXS22SRSS_VERSION ==2 )
+    CY_WDT_CLK_SOURCE_WCO       =     2U, /**< Select the WCO as clock source to WDT */
+#else
     CY_WDT_CLK_SOURCE_BAK       =     2U, /**< Select the clk_bak as clock source to WDT */
+#endif
 } cy_en_wdt_clk_sources_t;
 #endif /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) ||defined (CY_DOXYGEN) */
 
 
 /** \} group_wdt_clk_src_enums */
 
+/**
+* \addtogroup group_wdt_structures
+* \{
+*/
+
+/**
+  * \brief Watchdog Timer Configuration Structure
+  */
+typedef struct{
+    uint32_t match;         /**< Match value for Watchdog counter */
+    uint32_t ignoreBits;    /**< Number of the most significant bits of the Watchdog counter that
+                                are excluded  from the match comparison. When this is set to 1,
+                                just the MSB is ignored. When set to 2, MSB and (MSB-1) bits
+                                are ignored and so on */
+} cy_stc_wdt_config_t;
+/** \} group_wdt_structures */
 
 /*******************************************************************************
 *        Function Prototypes
@@ -322,7 +389,33 @@ typedef enum
 * \addtogroup group_wdt_functions
 * @{
 */
+#if defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A > 1)
+/* WDT APIs to support multiple instances of WDT */
+cy_en_wdt_status_t Cy_WDTx_Init(WDT_STRUCT_Type *base, cy_stc_wdt_config_t const *config);
+void Cy_WDTx_Lock(WDT_STRUCT_Type *base);
+void Cy_WDTx_Unlock(WDT_STRUCT_Type *base);
+bool Cy_WDTx_Locked(WDT_STRUCT_Type *base);
+cy_en_wdt_status_t Cy_WDTx_ClearInterrupt(WDT_STRUCT_Type *base);
+cy_en_wdt_status_t Cy_WDTx_ClearWatchdog(WDT_STRUCT_Type *base);
 
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_Enable(WDT_STRUCT_Type *base);
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_Disable(WDT_STRUCT_Type *base);
+__STATIC_INLINE bool Cy_WDTx_IsEnabled(WDT_STRUCT_Type *base);
+__STATIC_INLINE uint32_t Cy_WDTx_GetCount(WDT_STRUCT_Type *base);
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_ResetCounter(WDT_STRUCT_Type *base);
+__STATIC_INLINE void Cy_WDTx_MaskInterrupt(WDT_STRUCT_Type *base);
+__STATIC_INLINE void Cy_WDTx_UnmaskInterrupt(WDT_STRUCT_Type *base);
+cy_en_wdt_status_t Cy_WDTx_SetMatch(WDT_STRUCT_Type *base, uint32_t match);
+cy_en_wdt_status_t Cy_WDTx_SetIgnoreBits(WDT_STRUCT_Type *base, uint32_t bitsNum);
+__STATIC_INLINE uint32_t Cy_WDTx_GetMatch(WDT_STRUCT_Type *base);
+__STATIC_INLINE uint32_t Cy_WDTx_GetIgnoreBits(WDT_STRUCT_Type *base);
+cy_en_wdt_status_t Cy_WDTx_SetMatchBits(WDT_STRUCT_Type *base, uint32_t bitPos);
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_SetClkSource(WDT_STRUCT_Type *base, cy_en_wdt_clk_sources_t src);
+__STATIC_INLINE cy_en_wdt_clk_sources_t Cy_WDTx_GetClkSource(WDT_STRUCT_Type *base);
+__STATIC_INLINE uint32_t Cy_WDTx_GetMatchBits(WDT_STRUCT_Type *base);
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_EnableReset(WDT_STRUCT_Type *base);
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_DisableReset(WDT_STRUCT_Type *base);
+#else
 /* WDT API */
 void Cy_WDT_Init(void);
 void Cy_WDT_Lock(void);
@@ -354,7 +447,452 @@ __STATIC_INLINE uint32_t Cy_WDT_GetMatchBits(void);
 
 #endif
 
+#if defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2)
+__STATIC_INLINE void Cy_WDT_EnableReset(void);
+__STATIC_INLINE void Cy_WDT_DisableReset(void);
+#endif // defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2)
+#endif // (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A > 1)
 
+#if defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2)
+
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_WaitForNotBusy_Common(WDT_STRUCT_Type *base)
+{
+    cy_en_wdt_status_t status         = CY_WDT_TIMEOUT;
+    uint32_t           wdtAccessRetry = CY_WDT_ACCESS_BUSY_RETRY_COUNT;
+    while ((_FLD2BOOL(WDT_MAIN_WDT_STATUS_BUSY, SRSS_WDT_STATUS(base)) == true) && (wdtAccessRetry != 0))
+    {
+        wdtAccessRetry--;
+        Cy_SysLib_DelayUs(CY_WDT_BUSY_RETRY_DELAY_US);
+    }
+    if(wdtAccessRetry != 0)
+    {
+        status = CY_WDT_SUCCESS;
+    }
+    return status;
+}
+
+__STATIC_INLINE  bool Cy_WDTx_Locked_Common(WDT_STRUCT_Type *base)
+{
+    /* Prohibits writing to the WDT registers and other CLK_LF */
+    return (0u != _FLD2VAL(WDT_MAIN_WDT_LOCK_WDT_LOCK, SRSS_WDT_LOCK(base)));
+}
+
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_ClearInterrupt_Common(WDT_STRUCT_Type *base)
+{
+    cy_en_wdt_status_t status = Cy_WDTx_WaitForNotBusy_Common(base);
+    if(CY_WDT_SUCCESS == status)
+    {
+        SRSS_WDT_INTR(base) = WDT_MAIN_WDT_INTR_WDT_MATCH_Msk;
+
+        /* Read the interrupt register to ensure that the initial clearing write has
+        * been flushed out to the hardware.
+        */
+        (void) SRSS_WDT_INTR(base);
+    }
+    return status;
+}
+
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_Enable_Common(WDT_STRUCT_Type *base)
+{
+    cy_en_wdt_status_t status = CY_WDT_LOCKED;
+    if (false == Cy_WDTx_Locked_Common(base))
+    {
+        /* Enables the Watchdog timer */
+        SRSS_WDT_CTL(base) |= WDT_MAIN_WDT_CTL_WDT_EN_Msk;
+        status =  Cy_WDTx_ClearInterrupt_Common(base);
+    }
+    return status;
+}
+
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_Disable_Common(WDT_STRUCT_Type *base)
+{
+    cy_en_wdt_status_t status = CY_WDT_LOCKED;
+    if (false == Cy_WDTx_Locked_Common(base))
+    {
+        /* Disables the Watchdog timer */
+        SRSS_WDT_CTL(base) &= ((uint32_t) ~(WDT_MAIN_WDT_CTL_WDT_EN_Msk));
+        status = CY_WDT_SUCCESS;
+    }
+    return status;
+}
+
+__STATIC_INLINE bool Cy_WDTx_IsEnabled_Common(WDT_STRUCT_Type *base)
+{
+    return _FLD2BOOL(WDT_MAIN_WDT_CTL_WDT_EN, SRSS_WDT_CTL(base));
+}
+
+__STATIC_INLINE uint32_t Cy_WDTx_GetMatch_Common(WDT_STRUCT_Type *base)
+{
+    /* Reads the WDT counter match comparison value*/
+    return ((uint32_t) _FLD2VAL(WDT_MAIN_WDT_MATCH_MATCH, SRSS_WDT_MATCH(base)));
+}
+
+__STATIC_INLINE uint32_t Cy_WDTx_GetIgnoreBits_Common(WDT_STRUCT_Type *base)
+{
+    /* Reads the number of the most significant bits of the Watchdog timer that are
+       not checked against the match*/
+    return((uint32_t) (WDT_MAX_IGNORE_BITS - _FLD2VAL(WDT_MAIN_WDT_MATCH2_IGNORE_BITS_ABOVE, SRSS_WDT_MATCH2(base))));
+}
+
+
+
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_SetClkSource_Common(WDT_STRUCT_Type *base, cy_en_wdt_clk_sources_t src)
+{
+    cy_en_wdt_status_t status = CY_WDT_LOCKED;
+    CY_ASSERT_L2(CY_WDT_IS_CLK_SRC_VALID(src));
+    status = Cy_WDTx_Locked_Common(base) ? CY_WDT_LOCKED : CY_WDT_SUCCESS;
+    if(CY_WDT_SUCCESS == status)
+    {
+        status = Cy_WDTx_WaitForNotBusy_Common(base);
+    }
+    if(CY_WDT_SUCCESS == status)
+    {
+        SRSS_WDT_CTL(base) = _CLR_SET_FLD32U((SRSS_WDT_CTL(base)), WDT_MAIN_WDT_CTL_WDT_CLK_SEL, src);
+        /** Adding 4 cycle delay */
+        Cy_SysLib_DelayUs((uint16_t)CY_WDT_SRC_CLK_SWITCH_DELAY);
+    }
+    return status;
+}
+
+__STATIC_INLINE cy_en_wdt_clk_sources_t Cy_WDTx_GetClkSource_Common(WDT_STRUCT_Type *base)
+{
+    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to cy_en_wdt_clk_sources_t enum.');
+    return ((cy_en_wdt_clk_sources_t) _FLD2VAL(WDT_MAIN_WDT_CTL_WDT_CLK_SEL, SRSS_WDT_CTL(base)));
+}
+
+__STATIC_INLINE uint32_t Cy_WDTx_GetMatchBits_Common(WDT_STRUCT_Type *base)
+{
+    return((uint32_t) (_FLD2VAL(WDT_MAIN_WDT_MATCH2_IGNORE_BITS_ABOVE, SRSS_WDT_MATCH2(base))));
+}
+
+__STATIC_INLINE uint32_t Cy_WDTx_GetCount_Common(WDT_STRUCT_Type *base)
+{
+    return ((uint32_t) _FLD2VAL(WDT_MAIN_WDT_CNT_COUNTER, SRSS_WDT_CNT(base)));
+}
+
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_ResetCounter_Common(WDT_STRUCT_Type *base)
+{
+    cy_en_wdt_status_t status = CY_WDT_LOCKED;
+    status = Cy_WDTx_Locked_Common(base) ? CY_WDT_LOCKED : CY_WDT_SUCCESS;
+    if(CY_WDT_SUCCESS == status)
+    {
+        status = Cy_WDTx_WaitForNotBusy_Common(base);
+    }
+    if( CY_WDT_SUCCESS == status )
+    {
+        SRSS_WDT_CNT(base) = 0x0U;
+    }
+    return status;
+}
+
+__STATIC_INLINE void Cy_WDTx_MaskInterrupt_Common(WDT_STRUCT_Type *base)
+{
+    SRSS_WDT_INTR_MASK(base) &= (uint32_t)(~ WDT_MAIN_WDT_INTR_MASK_WDT_MATCH_Msk);
+}
+
+__STATIC_INLINE void Cy_WDTx_UnmaskInterrupt_Common(WDT_STRUCT_Type *base)
+{
+    SRSS_WDT_INTR_MASK(base) |= WDT_MAIN_WDT_INTR_MASK_WDT_MATCH_Msk;
+}
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_EnableReset_Common(WDT_STRUCT_Type *base)
+{
+    cy_en_wdt_status_t status = CY_WDT_LOCKED;
+    if (false == Cy_WDTx_Locked_Common(base))
+    {
+        SRSS_WDT_CTL(base) &= ((uint32_t)(~ WDT_MAIN_WDT_CTL_MASK_WDT_RESET_Msk));
+        status = CY_WDT_SUCCESS;
+    }
+    return status;
+}
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_DisableReset_Common(WDT_STRUCT_Type *base)
+{
+    cy_en_wdt_status_t status = CY_WDT_LOCKED;
+    if (false == Cy_WDTx_Locked_Common(base))
+    {
+        SRSS_WDT_CTL(base) |= WDT_MAIN_WDT_CTL_MASK_WDT_RESET_Msk;
+        status = CY_WDT_SUCCESS;
+    }
+    return status;
+}
+#endif
+
+#if defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A > 1)
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_Enable
+****************************************************************************//**
+*
+* Enables the Watchdog timer.The Watchdog timer should be unlocked before being
+* enabled. Call the Cy_WDTx_Unlock() API to unlock the WDT.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return
+* The status of the WDT enable request. \ref cy_en_wdt_status_t
+*
+* \sideeffect
+* This function clears the WDT interrupt.
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_Enable(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_Enable_Common(base);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_Disable
+****************************************************************************//**
+*
+* Disables the Watchdog timer. The Watchdog timer should be unlocked before being
+* disabled. Call the Cy_WDT_Unlock() API to unlock the WDT.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return
+* The status of the WDT disable request. \ref cy_en_wdt_status_t
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_Disable(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_Disable_Common(base);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_IsEnabled
+****************************************************************************//**
+*
+* Reports an enable/disable state of the Watchdog timer.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return
+* - true - if the timer is enabled
+* - false - if the timer is disabled
+*
+*******************************************************************************/
+__STATIC_INLINE bool Cy_WDTx_IsEnabled(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_IsEnabled_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_GetMatch
+****************************************************************************//**
+*
+* Reads the WDT counter match comparison value.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return The counter match value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_WDTx_GetMatch(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_GetMatch_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_GetIgnoreBits
+****************************************************************************//**
+*
+* Reads the number of the most significant bits of the Watchdog timer that are
+* not checked against the match.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return The number of the most significant bits.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_WDTx_GetIgnoreBits(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_GetIgnoreBits_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_SetClkSource
+****************************************************************************//**
+*
+* Configures the WDT clock source
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \param src
+* Clock sources for WDT. \ref cy_en_wdt_clk_sources_t
+*
+* \return
+* The status of the WDT enable request. \ref cy_en_wdt_status_t
+*
+* \note  It takes three cycles of the originally selected clock plus two cycles
+* of the newly selected clock to switch away  from it.  Do not disable the
+* original clock during this time.
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_SetClkSource(WDT_STRUCT_Type *base, cy_en_wdt_clk_sources_t src)
+{
+    return Cy_WDTx_SetClkSource_Common(base, src);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_GetClkSource
+****************************************************************************//**
+*
+* Gets the WDT clock source configured.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return The Clock source enum \ref cy_en_wdt_clk_sources_t
+*
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_wdt_clk_sources_t Cy_WDTx_GetClkSource(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_GetClkSource_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_GetMatchBits
+****************************************************************************//**
+*
+* Gets the bit position above which the bits will be ignored for match.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return The bit position above which the bits will be ignored for match.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_WDTx_GetMatchBits(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_GetMatchBits_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_GetCount
+****************************************************************************//**
+*
+* Reads the current WDT counter value.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return A live counter value.
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_WDTx_GetCount(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_GetCount_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_ResetCounter
+****************************************************************************//**
+*
+* Resets the WDT counter value.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return
+* The status of the WDT reset counter request. \ref cy_en_wdt_status_t
+*
+* \note
+* This API must be called only after WDT is disabled, else the writes will be
+* ignored if WDT is enabled.
+*
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_ResetCounter(WDT_STRUCT_Type *base)
+{
+   return Cy_WDTx_ResetCounter_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_MaskInterrupt
+****************************************************************************//**
+*
+* After masking interrupts from the WDT, they are not passed to the CPU.
+* This function does not disable the WDT-reset generation.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_WDTx_MaskInterrupt(WDT_STRUCT_Type *base)
+{
+    Cy_WDTx_MaskInterrupt_Common(base);
+}
+
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_UnmaskInterrupt
+****************************************************************************//**
+*
+* After unmasking interrupts from the WDT, they are passed to CPU.
+* This function does not impact the reset generation.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_WDTx_UnmaskInterrupt(WDT_STRUCT_Type *base)
+{
+    Cy_WDTx_UnmaskInterrupt_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_EnableReset
+****************************************************************************//**
+*
+* Enable the generation of reset signal by the WDT.
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return
+* The status of the WDT reset enable request. \ref cy_en_wdt_status_t
+*
+*\note WDT reset is enabled by default. Use this function to enable the reset
+* in case the reset was disabled using \ref Cy_WDTx_DisableReset.
+* WDT should be unlocked for the settings to take effect.
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_EnableReset(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_EnableReset_Common(base);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDTx_DisableReset
+****************************************************************************//**
+*
+* Disable the generation of reset signal by the WDT. When disabled, missed WDT
+* interrupts will not generate a reset
+*
+* \param base
+* The pointer to the WDT instance.
+*
+* \return
+* The status of the WDT reset disable request. \ref cy_en_wdt_status_t
+*
+*\note WDT reset is enabled by default. Use this function to disable the reset.
+* WDT should be unlocked for the settings to take effect.
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_DisableReset(WDT_STRUCT_Type *base)
+{
+    return Cy_WDTx_DisableReset_Common(base);
+}
+
+#else
 
 /*******************************************************************************
 * Function Name: Cy_WDT_Enable
@@ -368,13 +906,16 @@ __STATIC_INLINE uint32_t Cy_WDT_GetMatchBits(void);
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_Enable(void)
 {
-
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    Cy_WDTx_Enable_Common(WDT_DEFAULT);
+#else
 #if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     SRSS_WDT_CTL |= WDT_CTL_ENABLE_Msk;
 #else
     SRSS_WDT_CTL |= _VAL2FLD(SRSS_WDT_CTL_WDT_EN, 1U);
 #endif
     Cy_WDT_ClearInterrupt();
+#endif
 }
 
 
@@ -388,7 +929,9 @@ __STATIC_INLINE void Cy_WDT_Enable(void)
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_Disable(void)
 {
-#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    Cy_WDTx_Disable_Common(WDT_DEFAULT);
+#elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     SRSS_WDT_CTL &= ((uint32_t) ~(_VAL2FLD(WDT_CTL_ENABLE, 1U)));
 #else
     SRSS_WDT_CTL &= ((uint32_t) ~(_VAL2FLD(SRSS_WDT_CTL_WDT_EN, 1U)));
@@ -409,7 +952,9 @@ __STATIC_INLINE void Cy_WDT_Disable(void)
 *******************************************************************************/
 __STATIC_INLINE bool Cy_WDT_IsEnabled(void)
 {
-#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    return Cy_WDTx_IsEnabled_Common(WDT_DEFAULT);
+#elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     return _FLD2BOOL(WDT_CTL_ENABLE, SRSS_WDT_CTL);
 #else
     return _FLD2BOOL(SRSS_WDT_CTL_WDT_EN, SRSS_WDT_CTL);
@@ -426,10 +971,17 @@ __STATIC_INLINE bool Cy_WDT_IsEnabled(void)
 *
 * \return The counter match value.
 *
+* \note
+* This API is available for PSOC, PSC and PSE devices.
+*
 *******************************************************************************/
 __STATIC_INLINE uint32_t Cy_WDT_GetMatch(void)
 {
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    return Cy_WDTx_GetMatch_Common(WDT_DEFAULT);
+#else
     return ((uint32_t) _FLD2VAL(SRSS_WDT_MATCH_MATCH, SRSS_WDT_MATCH));
+#endif
 }
 
 /*******************************************************************************
@@ -441,10 +993,15 @@ __STATIC_INLINE uint32_t Cy_WDT_GetMatch(void)
 *
 * \return The number of the most significant bits.
 *
+* \note
+* This API is available for PSOC, PSC and PSE devices.
+*
 *******************************************************************************/
 __STATIC_INLINE uint32_t Cy_WDT_GetIgnoreBits(void)
 {
-#if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    return Cy_WDTx_GetIgnoreBits_Common(WDT_DEFAULT);
+#elif defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
     return((uint32_t) (WDT_MAX_IGNORE_BITS - _FLD2VAL(SRSS_WDT_MATCH2_IGNORE_BITS_ABOVE, SRSS_WDT_MATCH2)));
 #else
     return((uint32_t) _FLD2VAL(SRSS_WDT_MATCH_IGNORE_BITS, SRSS_WDT_MATCH));
@@ -461,12 +1018,18 @@ __STATIC_INLINE uint32_t Cy_WDT_GetIgnoreBits(void)
 * \param src
 * \ref cy_en_wdt_clk_sources_t
 *
+* \note
+* This API is available for PSC and PSE devices.
+*
 * \note  It takes four cycles of the originally selected clock to switch away
 * from it.  Do not disable the original clock during this time.
 *
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_SetClkSource(cy_en_wdt_clk_sources_t src)
 {
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    Cy_WDTx_SetClkSource_Common(WDT_DEFAULT, src);
+#else
     CY_ASSERT_L2(CY_WDT_IS_CLK_SRC_VALID(src));
 
     if (false == Cy_WDT_Locked())
@@ -475,6 +1038,7 @@ __STATIC_INLINE void Cy_WDT_SetClkSource(cy_en_wdt_clk_sources_t src)
         /** Adding 4 cycle delay */
         Cy_SysLib_DelayUs((uint16_t)CY_WDT_SRC_CLK_SWITCH_DELAY);
     }
+#endif
 }
 
 /*******************************************************************************
@@ -488,8 +1052,12 @@ __STATIC_INLINE void Cy_WDT_SetClkSource(cy_en_wdt_clk_sources_t src)
 *******************************************************************************/
 __STATIC_INLINE cy_en_wdt_clk_sources_t Cy_WDT_GetClkSource(void)
 {
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    return Cy_WDTx_GetClkSource_Common(WDT_DEFAULT);
+#else
     CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to cy_en_wdt_clk_sources_t enum.');
     return ((cy_en_wdt_clk_sources_t) _FLD2VAL(SRSS_WDT_CTL_WDT_CLK_SEL, SRSS_WDT_CTL));
+#endif
 }
 
 /*******************************************************************************
@@ -503,7 +1071,11 @@ __STATIC_INLINE cy_en_wdt_clk_sources_t Cy_WDT_GetClkSource(void)
 *******************************************************************************/
 __STATIC_INLINE uint32_t Cy_WDT_GetMatchBits(void)
 {
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    return Cy_WDTx_GetMatchBits_Common(WDT_DEFAULT);
+#else
     return((uint32_t) (_FLD2VAL(SRSS_WDT_MATCH2_IGNORE_BITS_ABOVE, SRSS_WDT_MATCH2)));
+#endif
 }
 #endif
 
@@ -521,7 +1093,9 @@ __STATIC_INLINE uint32_t Cy_WDT_GetMatchBits(void)
 *******************************************************************************/
 __STATIC_INLINE uint32_t Cy_WDT_GetCount(void)
 {
-#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    return Cy_WDTx_GetCount_Common(WDT_DEFAULT);
+#elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     return ((uint32_t) _FLD2VAL(WDT_CNT_CNT, SRSS_WDT_CNT));
 #else
     return ((uint32_t) _FLD2VAL(SRSS_WDT_CNT_COUNTER, SRSS_WDT_CNT));
@@ -542,7 +1116,11 @@ __STATIC_INLINE uint32_t Cy_WDT_GetCount(void)
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_ResetCounter(void)
 {
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    (void) Cy_WDTx_ResetCounter_Common(WDT_DEFAULT);
+#else
     SRSS_WDT_CNT = 0x0U;
+#endif
 }
 
 /*******************************************************************************
@@ -555,7 +1133,9 @@ __STATIC_INLINE void Cy_WDT_ResetCounter(void)
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_MaskInterrupt(void)
 {
-#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    (void)Cy_WDTx_MaskInterrupt_Common(WDT_DEFAULT);
+#elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     SRSS_WDT_INTR_MASK &= ~WDT_INTR_MASK_WDT_Msk;
 #else
     #if CY_CPU_CORTEX_M4 && defined(CY_DEVICE_SECURE)
@@ -577,7 +1157,9 @@ __STATIC_INLINE void Cy_WDT_MaskInterrupt(void)
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_UnmaskInterrupt(void)
 {
-#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
+    (void)Cy_WDTx_UnmaskInterrupt_Common(WDT_DEFAULT);
+#elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     SRSS_WDT_INTR_MASK |= WDT_INTR_MASK_WDT_Msk;
 #else
     #if CY_CPU_CORTEX_M4 && defined(CY_DEVICE_SECURE)
@@ -588,6 +1170,45 @@ __STATIC_INLINE void Cy_WDT_UnmaskInterrupt(void)
 #endif
 }
 /** \} group_wdt_functions */
+#if defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2)
+
+/*******************************************************************************
+* Function Name: Cy_WDT_EnableReset
+****************************************************************************//**
+*
+* Enable the generation of reset signal by the WDT.
+*
+*\note WDT reset is enabled by default. Use this function to enable the reset
+* in case the reset was disabled using \ref Cy_WDT_DisableReset.
+* WDT should be unlocked for the settings to take effect.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_WDT_EnableReset(void)
+{
+    Cy_WDTx_EnableReset_Common(WDT_DEFAULT);
+}
+
+/*******************************************************************************
+* Function Name: Cy_WDT_DisableReset
+****************************************************************************//**
+*
+* Disable the generation of reset signal by the WDT. When disabled, missed WDT
+* interrupts will not generate a reset
+*
+*\note WDT reset is enabled by default. Use this function to disable the reset.
+* WDT should be unlocked for the settings to take effect.
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_WDT_DisableReset(void)
+{
+    Cy_WDTx_DisableReset_Common(WDT_DEFAULT);
+}
+#endif /* defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2) */
+
+/** \} group_wdt_functions */
+
+#endif
+
 #if defined(__cplusplus)
 }
 #endif

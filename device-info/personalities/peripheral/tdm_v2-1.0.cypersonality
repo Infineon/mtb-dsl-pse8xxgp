@@ -11,8 +11,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2023-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2023-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -260,6 +260,14 @@
       <Constraint type="ACCEPT" targetLocation="ioss\[\d+\]\.port\[\d+\]\.pin.*" valid="true" >
         <Parameter id="DriveModes" severity="ERROR" reason="">
           <Fixed value="CY_GPIO_DM_HIGHZ" />
+        </Parameter>
+      </Constraint>
+      <Constraint type="ACCEPT" targetLocation=".*" valid="true" />
+    </ParamSignal>
+    <ParamSignal port="tdm_rx_mck[0]" name="Rx Master Interface Clock" group="`${(rxMode eq CY_TDM_DEVICE_MASTER) ? &quot;Outputs&quot; : &quot;Inputs&quot;}`" visible="`${rxEnabled &amp;&amp; (rxclockselect eq CY_TDM_SEL_MCLK_IN)}`" desc="Rx master interface clock. Required when Rx clock source is set to MCLK_IN (visible when Rx is enabled and Clock Select is Interface Clock MCLK)." canBeEmpty="`${!rxEnabled || !(rxclockselect eq CY_TDM_SEL_MCLK_IN)}`" >
+      <Constraint type="ACCEPT" targetLocation="ioss\[\d+\]\.port\[\d+\]\.pin.*" valid="true" >
+        <Parameter id="DriveModes" severity="ERROR" reason="">
+          <Fixed value="`${(rxMode eq CY_TDM_DEVICE_MASTER) ? &quot;CY_GPIO_DM_STRONG_IN_OFF&quot; : &quot;CY_GPIO_DM_HIGHZ&quot;}`" />
         </Parameter>
       </Constraint>
       <Constraint type="ACCEPT" targetLocation=".*" valid="true" />

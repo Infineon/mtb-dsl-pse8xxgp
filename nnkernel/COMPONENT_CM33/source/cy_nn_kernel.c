@@ -117,7 +117,7 @@ static cy_kernel_context_t kernelContext =
  *****************************************************************************/
 #if defined(IFX_USE_MXNNLITE_STREAM_EMU)
 __attribute__((used))
-void Cy_NNLite_Isr(void)
+void Cy_NNLite_Isr(NNLITE_Type *nnlite_regs)
 #else
 void Cy_NNLite_Isr(void)
 #endif
@@ -138,7 +138,11 @@ void Cy_NNLite_Isr(void)
   {
     kernelContext.profGetCount(kernelContext.profArg, CY_NNLITE_PP_ACCELERATOR_DONE);
   }
+#if defined(IFX_USE_MXNNLITE_STREAM_EMU)
+  Cy_NNLite_InterruptHandler(nnlite_regs, &kernelContext.pdlContext);
+#else
   Cy_NNLite_InterruptHandler(MXNNLITE_REGS, &kernelContext.pdlContext);
+#endif
   if (kernelContext.completionCbFunc == NULL)
   {
     kernelContext.SemGiveFunc(kernelContext.nnliteSem);
@@ -604,13 +608,19 @@ __Cy_NNLite_Convolution(const int8_t *inputData, int8_t *outData,
     /* activation repeat is equal to number of filters or output depth */
     activationRepeats = MIN(outputChannels, numFilters);
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         filterWidth, filterHeight,
         activationRepeats, inputWidth,
         inputHeight, inputChannel,
         convParam->padValue, convParam->padWidth,
         convParam->padHeight, convParam->strideCol,
         convParam->strideRow, convParam->inputOffset);
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_WeightStreamerCfg(Memio, &kernelContext.pdlContext,
         weightPerNeuron, convParam->filterOffset);
@@ -847,8 +857,7 @@ __Cy_NNLite_DepthwiseConvolution(const int8_t *inputData, int8_t *outData,
 
   kernelContext.mutexLockFunc(kernelContext.nnliteMutex);
   kernelContext.profStart(kernelContext.profArg);
-  if( (NULL == filterData) ||
-      (NULL == inputDims) || (NULL == outputDims) ||
+  if( (NULL == inputDims) || (NULL == outputDims) ||
       (NULL == filterDims) || (NULL == convParam) ||
       (NULL == inputData) || (NULL == outData) ||
       (NULL == convParam->outScalingFactor))
@@ -866,6 +875,7 @@ __Cy_NNLite_DepthwiseConvolution(const int8_t *inputData, int8_t *outData,
      (kernelContext.pdlContext.nnliteState == CY_NNLITE_OP_DONE))
   {
     bool biasEn = biasData != NULL;
+    bool weightsEn = filterData != NULL; // weights enable flag derived from filterData pointer
     filterHeight = filterDims->dims[1];
     filterWidth = filterDims->dims[2];
     numFilters = filterDims->dims[3];
@@ -891,24 +901,42 @@ __Cy_NNLite_DepthwiseConvolution(const int8_t *inputData, int8_t *outData,
     /* Disable DW trigger for CPU mode */
     Cy_NNLite_DatawireTriggerEnable(Memio, dmaMode);
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         filterWidth, filterHeight,
         activationRepeats, inputWidth,
         inputHeight, inputChannels,
         convParam->padValue, convParam->padWidth,
         convParam->padHeight, convParam->strideCol,
         convParam->strideRow, convParam->inputOffset);
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_SetPWLActivation(Memio, intrplParam);
 
-    Cy_NNLite_WeightStreamerCfg(Memio, &kernelContext.pdlContext,
+    /* Case: depthwise-convolution path (filterData != NULL).
+     * In this path (weightsEn == true), configure the weight streamer.
+     * Pad-op (filterData == NULL) is handled below via CY_NNLITE_DWACT_ONLY. */
+    if (weightsEn)
+    {
+      Cy_NNLite_WeightStreamerCfg(Memio, &kernelContext.pdlContext,
         weightPerNeuron*numFilters,
         convParam->filterOffset);
+    }
+
+    /* Case: depthwise convolution with weights (filterData != NULL) vs pad-op without weights (filterData == NULL).
+     * Fetch mode: regular DWACT_WGT (weights fetched) or DWACT_ONLY
+     * when caller provided no weights (identity-weights). We derive
+     * presence of weights from filterData. */
+    cy_en_nnlite_mode_t fetchMode = weightsEn ? CY_NNLITE_DWACT_WGT : CY_NNLITE_DWACT_ONLY;
 
     Cy_NNLite_PipelineConfig(Memio,
 
         /* opType= */ CY_NNLITE_MUL,
-        /* fetchMode = */ CY_NNLITE_DWACT_WGT,
+        /* fetchMode = */ fetchMode,
         /* repeatWeights = */ false,
         /* biasEn = */ biasEn,
         /* sparsityEn = */ false,
@@ -920,7 +948,8 @@ __Cy_NNLite_DepthwiseConvolution(const int8_t *inputData, int8_t *outData,
         CY_NNLITE_ACT_AS_OUT_BW(convParam->act_size)
     );
 
-    weightPtr = (int8_t *)filterData;
+    /* Set weight pointer if weights are enabled */
+    weightPtr = weightsEn ? (int8_t *)filterData : NULL;
 
     Cy_NNLite_StreamerBaseAddrSet(Memio,
         CY_NNLITE_ACTIVATION_STREAMER, inputData);
@@ -935,10 +964,13 @@ __Cy_NNLite_DepthwiseConvolution(const int8_t *inputData, int8_t *outData,
       /*preScalingFactor=*/ 0.0f,
       /*postScalingFactors=*/convParam->outScalingFactor);
 
-
-    Cy_NNLite_StreamerBaseAddrSet(Memio,
-        CY_NNLITE_WEIGHT_STREAMER,
-        weightPtr);
+    /* Case: depthwise-convolution (filterData != NULL); set weight streamer base address. */
+    if (weightsEn)
+    {
+      Cy_NNLite_StreamerBaseAddrSet(Memio,
+          CY_NNLITE_WEIGHT_STREAMER,
+          weightPtr);
+    }
 
     Cy_NNLite_StreamerBaseAddrSet(Memio,
         CY_NNLITE_OUT_STREAMER,
@@ -1067,7 +1099,7 @@ __Cy_NNLite_FullyConnected(const int8_t* inputData, int8_t* outData,
     NNLITE_Type *Memio = dmaMode ? (NNLITE_Type *)fcParam->scratchBuf : MXNNLITE_REGS;
     uint32_t intrMask = dmaMode ? NNLITE_INTR_ERRORS_MASK : NNLITE_INTR_ENABLE_MASK;
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         filterWidth, filterHeight,
         activationRepeats,
         inputWidth, inputHeight, 1 /* input channels */,
@@ -1075,6 +1107,12 @@ __Cy_NNLite_FullyConnected(const int8_t* inputData, int8_t* outData,
         0, 1, /*  stride col, stride row  - batch dimension is "height" */
         fcParam->inputOffset /* input offset */
         );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_SetPWLActivation(Memio, intrplParam);
 
@@ -1225,13 +1263,19 @@ __Cy_NNLite_FullyConnected_batch(const int8_t* inputData, int8_t* outData,
     /* activation repeat is equal to number of filters or output depth */
     activationRepeats = MIN(outputChannels, numFilters);
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         filterWidth, filterHeight,
         activationRepeats, inputWidth,
         inputHeight, inputChannel,
         0, 0,
         0, 0,
         1, fcParam->inputOffset);
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_WeightStreamerCfg(Memio, &kernelContext.pdlContext,
         weightPerNeuron, fcParam->filterOffset);
@@ -1482,7 +1526,7 @@ __Cy_NNLite_Avgpool(const int8_t* inputData, int8_t* outData,
     /* calculate float scaling value*/
     fscaling = (1.0 / weightPerNeuron);
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         filterWidth, filterHeight,
         activationRepeat,
         inputWidth, inputHeight, inputChannels,
@@ -1490,6 +1534,12 @@ __Cy_NNLite_Avgpool(const int8_t* inputData, int8_t* outData,
         poolParam->strideCol,poolParam->strideRow,  /* stride row, col */
         0 /* input offset */
         );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_SetInterpolationParam(Memio, 0, 1.0f);
 
@@ -1656,7 +1706,7 @@ __Cy_NNLite_Maxpool(const int8_t* inputData, int8_t* outData,
     /* Each footprint activations fetched once Hence...  */
     activationRepeat = 1;
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         filterWidth, filterHeight,
         activationRepeat,
         inputWidth, inputHeight, inputChannels,
@@ -1664,6 +1714,12 @@ __Cy_NNLite_Maxpool(const int8_t* inputData, int8_t* outData,
         poolParam->strideCol,poolParam->strideRow,  /* stride row, col */
         0 /* input offset */
         );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_SetInterpolationParam(Memio, 0, 1.0f);
 
@@ -1964,7 +2020,7 @@ __Cy_NNLite_AddSubMul(const int8_t* lhsData, const int8_t *rhsData, int8_t* outD
     NNLITE_Type *Memio = dmaMode ? (NNLITE_Type *)pwParams->scratchBuf : MXNNLITE_REGS;
     uint32_t intrMask = dmaMode ? NNLITE_INTR_ERRORS_MASK : NNLITE_INTR_ENABLE_MASK;
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         1, 1, /* Filter width, height */
         1,    /* Only fetch rhs once */
         1, 1, rhsOutElts, /* input width, input height, input channels == # filters*/
@@ -1972,6 +2028,12 @@ __Cy_NNLite_AddSubMul(const int8_t* lhsData, const int8_t *rhsData, int8_t* outD
         1, 1, /* stride col, stride row*/
         pwParams->rhsOffset /* input offset */
         );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_WeightStreamerCfg(Memio, &kernelContext.pdlContext,
         /* 1*1* */ lhsElts, pwParams->lhsOffset);
@@ -2252,7 +2314,7 @@ __Cy_NNLite_Activation(const int8_t *inData, int8_t* outData,
     NNLITE_Type *Memio = dmaMode ? (NNLITE_Type *)actParams->scratchBuf : MXNNLITE_REGS;
     uint32_t intrMask = dmaMode ? NNLITE_INTR_ERRORS_MASK : NNLITE_INTR_ENABLE_MASK;
 
-    Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(Memio, &kernelContext.pdlContext,
         1, 1, /* Filter width, height */
         1,    /* Only fetch rhs once */
         1, 1, inOutElts, /* input width, input height, input channels == # values*/
@@ -2260,6 +2322,12 @@ __Cy_NNLite_Activation(const int8_t *inData, int8_t* outData,
         1, 1, /* stride col, stride row*/
         actParams->inOffset /* input offset */
         );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     float mac_in_sf;
     // TODO Really this should support mapping to a suitable linker section
@@ -2496,7 +2564,7 @@ Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData,
      (kernelContext.pdlContext.nnliteState == CY_NNLITE_OP_DONE))
   {
 
-    Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
         1, 1, /* Filter width, height */
         1,    /* Only fetch rhs once */
         1, 1, count, /* input width, input height, input channels == # values*/
@@ -2504,6 +2572,12 @@ Cy_NNLite_Byte_Copy(const int8_t *inData, int8_t* outData,
         1, 1, /* stride col, stride row*/
         0 /* input offset */
         );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     static cy_nnlite_clipping_t noop_clip = {
       /*min*/ -(1<<15),
@@ -2620,7 +2694,7 @@ Cy_NNLite_Redo_Byte_Copy(const int8_t *inData, int8_t* outData, uint32_t count)
         CY_NNLITE_ACTIVATION_STREAMER, inData);
     Cy_NNLite_StreamerBaseAddrSet(MXNNLITE_REGS,
         CY_NNLITE_OUT_STREAMER, outData);
-
+        
     kernelContext.LpmLockFunc();
     kernelContext.profGetCount(kernelContext.profArg, CY_NNLITE_PP_ACCELERATOR_START);
     status = Cy_NNLite_Start(MXNNLITE_REGS, &kernelContext.pdlContext);
@@ -2698,7 +2772,7 @@ Cy_NNLite_Q31Reciprocal(const uint32_t *inData, float* outData,
 
     cy_nnlite_clipping_t dummyOutClipping = { 0, 0}; //32-bit mode ignores these...
 
-    Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
         1, 1, /* Filter width, height */
         1,    /* Only fetch rhs once */
         inoutWidth, 1, inChannels, /* input width, input height, input channels == # values*/
@@ -2706,7 +2780,12 @@ Cy_NNLite_Q31Reciprocal(const uint32_t *inData, float* outData,
         1, 1, /* stride col, stride row*/
         0 /* input offset */
         );
-
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      kernelContext.profStop(kernelContext.profArg);
+      kernelContext.mutexUnlockFunc(kernelContext.nnliteMutex);
+      return status;
+    }
 
     Cy_NNLite_OutputStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
         dummyOutClipping,  /* Dummy Clipping - no used  */
@@ -2822,7 +2901,7 @@ Cy_NNLite_SoftMax_RowMaxes(const int8_t* x_in,
                   const cy_nn_pwise_unary_params_t *smParams)
 {
     cy_en_nnlite_status_t status;
-    Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
         row_size, 1, /* Filter width  == # value, height */
         1,    /* Only fetch rhs once */
         row_size, num_rows, 1, /* input width == # values, input height, input channels */
@@ -2830,6 +2909,10 @@ Cy_NNLite_SoftMax_RowMaxes(const int8_t* x_in,
         1, 1, /* stride col, stride row*/
         0 /* ignore input offset, we're going to work with differences... */
         );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      return status;
+    }
 
       // No Cy_NNLite_WeightStreamerCfg - weight streamer inactive
       // Output is non-negative.
@@ -2897,7 +2980,7 @@ Cy_NNLite_SoftMax_SubFromRowMaxes(int8_t *max_in, const int8_t* x_in,
 
   cy_en_nnlite_status_t status = CY_NNLITE_SUCCESS;
 #if NNLITE_WITHOUT_HARDWIRED_ADD_SUB_HACK
-  Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+  status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       row_size,    /* Fetch each MAX row_size times once */
       1, 1, num_rows, /* input width, input height, input channels == # filters*/
@@ -2905,6 +2988,10 @@ Cy_NNLite_SoftMax_SubFromRowMaxes(int8_t *max_in, const int8_t* x_in,
       1, 1, /* stride col, stride row*/
       0 /* ignore input offset, we're going to work with differences... */
       );
+  if (CY_NNLITE_SUCCESS != status)
+  {
+    return status;
+  }
 
   // Weight streamer set to x_i in order
   Cy_NNLite_WeightStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
@@ -2970,7 +3057,7 @@ Cy_NNLite_SoftMax_SubFromRowMaxes(int8_t *max_in, const int8_t* x_in,
   }
 
   int8_t *replicated_max = max_in + max_values_len;
-  Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+  status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       row_size,    /* Fetch each MAX row_size times  */
       1, 1, num_rows, /* input width, input height, input channels == # filters*/
@@ -2978,6 +3065,10 @@ Cy_NNLite_SoftMax_SubFromRowMaxes(int8_t *max_in, const int8_t* x_in,
       1, 1, /* stride col, stride row*/
       0 /* ignore input offset, we're going to work with differences... */
       );
+  if (CY_NNLITE_SUCCESS != status)
+  {
+    return status;
+  }
 
     cy_nnlite_clipping_t no_clip = {
         /*min=*/ -(1<<15),
@@ -3021,7 +3112,7 @@ Cy_NNLite_SoftMax_SubFromRowMaxes(int8_t *max_in, const int8_t* x_in,
   // Step 2:
   // Not we just do a simple pointwise subtraction from the (replicated) max values
 
-  Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+  status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       1,    /* each replicated MAX fetched  once */
       1, 1, row_size*num_rows, /* input width, input height, input channels == # values*/
@@ -3029,6 +3120,10 @@ Cy_NNLite_SoftMax_SubFromRowMaxes(int8_t *max_in, const int8_t* x_in,
       1, 1, /* stride col, stride row*/
       0 /* ignore input offset, we're going to work with differences... */
       );
+  if (CY_NNLITE_SUCCESS != status)
+  {
+    return status;
+  }
 
   // Weight streamer set to x_i in order
   Cy_NNLite_WeightStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
@@ -3103,7 +3198,7 @@ cy_en_nnlite_status_t status;
   static float second_rescale_buf;
   static int8_t zero_value_buf[] = {0,0,0,0};
 
-  Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+  status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       1,    /* Only fetch rhs once */
       num_rows, 1, row_size, /* input width, input height, input channels == # values*/
@@ -3111,6 +3206,10 @@ cy_en_nnlite_status_t status;
       1, 1, /* stride col, stride row*/
       -clip_diffs.min /* input offset: inputs are all non-negative*/
       );
+  if (CY_NNLITE_SUCCESS != status)
+  {
+    return status;
+  }
 
   // Limited exponent range in single scaling unit - split into two steps
   // if necessary.  Since lg2_e_folded_prescale is quite large (exp engine expected Q8/Q16 inputs
@@ -3207,7 +3306,7 @@ Cy_NNLite_SoftMax_ReciprocalExpSum(const int32_t* q31_exps,
 {
   cy_en_nnlite_status_t status;
   (void)smParams;
-  Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+  status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       1,    /* Only fetch rhs once */
       num_rows, 1, row_size*2, /* input width, input height, (16-bit)input channels == 2* # values */
@@ -3215,6 +3314,10 @@ Cy_NNLite_SoftMax_ReciprocalExpSum(const int32_t* q31_exps,
       1, 1, /* stride col, stride row*/
       0 /* input offset */
       );
+  if (CY_NNLITE_SUCCESS != status)
+  {
+    return status;
+  }
 
 
   Cy_NNLite_OutputStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
@@ -3294,7 +3397,7 @@ Cy_NNLite_SoftMax_Normalize(const int32_t* q31_exps,
     Cy_NNLite_SetInterpolationParam(MXNNLITE_REGS, 0, (1.0f/(float)(1u<<31u))/smParams->outScale);
 
 #if NNLITE_HAS_PER_ROW_SCALING_SUPPORT
-    Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       1,    /* Only fetch rhs once */
       row_size, num_rows, 2, /* input width = # values, input height, (16-bit)input channels == 2 */
@@ -3303,6 +3406,10 @@ Cy_NNLite_SoftMax_Normalize(const int32_t* q31_exps,
       1, 1, /* stride col, stride row*/
       0 /* input offset */
       );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      return status;
+    }
 
     Cy_NNLite_PipelineConfig(MXNNLITE_REGS,
         /* opType= */ CY_NNLITE_SUM_ACT32,
@@ -3341,7 +3448,7 @@ Cy_NNLite_SoftMax_Normalize(const int32_t* q31_exps,
           status = Cy_NNLite_WaitForCompletionPartialOp();
       }
 #else
-    Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+    status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
       1, 1, /* Filter width, height */
       1,    /* Only fetch rhs once */
       row_size, 1, 2, /* input width = # values, input height, (16-bit)input channels == 2 */
@@ -3349,6 +3456,10 @@ Cy_NNLite_SoftMax_Normalize(const int32_t* q31_exps,
       1, 1, /* stride col, stride row*/
       0 /* input offset */
       );
+    if (CY_NNLITE_SUCCESS != status)
+    {
+      return status;
+    }
 
     Cy_NNLite_PipelineConfig(MXNNLITE_REGS,
         /* opType= */ CY_NNLITE_SUM_ACT32,
@@ -3576,7 +3687,7 @@ __Cy_NNLite_LayerNorm_RowBroadcasting(int8_t *inputData,
       }
 
       int8_t *replicated_max = inputData + max_values_len;
-      Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
+      status = Cy_NNLite_ActivationStreamerCfg(MXNNLITE_REGS, &kernelContext.pdlContext,
           1, 1, /* Filter width, height */
           row_size,    /* Fetch each MAX row_size times  */
           1, 1, num_rows, /* input width, input height, input channels == # filters*/
@@ -3584,6 +3695,10 @@ __Cy_NNLite_LayerNorm_RowBroadcasting(int8_t *inputData,
           1, 1, /* stride col, stride row*/
           0 /* ignore input offset, we're going to work with differences... */
           );
+      if (CY_NNLITE_SUCCESS != status)
+      {
+        return status;
+      }
 
         cy_nnlite_clipping_t no_clip = {
             /*min=*/ -(1<<15),

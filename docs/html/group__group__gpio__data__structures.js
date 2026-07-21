@@ -13,9 +13,7 @@ var group__group__gpio__data__structures =
       [ "cfgSlew", "group__group__gpio__data__structures.html#ae45a5b55868813fc798f154897a2f02c", null ],
       [ "cfgDriveSel0", "group__group__gpio__data__structures.html#a8ed05a164d9c2be87d994215ca0d6b61", null ],
       [ "cfgDriveSel1", "group__group__gpio__data__structures.html#adc09324003007e956be2d8bc0e9e7004", null ],
-      [ "nonSecMask", "group__group__gpio__data__structures.html#ae4dac6192992209fc667e67335002755", null ],
-      [ "cfgRes", "group__group__gpio__data__structures.html#a4c33962dbab5b609cf728a6db04aebed", null ],
-      [ "cfgOut3", "group__group__gpio__data__structures.html#aff59b19bd40978ace3fd45499960291d", null ]
+      [ "nonSecMask", "group__group__gpio__data__structures.html#ae4dac6192992209fc667e67335002755", null ]
     ] ],
     [ "cy_stc_gpio_pin_config_t", "group__group__gpio__data__structures.html#structcy__stc__gpio__pin__config__t", [
       [ "outVal", "group__group__gpio__data__structures.html#ae39ff5dc65ffef2808a0183f23691389", null ],
@@ -31,7 +29,6 @@ var group__group__gpio__data__structures =
       [ "vtripSel", "group__group__gpio__data__structures.html#aa4cc8c41ddc1a81f1b70c22bb9284a89", null ],
       [ "vrefSel", "group__group__gpio__data__structures.html#a4bb7bdbf8e3df5475582113e02e63bc0", null ],
       [ "vohSel", "group__group__gpio__data__structures.html#a5af07673aa0c34dafa660f6975bad826", null ],
-      [ "nonSec", "group__group__gpio__data__structures.html#aa678e972ae52882207161cbb7190fd79", null ],
-      [ "pullUpRes", "group__group__gpio__data__structures.html#ad801b7d2256c5c0afeb0c1ef88ac041c", null ]
+      [ "nonSec", "group__group__gpio__data__structures.html#aa678e972ae52882207161cbb7190fd79", null ]
     ] ]
 ];

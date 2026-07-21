@@ -534,7 +534,8 @@ On WDT driver version B this function simply call Cy_WDT_SetService() function. 
 </div><div class="memdoc">
 
 <p>Reads the WDT counter match comparison value. </p>
-<dl class="section return"><dt>Returns</dt><dd>The counter match value. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The counter match value.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This API is available for PSOC, PSC and PSE devices. </dd></dl>
 
 </div>
 </div>
@@ -555,7 +556,8 @@ On WDT driver version B this function simply call Cy_WDT_SetService() function. 
 </div><div class="memdoc">
 
 <p>Reads the number of the most significant bits of the Watchdog timer that are not checked against the match. </p>
-<dl class="section return"><dt>Returns</dt><dd>The number of the most significant bits. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of the most significant bits.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This API is available for PSOC, PSC and PSE devices. </dd></dl>
 
 </div>
 </div>
@@ -610,7 +612,9 @@ On WDT driver version B this function simply call Cy_WDT_SetService() function. 
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>It takes four cycles of the originally selected clock to switch away from it. Do not disable the original clock during this time. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This API is available for PSC and PSE devices.</dd>
+<dd>
+It takes four cycles of the originally selected clock to switch away from it. Do not disable the original clock during this time. </dd></dl>
 <p>Adding 4 cycle delay</p>
 
 </div>

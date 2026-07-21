@@ -26,6 +26,19 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "cy_result.h"
+#include "cy_utils.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_PWM)
+
+
+
 
 /**
  * \addtogroup group_hal_pwm PWM (Pulse Width Modulator)
@@ -58,30 +71,20 @@
  * \subsection subsection_pwm_snippet_1 Snippet 1: Simple PWM initialization and output to pin
  * The clock parameter <b>clk</b> is optional and need not be provided (NULL), to generate and use
  * an available clock resource with a default frequency. <br>
- * The clock frequency and the duty cycle is set using \ref mtb_hal_pwm_set_period. <br>
- * \ref mtb_hal_pwm_start starts the PWM output on the pin.
+ * The clock frequency and the duty cycle is set using mtb_hal_pwm_set_period(). <br>
+ * mtb_hal_pwm_start() starts the PWM output on the pin.
  *
  * \snippet hal_pwm.c snippet_mtb_hal_pwm_init
  *
  *
  * \subsection subsection_pwm_snippet_2 Snippet 2: Starting and stopping the PWM output
- * \ref mtb_hal_pwm_start and \ref mtb_hal_pwm_stop functions can be used after PWM initialization
+ * mtb_hal_pwm_start() and mtb_hal_pwm_stop() functions can be used after PWM initialization
  * to start and stop the PWM output.
  *
  * \snippet hal_pwm.c snippet_mtb_hal_pwm_start_stop
  *
  */
 
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-
-#include "cy_result.h"
-#include "cy_utils.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_PWM)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -317,6 +320,6 @@ cy_rslt_t mtb_hal_pwm_process_interrupt(mtb_hal_pwm_t* obj);
 #include MTB_HAL_PWM_IMPL_HEADER
 #endif /* MTB_HAL_PWM_IMPL_HEADER */
 
-#endif //defined(MTB_HAL_DRIVER_AVAILABLE_PWM)
-
 /** \} group_hal_pwm */
+
+#endif //defined(MTB_HAL_DRIVER_AVAILABLE_PWM)

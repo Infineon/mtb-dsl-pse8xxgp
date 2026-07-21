@@ -36,9 +36,12 @@
 #ifdef CY_IP_M4CPUSS
 #include "cy_ipc_drv.h"
 #endif
+
+#if !defined(NO_STD_LIB)
 #if !defined(NDEBUG)
     #include <string.h>
 #endif /* NDEBUG */
+#endif /* NO_STD_LIB */
 
 #if defined (CY_DEVICE_SECURE)
 #include "cy_pra.h"
@@ -72,21 +75,36 @@
 
 
 #if  defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS28SRSS) || defined(CY_IP_MXS22SRSS)
+#if (CY_IP_MXS22SRSS_VERSION == 2UL)
+#define CY_SRSS_RES_CAUSE2_CSV_LOSS_Msk    (RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_HF_Msk) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
+#define CY_SRSS_RES_CAUSE2_CSV_LOSS_Pos    (RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_HF_Pos) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
+#define CY_SRSS_RES_CAUSE2_CSV_ERROR_Msk    (RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_REF_Msk) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
+#define CY_SRSS_RES_CAUSE2_CSV_ERROR_Pos    (RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_REF_Pos) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
+#else
 #define CY_SRSS_RES_CAUSE2_CSV_LOSS_Msk    (SRSS_RES_CAUSE2_RESET_CSV_HF_Msk)
 #define CY_SRSS_RES_CAUSE2_CSV_LOSS_Pos    (SRSS_RES_CAUSE2_RESET_CSV_HF_Pos)
 #define CY_SRSS_RES_CAUSE2_CSV_ERROR_Msk    (SRSS_RES_CAUSE2_RESET_CSV_REF_Msk)
 #define CY_SRSS_RES_CAUSE2_CSV_ERROR_Pos    (SRSS_RES_CAUSE2_RESET_CSV_REF_Pos)
+#endif
 #endif
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
 /** Holds the flag to indicate if the System woke up from Warm Boot or not */
 bool cy_WakeupFromWarmBootStatus = false;
 #endif /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) */
+#if (defined(CY_PDL_TZ_ENABLED) && defined (CY_IP_MXS40SSRSS))
+/* coefficients chosen to set the time of the wait states to 60 ns at high voltage and 80 ns at low voltage */
+#define CY_SYSLIB_COEFFICIENT_ULP     (80U) /* Wait states coefficient for ULP mode  */
+#define CY_SYSLIB_COEFFICIENT         (60U) /* Wait states coefficient for general mode  */
+#endif /* (defined(CY_PDL_TZ_ENABLED) && defined (CY_IP_MXS40SSRSS)) */
 
+#ifndef AROM_SUPPORTED
 #if !defined(NDEBUG)
     CY_NOINIT char_t cy_assertFileName[CY_MAX_FILE_NAME_SIZE + 1];
     CY_NOINIT uint32_t cy_assertLine;
 #endif /* NDEBUG */
+
+#endif
 
 #if (CY_ARM_FAULT_DEBUG == CY_ARM_FAULT_DEBUG_ENABLED)
     CY_NOINIT cy_stc_fault_frame_t cy_faultFrame;
@@ -155,9 +173,11 @@ __NO_RETURN void Cy_SysLib_Halt(uint32_t reason)
 __WEAK void Cy_SysLib_AssertFailed(const char_t * file, uint32_t line)
 {
 #if !defined(NDEBUG) || defined(CY_DOXYGEN)
+#if !defined(NO_STD_LIB)
     (void) strncpy(cy_assertFileName, file, CY_MAX_FILE_NAME_SIZE);
     cy_assertLine = line;
     Cy_SysLib_Halt(0UL);
+#endif /* NO_STD_LIB */
 #else
     (void) file;
     (void) line;
@@ -180,14 +200,135 @@ void Cy_SysLib_ClearFlashCacheAndBuffer(void)
 
 cy_en_syslib_status_t Cy_SysLib_ResetBackupDomain(void)
 {
+    #if ((defined (CY_IP_MXS22SRSS) && (SRSS_RTC_PRESENT == 0)) || (defined (CY_IP_MXS40SSRSS) && (SRSS_BACKUP_PRESENT == 0U))) /* No RTC present */
+    return CY_SYSLIB_UNKNOWN;
+    #else
     BACKUP_RESET = BACKUP_RESET_RESET_Msk;
     return (Cy_SysLib_GetResetStatus());
+    #endif
 }
 
 uint32_t Cy_SysLib_GetResetReason(void)
 {
     uint32_t retVal = 0UL;
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+#if (SRSS_POR_PRESENT)
+    uint32_t value =  0UL;
+#endif
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_ACT_FAULT, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_ACT_FAULT;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_TC_DBGRESET, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_TC_DBGRESET;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_SOFT, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_SOFT0;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_SOFT1, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_SOFT1;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_SOFT2, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_SOFT2;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_MCWDT0, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_SWWDT0;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_MCWDT1, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_SWWDT1;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_MCWDT2, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_SWWDT2;
+    }
+    if(0 != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE_RESET_MCWDT3, SRSS_RES_CAUSE))
+    {
+        retVal |= CY_SYSLIB_RESET_SWWDT3;
+    }
+    if(0U != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_HF, SRSS_RES_CAUSE2))
+    {
+        retVal |= CY_SYSLIB_RESET_CSV_LOSS_WAKEUP;
+    }
+
+    if(0U != _FLD2VAL(RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_REF, SRSS_RES_CAUSE2))
+    {
+        retVal |= CY_SYSLIB_RESET_CSV_ERROR_WAKEUP;
+    }
+
+    if(CY_SYSLIB_HIBERNATE_TOKEN == _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+    {
+        retVal |= CY_SYSLIB_RESET_HIB_WAKEUP;
+    }
+    if (CY_SYSLIB_DEEP_SLEEP_OFF_TOKEN == _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+    {
+        retVal |= CY_SYSLIB_RESET_DS_OFF_WAKEUP;
+    }
+    if (CY_SYSLIB_HIBERNATE_RAM_TOKEN == _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+    {
+        retVal |= CY_SYSLIB_RESET_HIBERNATE_RAM_WAKEUP;
+    }
+#if (SRSS_POR_PRESENT)
+    value = _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_WDT, SRSS_RES_CAUSE_EXTEND);
+    if(0 != value)
+    {
+        if(value & ((uint32)1 << 0))
+        {
+            retVal |= CY_SYSLIB_RESET_HWWDT0;
+        }
+        if(value & ((uint32)1 << 1))
+        {
+            retVal |= CY_SYSLIB_RESET_HWWDT1;
+        }
+        if(value & ((uint32)1 << 2))
+        {
+            retVal |= CY_SYSLIB_RESET_HWWDT2;
+        }
+        if(value & ((uint32)1 << 3))
+        {
+            retVal |= CY_SYSLIB_RESET_HWWDT3;
+        }
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_XRES, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_XRES;
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_BODVDDD, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_BODVDDD;
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_BODVCCD, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_BODVCCD;
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_BODVBAT, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_BODVBAT;
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_OVDVCCD, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_OVDVCCD;
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_PXRES, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_PXRES;
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_STRUCT_XRES, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_STRUCT_XRES;
+    }
+    if (0U != _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_PORVDDD, SRSS_RES_CAUSE_EXTEND))
+    {
+        retVal |= CY_SYSLIB_RESET_PORVDDD;
+    }
+#endif
+#else
     if(0 != _FLD2VAL(SRSS_RES_CAUSE_RESET_WDT, SRSS_RES_CAUSE))
     {
         retVal |= CY_SYSLIB_RESET_HWWDT;
@@ -236,7 +377,12 @@ uint32_t Cy_SysLib_GetResetReason(void)
     {
         retVal |= CY_SYSLIB_RESET_DS_OFF_WAKEUP;
     }
+	#endif
+    #if (CY_IP_MXS22SRSS_VERSION == 2UL)
+    if(0U != _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE)) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
+    #else
     if(CY_SYSLIB_HIBERNATE_TOKEN == _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+	#endif
     {
         retVal |= CY_SYSLIB_RESET_HIB_WAKEUP;
     }
@@ -253,7 +399,7 @@ uint32_t Cy_SysLib_GetResetReason(void)
     }
 #endif
 
-#if defined(CY_IP_MXS22SRSS) && (SRSS_POR_PRESENT)
+#if defined(CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION < 2UL) && (SRSS_POR_PRESENT)
     if (0U != _FLD2VAL(SRSS_RES_CAUSE_EXTEND_RESET_XRES, SRSS_RES_CAUSE_EXTEND))
     {
         retVal |= CY_SYSLIB_RESET_XRES;
@@ -302,17 +448,25 @@ void Cy_SysLib_ClearResetReason(void)
     /* RES_CAUSE_EXTEND register bits are RW1C (every bit is cleared upon writing 1),
      * so write all ones to clear all the reset reasons.
      */
-#if defined(CY_IP_MXS22SRSS)  && (SRSS_POR_PRESENT)
+#if defined (CY_IP_MXS22SRSS) && (SRSS_POR_PRESENT)
     SRSS_RES_CAUSE_EXTEND = 0xFFFFFFFFU;
 #endif /* defined(CY_IP_MXS22SRSS) && (SRSS_POR_PRESENT) */
 
-    if(0U != _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+    #if (CY_IP_MXS22SRSS_VERSION == 2UL)
+    if(0U != _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE)) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
+    #else
+	if(0U != _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
+	#endif
     {
         /* Clears PWR_HIBERNATE token */
 #if CY_CPU_CORTEX_M4 && defined (CY_DEVICE_SECURE)
         CY_PRA_REG32_CLR_SET(CY_PRA_INDX_SRSS_PWR_HIBERNATE, SRSS_PWR_HIBERNATE_TOKEN, 0UL);
 #else
+    #if (CY_IP_MXS22SRSS_VERSION == 2UL)
+        SRSS_PWR_HIBERNATE &= ~PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN_Msk; // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
+    #else
         SRSS_PWR_HIBERNATE &= ~SRSS_PWR_HIBERNATE_TOKEN_Msk;
+    #endif
 #endif /* CY_CPU_CORTEX_M4 && defined (CY_DEVICE_SECURE) */
     }
 }
@@ -653,7 +807,13 @@ uint16_t Cy_SysLib_GetDevice(void)
 #if  defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
 void Cy_Syslib_SetWarmBootEntryPoint(uint32_t *entryPoint, bool enable)
 {
+#if defined (CY_IP_MXS22SRSS)
+    /* WarmBoot path not supported on PSOC Edge using MXS22SRSS */
+    (void)entryPoint;
+    (void)enable;
+#else
     *(uint32_t *)CY_SYSPM_BOOTROM_ENTRYPOINT_ADDR = (uint32_t)entryPoint | (enable ? CY_SYSPM_BOOTROM_DSRAM_DBG_ENABLE_MASK : 0UL) ;
+#endif
 }
 
 bool Cy_SysLib_IsDSRAMWarmBootEntry(void)
@@ -669,6 +829,41 @@ void Cy_SysLib_ClearDSRAMWarmBootEntryStatus(void)
 
 
 #if defined(CY_IP_MXS22SRSS) || defined(CY_IP_MXS40SSRSS)
+
+#if defined (CY_IP_MXS40SSRSS)
+bool Cy_SysLib_DebugSessionActive(SRSS_Type *base)
+{
+    CY_ASSERT_L2(base);
+    return ((bool)(_FLD2VAL(SRSS_PWR_CTL_DEBUG_SESSION, base->PWR_CTL)));
+}
+
+void Cy_SysLib_DebugCtiMuxConnect(cy_syslib_debug_cti_t *base, uint32_t inTrig, uint32_t outTrig, uint8_t channel, bool enable)
+{
+    CY_ASSERT_L2(base);
+    CY_ASSERT_L2(inTrig < DEBUG_TRC_CTI_CTIINEN_COUNT);
+    CY_ASSERT_L2(outTrig < DEBUG_TRC_CTI_CTIOUTEN_COUNT);
+    CY_ASSERT_L2(channel < DEBUG_TRC_CTI_TR_CHANNEL_COUNT);
+
+    cy_syslib_debug_cti_t *cti_obj = (cy_syslib_debug_cti_t *) GET_NSALIAS_ADDRESS(base);
+
+    /* Enable CTI */
+    cti_obj->CTICONTROL = 0x1U;
+
+    if (enable)
+    {
+        /* Enable the CTI connection for the selected channel */
+        cti_obj->CTIINEN[inTrig] |= (1UL << channel);
+        cti_obj->CTIOUTEN[outTrig] |= (1UL << channel);
+    }
+    else
+    {
+        /* Disable the CTI connection for the selected channel */
+        cti_obj->CTIINEN[inTrig] &= ~(1UL << channel);
+        cti_obj->CTIOUTEN[outTrig] &= ~(1UL << channel);
+    }
+}
+#endif /* defined (CY_IP_MXS40SSRSS) */
+#if !defined (CY_DEVICE_ACW)
 cy_en_syslib_lcs_mode_t Cy_SysLib_GetDeviceLCS(cy_syslib_lcs_data_t *base)
 {
     CY_ASSERT_L2(base);
@@ -701,6 +896,33 @@ cy_en_syslib_lcs_mode_t Cy_SysLib_GetDeviceLCS(cy_syslib_lcs_data_t *base)
 
     return lcsMode;
 }
+#else
+cy_en_syslib_lcs_mode_t Cy_SysLib_GetDeviceLCS(void)
+{
+    cy_en_syslib_lcs_mode_t lcsMode;
+
+    lcsMode = (cy_en_syslib_lcs_mode_t)(SRSS_DECODED_LCS_DATA);
+
+    switch (lcsMode)
+    {
+        case CY_SYSLIB_LCS_VIRGIN:
+        case CY_SYSLIB_LCS_SORT:
+        case CY_SYSLIB_LCS_PROVISIONED:
+        case CY_SYSLIB_LCS_NORMAL_PROVISIONED:
+        case CY_SYSLIB_LCS_NORMAL:
+        case CY_SYSLIB_LCS_SECURE:
+        case CY_SYSLIB_LCS_NORMAL_NO_SECURE:
+        case CY_SYSLIB_LCS_RMA:
+        break;
+        default:
+            lcsMode = CY_SYSLIB_LCS_CORRUPTED;
+        break;
+    }
+
+    return lcsMode;
+}
+
+#endif
 #endif /* defined(CY_IP_MXS22SRSS) || defined(CY_IP_MXS40SSRSS) */
 
 #if (((defined (CY_CPU_CORTEX_M7) && CY_CPU_CORTEX_M7) || (defined (CY_CPU_CORTEX_M55) && CY_CPU_CORTEX_M55)) && (defined (__MPU_PRESENT) && (__MPU_PRESENT == 1U)))

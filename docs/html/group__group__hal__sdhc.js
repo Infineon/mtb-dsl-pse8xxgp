@@ -11,6 +11,7 @@ var group__group__hal__sdhc =
       [ "data_ptr", "group__group__hal__sdhc.html#ac607986412cb0323d977c08d3c55e714", null ],
       [ "block_size", "group__group__hal__sdhc.html#a1b08389c1121e404ee7f466829909c07", null ],
       [ "number_of_blocks", "group__group__hal__sdhc.html#a1361c49846f19e9b07b9d404dffbd1a1", null ],
+      [ "auto_command", "group__group__hal__sdhc.html#a17c88804ea0092febc6c476802387458", null ],
       [ "is_read", "group__group__hal__sdhc.html#aab20ebc57e99f79bf47db0a71fc02ba3", null ]
     ] ],
     [ "mtb_hal_sdhc_cmd_config_t", "group__group__hal__sdhc.html#structmtb__hal__sdhc__cmd__config__t", [

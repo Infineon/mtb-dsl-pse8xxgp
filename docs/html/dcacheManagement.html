@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('dcacheManagement.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_deploy_doxygen_hal_input_dcache"></a></p>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 Overview</h1>
 <p><a class="anchor" id="DCACHE_Management"></a>For devices that contain a data cache (DCACHE), the HAL supports cache management in select drivers that can potentially be affected by it. The impacted drivers are:</p>
 <ul>
@@ -108,7 +108,7 @@ Overview</h1>
 <li>Cache line size of 32 bytes</li>
 <li>All memory in application is assumed to be cacheable</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 Operation</h1>
 <p>When working with DCACHE, cache coherency issues can be encountered when multiple bus masters access the same region of memory. There are two main scenarios to consider in the case where one of these is the CPU with DCACHE enabled, and the other is a peripheral such as a DMA. Suppose that both access the same memory region located in SRAM. Cache coherency issues can occur depending on the ordering in which the bus masters access that memory and which operations are performed on it.</p>
 <ol type="1">
@@ -121,11 +121,11 @@ Operation</h1>
 <li>DMA writes to SRAM, CPU reads the content: Invalidate the cache (SCB_InvalidateDCache_by_Addr) before CPU read.</li>
 </ol>
 <p>In a scenario where multiple bus masters have DCACHE enabled, such as in multi-core (CPU) devices, the application must ensure that memory access is co-ordinated between the cores, such as by using an IPC (Inter-processor commnication) channel.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md19"></a>
 Alignment and Padding</h1>
 <p>Cache clean and invalidate operations are performed at a granularity of the cache line size (i.e. 32 bytes). Therefore, all affected memory regions must also be aligned to 32 bytes and suitably padded to be a multiple of 32 bytes. Without proper alignment and padding, adjacent data will become corrupted during these operations.</p>
 <p>The HAL is responsible for managing the memory internally within the drivers. The affected memory regions are aligned to the cache line and padded. However, the drivers cannot manage all the memory, such as data buffers passed in by the application. It is the responsibility of the application to properly align and pad the data. Refer to the individual driver API documentation on where these operations should be applied.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 References</h1>
 <ul>
 <li><a href="https://www.cypress.com/products/modustoolbox-software-environment">ModusToolbox™</a></li>

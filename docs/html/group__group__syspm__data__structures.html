@@ -118,6 +118,9 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structcy__stc__syspm__warmboot__entrypoint__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__warmboot__entrypoint__t">cy_stc_syspm_warmboot_entrypoint_t</a></td></tr>
 <tr class="memdesc:structcy__stc__syspm__warmboot__entrypoint__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">The structure contains warmboot entry point struct used during DEEPSLEEP-RAM entry.  <a href="group__group__syspm__data__structures.html#structcy__stc__syspm__warmboot__entrypoint__t">More...</a><br /></td></tr>
 <tr class="separator:structcy__stc__syspm__warmboot__entrypoint__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structcy__stc__syspm__warmboot__context__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__warmboot__context__t">cy_stc_syspm_warmboot_context_t</a></td></tr>
+<tr class="memdesc:structcy__stc__syspm__warmboot__context__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">The structure contains warmboot CPU context information used during DEEPSLEEP-RAM entry/exit.  <a href="group__group__syspm__data__structures.html#structcy__stc__syspm__warmboot__context__t">More...</a><br /></td></tr>
+<tr class="separator:structcy__stc__syspm__warmboot__context__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcy__stc__syspm__core__buck__params__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syspm__data__structures.html#structcy__stc__syspm__core__buck__params__t">cy_stc_syspm_core_buck_params_t</a></td></tr>
 <tr class="memdesc:structcy__stc__syspm__core__buck__params__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">The structure contains syspm core buck configuration parameters.  <a href="group__group__syspm__data__structures.html#structcy__stc__syspm__core__buck__params__t">More...</a><br /></td></tr>
 <tr class="separator:structcy__stc__syspm__core__buck__params__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -379,6 +382,53 @@ Entry Function Address. </td></tr>
 
 </div>
 </div>
+<a name="structcy__stc__syspm__warmboot__context__t" id="structcy__stc__syspm__warmboot__context__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structcy__stc__syspm__warmboot__context__t">&#9670;&#160;</a></span>cy_stc_syspm_warmboot_context_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct cy_stc_syspm_warmboot_context_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="ad1fc11d8d21dbd5ad05807a217cfdf12" name="ad1fc11d8d21dbd5ad05807a217cfdf12"></a>uint32_t</td>
+<td class="fieldname">
+r[13]</td>
+<td class="fielddoc">
+R0-R12 register content. </td></tr>
+<tr><td class="fieldtype">
+<a id="abd80e531931fb33c28573fb3d5ee6195" name="abd80e531931fb33c28573fb3d5ee6195"></a>uint32_t</td>
+<td class="fieldname">
+lr</td>
+<td class="fielddoc">
+LR register content. </td></tr>
+<tr><td class="fieldtype">
+<a id="a9c7a73708f53a4f50ba6eebe76e3044f" name="a9c7a73708f53a4f50ba6eebe76e3044f"></a>uint32_t</td>
+<td class="fieldname">
+exit</td>
+<td class="fielddoc">
+DS Exit address. </td></tr>
+<tr><td class="fieldtype">
+<a id="ab968a4e6215d6d4189c64d21d39e9596" name="ab968a4e6215d6d4189c64d21d39e9596"></a>uint32_t</td>
+<td class="fieldname">
+msp</td>
+<td class="fielddoc">
+Main stack pointer. </td></tr>
+<tr><td class="fieldtype">
+<a id="a8ec055d69f1d75227249a9cab76fdc57" name="a8ec055d69f1d75227249a9cab76fdc57"></a>uint32_t</td>
+<td class="fieldname">
+wfiStatus</td>
+<td class="fielddoc">
+WFI entry/exit status. </td></tr>
+</table>
+
+</div>
+</div>
 <a name="structcy__stc__syspm__core__buck__params__t" id="structcy__stc__syspm__core__buck__params__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structcy__stc__syspm__core__buck__params__t">&#9670;&#160;</a></span>cy_stc_syspm_core_buck_params_t</h2>
 
@@ -474,13 +524,13 @@ Deep sleep Core Buck Mode : 0x01 - Low Power Mode, 0x11 - High Performance mode(
 <td class="fieldname">
 sdrVoltSel</td>
 <td class="fielddoc">
-SDR Regulator Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a>. </td></tr>
+SDR Regulator Voltage Select cy_en_syspm_sdr_voltage_t. </td></tr>
 <tr><td class="fieldtype">
 <a id="aeaa701586a259d33a4abbbe9abb1a5e0" name="aeaa701586a259d33a4abbbe9abb1a5e0"></a>uint8_t</td>
 <td class="fieldname">
 sdr0DpSlpVoltSel</td>
 <td class="fielddoc">
-SDR Regulator Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga5b3fa93779730eb75af8b267923d68c1">cy_en_syspm_sdr_voltage_t</a>. </td></tr>
+SDR Regulator Voltage Select cy_en_syspm_sdr_voltage_t. </td></tr>
 <tr><td class="fieldtype">
 <a id="ab1a2dfa3b068f1ad0b975068502cdbaa" name="ab1a2dfa3b068f1ad0b975068502cdbaa"></a>bool</td>
 <td class="fieldname">
@@ -521,7 +571,7 @@ SDR1 Enable/Disable: true - SDR1 is enabled false - SDR1 is disabled. </td></tr>
 <td class="fieldname">
 voltageSel</td>
 <td class="fielddoc">
-HVLDO Voltage Select <a class="el" href="group__group__syspm__data__enumerates.html#ga64b1d9370a07008a83b14bcbee4f731c">cy_en_syspm_hvldo_voltage_t</a>. </td></tr>
+HVLDO Voltage Select cy_en_syspm_hvldo_voltage_t. </td></tr>
 <tr><td class="fieldtype">
 <a id="a72b33486e1eb44af178c9ae841f70620" name="a72b33486e1eb44af178c9ae841f70620"></a>bool</td>
 <td class="fieldname">

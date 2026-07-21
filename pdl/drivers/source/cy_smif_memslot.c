@@ -81,7 +81,7 @@ extern "C" {
 *
 * \param blockConfig
 * The configuration structure array that configures the SMIF memory device to be
-* mapped into the PSoC memory map. \ref cy_stc_smif_mem_config_t
+* mapped into the PSOC memory map. \ref cy_stc_smif_mem_config_t
 *
 * \param context
 * This is the pointer to the context structure \ref cy_stc_smif_context_t
@@ -136,13 +136,13 @@ cy_en_smif_status_t Cy_SMIF_MemInit(SMIF_Type *base,
                    In case of power consumption impact we have to optimize this setting */
                 SMIF_CLK_DRIVE_STRENGTH(base) = ((CY_GPIO_DRIVE_FULL) | (CY_GPIO_DRIVE_FULL << 8U));
                 SMIF_RWDS_DRIVE_STRENGTH(base) = CY_GPIO_DRIVE_FULL;
-                SMIF_DEVICE_IDX_RX_CAPTURE_CONFIG(base, idx) |= _VAL2FLD(SMIF_CORE_DEVICE_RX_CAPTURE_CONFIG_NEG_SDL_TAP_SEL, 1U);
-                SMIF_DEVICE_IDX_RX_CAPTURE_CONFIG(base, idx) |= _VAL2FLD(SMIF_CORE_DEVICE_RX_CAPTURE_CONFIG_POS_SDL_TAP_SEL, 1U);
  
                 /* SPI(deviceCfg) and Hyperbus(hbdeviceCfg) are mutually exclusive and if both are initialized, priority would be for SPI(deviceCfg) */
                 if(memCfg->deviceCfg != NULL)
                 {
-                    device = Cy_SMIF_GetDeviceBySlot(base, memCfg->slaveSelect);
+                    SMIF_DEVICE_IDX_RX_CAPTURE_CONFIG(base, idx) |= _VAL2FLD(SMIF_CORE_DEVICE_RX_CAPTURE_CONFIG_NEG_SDL_TAP_SEL, 1U);
+                    SMIF_DEVICE_IDX_RX_CAPTURE_CONFIG(base, idx) |= _VAL2FLD(SMIF_CORE_DEVICE_RX_CAPTURE_CONFIG_POS_SDL_TAP_SEL, 1U);
+                     device = Cy_SMIF_GetDeviceBySlot(base, memCfg->slaveSelect);
                     if (NULL != device)
                     {
                         /* The slave-slot initialization of the device control register.
@@ -1120,7 +1120,7 @@ cy_en_smif_status_t Cy_SMIF_MemCmdProgram(SMIF_Type *base,
 * management in a DMA or a polling-based code.
 * If the user provides a NULL pointer in this function and does not handle
 * the FIFO transaction, this could either stall or timeout the operation
-* \ref Cy_SMIF_TransmitData().
+* \ref Cy_SMIF_ReceiveData().
 *
 * \param size
 * The size of data to read.
@@ -2334,7 +2334,7 @@ cy_en_smif_status_t Cy_SMIF_MemCmdReleasePowerDown(SMIF_Type *base,
 ****************************************************************************//**
 *
 * This function enables Firmware Calibration mode for the device. Once firmware calibration
-* mode is enabled, user can add delay taps for selected data line using \ref Cy_SMIF_GetSelectedDelayTapSel
+* mode is enabled, user can add delay taps for selected data line using \ref Cy_SMIF_SetSelectedDelayTapSel
 *
 * \param base
 * Holds the base address of the SMIF block registers.
@@ -2376,7 +2376,7 @@ void Cy_SMIF_MemDisableFWCalibration(SMIF_Type *base, cy_en_smif_slave_select_t 
 }
 
 /*******************************************************************************
-* Function Name: Cy_SMIF_MemSetDataLineDelayTap
+* Function Name: Cy_SMIF_SetSelectedDelayTapSel
 ****************************************************************************//**
 *
 * This function sets delay tap for a particular data line. \ref Cy_SMIF_MemEnableFWCalibration

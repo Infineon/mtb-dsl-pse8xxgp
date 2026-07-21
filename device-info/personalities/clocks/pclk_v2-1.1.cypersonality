@@ -29,6 +29,11 @@
 <PersonalityTemplate id='pclk_v2' name='Peripheral Clock' version='1.1' xmlns='http://cypress.com/xsd/cyhwpersonality_v13'>
   <FittingRules>
     <MappingRules>
+      <RequiresConnectivity>
+        <SignalGroup type="ALL">
+          <Signal port="clk[0]"/>
+        </SignalGroup>
+      </RequiresConnectivity>
       <IpBlock name='mxperi_ver3,mxsperi' />
       <Resource name='peri\.group\.div_(8|16|16_5|24_5)' />
     </MappingRules>
@@ -56,29 +61,29 @@
     <ParamString id='hf_clk_idx' name='' group='Internal' default='`${getInstFromLocation(getBlockFromSignal("clk_pclk_root[0]"), "hfclk")}`' visible='false' editable='false' desc='Source clock' />
 
     <!-- Instance name -->
-    <ParamString id='instName' default='`${INST_NAME}`' />
+    <ParamString id='instName' default='`${INST_NAME}`' desc='Instance name used to generate configuration macros' />
 
     <!-- Get the name of the source clock resource -->
-    <ParamString id='sourceClockRscV1' default='srss[0].clock[0].hfclk[`${getInstNumber("group")}`]' />
-    <ParamString id='sourceClockRscV2' default='srss[0].clock[0].hfclk[`${hf_clk_idx}`]' />
-    <ParamString id='sourceClockRscV3' default='srss[0].clock[0].`${getInstNumber("group") == 0 ? "periclk[0]" : "hfclk[2]"}`' />
-    <ParamString id='sourceClockRsc' default='`${"mxsperi" eq getIpBlockName() ? (getVersion() == 1 ? sourceClockRscV1 : sourceClockRscV2) : sourceClockRscV3 }`' />
+    <ParamString id='sourceClockRscV1' default='srss[0].clock[0].hfclk[`${getInstNumber("group")}`]' desc='Source clock resource path for mxsperi version 1 devices' />
+    <ParamString id='sourceClockRscV2' default='srss[0].clock[0].hfclk[`${hf_clk_idx}`]' desc='Source clock resource path for mxsperi version 2 devices' />
+    <ParamString id='sourceClockRscV3' default='srss[0].clock[0].`${getInstNumber("group") == 0 ? "periclk[0]" : "hfclk[2]"}`' desc='Source clock resource path for mxperi_ver3 devices' />
+    <ParamString id='sourceClockRsc' default='`${"mxsperi" eq getIpBlockName() ? (getVersion() == 1 ? sourceClockRscV1 : sourceClockRscV2) : sourceClockRscV3 }`' desc='Resolved source clock resource path based on device IP block and version' />
 
     <!-- Source clock frequency -->
-    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Source clock frequency in Hz used for DRCs and code generation' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
 
     <!-- Get the peripheral clock divider type, width and number -->
-    <ParamString id='type' default='`${getBlockType(2)}`' />
-    <ParamString id='width'  default='`${type eq "div_8" ? 8 : type eq "div_24_5" ? 24 : 16}`' />
+    <ParamString id='type' default='`${getBlockType(2)}`' desc='Peripheral clock divider block type (div_8, div_16, div_16_5, or div_24_5)' />
+    <ParamString id='width'  default='`${type eq "div_8" ? 8 : type eq "div_24_5" ? 24 : 16}`' desc='Integer divider bit width derived from the divider type' />
 
     <!-- Determine if the divider is fractional -->
-    <ParamBool   id='isFractional' default='`${(type eq "div_16_5") || (type eq "div_24_5")}`' />
+    <ParamBool   id='isFractional' default='`${(type eq "div_16_5") || (type eq "div_24_5")}`' desc='True when the divider type supports fractional division' />
 
     <!-- Dividers -->
-    <ParamRange  id='intDivider' name='`${isFractional ? "Integer Divider" : "Divider"}`' group='General' default='1' min='1' max='`${pow(2, width)}`' resolution='1' visible='true' desc='' />
-    <ParamRange  id='fracDivider' name='Fractional Divider' group='General' default='0' min='0' max='31' resolution='1' visible='`${isFractional}`' desc='' />
-    <ParamString id='divider' default='`${isFractional ? intDivider + fracDivider / 32.0 : intDivider}`' />
+    <ParamRange  id='intDivider' name='`${isFractional ? "Integer Divider" : "Divider"}`' group='General' default='1' min='1' max='`${pow(2, width)}`' resolution='1' visible='true' desc='The integer part of the divider applied to the source clock to produce this peripheral clock' />
+    <ParamRange  id='fracDivider' name='Fractional Divider' group='General' default='0' min='0' max='31' resolution='1' visible='`${isFractional}`' desc='The fractional part of the divider (in 1/32 steps) applied to the source clock' />
+    <ParamString id='divider' default='`${isFractional ? intDivider + fracDivider / 32.0 : intDivider}`' desc='Effective divider value combining the integer and fractional parts' />
 
     <!-- Output frequency -->
     <ParamString id='frequency' default='`${cast(int64, ((sourceFreq / cast(float, divider) + 0.0005) * 1000)) / 1000.0}`' editable='false' desc='The resulting output clock frequency' />
@@ -86,9 +91,9 @@
     <ParamBool   id='startOnReset' name='Start on Reset' group='General' default='true' visible='true' desc='If checked, this option will cause the clock to be enabled by the clock initialization routine' />
     <ParamSignal port='clk[0]' name='Peripherals' group='General' visible='true' desc='This signal can be used to drive peripherals' canBeEmpty='true' />
 
-    <ParamString id='typeApiConst' name='' group='Internal' default='CY_SYSCLK_`${toUpper(type)}`_BIT' />
-    <ParamString id='number' name='' group='Internal' default='`${getInstNumber(getBlockType(2))}`' />
-    <ParamString id='clockSel' name='' group='Internal' default='`${typeApiConst}`, `${number}`U' />
+    <ParamString id='typeApiConst' name='' group='Internal' default='CY_SYSCLK_`${toUpper(type)}`_BIT' desc='API constant for the divider type used in generated code' />
+    <ParamString id='number' name='' group='Internal' default='`${getInstNumber(getBlockType(2))}`' desc='Instance number of the peripheral clock divider' />
+    <ParamString id='clockSel' name='' group='Internal' default='`${typeApiConst}`, `${number}`U' desc='Combined divider type and number arguments passed to the SysClk API' />
   </Parameters>
 
   <DRCs>

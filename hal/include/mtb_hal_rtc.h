@@ -26,6 +26,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <time.h>
+#include "cy_result.h"
+#include "mtb_hal_hw_types.h"
+
+#if defined(MTB_HAL_DRIVER_AVAILABLE_RTC)
+
 //" *SUSPEND-FORMATTING*"
 /**
  * \addtogroup group_hal_rtc RTC (Real-Time Clock)
@@ -42,15 +52,15 @@
  *
  * \section section_rtc_quickstart Quick Start
  *
- * Initialise the RTC using the PDL. Set the current time and date using \ref mtb_hal_rtc_write.
+ * Initialise the RTC using the PDL. Set the current time and date using mtb_hal_rtc_write().
  * <br>
  * See \ref subsection_rtc_snippet_1 to initialize RTC, read and write current date and time to the
  * RTC peripheral.
  *
  * \section section_rtc_snippets Code snippets
  * \subsection subsection_rtc_snippet_1 Snippet 1: Initialize RTC, write and read current time and date
- * The following code sets the current date and time using \ref mtb_hal_rtc_write.
- * The current date and time is read from the RTC using \ref mtb_hal_rtc_read. The time structure
+ * The following code sets the current date and time using mtb_hal_rtc_write().
+ * The current date and time is read from the RTC using mtb_hal_rtc_read(). The time structure
  * <b> tm </b>, contains the calendar date and time which
  * are broken down into its components. This structure is declared in standard C library time.h
  * which is included by HAL.
@@ -58,15 +68,6 @@
  *
  */
 //" *RESUME-FORMATTING*"
-#pragma once
-
-#include <stdint.h>
-#include <stdbool.h>
-#include <time.h>
-#include "cy_result.h"
-#include "mtb_hal_hw_types.h"
-
-#if defined(MTB_HAL_DRIVER_AVAILABLE_RTC)
 
 #if defined(__cplusplus)
 extern "C" {
@@ -119,6 +120,6 @@ cy_rslt_t mtb_hal_rtc_write(mtb_hal_rtc_t* obj, const struct tm* time);
 #include MTB_HAL_RTC_IMPL_HEADER
 #endif /* MTB_HAL_RTC_IMPL_HEADER */
 
-#endif // defined(MTB_HAL_DRIVER_AVAILABLE_RTC)
-
 /** \} group_hal_rtc */
+
+#endif // defined(MTB_HAL_DRIVER_AVAILABLE_RTC)

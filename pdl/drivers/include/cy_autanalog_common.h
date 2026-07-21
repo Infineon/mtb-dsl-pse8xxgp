@@ -30,8 +30,7 @@
 #define CY_AUTANALOG_COMMON_H
 
 #include "cy_device.h"
-
-#ifdef CY_IP_MXS22LPPASS
+#if defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U)
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -285,8 +284,8 @@ __STATIC_INLINE cy_en_autanalog_status_t Cy_AutAnalog_IdxToBaseAddr(cy_en_autana
 }
 #endif
 
-#endif /* CY_IP_MXS22LPPASS */
+#endif /* defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U) */
 
-#endif /** !defined(CY_AUTANALOG_COMMON_H) */
+#endif /* !defined(CY_AUTANALOG_COMMON_H) */
 
 /* [] END OF FILE */

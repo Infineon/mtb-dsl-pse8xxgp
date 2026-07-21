@@ -43,6 +43,10 @@
 *
 * For more information on Secure Aware PDL behavior, see \ref group_pdl_srf_general.
 *
+* \defgroup group_smif_memnum_macros Macros
+* \defgroup group_smif_memnum_data_structures Data Structures
+* \defgroup group_smif_memnum_functions Functions
+*
 */
 
 #if !defined (CY_SMIF_MEMORYNUM_H)
@@ -55,7 +59,7 @@
 #include "cy_pdl_srf_common.h"
 #endif /* defined(CY_PDL_SMIF_ENABLE_SRF_INTEG) */
 
-#if (CY_IP_MXSMIF_VERSION == 4) || (CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6)
+#if defined (CY_IP_MXSMIF)
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -69,6 +73,9 @@ extern "C" {
 
 
 #if !defined(CY_SMIF_MAX_HYBRID_REGION)
+/** \addtogroup group_smif_memnum_macros
+* \{
+*/
 /** Maximum number of hybrid regions in the supported external memories*/
 #define CY_SMIF_MAX_HYBRID_REGION      (5U)
 #endif
@@ -80,8 +87,12 @@ extern "C" {
 #define CY_SMIF_FLAG_SPI_DEVICE          (1UL)
 /** SMIF flag to identify HyperBus devices */
 #define CY_SMIF_FLAG_HYPERBUS_DEVICE     (2UL)
+/** \} group_smif_memnum_macros */
 
 
+/** \addtogroup group_smif_memnum_data_structures
+* \{
+*/
 /** The SMIF Device internal context data. The user must not modify it.
 *  The contents of this struct are internal to the PDL and are subject to change.
 *  The user allocates this struct but should not directly access its contents.
@@ -128,6 +139,7 @@ typedef struct
     cy_stc_smif_hyb_sectors_info_t hybridRegionInfo[CY_SMIF_MAX_HYBRID_REGION];  /**< This stores the information for the hybrid regions */
 
 } cy_stc_smif_mem_info_t;
+/** \} group_smif_memnum_data_structures */
 
 /** \cond INTERNAL */
 #if defined(CY_PDL_SMIF_ENABLE_SRF_INTEG)
@@ -156,6 +168,9 @@ typedef struct {
 #endif
 /** \endcond */
 
+/** \addtogroup group_smif_memnum_functions
+* \{
+*/
 /*******************************************************************************
 * Function Name: Cy_SMIF_MemNumInit
 ****************************************************************************//**
@@ -536,6 +551,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusRead(cy_stc_smif_mem_context_t *contex
 cy_en_smif_status_t Cy_SMIF_MemNumHyperBusWrite(cy_stc_smif_mem_context_t *context, uint8_t memNum,
                                      uint32_t address, uint8_t const txBuffer[],
                                      uint32_t length);
+/** \} group_smif_memnum_functions */
 
 #if defined(__cplusplus)
 }

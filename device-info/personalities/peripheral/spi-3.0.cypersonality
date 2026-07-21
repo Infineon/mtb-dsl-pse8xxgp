@@ -10,8 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -421,7 +421,10 @@
     <ParamString id='slaveDiv' name='Slave Clock Divider' group='Internal' default='`${floor((scbClkHz * getExposedMember(sourceClock, "divider")) / SlaveClkHz)}`' visible='false' editable='false' desc=' ' />
     <ParamString id='clkDiv' name='Current Clock Divider' group='Internal' default='`${getExposedMember(sourceClock, "divider")}`' visible='false' editable='false' desc=' ' />
     <ParamString id='slaveDivFix' name='Fix for Slave Datarate' group='Internal' default='`${(slaveDiv != clkDiv) ? true : false}`' visible='false' editable='false' desc=' ' />
-    <ParamString id='overSampleFix' name='Fix for OverSample' group='Internal' default='`${ceil(scbClkHz / (DataRate * 1000))}`' visible='false' editable='false' desc=' ' />
+    <ParamRange id='sourceFreqHz' name='Source Frequency Hz' group='Internal' default='`${scbClkHz * getExposedMember(sourceClock, "divider")}`' min='0' max='400000000' resolution='1' visible='false' editable='false' desc='Source clock frequency before divider in Hz.' />
+    <ParamRange id='sourceFreqDivN' name='Source Freq Div N' group='Internal' default='`${(DataRate > 0) ? floor(sourceFreqHz / (DataRate * 1000)) : 0}`' min='0' max='400000' resolution='1' visible='false' editable='false' desc='Total OvsFactor x Divider product needed for exact data rate.' />
+    <ParamString id='overSampleFix' name='Fix for OverSample' group='Internal' default='`${(sourceFreqDivN > 0) ? (((sourceFreqDivN - floor(sourceFreqDivN / 16) * 16) == 0) ? 16 : ((sourceFreqDivN - floor(sourceFreqDivN / 15) * 15) == 0) ? 15 : ((sourceFreqDivN - floor(sourceFreqDivN / 14) * 14) == 0) ? 14 : ((sourceFreqDivN - floor(sourceFreqDivN / 13) * 13) == 0) ? 13 : ((sourceFreqDivN - floor(sourceFreqDivN / 12) * 12) == 0) ? 12 : ((sourceFreqDivN - floor(sourceFreqDivN / 11) * 11) == 0) ? 11 : ((sourceFreqDivN - floor(sourceFreqDivN / 10) * 10) == 0) ? 10 : ((sourceFreqDivN - floor(sourceFreqDivN / 9) * 9) == 0) ? 9 : ((sourceFreqDivN - floor(sourceFreqDivN / 8) * 8) == 0) ? 8 : ((sourceFreqDivN - floor(sourceFreqDivN / 7) * 7) == 0) ? 7 : ((sourceFreqDivN - floor(sourceFreqDivN / 6) * 6) == 0) ? 6 : ((sourceFreqDivN - floor(sourceFreqDivN / 5) * 5) == 0) ? 5 : ((sourceFreqDivN - floor(sourceFreqDivN / 4) * 4) == 0) ? 4 : OvsFactor) : OvsFactor}`' visible='false' editable='false' desc='Best OvsFactor that allows exact clock division for the desired data rate.' />
+    <ParamRange id='bestMasterDiv' name='Best Master Divider' group='Internal' default='`${(MasterMode &amp;&amp; overSampleFix > 0) ? floor(sourceFreqDivN / overSampleFix) : 1}`' min='1' max='16777216' resolution='1' visible='false' editable='false' desc='Best achievable integer divider consistent with overSampleFix for exact data rate.' />
 
   </Parameters>
 
@@ -432,9 +435,9 @@
     </DRC>
 
     <!-- Master Mode -->
-    <DRC type='INFO' paramId='clock_scb_en[0]' text='The clock frequency must be `${MasterClkHz / 1000}` kHz to operate with data rate `${DataRate}` kbps.' condition='`${((MasterMode) &amp;&amp; (MasterClkHzTolerance &gt; 1) &amp;&amp; (hasVisibleOption("clock_scb_en[0]")))}`' >
-        <FixIt action='SET_PARAM' target='`${getBlockFromSignalValue(getParamValue("clock_scb_en[0]")).".intDivider"}`' value='`${ceil((scbClkHz * getExposedMember(sourceClock, "divider")) / MasterClkHz)}`' valid='`${true}`' />
-        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (hasConnection("spi_miso", 0) ? 3 : 1)) ? overSampleFix : (hasConnection("spi_miso", 0) ? 4 : 2)) : 16)}`' valid='`${(MasterClkHz != (floor(getExposedMember(sourceClock, "frequency") * getExposedMember(sourceClock, "divider"))))}`' />
+    <DRC type='INFO' paramId='clock_scb_en[0]' text='The clock frequency must be `${MasterClkHz / 1000}` kHz to operate with data rate `${DataRate}` kbps.' condition='`${((MasterMode) &amp;&amp; ((getExposedMember(sourceClock, "divider") != bestMasterDiv) || (OvsFactor != overSampleFix)) &amp;&amp; (hasVisibleOption("clock_scb_en[0]")))}`' >
+        <FixIt action='SET_PARAM' target='`${getBlockFromSignalValue(getParamValue("clock_scb_en[0]")).".intDivider"}`' value='`${bestMasterDiv}`' valid='`${true}`' />
+        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (hasConnection("spi_miso", 0) ? 3 : 1)) ? overSampleFix : (hasConnection("spi_miso", 0) ? 4 : 2)) : 16)}`' valid='`${(MasterClkHz != sourceFreqHz)}`' />
     </DRC>
 
     <!-- Slave Mode -->
@@ -443,9 +446,9 @@
     </DRC>
 
     <!-- Master Mode -->
-    <DRC type='INFO' paramId='clock[0]' text='The clock frequency must be `${MasterClkHz / 1000}` kHz to operate with data rate `${DataRate}` kbps.' condition='`${((MasterMode) &amp;&amp; (MasterClkHzTolerance &gt; 1) &amp;&amp; (hasVisibleOption("clock[0]")))}`' >
-        <FixIt action='SET_PARAM' target='`${getBlockFromSignalValue(getParamValue("clock[0]")).".intDivider"}`' value='`${ceil((scbClkHz * getExposedMember(sourceClock, "divider")) / MasterClkHz)}`' valid='`${true}`' />
-        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (hasConnection("spi_miso", 0) ? 3 : 1)) ? overSampleFix : (hasConnection("spi_miso", 0) ? 4 : 2)) : 16)}`' valid='`${(MasterClkHz != (floor(getExposedMember(sourceClock, "frequency") * getExposedMember(sourceClock, "divider"))))}`' />
+    <DRC type='INFO' paramId='clock[0]' text='The clock frequency must be `${MasterClkHz / 1000}` kHz to operate with data rate `${DataRate}` kbps.' condition='`${((MasterMode) &amp;&amp; ((getExposedMember(sourceClock, "divider") != bestMasterDiv) || (OvsFactor != overSampleFix)) &amp;&amp; (hasVisibleOption("clock[0]")))}`' >
+        <FixIt action='SET_PARAM' target='`${getBlockFromSignalValue(getParamValue("clock[0]")).".intDivider"}`' value='`${bestMasterDiv}`' valid='`${true}`' />
+        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (hasConnection("spi_miso", 0) ? 3 : 1)) ? overSampleFix : (hasConnection("spi_miso", 0) ? 4 : 2)) : 16)}`' valid='`${(MasterClkHz != sourceFreqHz)}`' />
     </DRC>
 
     <!--RxDataWidth and $TxDataWidth DRCs-->

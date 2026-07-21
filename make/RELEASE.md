@@ -16,6 +16,11 @@ This release of the PSOC™ Edge GNU make build recipe includes complete support
     * LLVM Embedded Toolchain for Arm
 
 ### What Changed?
+#### v2.3.4
+* Added Advanced KitProg3 Programming task in VS Code export.
+* Enhanced project export to Keil uVision IDE.
+* Resolved several issues with memory utilization reporting.
+
 #### v2.3.3
 * Improved project export for the Keil uVision IDE.
 * Resolved several issues with memory utilization reporting.
@@ -45,10 +50,8 @@ This version of the PSOC™ Edge build system was validated for compatibility wi
 | ModusToolbox™ Software Environment        | 3.8     |
 | GCC Compiler                              | 14.2.1  |
 | LLVM Compiler                             | 19.1.5  |
-| IAR Compiler                              | 9.50.2  |
+| IAR Compiler                              | 9.70.2  |
 | ARM Compiler                              | 6.22    |
-
-Minimum required ModusToolbox™ Software Environment: v3.6
 
 ### More information
 * [Infineon GitHub](https://github.com/Infineon)

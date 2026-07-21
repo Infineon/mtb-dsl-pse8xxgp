@@ -26,7 +26,7 @@
 
 #include "cy_device.h"
 
-#if defined (CY_IP_MXS40SRSS_RTC) || defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
+#if defined (CY_IP_MXS40SRSS_RTC) || defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) && (SRSS_RTC_PRESENT > 0)
 
 #include "cy_rtc.h"
 #include "cy_pdl_srf.h"
@@ -466,6 +466,98 @@ cy_en_rtc_status_t Cy_RTC_SetAlarmDateAndTime(cy_stc_rtc_alarm_t const *alarmDat
 * The alarm index to be configured, see \ref cy_en_rtc_alarm_t.
 *
 *******************************************************************************/
+#if defined (CY_IP_MXS22SRSS) && (SRSS_RTC_PRESENT > 0) && (CY_IP_MXS22SRSS_VERSION == 2)
+
+void   Cy_RTC_GetAlarmDateAndTime(cy_stc_rtc_alarm_t *alarmDateTime, cy_en_rtc_alarm_t alarmIndex)
+{
+    uint32_t tmpAlarmTime;
+    uint32_t tmpAlarmDate;
+    cy_en_rtc_hours_format_t curHoursFormat;
+
+    CY_ASSERT_L1(NULL != alarmDateTime);
+    CY_ASSERT_L3(CY_RTC_IS_ALARM_IDX_VALID(alarmIndex));
+
+    /* Read the current RTC time and date to validate the input parameters */
+    Cy_RTC_SyncFromRtc();
+
+    curHoursFormat = Cy_RTC_GetHoursFormat();
+
+    /* Write the AHB RTC registers into the local variables and update the
+    * alarmDateTime structure elements
+    */
+    if (alarmIndex == CY_RTC_ALARM_1)
+    {
+        tmpAlarmTime = BACKUP_ALM1_TIME;
+        tmpAlarmDate = BACKUP_ALM1_DATE;
+    }
+    else
+    {
+        tmpAlarmTime = BACKUP_ALM2_TIME;
+        tmpAlarmDate = BACKUP_ALM2_DATE;
+    }
+
+    alarmDateTime->sec   = CONVERT_BCD_TO_DEC(_FLD2VAL(BACKUP_ALM_TIME_ALM_SEC, tmpAlarmTime));
+    alarmDateTime->secEn =
+    ((_FLD2BOOL(BACKUP_ALM_TIME_ALM_SEC_EN, tmpAlarmTime)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
+    alarmDateTime->min   = CONVERT_BCD_TO_DEC(_FLD2VAL(BACKUP_ALM_TIME_ALM_MIN, tmpAlarmTime));
+    alarmDateTime->minEn =
+    ((_FLD2BOOL(BACKUP_ALM_TIME_ALM_MIN_EN, tmpAlarmTime)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
+
+    /* Read the current hour mode to know how many hour bits to convert.
+    *  In the 24-hour mode, the hour value is presented in [21:16] bits in
+    *  the BCD format.
+    *  In the 12-hour mode, the hour value is presented in [20:16] bits in
+    *  the BCD format and bit [21] is present: 0 - AM; 1 - PM.
+    */
+    if (curHoursFormat != CY_RTC_24_HOURS)
+    {
+        alarmDateTime->hour =
+        CONVERT_BCD_TO_DEC((tmpAlarmTime & CY_RTC_BACKUP_RTC_TIME_RTC_12HOUR)
+                                                                        >> BACKUP_ALM_TIME_ALM_HOUR_Pos);
+
+        /* In the structure, the hour value should be presented in the 24-hour mode. In
+        *  that condition the firmware checks the AM/PM status and adds 12 hours to
+        *  the converted hour value if the PM bit is set.
+        */
+        if ((alarmDateTime->hour < CY_RTC_HOURS_PER_HALF_DAY) &&
+        (0U != (tmpAlarmTime & CY_RTC_BACKUP_RTC_TIME_RTC_PM)))
+        {
+            alarmDateTime->hour += CY_RTC_HOURS_PER_HALF_DAY;
+        }
+
+        /* Set zero hour, as the 12 A hour is zero hour in 24-hour format */
+        if ((alarmDateTime->hour == CY_RTC_HOURS_PER_HALF_DAY) &&
+            (0U == (tmpAlarmTime & CY_RTC_BACKUP_RTC_TIME_RTC_PM)))
+        {
+            alarmDateTime->hour = 0U;
+        }
+
+    }
+    else
+    {
+        alarmDateTime->hour = CONVERT_BCD_TO_DEC(_FLD2VAL(BACKUP_ALM_TIME_ALM_HOUR, tmpAlarmTime));
+    }
+
+    alarmDateTime->hourEn =
+    ((_FLD2BOOL(BACKUP_ALM_TIME_ALM_HOUR_EN, tmpAlarmTime)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
+
+    alarmDateTime->dayOfWeek = CONVERT_BCD_TO_DEC(_FLD2VAL(BACKUP_ALM_TIME_ALM_DAY, tmpAlarmTime));
+    alarmDateTime->dayOfWeekEn =
+    ((_FLD2BOOL(BACKUP_ALM_TIME_ALM_DAY_EN, tmpAlarmTime)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
+
+    alarmDateTime->date = CONVERT_BCD_TO_DEC(_FLD2VAL(BACKUP_ALM_DATE_ALM_DATE, tmpAlarmDate));
+    alarmDateTime->dateEn  =
+    ((_FLD2BOOL(BACKUP_ALM_DATE_ALM_DATE_EN, tmpAlarmDate)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
+
+    alarmDateTime->month = CONVERT_BCD_TO_DEC(_FLD2VAL(BACKUP_ALM_DATE_ALM_MON, tmpAlarmDate));
+    alarmDateTime->monthEn =
+    ((_FLD2BOOL(BACKUP_ALM_DATE_ALM_MON_EN, tmpAlarmDate)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
+
+    alarmDateTime->almEn =
+    ((_FLD2BOOL(BACKUP_ALM_DATE_ALM_EN, tmpAlarmDate)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
+}
+
+#else
 
 void   Cy_RTC_GetAlarmDateAndTime(cy_stc_rtc_alarm_t *alarmDateTime, cy_en_rtc_alarm_t alarmIndex)
 {
@@ -614,6 +706,7 @@ void   Cy_RTC_GetAlarmDateAndTime(cy_stc_rtc_alarm_t *alarmDateTime, cy_en_rtc_a
         ((_FLD2BOOL(BACKUP_ALM2_DATE_ALM_EN, tmpAlarmDate)) ? CY_RTC_ALARM_ENABLE : CY_RTC_ALARM_DISABLE);
     }
 }
+#endif // defined (CY_IP_MXS22SRSS) && (SRSS_RTC_PRESENT > 0) && (CY_IP_MXS22SRSS_VERSION == 2)
 
 /*******************************************************************************
 * Function Name: Cy_RTC_SetDateAndTimeDirect
@@ -999,13 +1092,53 @@ void Cy_RTC_SelectFrequencyPrescaler(cy_en_rtc_clock_freq_t clkSel)
     CY_ASSERT_L3(CY_RTC_IS_CLK_VALID(clkSel));
 
 #if defined (CY_IP_MXS22SRSS)
+#if (CY_IP_MXS22SRSS_VERSION == 2)
+    BACKUP_CLK_RTC = (_CLR_SET_FLD32U(BACKUP_CLK_RTC, RTC_MAIN_CLK_RTC_CONFIG_PRESCALER, (uint32_t) clkSel));
+#else
     BACKUP_CTL = (_CLR_SET_FLD32U(BACKUP_CTL, SRSS_CLK_WCO_CONFIG_PRESCALER, (uint32_t) clkSel));
+#endif
 #else
     BACKUP_CTL = (_CLR_SET_FLD32U(BACKUP_CTL, BACKUP_CTL_PRESCALER, (uint32_t) clkSel));
 #endif
 }
 #endif /* CY_IP_MXS40SRSS_RTC, CY_IP_MXS40SSRSS, CY_IP_MXS22SRSS*/
 
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2)
+/*******************************************************************************
+* Function Name: Cy_RTC_SelectClockSource()
+****************************************************************************//**
+* \param clkSel Source clock, see \ref cy_en_rtc_clk_select_sources_t
+* Selects the source clock  for RTC.
+*
+* Changing clock selection is not guaranteed to be glitch free, thus alarms
+* should be deactivated before changing the selected clock. Afterwards the
+* RTC time should also be reconfigured.
+*
+* \return
+* Result of RTC clock source update. See \ref cy_en_rtc_status_t.
+*
+*******************************************************************************/
+cy_en_rtc_status_t Cy_RTC_SelectClockSource(cy_en_rtc_clk_select_sources_t clkSel)
+{
+    uint32_t interruptState;
+    cy_en_rtc_status_t retVal = CY_RTC_BAD_PARAM;
+
+    if (CY_RTC_IS_SRC_CLK_SELECT_VALID(clkSel))
+    {
+        interruptState = Cy_SysLib_EnterCriticalSection();
+        /* Set WRITE bit for the clock configuration to take effect */
+        retVal = Cy_RTC_WriteEnable(CY_RTC_WRITE_ENABLED);
+        if (retVal == CY_RTC_SUCCESS)
+        {
+            BACKUP_CLK_RTC = (_CLR_SET_FLD32U(BACKUP_CLK_RTC, RTC_MAIN_CLK_RTC_CONFIG_CLK_RTC_SEL, (uint32_t) clkSel));
+            /* Clear WRITE bit */
+            retVal = Cy_RTC_WriteEnable(CY_RTC_WRITE_DISABLED);
+        }
+        Cy_SysLib_ExitCriticalSection(interruptState);
+    }
+    return retVal;
+}
+#else
 /*******************************************************************************
 * Function Name: Cy_RTC_SelectClockSource()
 ****************************************************************************//**
@@ -1022,6 +1155,7 @@ void Cy_RTC_SelectClockSource(cy_en_rtc_clk_select_sources_t clkSel)
     BACKUP_CTL = (_CLR_SET_FLD32U(BACKUP_CTL, BACKUP_CTL_CLK_SEL, (uint32_t) clkSel));
 #endif
 }
+#endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) */
 
 /*******************************************************************************
 * Function Name: Cy_RTC_EnableDstTime

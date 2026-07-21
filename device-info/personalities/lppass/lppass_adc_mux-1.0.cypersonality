@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) (2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -140,7 +140,7 @@
                visible='`${(operatingMode eq "HighSpeed")}`'
                editable='`${(operatingMode eq "HighSpeed")}`'
                desc='Enable Pseudo-Differential Conversions'
-               default='`${(operatingMode eq "HighSpeed")}`'/>
+               default='false'/>
 
     <ParamChoice id='sar_mux_nonInvPin'
                  name='Non-Inverting Mux Input'
@@ -148,7 +148,7 @@
                  visible='true'
                  editable='true'
                  desc='Non-Inverting Input of the Mux channel. Reserve and configure the corresponding pin in Autonomous Analog tab (if required).'
-                                        default='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN1'>
+                                        default='CY_AUTANALOG_SAR_PIN_MUX_VSSA'>
       <Entry name='CTB0 Pin 1'            value='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN1'    visible='`${getExposedMember("pass[0]", "ctb0_pin1")}`'/>
       <Entry name='CTB0 Pin 4'            value='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN4'    visible='`${getExposedMember("pass[0]", "ctb0_pin4")}`'/>
       <Entry name='CTB0 Pin 6'            value='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN6'    visible='`${getExposedMember("pass[0]", "ctb0_pin6")}`'/>
@@ -163,7 +163,7 @@
       <Entry name='CTB1 Opamp 1 Out'      value='CY_AUTANALOG_SAR_PIN_MUX_CTB1_OA1_OUT' visible='`${hasBlock("pass[0].ctb[1].oa[1]") &amp;&amp; isBlockUsed("pass[0].ctb[1].oa[1]")}`'/>
       <Entry name='DAC0'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC0'         visible='`${hasBlock("pass[0].dac[0]") &amp;&amp; isBlockUsed("pass[0].dac[0]")}`'/>
       <Entry name='DAC1'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC1'         visible='`${hasBlock("pass[0].dac[1]") &amp;&amp; isBlockUsed("pass[0].dac[1]")}`'/>
-      <Entry name='Temp Sensor +'         value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='true'/>
+      <Entry name='Temp Sensor'           value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='true'/>
       <Entry name='SAR / PTComp Pin $idx' value='CY_AUTANALOG_SAR_PIN_MUX_GPIO$idx'     visible='`${getExposedMember("pass[0]", "ptc_pin$idx")}`' repeatCount='8' />
       <Entry name='VSSA'                  value='CY_AUTANALOG_SAR_PIN_MUX_VSSA'         visible='true'/>
     </ParamChoice>
@@ -174,7 +174,7 @@
                  visible='`${(operatingMode eq "HighSpeed") ? (pseudoDiffMode) : (diffMode)}`'
                  editable='true'
                  desc='Inverting Input of the Mux channel. Reserve and configure the corresponding pin in Autonomous Analog tab (if required).'
-                                        default='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN1'>
+                                        default='CY_AUTANALOG_SAR_PIN_MUX_VSSA'>
       <Entry name='CTB0 Pin 1'            value='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN1'    visible='`${getExposedMember("pass[0]", "ctb0_pin1")}`'/>
       <Entry name='CTB0 Pin 4'            value='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN4'    visible='`${getExposedMember("pass[0]", "ctb0_pin4")}`'/>
       <Entry name='CTB0 Pin 6'            value='CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN6'    visible='`${getExposedMember("pass[0]", "ctb0_pin6")}`'/>
@@ -189,7 +189,7 @@
       <Entry name='CTB1 Opamp 1 Out'      value='CY_AUTANALOG_SAR_PIN_MUX_CTB1_OA1_OUT' visible='`${hasBlock("pass[0].ctb[1].oa[1]") &amp;&amp; isBlockUsed("pass[0].ctb[1].oa[1]")}`'/>
       <Entry name='DAC0'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC0'         visible='`${hasBlock("pass[0].dac[0]") &amp;&amp; isBlockUsed("pass[0].dac[0]")}`'/>
       <Entry name='DAC1'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC1'         visible='`${hasBlock("pass[0].dac[1]") &amp;&amp; isBlockUsed("pass[0].dac[1]")}`'/>
-      <Entry name='Temp Sensor -'         value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='true'/>
+      <Entry name='Temp Sensor'           value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='true'/>
       <Entry name='SAR / PTComp Pin $idx' value='CY_AUTANALOG_SAR_PIN_MUX_GPIO$idx'     visible='`${getExposedMember("pass[0]", "ptc_pin$idx")}`' repeatCount='8' />
       <Entry name='VSSA'                  value='CY_AUTANALOG_SAR_PIN_MUX_VSSA'         visible='true'/>
     </ParamChoice>

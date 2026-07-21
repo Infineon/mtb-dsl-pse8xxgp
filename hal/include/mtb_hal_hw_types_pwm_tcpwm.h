@@ -51,7 +51,7 @@
 typedef struct
 {
     mtb_hal_tcpwm_t                     tcpwm; //!< Common TCPWM data
-    _mtb_hal_event_callback_data_t      callback_data;
+    _mtb_hal_event_callback_data_t      callback_data; //!< Callback data
     uint32_t                            callback_event;   //!< Event requested
 } mtb_hal_pwm_t;
 

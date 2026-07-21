@@ -25,10 +25,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
+
 #include "cy_device.h"
 
-#if (CY_IP_MXSMIF_VERSION == 4) || (CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6)
-
+#if (CY_IP_MXSMIF_VERSION == 4) || (CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION==7)
 #include "cy_smif_memnum.h"
 #include "cy_pdl_srf_common.h"
 #include "cycfg_ppc.h"
@@ -1480,4 +1480,6 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusWrite(cy_stc_smif_mem_context_t *conte
 #endif
 
 #endif /* CY_IP_MXSMIF */
+
 /* [] END OF FILE */
+

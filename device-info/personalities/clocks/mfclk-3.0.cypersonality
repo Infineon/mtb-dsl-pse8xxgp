@@ -10,9 +10,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -46,7 +45,7 @@
 
   <Parameters>
     <!-- PDL documentation -->
-    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk.html' linkText='Open SysClk Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__mf.html' linkText='Open Medium Frequency Clock Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
     <ParamChoice id='sourceClock' name='Source Clock' group='General' default='`${"mxs22srss" eq getIpBlockName() ? "wco" : "mfo"}`' visible='`${"mxs40srss" eq getIpBlockName()}`' desc='Source clock path'>
       <Entry name='MFO'    value='mfo'    visible='`${hasBlock("srss[0].clock[0].mfo[0]")}`'/>
@@ -60,11 +59,11 @@
                                                      sourceClock eq ilo  ? "ILO" :
                                                      sourceClock eq wco  ? "WCO" :
                                                      sourceClock eq pilo ? "PILO" :
-                                                     sourceClock eq ecoprescaler ? "ECO_PRESCALER" : "IHO"}`' />
+                                                     sourceClock eq ecoprescaler ? "ECO_PRESCALER" : "IHO"}`' desc='PDL API source enum suffix for the selected CLK_MF source used in generated configuration' />
 
-    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' />
-    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' />
-    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' />
+    <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[0]' desc='Resource path of the selected CLK_MF source clock' />
+    <ParamString id='sourceFreq' default='`${getOrDefault(getExposedMember(sourceClockRsc, "frequency"), 0)}`' desc='Source clock frequency in Hz used for DRCs and code generation' />
+    <ParamString id='accuracy' default='`${getOrDefault(getExposedMember(sourceClockRsc, "accuracy"), 0)}`' desc='Source clock accuracy used to compute the resulting clock accuracy' />
     <ParamString id='sourceFrequencyInfo' name='Source Frequency' group='General' default='`${formatFrequency(sourceFreq,accuracy)}`' visible='true' editable='false' desc='Source clock frequency' />
     <ParamRange id='divider' name='Divider' group='General' default='1' min='`${"mxs22srss" eq getIpBlockName() &amp;&amp; sourceClock eq iho ? "2" : "1"}`' max='256' resolution='1' visible='true' desc='The source clock frequency divider' />
     <ParamString id='frequency' default='`${sourceFreq / divider}`' />

@@ -9,9 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) 2022-2026, Infineon Technologies AG or an affiliate of
-* Infineon Technologies AG.
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 * SPDX-License-Identifier: Apache-2.0
 *
 * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -53,7 +52,7 @@
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__eco.html' linkText='Open ECO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
-    <ParamRange id='ecoFrequency' name='Frequency (MHz)' group='General' default='17.2032' visible='true' editable='true' min='4' max='38' resolution='0.0001' desc='' />
+    <ParamRange id='ecoFrequency' name='Frequency (MHz)' group='General' default='17.2032' visible='true' editable='true' min='4' max='38' resolution='0.0001' desc='The frequency of the external crystal connected to the ECO' />
     <ParamRange id='frequency' name='Frequency (Hz)' group='Internal' default='`${ecoFrequency * 1000000}`' visible='false' editable='false' min='4000000' max='38000000' resolution='1' desc='' />
     <ParamRange id='esr' name='ESR (ohms)' group='General' default='100' min='0' max='65535' resolution='1' visible='true' editable='true' desc='Crystal equivalent series resistance. All input parameters are interdependent, so it is not possible to define a valid range for each parameter individually. 
         Only after providing values for all parameters, the configurability can be determined.' />
@@ -115,7 +114,7 @@ Only after providing values for all parameters, the configurability can be deter
       <Constraint type='REQUIRE' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
     </ParamSignal>
 
-    <ParamBool id='suppressCodeGen' default='true' />
+    <ParamBool id='suppressCodeGen' default='true' desc='Flags the clock framework to skip automatic code generation for this clock' />
   </Parameters>
 
   <Variables>

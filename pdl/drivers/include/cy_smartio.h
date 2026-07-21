@@ -182,8 +182,8 @@
 
 #include "cy_device.h"
 
-#if (defined (CY_IP_MXS40IOSS) || defined(CY_IP_MXS40SIOSS) || defined(CY_IP_MXS22IOSS) || defined(CY_DOXYGEN))
-#if ((defined(IOSS_SMARTIO_SMARTIO_MASK) && (IOSS_SMARTIO_SMARTIO_MASK != 0)) || defined(CY_DOXYGEN))
+#if (defined (CY_IP_MXS40IOSS) || defined(CY_IP_MXS40SIOSS) || defined(CY_IP_IOCL) || defined(CY_IP_MXS22IOSS) || defined(CY_DOXYGEN))
+#if ((defined(IOSS_SMARTIO_SMARTIO_MASK) && (IOSS_SMARTIO_SMARTIO_MASK != 0)) ||  (defined(IOCL_SMARTIO_SMARTIO_MASK) && (IOCL_SMARTIO_SMARTIO_MASK != 0)) || defined(CY_DOXYGEN))
 
 #include <stdbool.h>
 #include <stddef.h>

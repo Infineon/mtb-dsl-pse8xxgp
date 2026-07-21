@@ -9,8 +9,8 @@
 *
 ********************************************************************************
 * \copyright
-* (c) (2025), Cypress Semiconductor Corporation (an Infineon company) or
-* an affiliate of Cypress Semiconductor Corporation.
+* (c) 2025-2026, Infineon Technologies AG, or an affiliate of Infineon
+* Technologies AG.
 *
 * SPDX-License-Identifier: Apache-2.0
 *
@@ -346,6 +346,15 @@
                 (lpModeVrefSelect eq CY_AUTANALOG_SAR_VREF_PRB_OUT1) ? prbOut1Voltage :
                 1800}`'/>
 
+    <!-- DRIVERS-21380: VBGR accuracy display -->
+    <ParamString id='lpVbgrAccuracyInfo'
+                 name='VBGR Reference Accuracy'
+                 group='LP Mode ADC Settings'
+                 visible='`${(operatingMode eq "LowPower") &amp;&amp; (lpModeVrefSelect eq CY_AUTANALOG_SAR_VREF_VBGR)}`'
+                 editable='false'
+                 desc='Accuracy specification of the internal VBGR 0.9V reference'
+                 default='VBGR 0.9 V: typical &#177;1%, max &#177;2% over temperature'/>
+
     <ParamBool id='lpAutosetConversionRate'
                name='Autoset Conversion Rate'
                group='LP Mode ADC Settings'
@@ -412,6 +421,15 @@
                 (hsModeVrefSelect eq CY_AUTANALOG_SAR_VREF_PRB_OUT0) ? prbOut0Voltage :
                 (hsModeVrefSelect eq CY_AUTANALOG_SAR_VREF_PRB_OUT1) ? prbOut1Voltage :
                 1800}`'/>
+
+    <!-- DRIVERS-21380: VBGR accuracy display -->
+    <ParamString id='hsVbgrAccuracyInfo'
+                 name='VBGR Reference Accuracy'
+                 group='HS Mode ADC Settings'
+                 visible='`${(operatingMode eq "HighSpeed") &amp;&amp; (hsModeVrefSelect eq CY_AUTANALOG_SAR_VREF_VBGR)}`'
+                 editable='false'
+                 desc='Accuracy specification of the internal VBGR 0.9V reference'
+                 default='VBGR 0.9 V: typical &#177;1%, max &#177;2% over temperature'/>
 
     <ParamBool id='hsAutosetConversionRate'
                name='Autoset Conversion Rate'

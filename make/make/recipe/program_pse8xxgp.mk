@@ -40,7 +40,7 @@ _MTB_RECIPE__OPENOCD_PREPARE_APP=init; reset init; load_image $(_MTB_RECIPE__OPE
 _MTB_RECIPE__OPENOCD_DEBUG=$(_MTB_RECIPE__OPENOCD_DEBUG_PREFIX) $(_MTB_RECIPE__OPENOCD_PREPARE_APP)
 _MTB_RECIPE__OPENOCD_PROGRAM=$(_MTB_RECIPE__OPENOCD_PREPARE_APP); reg sp [mrw $(_MTB_RECIPE__APP_SP)]; reg pc [mrw $(_MTB_RECIPE__APP_PC)]; reg xPSR 0x01000000; resume; exit;
 else # default case for Virgin Si
-_MTB_RECIPE__OPENOCD_ERASE=init; reset init; $(_MTB_RECIPE__OPENOCD_PROBE_FREQUENCY)erase_all; exit;
+_MTB_RECIPE__OPENOCD_ERASE=init; reset init; erase_all; exit;
 _MTB_RECIPE__OPENOCD_DEBUG=$(_MTB_RECIPE__OPENOCD_DEBUG_PREFIX) init; reset init;
-_MTB_RECIPE__OPENOCD_PROGRAM=init; reset init; $(_MTB_RECIPE__OPENOCD_PROBE_FREQUENCY)flash write_image erase $(_MTB_RECIPE__OPENOCD_PROGRAM_IMG); verify_image $(_MTB_RECIPE__OPENOCD_PROGRAM_IMG); reset run; shutdown;
+_MTB_RECIPE__OPENOCD_PROGRAM=init; reset init; flash write_image erase $(_MTB_RECIPE__OPENOCD_PROGRAM_IMG); verify_image $(_MTB_RECIPE__OPENOCD_PROGRAM_IMG); reset run; shutdown;
 endif #($(BITFILE_PROVISIONED),true)

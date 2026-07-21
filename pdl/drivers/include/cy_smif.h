@@ -314,7 +314,6 @@ extern "C" {
 /***************************************
 *            Constants
 ****************************************/
-
 /**
 * \addtogroup group_smif_macros
 * \{
@@ -404,10 +403,10 @@ extern "C" {
 #define CY_SMIF_SFDP_FAIL_SS3_POS           (0x03U)
 
 #define CY_SMIF_MAX_DESELECT_DELAY          (7U)
-#define CY_SMIF_MAX_TX_TR_LEVEL             (8U)
-#define CY_SMIF_MAX_RX_TR_LEVEL             (8U)
+#define CY_SMIF_MAX_TX_TR_LEVEL             (7U)
+#define CY_SMIF_MAX_RX_TR_LEVEL             (7U)
 
-#define CY_SMIF_MODE_VALID(mode)            ((CY_SMIF_NORMAL == (cy_en_smif_mode_t)(mode)) || \
+ #define CY_SMIF_MODE_VALID(mode)            ((CY_SMIF_NORMAL == (cy_en_smif_mode_t)(mode)) || \
                                              (CY_SMIF_MEMORY == (cy_en_smif_mode_t)(mode)))
 #define CY_SMIF_BLOCK_EVENT_VALID(event)    ((CY_SMIF_BUS_ERROR == (cy_en_smif_error_event_t)(event)) || \
                                              (CY_SMIF_WAIT_STATES == (cy_en_smif_error_event_t)(event)))
@@ -677,7 +676,17 @@ typedef enum
     CY_SMIF_XIP_ERROR,     /**< An XIP alignment error. */
     CY_SMIF_CMD_ERROR,     /**< A TX CMD FIFO overflow. */
     CY_SMIF_TX_ERROR,      /**< A TX DATA FIFO overflow. */
-    CY_SMIF_RX_ERROR       /**< An RX DATA FIFO underflow. */
+    CY_SMIF_RX_ERROR,      /**< An RX DATA FIFO underflow. */
+/*******************************************************************************
+* TEMPORARY: CY_SMIF_CRYPTO_ERROR enum value.
+* cyip_smif_v7.h does not yet define the SMIF_INTR_CRYPTO_* interrupt masks.
+* Once the IP header is updated, remove this #ifndef guard and the
+* corresponding guards in Cy_SMIF_Interrupt_Handler.
+* Tracking: DRIVERS-XXXXX
+*******************************************************************************/
+#ifndef CY_SMIF_CRYPTO_ERROR
+    CY_SMIF_CRYPTO_ERROR,  /**< A crypto/authentication error (SMIFv7+). */
+#endif
 
 } cy_en_smif_txfr_status_t;
 
@@ -923,6 +932,7 @@ typedef enum
       CY_SMIF_CACHEABLE_WB_RWA             = 0x1F, /**< Cacheable, Write Back, Read & Write Allocate */
 } cy_en_smif_cache_attribute_t;
 
+
 /** \cond INTERNAL */
 /*******************************************************************************
 * These are legacy macros. They are left here just for backward compatibility.
@@ -1058,6 +1068,8 @@ typedef struct
     cy_stc_smif_cache_region_t  cache_region_2;          /**< CACHE region 2 configuration. */
     cy_stc_smif_cache_region_t  cache_region_3;          /**< CACHE region 3 configuration. */
 } cy_stc_smif_cache_config_t;
+
+
 /** \} group_smif_data_structures */
 
 
@@ -1193,14 +1205,17 @@ cy_en_smif_status_t Cy_SMIF_CacheDisable(SMIF_Type *base, cy_en_smif_cache_t cac
 cy_en_smif_status_t Cy_SMIF_CachePrefetchingEnable(SMIF_Type *base, cy_en_smif_cache_t cacheType);
 cy_en_smif_status_t Cy_SMIF_CachePrefetchingDisable(SMIF_Type *base, cy_en_smif_cache_t cacheType);
 cy_en_smif_status_t Cy_SMIF_CacheInvalidate(SMIF_Type *base, cy_en_smif_cache_t cacheType);
-void Cy_SMIF_SetCryptoKey(SMIF_Type *base, uint32_t *key);
+ void Cy_SMIF_SetCryptoKey(SMIF_Type *base, uint32_t *key);
 void Cy_SMIF_SetCryptoIV(SMIF_Type *base, uint32_t *nonce);
 cy_en_smif_status_t Cy_SMIF_SetCryptoEnable(SMIF_Type *base, cy_en_smif_slave_select_t slaveId);
 cy_en_smif_status_t Cy_SMIF_SetCryptoDisable(SMIF_Type *base, cy_en_smif_slave_select_t slaveId);
 cy_en_smif_status_t Cy_SMIF_IsCryptoEnabled(SMIF_Type *base, cy_en_smif_slave_select_t slaveId, bool *crypto_status);
 
+ 
 cy_en_smif_status_t Cy_SMIF_SetCryptoKeyRegion(SMIF_Type *base, uint8_t crypto_region_index, cy_stc_smif_crypto_region_config_t *region_config);
 cy_en_smif_status_t Cy_SMIF_SetCryptoSubRegionDisable(SMIF_Type *base, uint8_t crypto_region_index, uint8_t mask);
+ 
+
 
 cy_en_smif_status_t Cy_SMIF_ConvertSlaveSlotToIndex(cy_en_smif_slave_select_t ss, uint32_t *device_idx);
 
@@ -1438,13 +1453,21 @@ __STATIC_INLINE void  Cy_SMIF_ClearInterrupt(SMIF_Type *base, uint32_t interrupt
 * Holds the base address of the SMIF block registers.
 *
 * \param level
-* The trigger level to set (0-8).
+* The trigger level to set (0-7).
 *
 *******************************************************************************/
 __STATIC_INLINE void  Cy_SMIF_SetTxFifoTriggerLevel(SMIF_Type *base, uint32_t level)
 {
     CY_ASSERT_L2(level <= CY_SMIF_MAX_TX_TR_LEVEL);
+#if defined(CY_IP_SMIF_VERSION) && (CY_IP_SMIF_VERSION >= 7)
+    /* SMIF v7: TX and RX trigger levels share the MMIO_FIFO_CTL register */
+    uint32_t temp = SMIF_MMIO_FIFO_CTL(base);
+    temp &= ~SMIF_CORE_MMIO_FIFO_CTL_TX_DATA_TRIG_LVL_Msk;
+    temp |= (level << SMIF_CORE_MMIO_FIFO_CTL_TX_DATA_TRIG_LVL_Pos);
+    SMIF_MMIO_FIFO_CTL(base) = temp;
+#else
     SMIF_TX_DATA_FIFO_CTL(base) = level;
+#endif
 }
 
 
@@ -1460,13 +1483,21 @@ __STATIC_INLINE void  Cy_SMIF_SetTxFifoTriggerLevel(SMIF_Type *base, uint32_t le
 * Holds the base address of the SMIF block registers.
 *
 * \param level
-* The trigger level to set(0-8).
+* The trigger level to set (0-7).
 *
 *******************************************************************************/
 __STATIC_INLINE void  Cy_SMIF_SetRxFifoTriggerLevel(SMIF_Type *base, uint32_t level)
 {
     CY_ASSERT_L2(level <= CY_SMIF_MAX_RX_TR_LEVEL);
+#if defined(CY_IP_SMIF_VERSION) && (CY_IP_SMIF_VERSION >= 7)
+    /* SMIF v7: TX and RX trigger levels share the MMIO_FIFO_CTL register */
+    uint32_t temp = SMIF_MMIO_FIFO_CTL(base);
+    temp &= ~SMIF_CORE_MMIO_FIFO_CTL_RX_DATA_TRIG_LVL_Msk;
+    temp |= (level << SMIF_CORE_MMIO_FIFO_CTL_RX_DATA_TRIG_LVL_Pos);
+    SMIF_MMIO_FIFO_CTL(base) = temp;
+#else
     SMIF_RX_DATA_FIFO_CTL(base) = level;
+#endif
 }
 
 
@@ -1621,8 +1652,8 @@ __STATIC_INLINE void Cy_SMIF_Interrupt(SMIF_Type *base, cy_stc_smif_context_t *c
         context->transferStatus = CY_SMIF_RX_ERROR;
 
         Cy_SMIF_ClearInterrupt(base, SMIF_INTR_RX_DATA_FIFO_UNDERFLOW_Msk);
-    }
-    else
+    }    
+     else
     {
         /* Processing of errors */
     }
@@ -2003,3 +2034,4 @@ __STATIC_INLINE SMIF_DEVICE_Type volatile * Cy_SMIF_GetDeviceBySlot(SMIF_Type *b
 
 
 /* [] END OF FILE */
+

@@ -149,7 +149,7 @@ Only after providing values for all parameters, the configurability can be deter
       <Line value='{' />
       <Line value='    cycfg_ClockStartupError(CY_CFG_SYSCLK_ECO_ERROR);' />
       <Line value='}' />
-      <Line value='if (CY_SYSCLK_TIMEOUT == Cy_SysClk_EcoEnable(3000UL))' />
+      <Line value='if (CY_SYSCLK_TIMEOUT == Cy_SysClk_EcoEnable(10000UL))' />
       <Line value='{' />
       <Line value='    cycfg_ClockStartupError(CY_CFG_SYSCLK_ECO_ERROR);' />
       <Line value='}' />

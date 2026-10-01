@@ -27,7 +27,7 @@
 #endif
 
 /* the below define will enable cache maintenance API for ETHOS U55 */
-#define ETHOSU_USE_CACHE
+#define ETHOSU_USE_CACHE  
 
 /* This is a feature flag available only for PSOC Edge devices supporting Cy_SysClk_PeriGroupSlaveInit
 */

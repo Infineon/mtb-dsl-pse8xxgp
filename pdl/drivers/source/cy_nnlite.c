@@ -480,7 +480,7 @@ Cy_NNLite_OutputStreamerCfg(NNLITE_Type *nnlite, cy_nnlite_context_t *context,
     context->nnliteState = CY_NNLITE_CONFIG_STATE;
   }
   #endif
-
+	
   return CY_NNLITE_SUCCESS;
 }
 
@@ -638,7 +638,7 @@ Cy_NNLite_FFTCfg(NNLITE_Type *nnlite,
     context->nnliteState = CY_NNLITE_CONFIG_STATE;
   }
   #endif
-
+	
   return CY_NNLITE_SUCCESS;
 }
 

@@ -55,10 +55,10 @@ supports 1D, 2D, and CRC transfers with chained descriptor sequences.
 
 ## Quick Start
 
-**Step 1.** Declare and initialise a descriptor with `Cy_DMA_Descriptor_Init()`.
-**Step 2.** Initialise the channel with `Cy_DMA_Channel_Init()` and assign the descriptor.
-**Step 3.** Enable the channel with `Cy_DMA_Channel_Enable()`.
-**Step 4.** Enable the DMA block with `Cy_DMA_Enable()`.
+**Step 1.** Declare and initialise a descriptor with `Cy_DMA_Descriptor_Init()`.  
+**Step 2.** Initialise the channel with `Cy_DMA_Channel_Init()` and assign the descriptor.  
+**Step 3.** Enable the channel with `Cy_DMA_Channel_Enable()`.  
+**Step 4.** Enable the DMA block with `Cy_DMA_Enable()`.  
 **Step 5.** Fire a software trigger (or rely on hardware trigger).
 
 ### Sample Code

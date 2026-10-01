@@ -56,10 +56,10 @@ descriptor types and support for CM55 DTCM address remapping.
 
 ## Quick Start
 
-**Step 1.** Allocate descriptor and buffers in **AXI-accessible memory** (use `CY_SECTION(".cy_socmem_data")` or equivalent).
-**Step 2.** Initialise a descriptor with `Cy_AXIDMAC_Descriptor_Init()`.
-**Step 3.** Initialise the channel with `Cy_AXIDMAC_Channel_Init()`.
-**Step 4.** Enable the channel with `Cy_AXIDMAC_Channel_Enable()` and the block with `Cy_AXIDMAC_Enable()`.
+**Step 1.** Allocate descriptor and buffers in **AXI-accessible memory** (use `CY_SECTION(".cy_socmem_data")` or equivalent).  
+**Step 2.** Initialise a descriptor with `Cy_AXIDMAC_Descriptor_Init()`.  
+**Step 3.** Initialise the channel with `Cy_AXIDMAC_Channel_Init()`.  
+**Step 4.** Enable the channel with `Cy_AXIDMAC_Channel_Enable()` and the block with `Cy_AXIDMAC_Enable()`.  
 **Step 5.** Fire a software trigger or rely on a hardware peripheral trigger.
 
 ### Sample Code — SOCMEM Buffers (non-DTCM)

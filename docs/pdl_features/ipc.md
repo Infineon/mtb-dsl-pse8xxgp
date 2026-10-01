@@ -39,9 +39,9 @@ IPC does not require a Device Configurator personality. Channel assignments and 
 
 ## Quick Start
 
-**Step 1:** Choose an application IPC channel index ≥ `CY_IPC_CHAN_USER` and a matching interrupt index.
-**Step 2:** On the receiving core, configure and enable the IPC interrupt.
-**Step 3:** On the sending core, acquire the channel, write data, and send a notify.
+**Step 1:** Choose an application IPC channel index ≥ `CY_IPC_CHAN_USER` and a matching interrupt index.  
+**Step 2:** On the receiving core, configure and enable the IPC interrupt.  
+**Step 3:** On the sending core, acquire the channel, write data, and send a notify.  
 **Step 4:** On the receiving core, read the data in the interrupt handler and release the channel.
 
 **Expected Outcome:** The receiving core's interrupt fires, data is read correctly, and the channel is released.

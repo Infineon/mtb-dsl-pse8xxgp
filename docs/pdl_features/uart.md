@@ -61,9 +61,9 @@ The **UART driver** configures an SCB hardware block as an asynchronous serial p
 
 ## Quick Start
 
-**Step 1:** Enable an SCB in UART personality (Device Configurator), 115200-8N1.
-**Step 2:** Connect TX/RX pins; save the `.modus` file.
-**Step 3:** Add the sample code below to `main.c`.
+**Step 1:** Enable an SCB in UART personality (Device Configurator), 115200-8N1.  
+**Step 2:** Connect TX/RX pins; save the `.modus` file.  
+**Step 3:** Add the sample code below to `main.c`.  
 **Step 4:** Build, program, and open a serial terminal at 115200 baud.
 
 **Expected Outcome:** `"Hello, UART!\r\n"` appears in the terminal; typed characters are echoed back.

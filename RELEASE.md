@@ -1,9 +1,11 @@
-# ModusToolbox™ PSE8xxGP Device Support Library 1.6.0
+# ModusToolbox™ PSE8xxGP Device Support Library 1.7.0
 ## What's Included?
 
 Refer to the [README.md](./README.md) for a complete description of the ModusToolbox™ PSE8xxGP Device Support Library.
 
 ## Change log
+### v1.7.0
+* Increase ECO enable timeout from 3ms to 10ms
 ### v1.6.0
 * Added SCB EZI2C hardware mode for I2C driver.
 * Added SCB SPI EZ mode support.
@@ -55,7 +57,7 @@ Refer to the [README.md](./README.md) for a complete description of the ModusToo
 
 ## Supported Software and Tools
 
-This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.6.0 was validated for the compatibility with the following Software and Tools:
+This version of the ModusToolbox™ PSE8xxGP Device Support Library 1.7.0 was validated for the compatibility with the following Software and Tools:
 
 | Software and Tools                                                            | Version      |
 | :---                                                                          | :----        |

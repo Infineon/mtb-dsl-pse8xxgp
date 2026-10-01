@@ -57,9 +57,9 @@ The **I2C driver** configures an SCB hardware block as an I2C master, slave, or 
 
 ## Quick Start
 
-**Step 1:** Enable an SCB in I2C Master personality at 400 kbps in Device Configurator.
-**Step 2:** Connect SCL/SDA with 4.7 kΩ pull-ups; connect an I2C slave device.
-**Step 3:** Add the sample code below to `main.c`.
+**Step 1:** Enable an SCB in I2C Master personality at 400 kbps in Device Configurator.  
+**Step 2:** Connect SCL/SDA with 4.7 kΩ pull-ups; connect an I2C slave device.  
+**Step 3:** Add the sample code below to `main.c`.  
 **Step 4:** Build, program, and verify slave responds.
 
 **Expected Outcome:** A write+read transaction completes; slave responds with expected data.

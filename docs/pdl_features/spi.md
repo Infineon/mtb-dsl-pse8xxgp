@@ -58,9 +58,9 @@ The **SPI driver** configures an SCB hardware block as an SPI master or slave, s
 
 ## Quick Start
 
-**Step 1:** Enable an SCB in SPI Master personality, Motorola Mode 0, 8-bit, 1 MHz in Device Configurator.
-**Step 2:** Connect MOSI, MISO, SCLK, SS to the SPI slave.
-**Step 3:** Add the sample code below to `main.c`.
+**Step 1:** Enable an SCB in SPI Master personality, Motorola Mode 0, 8-bit, 1 MHz in Device Configurator.  
+**Step 2:** Connect MOSI, MISO, SCLK, SS to the SPI slave.  
+**Step 3:** Add the sample code below to `main.c`.  
 **Step 4:** Build, program, and verify data exchange.
 
 **Expected Outcome:** Data transmitted on MOSI is simultaneously received on MISO (loopback test passes).

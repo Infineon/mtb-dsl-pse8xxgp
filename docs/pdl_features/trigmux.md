@@ -58,8 +58,8 @@ enable peripheral features. For manual routing the following parameters are rele
 
 One call to `Cy_TrigMux_Connect()` links a source peripheral output to a destination peripheral input.
 
-**Step 1.** Identify the trigger group and signal for the source (e.g. TCPWM overflow).
-**Step 2.** Identify the matching output trigger for the destination (e.g. DW0 channel 0).
+**Step 1.** Identify the trigger group and signal for the source (e.g. TCPWM overflow).  
+**Step 2.** Identify the matching output trigger for the destination (e.g. DW0 channel 0).  
 **Step 3.** Call `Cy_TrigMux_Connect()`.
 
 ```c

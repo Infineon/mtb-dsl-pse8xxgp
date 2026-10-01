@@ -69,10 +69,10 @@ The **CAN FD (Controller Area Network Flexible Data-Rate)** driver provides an A
 
 ## Quick Start
 
-**Step 1:** Enable a CAN FD channel in the Device Configurator with arbitration rate 100 kbps, data rate 500 kbps.
-**Step 2:** Connect TX pin to transceiver TXD, RX pin to transceiver RXD; connect transceiver to the CAN bus with termination.
-**Step 3:** Register the `Cy_CANFD_IrqHandler` in the NVIC for `canfd_0_interrupts0_0_IRQn`.
-**Step 4:** Add the sample code below to `main.c`.
+**Step 1:** Enable a CAN FD channel in the Device Configurator with arbitration rate 100 kbps, data rate 500 kbps.  
+**Step 2:** Connect TX pin to transceiver TXD, RX pin to transceiver RXD; connect transceiver to the CAN bus with termination.  
+**Step 3:** Register the `Cy_CANFD_IrqHandler` in the NVIC for `canfd_0_interrupts0_0_IRQn`.  
+**Step 4:** Add the sample code below to `main.c`.  
 
 **Expected Outcome:** CAN FD initialization succeeds; received frames matching the configured filter arrive in the RX callback; transmitted frames appear on the bus.
 

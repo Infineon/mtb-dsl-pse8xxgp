@@ -64,9 +64,9 @@ The table below lists the key personality parameters shared across sub-modes.
 
 ### Sub-Mode 1 — Timer / Counter
 
-**Step 1.** Fill `cy_stc_tcpwm_counter_config_t`.
-**Step 2.** Call `Cy_TCPWM_Counter_Init()`.
-**Step 3.** Enable the counter with `Cy_TCPWM_Counter_Enable()`.
+**Step 1.** Fill `cy_stc_tcpwm_counter_config_t`.  
+**Step 2.** Call `Cy_TCPWM_Counter_Init()`.  
+**Step 3.** Enable the counter with `Cy_TCPWM_Counter_Enable()`.  
 **Step 4.** Start counting with `Cy_TCPWM_TriggerStart_Single()`.
 
 ```c
@@ -123,8 +123,8 @@ int main(void)
 
 ### Sub-Mode 2 — PWM
 
-**Step 1.** Fill `cy_stc_tcpwm_pwm_config_t` (pwmMode, period0, compare0 …).
-**Step 2.** Call `Cy_TCPWM_PWM_Init()`.
+**Step 1.** Fill `cy_stc_tcpwm_pwm_config_t` (pwmMode, period0, compare0 …).  
+**Step 2.** Call `Cy_TCPWM_PWM_Init()`.  
 **Step 3.** `Cy_TCPWM_PWM_Enable()` then `Cy_TCPWM_TriggerStart_Single()`.
 
 ```c
@@ -182,7 +182,7 @@ int main(void)
 
 ### Sub-Mode 3 — Quadrature Decoder
 
-**Step 1.** Fill `cy_stc_tcpwm_quaddec_config_t` with phiA/phiB inputs.
+**Step 1.** Fill `cy_stc_tcpwm_quaddec_config_t` with phiA/phiB inputs.  
 **Step 2.** `Cy_TCPWM_QuadDec_Init()` → `Cy_TCPWM_QuadDec_Enable()` → `Cy_TCPWM_TriggerReloadOrIndex_Single()`.
 
 ```c

@@ -58,10 +58,10 @@ The **I3C (Improved Inter-Integrated Circuit)** driver provides an API to implem
 
 ## Quick Start
 
-**Step 1:** Enable an I3C instance in the Device Configurator with Controller role.
-**Step 2:** Connect I3C SDA and SCL pins with appropriate pull-ups; connect one or more I3C target devices.
-**Step 3:** Register the interrupt handler and enable the I3C interrupt in the NVIC (interrupt is **mandatory** for I3C operation).
-**Step 4:** Add the sample code below to `main.c`.
+**Step 1:** Enable an I3C instance in the Device Configurator with Controller role.  
+**Step 2:** Connect I3C SDA and SCL pins with appropriate pull-ups; connect one or more I3C target devices.  
+**Step 3:** Register the interrupt handler and enable the I3C interrupt in the NVIC (interrupt is **mandatory** for I3C operation).  
+**Step 4:** Add the sample code below to `main.c`.  
 
 **Expected Outcome:** DAA completes and the controller successfully writes to and reads from the assigned target.
 

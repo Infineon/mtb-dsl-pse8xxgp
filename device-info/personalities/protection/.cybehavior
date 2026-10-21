@@ -112,12 +112,12 @@
   </Behavior>
 
   <Behavior type="ppc_v1">
-    <Member key='regKey$idx' repeatCount='500'/> <!-- Key identifier for each registry entry -->
-    <Member key='reg$idx_valid' repeatCount='500'/> <!-- Validity status of each registry entry -->
-    <Member key='reg$idx_locationKey' repeatCount='500'/> <!-- Location key associated with each registry entry -->
-    <Member key='reg$idx_location' repeatCount='500'/> <!-- Location information for each registry entry -->
-    <Member key='reg$idx_location_display' repeatCount='500'/> <!-- Display-friendly version of the location for each registry entry -->
-    <Member key='reg$idx' repeatCount='500'/> <!-- Represents the registry entry itself -->
+    <Member key='regKey$idx' repeatCount='700'/> <!-- Key identifier for each registry entry -->
+    <Member key='reg$idx_valid' repeatCount='700'/> <!-- Validity status of each registry entry -->
+    <Member key='reg$idx_locationKey' repeatCount='700'/> <!-- Location key associated with each registry entry -->
+    <Member key='reg$idx_location' repeatCount='700'/> <!-- Location information for each registry entry -->
+    <Member key='reg$idx_location_display' repeatCount='700'/> <!-- Display-friendly version of the location for each registry entry -->
+    <Member key='reg$idx' repeatCount='700'/> <!-- Represents the registry entry itself -->
   </Behavior>
 
 </BehaviorDefintion>

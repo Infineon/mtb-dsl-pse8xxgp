@@ -82,9 +82,9 @@ __STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_Init_Common(WDT_STRUCT_Type *base, cy
     Cy_WDTx_Unlock_Common(base);
     if (false == Cy_WDTx_Locked_Common(base))
     {
-        Cy_WDTx_Disable_Common(base);
-        Cy_WDTx_SetMatch_Common(base, config->match);
-        Cy_WDTx_SetIgnoreBits_Common(base, config->ignoreBits);
+        (void)Cy_WDTx_Disable_Common(base);
+        (void)Cy_WDTx_SetMatch_Common(base, config->match);
+        (void)Cy_WDTx_SetIgnoreBits_Common(base, config->ignoreBits);
         status = Cy_WDTx_ClearInterrupt_Common(base);
     }
     return status;
@@ -355,7 +355,7 @@ void Cy_WDT_Init(void)
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
     cy_stc_wdt_config_t const config = { .match      = CY_SRSS_WDT_DEFAULT_MATCH_VALUE,
                                          .ignoreBits = CY_SRSS_WDT_DEFAULT_IGNORE_BITS };
-    Cy_WDTx_Init_Common(WDT_DEFAULT, &config);
+    (void)Cy_WDTx_Init_Common(WDT_DEFAULT, &config);
 #else
     /* Unlock the WDT by two writes */
     SRSS_WDT_CTL = ((SRSS_WDT_CTL & (uint32_t)(~SRSS_WDT_CTL_WDT_LOCK_Msk)) | CY_SRSS_WDT_LOCK_BIT0);
@@ -455,7 +455,7 @@ void Cy_WDT_Unlock(void)
 void Cy_WDT_SetMatch(uint32_t match)
 {
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
-    Cy_WDTx_SetMatch_Common(WDT_DEFAULT, match);
+    (void)Cy_WDTx_SetMatch_Common(WDT_DEFAULT, match);
 #else
     CY_ASSERT_L2(CY_WDT_IS_MATCH_VAL_VALID(match));
 
@@ -489,7 +489,7 @@ void Cy_WDT_SetMatch(uint32_t match)
 void Cy_WDT_SetIgnoreBits(uint32_t bitsNum)
 {
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
-    Cy_WDTx_SetIgnoreBits_Common(WDT_DEFAULT, bitsNum);
+    (void)Cy_WDTx_SetIgnoreBits_Common(WDT_DEFAULT, bitsNum);
 #else
     CY_ASSERT_L1(CY_WDT_IS_IGNORE_BITS_VALID(bitsNum));
     (void)bitsNum;
@@ -528,7 +528,7 @@ void Cy_WDT_SetIgnoreBits(uint32_t bitsNum)
 void Cy_WDT_SetMatchBits(uint32_t bitPos)
 {
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
-    Cy_WDTx_SetMatchBits_Common(WDT_DEFAULT, bitPos);
+    (void)Cy_WDTx_SetMatchBits_Common(WDT_DEFAULT, bitPos);
 #else
     CY_ASSERT_L2(CY_WDT_IS_IGNORE_BITS_ABOVE_VALID(bitPos));
     (void)bitPos;
@@ -560,7 +560,7 @@ void Cy_WDT_SetMatchBits(uint32_t bitPos)
 void Cy_WDT_ClearInterrupt(void)
 {
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
-    Cy_WDTx_ClearInterrupt_Common(WDT_DEFAULT);
+    (void)Cy_WDTx_ClearInterrupt_Common(WDT_DEFAULT);
 #else
     #if CY_CPU_CORTEX_M4 && defined(CY_DEVICE_SECURE)
         CY_PRA_REG32_SET(CY_PRA_INDX_SRSS_SRSS_INTR, _VAL2FLD(SRSS_SRSS_INTR_WDT_MATCH, 1U));

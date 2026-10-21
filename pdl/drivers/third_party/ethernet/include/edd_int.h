@@ -78,7 +78,7 @@
 #define CEDI_RXD_USED        (1 << 0)
 #define CEDI_RXD_WRAP        (1 << 1)
 #define CEDI_RXD_TS_VALID    (1 << 2)
-#define CEDI_RXD_ADDR_MASK   (0xFFFFFFFC)
+#define CEDI_RXD_ADDR_MASK   (0xFFFFFFFCU)
 #define CEDI_RXD_ADDR_SHIFT  (2)
 
 /* Rx Descriptor flags/status - word 1 */
@@ -122,7 +122,7 @@
 
 
 
-#define CEDI_RXD_EMPTY              (0xFFAA0000)
+#define CEDI_RXD_EMPTY              (0xFFAA0000U)
 
 #define CEDI_PHY_ADDR_OP             (0)
 #define CEDI_PHY_WRITE_OP            (1)

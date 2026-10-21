@@ -265,8 +265,8 @@ cy_en_autanalog_status_t Cy_AutAnalog_DAC_Data_ReadWaveform(uint8_t dacIdx, uint
         {
             for (sampleIdx = 0U; sampleIdx < numSamples; sampleIdx++)
             {
-                CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from uint32_t to int32_t does not have any negative drawbacks');
-                waveform[sampleIdx] = _FLD2VAL(DAC_SRAM_WAVEFORM, AUTANALOG_DAC_LUT(baseAddr, dataIdx++));
+                uint32_t fieldVal = _FLD2VAL(DAC_SRAM_WAVEFORM, AUTANALOG_DAC_LUT(baseAddr, dataIdx++));
+                waveform[sampleIdx] = (int32_t)fieldVal;
             }
         }
     }
@@ -291,7 +291,6 @@ cy_en_autanalog_status_t Cy_AutAnalog_DAC_Data_GetDriveModeArray(uint8_t dacIdx,
         {
             for (sampleIdx = 0U; sampleIdx < numSamples; sampleIdx++)
             {
-                CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Review shows that type conversion from uint32_t to enum does not have any negative drawbacks');
                 driveModeArray[sampleIdx] = (cy_en_autanalog_dac_out_drive_mode_t)_FLD2VAL(DAC_SRAM_OUT_DM, AUTANALOG_DAC_LUT(baseAddr, dataIdx++));
             }
         }

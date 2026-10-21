@@ -252,7 +252,7 @@
 *   SRSS_WCO_OUT_PIN). These must be configured as Analog Hi-Z drive modes and the
 *   HSIOM selection set to GPIO. The WCO can also be used in bypass mode, where
 *   an external 32.768 kHz square wave is brought in directly through the
-*   SRSS_WCO_OUT_PIN pin.
+*   SRSS_WCO_IN_PIN pin.
 *
 *   \defgroup group_sysclk_wco_funcs       Functions
 *   \defgroup group_sysclk_wco_enums       Enumerated Types
@@ -346,6 +346,15 @@
 *   \defgroup group_sysclk_clk_peripheral_group_funcs Functions
 *   \defgroup group_sysclk_clk_peripheral_group_enums Enumerated Types
 * \}
+ * \defgroup group_sysclk_alt_hf Alternative High-Frequency Clock (ALTHF)
+* \{
+*   The Alternative High-Frequency Clock (ALTHF) is an on-chip clock source.
+*   In BLE-enabled PSOC6 devices, the \ref group_ble_clk clock is connected
+*   to the system ALTHF input. In PSC devices the BTSS IP provides ALTHF.
+*   In PSE8 devices the ALTHF is driven by the connectivity subsystem.
+*
+*   \defgroup group_sysclk_alt_hf_funcs    Functions
+* \}
 * \defgroup group_sysclk_clk_lf          Low-Frequency Clock
 * \{
 *   The low-frequency clock is the source clock for the \ref group_mcwdt
@@ -374,6 +383,16 @@
 *
 *   \defgroup group_sysclk_clk_bak_funcs   Functions
 *   \defgroup group_sysclk_clk_bak_enums   Enumerated Types
+* \}
+* \defgroup group_sysclk_mf         Medium-Frequency Clock (ClkMf)
+* \{
+*   The Medium-Frequency Clock (ClkMf) provides a configurable medium-frequency
+*   clock output. It consists of a source multiplexer and a clock divider.
+*   The clock source can be selected from IMO, ILO, WCO, ALTLF, PILO,
+*   ECO Prescaler, or IHO depending on the device.
+*
+*   \defgroup group_sysclk_mf_funcs   Functions
+*   \defgroup group_sysclk_mf_enums    Enumerated Types
 * \}
 * \defgroup group_sysclk_iho         Internal High Frequency(IHO) Clock
 * \{
@@ -414,7 +433,7 @@ extern "C" {
 /** Driver minor version */
 #define  CY_SYSCLK_DRV_VERSION_MINOR   150
 /** Sysclk driver identifier */
-#define CY_SYSCLK_ID   CY_PDL_DRV_ID(0x12U)
+#define CY_SYSCLK_ID   CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SYSCLK)
 
 /** ILO clock frequency */
 #define CY_SYSCLK_ILO_FREQ  (32768UL)   /* Hz */
@@ -436,7 +455,11 @@ extern "C" {
 #if defined (CY_IP_MXS22SRSS)
 /** IHO clock frequency */
 
+#if defined(CY_DEVICE_IHO_FREQ)
+#define CY_SYSCLK_IHO_FREQ  (CY_DEVICE_IHO_FREQ)
+#else
 #define CY_SYSCLK_IHO_FREQ  (50000000UL) /* Hz */
+#endif
 
 #endif /* CY_IP_MXS22SRSS*/
 
@@ -624,8 +647,8 @@ typedef struct
 * \addtogroup group_sysclk_eco_funcs
 * \{
 */
-#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 3)) || defined (CY_IP_MXS22SRSS) || \
-     (defined (CY_IP_MXS40SSRSS) && (SRSS_ECO_PRESENT == 1UL)) || defined (CY_DOXYGEN)
+#if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION < 2)) || (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 3)) || \
+    defined (CY_IP_MXS22SRSS) || (defined (CY_IP_MXS40SSRSS) && (SRSS_ECO_PRESENT == 1UL)) || defined (CY_DOXYGEN)
 /*******************************************************************************
 * Function Name: Cy_SysClk_EcoSetFrequency
 ****************************************************************************//**
@@ -634,7 +657,7 @@ typedef struct
 * within Sysclk driver.
 *
 * \param freq Operating frequency of the crystal in Hz.
-* Valid range: 16000000...35000000 (16..35 MHz).
+* Valid range: Refer to the selected device datasheet.
 *
 *******************************************************************************/
 void Cy_SysClk_EcoSetFrequency(uint32_t freq);
@@ -1369,6 +1392,29 @@ cy_en_sysclk_status_t Cy_SysClk_PllEnable(uint32_t clkPath, uint32_t timeoutus);
 *
 *******************************************************************************/
 bool Cy_SysClk_PllIsEnabled(uint32_t clkPath);
+
+
+/*******************************************************************************
+* Function Name: Cy_SysClk_PllIsConfigured
+****************************************************************************//**
+*
+* Reports whether or not the selected PLL has been configured by the
+* application.
+*
+* Unlike \ref Cy_SysClk_PllIsEnabled, this reflects the programmed PLL
+* configuration (the feedback divider, or the integer feedback divider for a
+* DPLL-HP), which is retained across \ref Cy_SysClk_PllDisable. It therefore
+* distinguishes a PLL that the application set up (and may have temporarily
+* disabled) from one that was never configured.
+*
+* \param clkPath Selects which PLL to check. 1 is the first PLL; 0 is invalid.
+*
+* \return
+* false = not configured \n
+* true = configured
+*
+*******************************************************************************/
+bool Cy_SysClk_PllIsConfigured(uint32_t clkPath);
 
 
 /*******************************************************************************
@@ -2545,6 +2591,35 @@ void Cy_SysClk_WcoDisable(void);
 *
 *******************************************************************************/
 void Cy_SysClk_WcoBypass(cy_en_wco_bypass_modes_t bypass);
+
+
+#if (defined (SRSS_WCO_PRESENT) && (SRSS_WCO_PRESENT > 0))
+/*******************************************************************************
+* Function Name: Cy_SysClk_Wco_LpoMode_Enable
+****************************************************************************//**
+*
+* Selects LPO mode for the WCO. In LPO mode the WCO uses a capacitively coupled
+* single-pin input (wco_in only).
+* This mode is available on devices with the SRIP WCO block (e.g. PSB3xxx).
+*
+* \note Call this before enabling the WCO with \ref Cy_SysClk_WcoEnable.
+*
+*******************************************************************************/
+void Cy_SysClk_Wco_LpoMode_Enable(void);
+
+
+/*******************************************************************************
+* Function Name: Cy_SysClk_Wco_LpoMode_Disable
+****************************************************************************//**
+*
+* Deselects LPO mode for the WCO, reverting to normal crystal or bypass operation
+* using both wco_in and wco_out pins.
+*
+* \note Call this before enabling the WCO with \ref Cy_SysClk_WcoEnable.
+*
+*******************************************************************************/
+void Cy_SysClk_Wco_LpoMode_Disable(void);
+#endif /* (defined (SRSS_WCO_PRESENT) && (SRSS_WCO_PRESENT > 0)) */
 /** \} group_sysclk_wco_funcs */
 
 

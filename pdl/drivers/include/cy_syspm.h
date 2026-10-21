@@ -960,7 +960,7 @@ extern "C" {
 #define CY_SYSPM_DRV_VERSION_MINOR       190
 
 /** SysPm driver identifier */
-#define CY_SYSPM_ID                      (CY_PDL_DRV_ID(0x10U))
+#define CY_SYSPM_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SYSPM))
 
 
 /*******************************************************************************
@@ -983,7 +983,7 @@ extern "C" {
 /* Macro to validate parameters in Cy_SysPm_ExecuteCallback() function */
 
 #if defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
-#if (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR >= 1)
 #define CY_SYSPM_IS_CALLBACK_TYPE_VALID(type)           (((type) == CY_SYSPM_SLEEP)         || \
                                                          ((type) == CY_SYSPM_DEEPSLEEP)     || \
                                                          ((type) == CY_SYSPM_DEEPSLEEP_RAM) || \
@@ -1273,7 +1273,7 @@ extern "C" {
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) || defined (CY_DOXYGEN)
 
-#if (CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1UL) && defined (CY_DEVICE_PSB3)
+#if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL) && (CY_IP_MXS22SRSS_VERSION_MINOR == 1UL) && defined (CY_DEVICE_PSB3)
 
 /**
 * The internal define of the first wake-up pin value
@@ -1351,7 +1351,7 @@ extern "C" {
 #define CY_SYSPM_HIB_WAKEUP_BTSS_POLARITY_HIGH_MASK    \
                                   (_VAL2FLD(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIB_WAKE_CTL2_HIB_WAKE_SRC, CY_SYSPM_HIB_WAKEUP_BTSS_POS))
 
-#elif (CY_IP_MXS22SRSS_VERSION == 2UL)
+#elif defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL)
 /**
 * The internal define of the first LPComparator value
 * used in the Cy_SysPm_SetHibernateWakeupSource() function
@@ -4550,7 +4550,7 @@ bool Cy_SysPm_IsSystemUlp(void);
 * \snippet syspm/snippet/main.c snippet_Cy_SysPm_IsSystemLp
 *
 *******************************************************************************/
-#if !((CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 2))
+#if !(defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && (CY_IP_MXS22SRSS_VERSION_MINOR == 2))
 bool Cy_SysPm_IsSystemLp(void);
 #endif
 #endif

@@ -293,8 +293,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Hkdf_Expand(CRYPTO_Type *base, cy_en_cry
         tLength = hashlen;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr((volatile void *)okm,(int32_t)okmLength);
+#if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)okm,(int32_t)okmLength);
 #endif
     return status;
 }

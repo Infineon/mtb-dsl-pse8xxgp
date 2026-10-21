@@ -274,13 +274,21 @@
                  desc='Divider for DAC Refresh Rate and DAC Refresh Time evaluation'
                  default='4'/>
 
-    <ParamString id='refreshRateLP'
+    <ParamString id='refreshRateValueLP'
+                 name='refreshRateValueLP'
+                 group='Internal'
+                 visible='false'
+                 editable='false'
+                 desc='DAC refresh rate in Hz for LowPower mode'
+                 default='`${4096000.0 / clockDividerLP}`'/>
+
+          <ParamString id='refreshRateLP'
                  name='DAC Refresh Rate (LP)'
                  group='DAC Clock'
                  desc='DAC Refresh Rate = 4.096 MHz / Clock Divider'
                  visible='`${opMode eq "LowPower"}`'
                  editable='false'
-                 default='`${formatFrequency(4096000.0/clockDividerLP)}`'/>
+                 default='`${formatFrequency(refreshRateValueLP)}`'/>
 
     <ParamString id='refreshTimeValueLP' name='refreshTimeValueLP' group='Internal' desc='' visible='false' editable='false' default='`${clockDividerLP /4096000.0}`'/>
 
@@ -308,13 +316,21 @@
                 desc='Peri Clock connected to DAC0 /DAC1 divider value'
                 default='`${isClockEnabled ? cast(int64, dividerValue) : errorMessage}`'/>
 
-   <ParamString id='refreshRateHS'
-                name='DAC Refresh Rate (HS)'
-                group='DAC Clock'
-                desc='DAC Refresh Rate  = Peri Clock connected to DAC0 /DAC1 frequency value'
-                visible='`${opMode eq "HighSpeed"}`'
-                editable='false'
-                default='`${isClockEnabled ? formatFrequency(frequencyValue, accuracy) : errorMessage}`'/>
+    <ParamString id='refreshRateValueHS'
+                 name='refreshRateValueHS'
+                 group='Internal'
+                 visible='false'
+                 editable='false'
+                 desc='DAC refresh rate in Hz for HighSpeed mode'
+                 default='`${isClockEnabled ? frequencyValue : 0}`'/>
+
+        <ParamString id='refreshRateHS'
+                 name='DAC Refresh Rate (HS)'
+                 group='DAC Clock'
+                 desc='DAC Refresh Rate  = Peri Clock connected to DAC0 /DAC1 frequency value'
+                 visible='`${opMode eq "HighSpeed"}`'
+                 editable='false'
+                 default='`${isClockEnabled ? formatFrequency(refreshRateValueHS, accuracy) : errorMessage}`'/>
 
     <ParamString id='refreshTimeValueHS' name='refreshTimeValueHS' group='Internal' desc='' visible='false' editable='false' default='`${isClockEnabled ? (1.0 / frequencyValue) : 0}`'/>
 
@@ -333,6 +349,34 @@
                             refreshTimeValueHS gt 0.000001 ? "us" :
                             refreshTimeValueHS gt 0.000000001 ? "ns" :
                             "ps") : ""}`'/>
+
+    <ParamString id='refreshRateValue'
+                 name='refreshRateValue'
+                 group='Internal'
+                 visible='false'
+                 editable='false'
+                 desc='DAC refresh rate in Hz'
+                 default='`${(opMode eq "LowPower") ? refreshRateValueLP : refreshRateValueHS}`'/>
+
+    <ParamString id='outputBufferPowerAuto'
+                 name='outputBufferPowerAuto'
+                 group='Internal'
+                 visible='false'
+                 editable='false'
+                 desc='Minimum output buffer power with bandwidth greater than half the DAC refresh rate'
+                 default='`${((outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_INTERNAL) || (outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_EXTERNAL)) ?
+                             ((outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_EXTERNAL) ?
+                              (refreshRateValue &lt; 200000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_ULTRA_LOW" :
+                               refreshRateValue &lt; 2400000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_LOW_RAIL" :
+                               refreshRateValue &lt; 4800000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_MEDIUM_RAIL" :
+                               refreshRateValue &lt; 12000000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_HIGH_RAIL" :
+                               "CY_AUTANALOG_DAC_OUT_BUF_PWR_ULTRA_HIGH_RAIL") :
+                              (refreshRateValue &lt; 60000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_ULTRA_LOW" :
+                               refreshRateValue &lt; 700000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_LOW_RAIL" :
+                               refreshRateValue &lt; 1400000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_MEDIUM_RAIL" :
+                               refreshRateValue &lt; 3500000.0 ? "CY_AUTANALOG_DAC_OUT_BUF_PWR_HIGH_RAIL" :
+                               "CY_AUTANALOG_DAC_OUT_BUF_PWR_ULTRA_HIGH_RAIL")) :
+                             "CY_AUTANALOG_DAC_OUT_BUF_PWR_OFF"}`'/>
 
     <ParamBool id='enableStepValues'
                name='Enable Step Values'
@@ -531,10 +575,10 @@
     <ParamChoice id='outputBufferPower'
                  name='Output Buffer Power'
                  group='Advanced Settings'
-                 visible='`${((showAdvancedSettings) &amp;&amp; ((outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_INTERNAL) || (outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_EXTERNAL)))}`'
+                 visible='`${((outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_INTERNAL) || (outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_EXTERNAL))}`'
                  editable='`${((showAdvancedSettings) &amp;&amp; ((outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_INTERNAL) || (outputTopology eq CY_AUTANALOG_DAC_TOPO_BUFFERED_EXTERNAL)))}`'
                  desc='Controls power consumption, Max sample rate and output voltage range of the DAC&apos;s output buffer'
-                 default='CY_AUTANALOG_DAC_OUT_BUF_PWR_OFF'>
+                 default='`${outputBufferPowerAuto}`'>
       <Entry name='Off'                             value='CY_AUTANALOG_DAC_OUT_BUF_PWR_OFF'             visible='true'/>
       <Entry name='Ultra-Low'                       value='CY_AUTANALOG_DAC_OUT_BUF_PWR_ULTRA_LOW'       visible='true'/>
       <Entry name='Ultra-Low, Rail-to-Rail Inputs'  value='CY_AUTANALOG_DAC_OUT_BUF_PWR_ULTRA_LOW_RAIL'  visible='true'/>
@@ -789,7 +833,7 @@
         <Member name='bottomSel'     value='false' />
         <Member name='disabledMode'  value='`${disabledOutputState}`' />
         <Member name='refBuffPwr'    value='`${(vrefSelect != 0) ? referenceBufferPower : "CY_AUTANALOG_DAC_REF_BUF_PWR_OFF"}`' />
-        <Member name='outBuffPwr'    value='`${(outputTopology eq "CY_AUTANALOG_DAC_TOPO_BUFFERED_INTERNAL") || (outputTopology eq "CY_AUTANALOG_DAC_TOPO_BUFFERED_EXTERNAL") ? outputBufferPower : "CY_AUTANALOG_DAC_OUT_BUF_PWR_OFF"}`' />
+        <Member name='outBuffPwr'    value='`${((outputTopology eq "CY_AUTANALOG_DAC_TOPO_BUFFERED_INTERNAL") || (outputTopology eq "CY_AUTANALOG_DAC_TOPO_BUFFERED_EXTERNAL")) ? (showAdvancedSettings ? outputBufferPower : outputBufferPowerAuto) : "CY_AUTANALOG_DAC_OUT_BUF_PWR_OFF"}`' />
         <Member name='sign'          value='`${dataFormat}`' />
         <Member name='vrefMux'       value='`${vrefSelect == 1 ? "CY_AUTANALOG_DAC_VREF_MUX_VBGR"      :
                                                vrefSelect == 2 ? "CY_AUTANALOG_DAC_VREF_MUX_PRB_OUT0"  :

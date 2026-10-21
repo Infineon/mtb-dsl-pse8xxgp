@@ -89,10 +89,10 @@ static cy_en_crypto_status_t Cy_Crypto_Core_V2_poly_1305_load_ctx(CRYPTO_Type *b
     static const uint8_t constant_5[] = { 0x05u };
 
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)state->state,(int32_t)CY_CRYPTO_POLY1305_STATE_SIZE);
-        SCB_CleanDCache_by_Addr((volatile void *)state->key,(int32_t)CY_CRYPTO_POLY1305_KEY_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)state->state,(int32_t)CY_CRYPTO_POLY1305_STATE_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)state->key,(int32_t)CY_CRYPTO_POLY1305_KEY_SIZE);
 #endif
 
     stateRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(state->state);
@@ -233,9 +233,9 @@ static void Cy_Crypto_Core_V2_poly_1305_store_ctx(CRYPTO_Type *base, cy_stc_cryp
     CY_CRYPTO_VU_REG_BIT(POLY_1305_T_259_VREG) | CY_CRYPTO_VU_REG_BIT(POLY_1305_T_132_VREG) | CY_CRYPTO_VU_REG_BIT(POLY_1305_T_5_VREG) |
     CY_CRYPTO_VU_REG_BIT(POLY_1305_C_5_VREG) | CY_CRYPTO_VU_REG_BIT(POLY_1305_C_130_VREG) );
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_InvalidateDCache_by_Addr((volatile void *)state->state,(int32_t)CY_CRYPTO_POLY1305_STATE_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)state->state,(int32_t)CY_CRYPTO_POLY1305_STATE_SIZE);
 #endif
 
 }
@@ -269,9 +269,9 @@ static void Cy_Crypto_Core_V2_poly_1305_calculate(CRYPTO_Type *base,  uint8_t * 
     uint32_t destAddr ;
     uint8_t *p_messageRemap;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)p_message,(int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)p_message,(int32_t)size);
 #endif
 
     p_messageRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(p_message);
@@ -379,11 +379,11 @@ cy_en_crypto_status_t Cy_Crypto_Core_poly_1305_Init(CRYPTO_Type *base, uint8_t c
         state->key[8u] &= 0xfcu;
         state->key[12u] &= 0xfcu;
 
-        #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+        #if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)state->key,(int32_t)CY_CRYPTO_POLY1305_KEY_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)state->key,(int32_t)CY_CRYPTO_POLY1305_KEY_SIZE);
 
-        SCB_InvalidateDCache_by_Addr((volatile void *)buffer,(int32_t)sizeof(cy_stc_crypto_poly_1305_buffers_t));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)buffer,(int32_t)sizeof(cy_stc_crypto_poly_1305_buffers_t));
         #endif
 
         tmpResult = CY_CRYPTO_SUCCESS;
@@ -435,10 +435,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_poly_1305_Update(CRYPTO_Type *base, cy_stc_
     if ((tmpResult == CY_CRYPTO_SUCCESS) && (size > 0UL))
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)p_message,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
-        SCB_CleanDCache_by_Addr((volatile void *)state->partialMessage,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)p_message,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)state->partialMessage,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
 #endif
 
         p_messageRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(p_message);
@@ -484,9 +484,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_poly_1305_Update(CRYPTO_Type *base, cy_stc_
 
         }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_InvalidateDCache_by_Addr((volatile void *)state->partialMessage,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)state->partialMessage,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
 #endif
         Cy_Crypto_Core_V2_poly_1305_store_ctx(base, state);
         tmpResult = CY_CRYPTO_SUCCESS;
@@ -526,9 +526,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_poly_1305_Finish(CRYPTO_Type *base, cy_stc_
 
     if((NULL != state) &&  (NULL != p_mac))
     {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)state->partialMessage,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)state->partialMessage,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
 #endif
         p_macRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(p_mac);
         partialMessageRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(&state->partialMessage[0u]);
@@ -556,9 +556,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_poly_1305_Finish(CRYPTO_Type *base, cy_stc_
         Cy_Crypto_Core_V2_BlockMov(base, CY_CRYPTO_V2_RB_FF_STORE, CY_CRYPTO_V2_RB_FF_LOAD0, CY_CRYPTO_POLY1305_BLOCK_SIZE);
         Cy_Crypto_Core_V2_poly_1305_store_ctx(base, state);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_InvalidateDCache_by_Addr((volatile void *)p_mac,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)p_mac,(int32_t)CY_CRYPTO_POLY1305_BLOCK_SIZE);
 #endif
 
         tmpResult = CY_CRYPTO_SUCCESS;

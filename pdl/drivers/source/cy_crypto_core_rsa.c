@@ -362,10 +362,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Verify_Ext(CRYPTO_Type *base,
             }
         }
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+    #if CY_CRYPTO_DCACHE_ENABLED
 
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)(decryptedSignatureIn),(int32_t)decryptedSignatureLength);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)(decryptedSignatureIn),(int32_t)decryptedSignatureLength);
     #endif
 
         if ((CY_CRYPTO_MODE_SHA_NONE != digestType) && (0u == cmpRes))
@@ -560,10 +560,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Sign(CRYPTO_Type *base,
         *signaturePtr++ = 0x00u;
         *signaturePtr++ = 0x01u;
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+    #if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)(signature),(int32_t)signatureLength);
-            SCB_CleanDCache_by_Addr((volatile void *)(digest),(int32_t)digestLength);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)(signature),(int32_t)signatureLength);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)(digest),(int32_t)digestLength);
 
     #endif
 
@@ -573,16 +573,16 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Sign(CRYPTO_Type *base,
         signaturePtr += psLength;
 
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+    #if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_InvalidateDCache_by_Addr((volatile void *)(signature),(int32_t)signatureLength);
+            CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)(signature),(int32_t)signatureLength);
     #endif
         /* After PS string (before T string) Set to 0x00 byte.*/
         *signaturePtr++ = 0x00;
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+    #if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)(signature),(int32_t)signatureLength);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)(signature),(int32_t)signatureLength);
 
     #endif
         if (CY_CRYPTO_MODE_SHA_NONE != digestType)
@@ -595,9 +595,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Sign(CRYPTO_Type *base,
         signatureRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(signaturePtr);
         Cy_Crypto_Core_MemCpy(base, (void *)signatureRemap, (void const *)digestRemap, (uint16_t)locDigestSize);
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+    #if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_InvalidateDCache_by_Addr((volatile void *)(signature),(int32_t)signatureLength);
+            CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)(signature),(int32_t)signatureLength);
     #endif
     }
 
@@ -1248,12 +1248,12 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Proc(CRYPTO_Type *base,
     uint16_t vu_mem_size         = 0U;
     void *vu_mem_address         = NULL;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)key->pubExpPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(expBitLength));
-    SCB_CleanDCache_by_Addr((volatile void *)key->moduloPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
-    SCB_CleanDCache_by_Addr((volatile void *)message,(int32_t)messageSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->pubExpPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(expBitLength));
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->moduloPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)message,(int32_t)messageSize);
 #endif
 
     vu_mem_address = Cy_Crypto_Core_GetVuMemoryAddress(base);
@@ -1321,11 +1321,11 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Proc(CRYPTO_Type *base,
     }
     else
     {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 
         /* Flush the cache */
         CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-        SCB_CleanDCache_by_Addr((volatile void *)key->barretCoefPtr,(int32_t)(CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength) + (uint32_t)1u));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->barretCoefPtr,(int32_t)(CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength) + (uint32_t)1u));
 #endif
         Cy_Crypto_Core_Vu_SetMemValue(base, barrettReg, barretCoefRemap, nBitLength + (uint32_t)1u);
     }
@@ -1345,10 +1345,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Proc(CRYPTO_Type *base,
     }
     else
     {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)key->rBarPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->rBarPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
 #endif
         Cy_Crypto_Core_Vu_SetMemValue(base, rBarReg, rBarRemap, nBitLength);
     }
@@ -1364,10 +1364,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Proc(CRYPTO_Type *base,
     }
     else
     {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)key->inverseModuloPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->inverseModuloPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
 #endif
         Cy_Crypto_Core_Vu_SetMemValue(base, inverseModuloReg, inverseModuloRemap, nBitLength);
     }
@@ -1390,9 +1390,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Proc(CRYPTO_Type *base,
 
     /* Copy the tmpResult to output buffer */
     Cy_Crypto_Core_Vu_GetMemValue(base, (uint8_t*)processedMessageRemap, yReg, nBitLength);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 
-        SCB_InvalidateDCache_by_Addr(processedMessage, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
+        CY_CRYPTO_INVALIDATE_DCACHE(processedMessage, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
 #endif
 
     CY_CRYPTO_VU_FREE_MEM(base, CY_CRYPTO_VU_REG_BIT(yReg) | CY_CRYPTO_VU_REG_BIT(xReg) |
@@ -1446,10 +1446,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Coef(CRYPTO_Type *base,
     uint16_t vu_mem_size         = 0U;
     void *vu_mem_address         = NULL;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)key->moduloPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->moduloPtr,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
 #endif
 
     vu_mem_address = Cy_Crypto_Core_GetVuMemoryAddress(base);
@@ -1519,12 +1519,12 @@ cy_en_crypto_status_t Cy_Crypto_Core_Rsa_Coef(CRYPTO_Type *base,
     CY_CRYPTO_VU_FREE_MEM(base, CY_CRYPTO_VU_REG_BIT(modReg) | CY_CRYPTO_VU_REG_BIT(inverseModuloReg) | CY_CRYPTO_VU_REG_BIT(barrettReg) | CY_CRYPTO_VU_REG_BIT(rBarReg));
 
     Cy_Crypto_Core_Vu_WaitForComplete(base);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 
     CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-    SCB_InvalidateDCache_by_Addr(key->barretCoefPtr, (int32_t)(CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength)+1u));
-    SCB_InvalidateDCache_by_Addr(key->inverseModuloPtr, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
-    SCB_InvalidateDCache_by_Addr(key->rBarPtr, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
+    CY_CRYPTO_INVALIDATE_DCACHE(key->barretCoefPtr, (int32_t)(CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength)+1u));
+    CY_CRYPTO_INVALIDATE_DCACHE(key->inverseModuloPtr, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
+    CY_CRYPTO_INVALIDATE_DCACHE(key->rBarPtr, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(nBitLength));
 #endif
 
     return (tmpResult);

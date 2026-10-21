@@ -38,7 +38,7 @@ extern "C" {
 
 #if defined (CY_IP_MXS22LPCOMP)
 #if defined (CY_IP_MXS22RRAMC) && (CY_IP_MXS22RRAMC_VERSION == 2)
-#include "cy_v2_systrimm.h"
+#include "cy_systrimm.h"
 #else
 #include "cy_systrimm.h"
 #endif

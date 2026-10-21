@@ -152,7 +152,7 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 15, \
 #define CY_DMA_DRV_VERSION_MINOR       90
 
 /** The DMA driver identifier */
-#define CY_DMA_ID                      (CY_PDL_DRV_ID(0x13U))
+#define CY_DMA_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_DMA))
 
 /** The DMA channel interrupt mask */
 #define CY_DMA_INTR_MASK               (0x01UL)
@@ -1357,7 +1357,7 @@ __STATIC_INLINE void Cy_DMA_Descriptor_SetYloopDataCount(cy_stc_dma_descriptor_t
     CY_ASSERT_L1(CY_DMA_2D_TRANSFER == Cy_DMA_Descriptor_GetDescriptorType(descriptor));
     CY_ASSERT_L2(CY_DMA_IS_LOOP_COUNT_VALID(yCount));
     /* Convert the data count from the user's range (1-256) into the machine range (0-255). */
-    CY_REG32_CLR_SET(descriptor->yCtl, CY_DMA_CTL_COUNT, yCount - 1UL);
+    CY_REG32_CLR_SET(descriptor->yCtl, CY_DMA_CTL_COUNT, (yCount > 0UL) ? (yCount - 1UL) : 0UL);
 }
 
 

@@ -108,7 +108,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_EC25519_Mont_ladder (CRYPTO_Type *base, cy_
 
    CY_CRYPTO_VU_PUSH_REG (base);
 
-    pd_ptr = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_d);
+    /* RegMemPointer() returns a crypto-engine-side (SAHB) address; translate it
+     * for direct CPU dereference below */
+    pd_ptr = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_d));
 
     tmpResult = CY_CRYPTO_VU_ALLOC_MEM (base, t1, bitsize);
     if(CY_CRYPTO_SUCCESS != tmpResult)
@@ -286,7 +288,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_EC25519_PointMultiplication(CRYPTO_Type *ba
     Cy_Crypto_Core_Vu_SetMemValue (base, my_d, (uint8_t const *)pd_Remap, bitsize);
 
 
-    pd_ptr = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, my_d);
+    /* RegMemPointer() returns a crypto-engine-side (SAHB) address; translate it
+     * for direct CPU dereference below */
+    pd_ptr = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, my_d));
     /* Decode scalar(RFC-7748 sec-5)*/
     /* For EC25519, in order to decode 32 random bytes as an integer scalar, set the three
     least significant bits of the first byte and the most significant bit of the last to zero,
@@ -416,7 +420,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_EC25519_MakePrivateKey(CRYPTO_Type *base,
             return tmpResult;
         }
         /* generate random string */
-        uint32_t *keyRegPtr = Cy_Crypto_Core_Vu_RegMemPointer(base, p_key);
+        uint32_t *keyRegPtr = CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_key));
 
         if (GetRandomDataFunc != NULL)
         {

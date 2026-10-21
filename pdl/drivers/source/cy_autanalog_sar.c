@@ -234,8 +234,12 @@ cy_en_autanalog_status_t Cy_AutAnalog_SAR_LoadStaticConfig(uint8_t sarIdx, const
         if (CY_AUTANALOG_SUCCESS == result)
         {
             uint16_t hsSampleTime[CY_AUTANALOG_SAR_SAMPLE_TIME_NUM] = {0U};
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 11.9','Review shows that usage macro NULL does not have any negative drawbacks');
-            cy_stc_autanalog_sar_hs_chan_t * hsGpioChan[PASS_SAR_SAR_GPIO_CHANNELS] = {NULL};
+            cy_stc_autanalog_sar_hs_chan_t * hsGpioChan[PASS_SAR_SAR_GPIO_CHANNELS];
+
+            for (uint32_t hsChanIdx = 0UL; hsChanIdx < PASS_SAR_SAR_GPIO_CHANNELS; hsChanIdx++)
+            {
+                hsGpioChan[hsChanIdx] = NULL;
+            }
 
             cy_en_autanalog_sar_vref_t hsVref = (NULL != sarStaCfg->hsStaCfg) ? sarStaCfg->hsStaCfg->hsVref : CY_AUTANALOG_SAR_VREF_VDDA;
             uint8_t hsGpioResultMask = (NULL != sarStaCfg->hsStaCfg) ? sarStaCfg->hsStaCfg->hsGpioResultMask : 0U;
@@ -739,7 +743,6 @@ int16_t Cy_AutAnalog_SAR_CountsTo_degreeC(uint8_t sarIdx, bool sarLP, uint8_t sa
                  _FLD2BOOL(SAR_SEQ_LP_DATA_AVG_EN, AUTANALOG_SAR_SEQ_LP_DATA(baseAddr, sarSequencer));
 
         /* Get AVG_MODE parameter for SAR ADC channel */
-        CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Review shows that conversion from uint32_t to enum does not have any negative drawbacks');
         accMode = (cy_en_autanalog_sar_acc_mode_t)_FLD2VAL(SAR_STA_CTRL_AVG_MODE, AUTANALOG_SAR_CTRL(baseAddr));
 
         /* Get SHIFT_MODE parameter for SAR ADC channel */
@@ -752,10 +755,9 @@ int16_t Cy_AutAnalog_SAR_CountsTo_degreeC(uint8_t sarIdx, bool sarLP, uint8_t sa
             accShift = _FLD2BOOL(SAR_STA_MUX_CHAN_CFG_AVG_SHIFT, AUTANALOG_SAR_MUX_CHAN_CFG(baseAddr, sarChannel));
 
             /* Get AVG_CNT parameter for SAR ADC sequencer */
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that conversion from uint32_t to uint8_t does not have any negative drawbacks');
-            avgCnt = (sarLP == false) ?
+            avgCnt = (uint8_t)((sarLP == false) ?
                       _FLD2VAL(SAR_SEQ_HS_DATA_AVG_CNT, AUTANALOG_SAR_SEQ_HS_DATA(baseAddr, sarSequencer)):
-                      _FLD2VAL(SAR_SEQ_LP_DATA_AVG_CNT, AUTANALOG_SAR_SEQ_LP_DATA(baseAddr, sarSequencer));
+                      _FLD2VAL(SAR_SEQ_LP_DATA_AVG_CNT, AUTANALOG_SAR_SEQ_LP_DATA(baseAddr, sarSequencer)));
 
             /* Averaging is not done in HW */
             if (!accShift || (avgShiftMode16 && (avgCnt < (uint8_t)CY_AUTANALOG_SAR_ACC_CNT32)))
@@ -768,7 +770,6 @@ int16_t Cy_AutAnalog_SAR_CountsTo_degreeC(uint8_t sarIdx, bool sarLP, uint8_t sa
         /* Shift 12b value to 16b */
         if (!avgShiftMode16)
         {
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.1','Review shows that operator "<<" does not have any negative drawbacks');
             sarCounts <<= 4UL;
         }
 
@@ -875,21 +876,15 @@ uint16_t Cy_AutAnalog_FIFO_ReadDataChanId(uint8_t fifoIdx, uint8_t buffIdx, cy_e
 
         for (uint16_t idx = 0U; idx < locSize; idx++)
         {
-            CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 1, 'Review shows that type conversion from signed to unsigned does not have any negative drawbacks');
             locData = (uint32_t)Cy_AutAnalog_FIFO_ReadWord(fifoIdx, buffIdx);
-            CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8');
 
-            CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.3', 1, 'Review shows that type conversion from uint32_t to uint8_t does not have any negative drawbacks');
-            chanID[idx] = (CY_AUTANALOG_SAR_INPUT_GPIO == input) ?
+            chanID[idx] = (uint8_t)((CY_AUTANALOG_SAR_INPUT_GPIO == input) ?
                           (locData & AUTANALOG_MMIO_FIFO_CH_ID_MASK_GPIO) >> AUTANALOG_MMIO_FIFO_CH_ID_POS_GPIO :
-                          (locData & AUTANALOG_MMIO_FIFO_CH_ID_MASK_MUX)  >> AUTANALOG_MMIO_FIFO_CH_ID_POS_MUX;
-            CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.3');
+                          (locData & AUTANALOG_MMIO_FIFO_CH_ID_MASK_MUX)  >> AUTANALOG_MMIO_FIFO_CH_ID_POS_MUX);
 
-            CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.3', 2, 'Review shows that type conversion from uint16_t to int32_t does not have any negative drawbacks');
             data[idx] = ((locData & AUTANALOG_MMIO_FIFO_SIGN_MASK) == AUTANALOG_MMIO_FIFO_SIGN_MASK) ?
                         (int32_t)(int16_t)CY_LO16(locData) :
                         (int32_t)CY_LO16(locData);
-            CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.3');
         }
     }
 
@@ -1105,17 +1100,15 @@ static int32_t SAR_GetAverageVoltCounts(uint32_t baseAddr, bool sarLP, uint8_t s
              _FLD2BOOL(SAR_SEQ_LP_DATA_AVG_EN, AUTANALOG_SAR_SEQ_LP_DATA(baseAddr, sarSequencer));
 
     /* Get AVG_MODE parameter for SAR ADC channel */
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Review shows that conversion from uint32_t to enum does not have any negative drawbacks');
     avgMode = (cy_en_autanalog_sar_acc_mode_t)_FLD2VAL(SAR_STA_CTRL_AVG_MODE, AUTANALOG_SAR_CTRL(baseAddr));
 
     /* Check if average is enabled */
     if (avgEn && (avgMode != CY_AUTANALOG_SAR_ACC_DISABLED))
     {
         /* Get AVG_CNT parameter for SAR ADC sequencer */
-        CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that conversion from uint32_t to uint8_t does not have any negative drawbacks');
-        avgCnt = (sarLP == false) ?
+        avgCnt = (uint8_t)((sarLP == false) ?
                   _FLD2VAL(SAR_SEQ_HS_DATA_AVG_CNT, AUTANALOG_SAR_SEQ_HS_DATA(baseAddr, sarSequencer)):
-                  _FLD2VAL(SAR_SEQ_LP_DATA_AVG_CNT, AUTANALOG_SAR_SEQ_LP_DATA(baseAddr, sarSequencer));
+                  _FLD2VAL(SAR_SEQ_LP_DATA_AVG_CNT, AUTANALOG_SAR_SEQ_LP_DATA(baseAddr, sarSequencer)));
 
         /* Get AVG_SHIFT parameter for SAR ADC channel */
         avgShift = (sarInput == CY_AUTANALOG_SAR_INPUT_GPIO) ?
@@ -1129,7 +1122,6 @@ static int32_t SAR_GetAverageVoltCounts(uint32_t baseAddr, bool sarLP, uint8_t s
         if (!avgShift)
         {
             /* Calculate average value */
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Review shows that conversion from unsigned to signed does not have any negative drawbacks');
             sarCounts /= (int32_t)(1UL << (avgCnt + 1UL));
         }
 
@@ -1154,7 +1146,6 @@ static int32_t SAR_GetAverageTempCounts(bool avgShiftMode16, uint8_t avgCnt, int
     uint16_t avgDivider;
 
     /* Calculate divider value */
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that conversion from uint32_t to uint16_t does not have any negative drawbacks');
     avgDivider = (uint16_t)(1UL << (avgCnt + 1UL));
 
     /* Averaged value */
@@ -1163,7 +1154,6 @@ static int32_t SAR_GetAverageTempCounts(bool avgShiftMode16, uint8_t avgCnt, int
     /* Shift 12b value to 16b */
     if (avgShiftMode16)
     {
-        CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.1','Review shows that operator "<<" does not have any negative drawbacks');
         sarCounts <<= 4UL;
     }
 

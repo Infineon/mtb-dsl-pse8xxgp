@@ -78,7 +78,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_SignHash(CRYPTO_Type *base, const uint8
 
     cy_stc_crypto_ecc_key ephKey;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     uint8_t myKGX_t[CY_CRYPTO_ALIGN_CACHE_LINE(CY_CRYPTO_ECC_MAX_BYTE_SIZE)+CY_CRYPTO_DCAHCE_PADDING_SIZE];
     uint8_t myKGY_t[CY_CRYPTO_ALIGN_CACHE_LINE(CY_CRYPTO_ECC_MAX_BYTE_SIZE)+CY_CRYPTO_DCAHCE_PADDING_SIZE];
     uint8_t *myKGX = (uint8_t *)CY_CRYPTO_DCACHE_ALIGN_ADDRESS(myKGX_t);
@@ -116,11 +116,11 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_SignHash(CRYPTO_Type *base, const uint8
             uint32_t bytesize = CY_CRYPTO_BYTE_SIZE_OF_BITS(eccDp->size);
             uint32_t datasize = hashlen;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)hash,(int32_t)hashlen);
-            SCB_CleanDCache_by_Addr((volatile void *)key->k, (int32_t)bytesize);
-            SCB_CleanDCache_by_Addr((volatile void *)messageKey,(int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)hash,(int32_t)hashlen);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->k, (int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)messageKey,(int32_t)bytesize);
 #endif
 
             /* make ephemeral key pair */
@@ -136,10 +136,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_SignHash(CRYPTO_Type *base, const uint8
                 uint32_t p_r      =  9U;
                 uint32_t p_s      = 10U;
                 uint32_t p_d      = 11U;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
                 /* Flush the cache */
-                SCB_CleanDCache_by_Addr((volatile void *)ephKey.pubkey.x,(int32_t)bytesize);
-                SCB_CleanDCache_by_Addr((volatile void *)ephKey.pubkey.y, (int32_t)bytesize);
+                CY_CRYPTO_CLEAN_DCACHE((volatile void *)ephKey.pubkey.x,(int32_t)bytesize);
+                CY_CRYPTO_CLEAN_DCACHE((volatile void *)ephKey.pubkey.y, (int32_t)bytesize);
 #endif
                 /* load values needed for reduction modulo order of the base point */
                 tmpResult = CY_CRYPTO_VU_ALLOC_MEM (base, VR_P, bitsize);
@@ -296,9 +296,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_SignHash(CRYPTO_Type *base, const uint8
                 }
 
                 CY_CRYPTO_VU_FREE_MEM(base, mallocMask);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
                 CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-                SCB_InvalidateDCache_by_Addr(sig, (int32_t)(bytesize*2U));
+                CY_CRYPTO_INVALIDATE_DCACHE(sig, (int32_t)(bytesize*2U));
 #endif
             }
         }
@@ -382,21 +382,21 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_VerifyHash(CRYPTO_Type *base,
             uint32_t p_gy = 10U;
             uint32_t p_qx = 11U;
             uint32_t p_qy = 12U;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)hash,(int32_t)hashlen);
-            SCB_CleanDCache_by_Addr((volatile void *)key->pubkey.x, (int32_t)bytesize);
-            SCB_CleanDCache_by_Addr((volatile void *)key->pubkey.y, (int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)hash,(int32_t)hashlen);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->pubkey.x, (int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->pubkey.y, (int32_t)bytesize);
             CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-            SCB_CleanDCache_by_Addr((volatile void *)sig,(int32_t)(2u*bytesize));
-            SCB_CleanDCache_by_Addr((volatile void *)eccDp->order,(int32_t)bytesize);
-            SCB_CleanDCache_by_Addr((volatile void *)eccDp->Gx,(int32_t)bytesize);
-            SCB_CleanDCache_by_Addr((volatile void *)eccDp->Gy,(int32_t)bytesize);
-            SCB_CleanDCache_by_Addr((volatile void *)eccDp->prime,(int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)sig,(int32_t)(2u*bytesize));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)eccDp->order,(int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)eccDp->Gx,(int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)eccDp->Gy,(int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)eccDp->prime,(int32_t)bytesize);
             CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-            SCB_CleanDCache_by_Addr((volatile void *)eccDp->barrett_o,(int32_t)(bytesize+1u));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)eccDp->barrett_o,(int32_t)(bytesize+1u));
             CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-            SCB_CleanDCache_by_Addr((volatile void *)eccDp->barrett_p,(int32_t)(bytesize+1u));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)eccDp->barrett_p,(int32_t)(bytesize+1u));
 #endif
             /* use Barrett reduction algorithm for operations modulo n (order of the base point) */
             Cy_Crypto_Core_EC_NistP_SetRedAlg(CY_CRYPTO_NIST_P_BARRETT_RED_ALG);

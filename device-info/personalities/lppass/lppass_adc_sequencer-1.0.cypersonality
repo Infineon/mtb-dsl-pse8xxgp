@@ -148,6 +148,22 @@
       <ParamString id='muxchan_$idx_pseudoDiffMode' name='muxchan_$idx_pseudoDiffMode' group='Internal' visible='false' desc='' editable='false' default='`${sar_muxchan_$idx_enabled ? getExposedMember("pass[" . inst_pass . "].sar[" . inst_sar . "].muxchan[" . $idx . "]",  "sar_mux_pseudoDiffMode") : false}`'/>
     </Repeat>
 
+<!-- SAR-level data used to compute Achieved Conversion Time, Result Format and Sequencer Index -->
+    <ParamString id='inst_scan' name='inst_scan' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getInstNumber("scan")}`'/>
+    <ParamString id='adcClockFreq' name='adcClockFreq' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getExposedMember(resource_sar, "sar_adcClockFreq")}`'/>
+    <ParamString id='vrefValue' name='vrefValue' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getExposedMember(resource_sar, "sar_vrefValue")}`'/>
+    <ParamString id='includeChannelId' name='includeChannelId' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getExposedMember(resource_sar, "sar_includeChannelId")}`'/>
+    <ParamString id='accShiftMode' name='accShiftMode' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getExposedMember(resource_sar, "sar_accumulationShiftMode")}`'/>
+    <ParamString id='differentialMode' name='differentialMode' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getExposedMember(resource_sar, "sar_differentialMode")}`'/>
+
+    <Repeat count='4'>
+      <ParamString id='globalSampleTime$idx' name='globalSampleTime$idx' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getExposedMember(resource_sar, "sar_globalSampleTime$idx")}`'/>
+    </Repeat>
+
+    <Repeat count='32'>
+      <ParamString id='groupScanCnt$idx' name='groupScanCnt$idx' group='Internal' visible='`${debug}`' editable='false' desc='' default='`${getExposedMember(resource_sar, "sar_group_$idx_scanCnt")}`'/>
+    </Repeat>
+
 <!-- LPPASS internal parameters -->
     <ParamString id='rootGroupName' name='rootGroupName' group='Internal' visible='`${debug}`' desc='' editable='false'
                  default='Sequencer Configuration'/>
@@ -248,23 +264,29 @@
       <Entry name='128' value='CY_AUTANALOG_SAR_ACC_CNT128' visible='true'/>
       <Entry name='256' value='CY_AUTANALOG_SAR_ACC_CNT256' visible='true'/>
     </ParamChoice>
-<!-- DRIVERS-19853
-    <ParamString id='conversionTime'
-                 name='Achieved Conversion Time'
-                 group='`${rootGroupName}`'
-                 default='TBD'
-                 visible='`${(channelMuxEnable || channelGpioEnable)}`'
-                 editable='false'
-                 desc='Expected Conversion Time for this channel' />
 
-    <ParamString id='resultFormat'
-                 name='Result Format'
-                 group='`${rootGroupName}`'
-                 default='TBD'
-                 visible='`${(channelMuxEnable || channelGpioEnable)}`'
-                 editable='false'
-                 desc='Result Format Number of bits, voltage/bits, signed/unsigned, Max Value, Min Value, Chan ID' />
--->
+<!-- Achieved Conversion Time helpers, declared right after the
+     accumulation parameters they depend on (declaration-order evaluation). -->
+    <ParamString id='selectedSampleClocks' name='selectedSampleClocks' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${!sampleTimeEnable ? globalSampleTime0 :
+                             (sampleTimeSelect eq CY_AUTANALOG_SAR_SAMPLE_TIME1) ? globalSampleTime1 :
+                             (sampleTimeSelect eq CY_AUTANALOG_SAR_SAMPLE_TIME2) ? globalSampleTime2 :
+                             (sampleTimeSelect eq CY_AUTANALOG_SAR_SAMPLE_TIME3) ? globalSampleTime3 : globalSampleTime0}`'/>
+
+    <ParamString id='accCountNum' name='accCountNum' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${(accumulationEnable &amp;&amp; (accMode ne "CY_AUTANALOG_SAR_ACC_DISABLED")) ?
+                             ((accCount eq CY_AUTANALOG_SAR_ACC_CNT2)   ? 2   :
+                              (accCount eq CY_AUTANALOG_SAR_ACC_CNT4)   ? 4   :
+                              (accCount eq CY_AUTANALOG_SAR_ACC_CNT8)   ? 8   :
+                              (accCount eq CY_AUTANALOG_SAR_ACC_CNT16)  ? 16  :
+                              (accCount eq CY_AUTANALOG_SAR_ACC_CNT32)  ? 32  :
+                              (accCount eq CY_AUTANALOG_SAR_ACC_CNT64)  ? 64  :
+                              (accCount eq CY_AUTANALOG_SAR_ACC_CNT128) ? 128 :
+                              (accCount eq CY_AUTANALOG_SAR_ACC_CNT256) ? 256 : 1) : 1}`'/>
+
+    <ParamString id='conversionTimeSec' name='conversionTimeSec' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${(cast(float, adcClockFreq) &gt; 0.0) ? ((cast(float, selectedSampleClocks) + 16.0) * cast(float, accCountNum) / cast(float, adcClockFreq)) : 0.0}`'/>
+
     <ParamChoice id='calibrationInRuntime'
                  name='Calibration in Runtime'
                  group='`${rootGroupName}`'
@@ -420,6 +442,88 @@
                     (sar_mux_1Choice eq CY_AUTANALOG_SAR_CHAN_CFG_MUX14) ? "CY_AUTANALOG_SAR_CHAN_CFG_MUX14" :
                     (sar_mux_1Choice eq CY_AUTANALOG_SAR_CHAN_CFG_MUX15) ? "CY_AUTANALOG_SAR_CHAN_CFG_MUX15" :
                      "CY_AUTANALOG_SAR_CHAN_CFG_MUX0"}`' />
+
+<!-- Result-format / sequencer-index helpers.
+     Declared after the mux-mode parameters they reference (declaration-order evaluation). -->
+    <ParamString id='resultBits' name='resultBits' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${(accumulationEnable &amp;&amp; (accMode ne "CY_AUTANALOG_SAR_ACC_DISABLED") &amp;&amp; accShiftMode) ? 16 : 12}`'/>
+
+    <ParamString id='resultCodeSpan' name='resultCodeSpan' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${(resultBits eq 16) ? 65536 : 4096}`'/>
+
+    <ParamBool id='resultSigned' name='resultSigned' group='Internal' visible='`${debug}`' editable='false' desc=''
+               default='`${(operatingMode eq "LowPower") ? differentialMode :
+                           (simultaneousSampling ? (simultaneousMuxMode eq "CY_AUTANALOG_SAR_CHAN_CFG_MUX0_PSEUDO_DIFF") :
+                                                   (nonSimultaneousMuxMode eq "CY_AUTANALOG_SAR_CHAN_CFG_MUX0_PSEUDO_DIFF"))}`'/>
+
+    <ParamString id='resultLsbMicroVolts' name='resultLsbMicroVolts' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${cast(int64, (resultSigned ? 2.0 : 1.0) * cast(float, vrefValue) * 1000.0 / cast(float, resultCodeSpan) + 0.5)}`'/>
+
+    <ParamString id='resultMaxCode' name='resultMaxCode' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${resultSigned ? (resultCodeSpan / 2 - 1) : (resultCodeSpan - 1)}`'/>
+
+    <ParamString id='resultMinCode' name='resultMinCode' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${resultSigned ? (0 - resultCodeSpan / 2) : 0}`'/>
+
+    <ParamString id='sequencerIndexBase' name='sequencerIndexBase' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${(cast(int64, inst_group) &gt; 0  ? cast(int64, groupScanCnt0)  : 0) +
+                             (cast(int64, inst_group) &gt; 1  ? cast(int64, groupScanCnt1)  : 0) +
+                             (cast(int64, inst_group) &gt; 2  ? cast(int64, groupScanCnt2)  : 0) +
+                             (cast(int64, inst_group) &gt; 3  ? cast(int64, groupScanCnt3)  : 0) +
+                             (cast(int64, inst_group) &gt; 4  ? cast(int64, groupScanCnt4)  : 0) +
+                             (cast(int64, inst_group) &gt; 5  ? cast(int64, groupScanCnt5)  : 0) +
+                             (cast(int64, inst_group) &gt; 6  ? cast(int64, groupScanCnt6)  : 0) +
+                             (cast(int64, inst_group) &gt; 7  ? cast(int64, groupScanCnt7)  : 0) +
+                             (cast(int64, inst_group) &gt; 8  ? cast(int64, groupScanCnt8)  : 0) +
+                             (cast(int64, inst_group) &gt; 9  ? cast(int64, groupScanCnt9)  : 0) +
+                             (cast(int64, inst_group) &gt; 10 ? cast(int64, groupScanCnt10) : 0) +
+                             (cast(int64, inst_group) &gt; 11 ? cast(int64, groupScanCnt11) : 0) +
+                             (cast(int64, inst_group) &gt; 12 ? cast(int64, groupScanCnt12) : 0) +
+                             (cast(int64, inst_group) &gt; 13 ? cast(int64, groupScanCnt13) : 0) +
+                             (cast(int64, inst_group) &gt; 14 ? cast(int64, groupScanCnt14) : 0) +
+                             (cast(int64, inst_group) &gt; 15 ? cast(int64, groupScanCnt15) : 0) +
+                             (cast(int64, inst_group) &gt; 16 ? cast(int64, groupScanCnt16) : 0) +
+                             (cast(int64, inst_group) &gt; 17 ? cast(int64, groupScanCnt17) : 0) +
+                             (cast(int64, inst_group) &gt; 18 ? cast(int64, groupScanCnt18) : 0) +
+                             (cast(int64, inst_group) &gt; 19 ? cast(int64, groupScanCnt19) : 0) +
+                             (cast(int64, inst_group) &gt; 20 ? cast(int64, groupScanCnt20) : 0) +
+                             (cast(int64, inst_group) &gt; 21 ? cast(int64, groupScanCnt21) : 0) +
+                             (cast(int64, inst_group) &gt; 22 ? cast(int64, groupScanCnt22) : 0) +
+                             (cast(int64, inst_group) &gt; 23 ? cast(int64, groupScanCnt23) : 0) +
+                             (cast(int64, inst_group) &gt; 24 ? cast(int64, groupScanCnt24) : 0) +
+                             (cast(int64, inst_group) &gt; 25 ? cast(int64, groupScanCnt25) : 0) +
+                             (cast(int64, inst_group) &gt; 26 ? cast(int64, groupScanCnt26) : 0) +
+                             (cast(int64, inst_group) &gt; 27 ? cast(int64, groupScanCnt27) : 0) +
+                             (cast(int64, inst_group) &gt; 28 ? cast(int64, groupScanCnt28) : 0) +
+                             (cast(int64, inst_group) &gt; 29 ? cast(int64, groupScanCnt29) : 0) +
+                             (cast(int64, inst_group) &gt; 30 ? cast(int64, groupScanCnt30) : 0)}`'/>
+
+    <ParamString id='conversionTime'
+                 name='Achieved Conversion Time'
+                 group='`${rootGroupName}`'
+                 visible='`${(channelMuxEnable || channelGpioEnable)}`'
+                 editable='false'
+                 desc='Expected conversion time for this scan = (Sample Time clocks + 16) * Accumulation Count / ADC clock frequency'
+                 default='`${conversionTimeSec ge 0.001 ? "" . conversionTimeSec * 1000 . " m" :
+                             conversionTimeSec ge 0.000001 ? "" . conversionTimeSec * 1000000 . " u" :
+                             conversionTimeSec ge 0.000000001 ? "" . conversionTimeSec * 1000000000 . " n" :
+                             "" . conversionTimeSec * 1000000000000 . " p"}`s'/>
+
+    <ParamString id='resultFormat'
+                 name='Result Format'
+                 group='`${rootGroupName}`'
+                 default='`${"" . resultBits . "-bit, " . resultLsbMicroVolts . " uV/code, " . (resultSigned ? "Signed" : "Unsigned") . ", Max " . resultMaxCode . ", Min " . resultMinCode . ", ChanID " . (includeChannelId ? "Yes" : "No")}`'
+                 visible='`${(channelMuxEnable || channelGpioEnable)}`'
+                 editable='false'
+                 desc='Result format: number of bits, uV per code, signed/unsigned, max/min code, Channel ID included. See device TRM.' />
+
+    <ParamString id='sequencerIndex'
+                 name='Sequencer Index'
+                 group='`${rootGroupName}`'
+                 default='`${sequencerIndexBase + cast(int64, inst_scan)}`'
+                 visible='`${(channelMuxEnable || channelGpioEnable)}`'
+                 editable='false'
+                 desc='Sequencer index of this scan. Used for the result conversion APIs (e.g. Cy_AutAnalog_SAR_CountsTo_Volts).' />
 
   </Parameters>
 

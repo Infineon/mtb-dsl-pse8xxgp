@@ -26,14 +26,17 @@
 *******************************************************************************/
 
 
+#if !defined(CY_SYSPM_SRF_H)
+#define CY_SYSPM_SRF_H
+
 /**
 * \addtogroup group_syspm_srf
 * \{
 * Internal operation declarations to enable Secure Aware SYSPM.
-*   \defgroup group_syspm_srf_enums    Enums
+*   \defgroup group_syspm_srf_macros          Macros
+*   \defgroup group_syspm_srf_enums           Enums
+*   \defgroup group_syspm_srf_data_structures Data Structures
 */
-
-#pragma once
 
 #include "mtb_srf.h"
 #include "cycfg_ppc.h"
@@ -49,6 +52,7 @@
 #if !defined(CY_PDL_ENABLE_SECURE_AWARE_SYSPM)
 /** SYSPM Secure Aware Driver enablement.  Set to 0 via Makefile defines to disable. When not manually set,
  * defaults to the PDL-wide Secure Aware Driver enablement status.
+ * \ingroup group_syspm_srf_macros
 */
 #define CY_PDL_ENABLE_SECURE_AWARE_SYSPM (CY_PDL_ENABLE_SECURE_AWARE)
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE_SYSPM) */
@@ -139,8 +143,13 @@ typedef enum
 /** \} group_syspm_srf_enums */
 
 #if defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG)
-/** Array of SYSPM Secure Operations */
+/**
+ * Array of SYSPM Secure Operations
+ * \ingroup group_syspm_srf_data_structures
+ */
 extern mtb_srf_op_s_t _cy_pdl_syspm_srf_operations[(uint32_t)CY_PDL_SYSPM_OP_MAX];
 #endif /* defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSPM_ENABLE_SRF_INTEG) */
 
 /** \} group_syspm_srf */
+
+#endif /* CY_SYSPM_SRF_H */

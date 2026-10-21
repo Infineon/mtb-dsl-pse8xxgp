@@ -137,7 +137,7 @@ extern "C"
 #define CY_PDM_PCM_V2_DRV_VERSION_MINOR       1
 
 /** The PDM-PCM driver identifier */
-#define CY_PDM_PCM_V2_ID                       CY_PDL_DRV_ID(0x73u)
+#define CY_PDM_PCM_V2_ID                       CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_PDM_PCM_V2)
 
 /**
 * \defgroup group_pdm_pcm_macros_interrupt_masks_v2 Interrupt Masks

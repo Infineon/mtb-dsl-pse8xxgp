@@ -30,7 +30,7 @@
 <PersonalityTemplate id='altsystick' name='CLK_ALT_SYS_TICK' version='3.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v13'>
   <FittingRules>
     <MappingRules>
-      <IpBlock name='mxs40srss,mxs40ssrss,mxs40srss_ver3,m0seccpuss,m33syscpuss,m55appcpuss,mxs40srss_ver2' />
+      <IpBlock name='mxs40srss,mxs40ssrss,mxs40srss_ver3,m0seccpuss,m33syscpuss,m55appcpuss,mxs40srss_ver2,cpuss' />
       <Resource name='srss\.clock\.altsystickclk|(m33syscpuss|m55appcpuss|cpuss)\.(systick_s|systick_ns)' />
     </MappingRules>
   </FittingRules>
@@ -39,7 +39,7 @@
     <Implements type='clock_sourced_v1'>
       <ExposedMember key='frequency' paramId='frequency' />
       <ExposedMember key='accuracy' paramId='accuracy' />
-      <ExposedMember key='sourceClockDisplayName' paramId='sourceClock' />
+      <ExposedMember key='sourceClockDisplayName' paramId='sourceClockDisplayName' />
     </Implements>
   </BehaviorImplementation>
 
@@ -56,6 +56,7 @@
       <Entry name='CLK_TIMER' value='timerclk' />
       <Entry name='CLK_HF`${"m55appcpuss" eq getIpBlockName() ? "1" : "0"}`' value='hfclk' visible='`${("mxs40ssrss" eq getIpBlockName()) || ("m0seccpuss" eq getIpBlockName()) || ("m33syscpuss" eq getIpBlockName()) || ("m55appcpuss" eq getIpBlockName())}`'/>
     </ParamChoice>
+    <ParamString id='sourceClockDisplayName' name='Source Clock Display Name' group='Internal' default='`${getParamValueDisplay("sourceClock")}`' visible='false' editable='false' desc='' />
     <ParamString id='sourceClockRsc' default='srss[0].clock[0].`${sourceClock}`[`${("m55appcpuss" eq getIpBlockName()&amp;&amp; (sourceClock eq hfclk)) ? "1" : "0"}`]' desc='Resource path of the selected CLK_ALT_SYS_TICK source clock' />
     <ParamString id='guardStr' default='`${"m0seccpuss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M0P)" : "mxs40srss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M4)" : "mxs40srss_ver3" eq getIpBlockName() ? " (CY_CPU_CORTEX_M7)" : "m55appcpuss" eq getIpBlockName() ? " (CY_CPU_CORTEX_M55)" : "systick_s" eq getBlockType(1) ? " (CY_CPU_CORTEX_M33) &amp;&amp; defined(CY_PDL_TZ_ENABLED)" : "(CY_CPU_CORTEX_M33) &amp;&amp; !defined(CY_PDL_TZ_ENABLED)"}`' desc='Preprocessor guard expression selecting the CPU core for the generated SysTick configuration' />
     <ParamString id='sourceClockRscName' default='`${sourceClock eq lfclk ? "LF" :

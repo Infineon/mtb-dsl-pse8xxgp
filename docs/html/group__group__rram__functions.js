@@ -34,5 +34,6 @@ var group__group__rram__functions =
     [ "Cy_RRAM_SetUDSLock", "group__group__rram__functions.html#ga2d4ffac792856fb5ed9f2638af117b95", null ],
     [ "Cy_RRAM_GetUDSLockState", "group__group__rram__functions.html#ga8da4812551d55a196b6f54152728dc42", null ],
     [ "Cy_RRAM_SetUDSConfig", "group__group__rram__functions.html#ga2bd175a5ed35ca43b6ac2c8a6027a3ab", null ],
-    [ "Cy_RRAM_ForceRelPCLock", "group__group__rram__functions.html#ga5b3af8c8d7c2b521eb53f5ef47e3f88b", null ]
+    [ "Cy_RRAM_ForceRelPCLock", "group__group__rram__functions.html#ga5b3af8c8d7c2b521eb53f5ef47e3f88b", null ],
+    [ "Cy_RRAM_GetNVMSubRegionInfo", "group__group__rram__functions.html#ga28bbe424f53079596dbe50e01330f198", null ]
 ];

@@ -80,7 +80,7 @@ extern "C" {
 */
 
 /** Graphics driver identifier */
-#define CY_MIPIDSI_ID                                   (CY_PDL_DRV_ID(0x4EU))
+#define CY_MIPIDSI_ID                                   (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_MIPIDSI))
 
 /** Driver major version */
 #define CY_MIPIDSI_DRV_VERSION_MAJOR                    1

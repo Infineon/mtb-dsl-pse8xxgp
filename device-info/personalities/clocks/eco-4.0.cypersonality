@@ -51,6 +51,7 @@
   <Parameters>
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__eco.html' linkText='Open ECO Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
+    <ParamBool id='is_mxs22srssv2_2' name='is_mxs22srssv2_2' group="" default='`${ "mxs22srss" eq getIpBlockName() &amp;&amp; (getVersion() eq 2) &amp;&amp; (GENERATED.IP_MINOR_VERSION == 2)}`' visible='false' editable='false' desc='True if the IP version is MX22SRSS v2.2' />
 
     <ParamRange id='ecoFrequency' name='Frequency (MHz)' group='General' default='17.2032' visible='true' editable='true' min='4' max='38' resolution='0.0001' desc='The frequency of the external crystal connected to the ECO' />
     <ParamRange id='frequency' name='Frequency (Hz)' group='Internal' default='`${ecoFrequency * 1000000}`' visible='false' editable='false' min='4000000' max='38000000' resolution='1' desc='' />
@@ -130,6 +131,7 @@ Only after providing values for all parameters, the configurability can be deter
   <ConfigFirmware>
     <ConfigInclude value='cy_gpio.h' />
     <ConfigInclude value='cy_sysclk.h' />
+    <ConfigInclude value='cy_syspm_pdcm.h' />
     <ConfigDefine name='CY_CFG_SYSCLK_ECO_ENABLED' value='1' public='false' />
     <ConfigDefine name='CY_CFG_SYSCLK_ECO_FREQ' value='`${frequency}`UL' public='false' />
     <ConfigDefine name='CY_CFG_SYSCLK_ECO_GPIO_IN_PRT' value='GPIO_PRT`${gpio_in_port}`' public='false' />
@@ -149,6 +151,13 @@ Only after providing values for all parameters, the configurability can be deter
       <Line value='{' />
       <Line value='    cycfg_ClockStartupError(CY_CFG_SYSCLK_ECO_ERROR);' />
       <Line value='}' />
+      <Line value='' />
+      <Line value='#if defined(CY_IP_MXS22SRSS) &amp;&amp; (CY_IP_MXS22SRSS_VERSION &gt;= 2)' />
+      <Line value='Cy_SysPm_PDResourceMapEnable(CY_PD_PDCM_SYSCPUSS, (uint32_t)(CY_SYSPM_PD_RESOURCE_ECO | CY_SYSPM_PD_RESOURCE_ECO_WAIT_FOR_LOCK), true);' include='`${!is_mxs22srssv2_2}`' />
+      <Line value='Cy_SysPm_PDResourceMapEnable(CY_PD_PDCM_PD_CORESS, (uint32_t)(CY_SYSPM_PD_RESOURCE_ECO | CY_SYSPM_PD_RESOURCE_ECO_WAIT_FOR_LOCK), true);' include='`${is_mxs22srssv2_2}`' />
+      <Line value='Cy_SysPm_PDResourceMapEnable(CY_PD_PDCM_RRAM, (uint32_t)(CY_SYSPM_PD_RESOURCE_ECO | CY_SYSPM_PD_RESOURCE_ECO_WAIT_FOR_LOCK), true);' include='`${!is_mxs22srssv2_2}`' />
+      <Line value='#endif /* defined(CY_IP_MXS22SRSS) &amp;&amp; (CY_IP_MXS22SRSS_VERSION &gt;= 2) */' />
+      <Line value='' />
       <Line value='if (CY_SYSCLK_TIMEOUT == Cy_SysClk_EcoEnable(10000UL))' />
       <Line value='{' />
       <Line value='    cycfg_ClockStartupError(CY_CFG_SYSCLK_ECO_ERROR);' />

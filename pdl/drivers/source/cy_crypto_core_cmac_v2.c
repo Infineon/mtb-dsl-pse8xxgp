@@ -81,9 +81,9 @@ static void Cy_Crypto_Core_V2_Cmac_CalcSubKey(uint8_t *srcDstPtr)
         /* Just one byte is valuable, the rest are zeros */
         srcDstPtr[(uint8_t)(CY_CRYPTO_AES_BLOCK_SIZE - 1U)] ^= CY_CRYPTO_CMAC_RB;
     }
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)srcDstPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)srcDstPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 }
 
@@ -173,8 +173,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Cmac_Start(CRYPTO_Type *base, cy_stc_cry
     Cy_Crypto_Core_V2_FFStart (base, CY_CRYPTO_V2_RB_FF_STORE, kRemap, CY_CRYPTO_AES_BLOCK_SIZE);
     Cy_Crypto_Core_V2_BlockMov(base, CY_CRYPTO_V2_RB_FF_STORE, CY_CRYPTO_V2_RB_BLOCK1, CY_CRYPTO_AES_BLOCK_SIZE);
     Cy_Crypto_Core_V2_Sync(base);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(cmacState->k, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(cmacState->k, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
     Cy_Crypto_Core_V2_Cmac_CalcSubKey(cmacState->k);
 
@@ -217,9 +217,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Cmac_Update(CRYPTO_Type *base,
     cy_stc_crypto_aes_buffers_t  *bufferRemap;
     uint8_t *messageRemap;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)message,(int32_t)messageSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)message,(int32_t)messageSize);
 #endif
 
     if(messageSize == 0u)
@@ -294,9 +294,6 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Cmac_Update(CRYPTO_Type *base,
 }
 
 
-CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 9.3', 2, \
-    'Partial initialization is intentional')
-
 /*******************************************************************************
 * Function Name: Cy_Crypto_Core_V2_Cmac_Finish
 ****************************************************************************//**
@@ -320,10 +317,12 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 9.3', 2, \
 cy_en_crypto_status_t Cy_Crypto_Core_V2_Cmac_Finish(CRYPTO_Type *base, cy_stc_crypto_v2_cmac_state_t *cmacState, uint8_t* cmac)
 {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     CRYPTO_MEM_ALIGN static const uint8_t p_padding[CY_CRYPTO_ALIGN_CACHE_LINE(16)] =
     {
         0x80u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
+        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
+        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
         0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u
     };
 #else
@@ -344,9 +343,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Cmac_Finish(CRYPTO_Type *base, cy_stc_cr
     kRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(cmacState->k);
     bufferRemap = (cy_stc_crypto_aes_buffers_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(cmacState->aesState.buffers);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)p_padding,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)p_padding,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     Cy_Crypto_Core_V2_FFContinue(base, CY_CRYPTO_V2_RB_FF_LOAD0, tempRemap, CY_CRYPTO_AES_BLOCK_SIZE);
@@ -373,14 +372,12 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Cmac_Finish(CRYPTO_Type *base, cy_stc_cr
     Cy_Crypto_Core_V2_FFStart   (base, CY_CRYPTO_V2_RB_FF_STORE, cmacRemap, CY_CRYPTO_AES_BLOCK_SIZE);
     Cy_Crypto_Core_V2_BlockMov  (base, CY_CRYPTO_V2_RB_FF_STORE, CY_CRYPTO_V2_RB_BLOCK1, CY_CRYPTO_AES_BLOCK_SIZE);
     Cy_Crypto_Core_V2_Sync(base);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(cmac, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(cmac, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     return (CY_CRYPTO_SUCCESS);
 }
-
-CY_MISRA_BLOCK_END('MISRA C-2012 Rule 9.3')
 
 /*******************************************************************************
 * Function Name: Cy_Crypto_Core_V2_Cmac_Free

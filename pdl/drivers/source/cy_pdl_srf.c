@@ -27,7 +27,7 @@
 
 #include "cy_pdl_srf.h"
 
-#if defined(COMPONENT_SECURE_DEVICE) && (CY_PDL_ENABLE_SECURE_AWARE)
+#if defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_ENABLE_SECURE_AWARE) && (CY_PDL_ENABLE_SECURE_AWARE)
 
 /* If the user marks every Secure Aware PPC region as NS but leaves CY_PDL_ENABLE_SECURE_AWARE enabled,
  * swap module registration to a NOP */
@@ -35,7 +35,7 @@
 #define CY_PDL_ENABLE_SRF_INTEG (1)
 #endif
 
-#if (CY_PDL_ENABLE_SRF_INTEG)
+#if defined(CY_PDL_ENABLE_SRF_INTEG) && (CY_PDL_ENABLE_SRF_INTEG)
 
 mtb_srf_op_s_t* cy_pdl_srf_operations[CY_PDL_SECURE_SUBMODULE_END] =
 {
@@ -81,7 +81,7 @@ mtb_srf_module_s_t _cy_pdl_srf_module =
 
 cy_rslt_t cy_pdl_srf_module_register(mtb_srf_context_s_t* context)
 {
-    #if (CY_PDL_ENABLE_SRF_INTEG)
+    #if defined(CY_PDL_ENABLE_SRF_INTEG) && (CY_PDL_ENABLE_SRF_INTEG)
     return mtb_srf_module_register(context, &_cy_pdl_srf_module);
     #else
     CY_UNUSED_PARAMETER(context);

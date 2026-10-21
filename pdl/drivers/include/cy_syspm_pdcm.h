@@ -313,38 +313,38 @@ typedef enum
 #endif
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION >= 2)
 /** Resources available */
-#define CY_SYSPM_PD_ALL_RESOURCES       ( CY_SYSPM_PD_RESOURCE_DPLL_0            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_1            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_2            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_3            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_4            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_5            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_6            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_7            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_8            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_9            | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_10           | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_11           | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_12           | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_13           | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_14           | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_15           | \
-                                          CY_SYSPM_PD_RESOURCE_ECO               | \
-                                          CY_SYSPM_PD_RESOURCE_IMO               | \
-                                          CY_SYSPM_PD_RESOURCE_IHO               | \
-                                          CY_SYSPM_PD_RESOURCE_IREF              | \
-                                          CY_SYSPM_PD_RESOURCE_VREFBUF           | \
-                                          CY_SYSPM_PD_RESOURCE_BOOTROW           | \
-                                          CY_SYSPM_PD_RESOURCE_OVD               | \
-                                          CY_SYSPM_PD_RESOURCE_ECO_WAIT_FOR_LOCK | \
-                                          CY_SYSPM_PD_RESOURCE_DPLL_WAIT_FOR_LOCK| \
-                                          CY_SYSPM_PD_RESOURCE_CLK_ALTHF_REQUEST | \
-                                          CY_SYSPM_PD_RESOURCE_CLK_ALTHF_REQUIRED| \
-                                          CY_SYSPM_PD_RESOURCE_POWER_MODE_2      | \
-                                          CY_SYSPM_PD_RESOURCE_POWER_MODE_1      | \
-                                          CY_SYSPM_PD_RESOURCE_POWER_MODE_0 )
+#define CY_SYSPM_PD_ALL_RESOURCES       ( (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_0            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_1            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_2            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_3            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_4            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_5            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_6            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_7            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_8            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_9            | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_10           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_11           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_12           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_13           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_14           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_15           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_ECO               | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_IMO               | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_IHO               | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_IREF              | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_VREFBUF           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_BOOTROW           | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_OVD               | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_ECO_WAIT_FOR_LOCK | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_DPLL_WAIT_FOR_LOCK| \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_CLK_ALTHF_REQUEST | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_CLK_ALTHF_REQUIRED| \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_POWER_MODE_2      | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_POWER_MODE_1      | \
+                                          (uint32_t)CY_SYSPM_PD_RESOURCE_POWER_MODE_0 )
 /** Macro to validate the resources */
-#define CY_SYSPM_IS_PD_RESOURCE_VALID(resource)   ( (resource & ~(CY_SYSPM_PD_ALL_RESOURCES)) == 0 )
+#define CY_SYSPM_IS_PD_RESOURCE_VALID(resource)   ( (((uint32_t)(resource)) & ~(CY_SYSPM_PD_ALL_RESOURCES)) == 0UL )
 #endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION >= 2) */
 /** \} group_syspm_pdcm_macros */
 
@@ -375,7 +375,7 @@ cy_en_syspm_status_t cy_pd_pdcm_clear_dependency(cy_pd_pdcm_id_t host_pd,cy_pd_p
 * Power Domain ID that requests for the resource
 *
 * \param resource
-* Bitmask of resource/resources to be enabled \ref cy_en_syspm_pd_resource_t
+* Single \ref cy_en_syspm_pd_resource_t resource value or a uint32_t bitmask of resource values to be enabled
 *
 * \param enable
 * 1 to request the resources to be enabled
@@ -385,9 +385,49 @@ cy_en_syspm_status_t cy_pd_pdcm_clear_dependency(cy_pd_pdcm_id_t host_pd,cy_pd_p
 * the status of the resource enable/disable request
 *
 *******************************************************************************/
-cy_en_syspm_status_t Cy_SysPm_PDResourceMapEnable(cy_pd_pdcm_id_t pd, cy_en_syspm_pd_resource_t resource, bool enable);
+cy_en_syspm_status_t Cy_SysPm_PDResourceMapEnable(cy_pd_pdcm_id_t pd, uint32_t resource, bool enable);
+
+#if (CY_IP_MXS22SRSS_VERSION_MINOR == 2)
+/*******************************************************************************
+* Function Name: Cy_SysPm_PDResourceMapDisable
+****************************************************************************//**
+*
+* Power Domain requests the resource/resources to be disabled using this
+* function. A resource can be disabled when it is defined as a configurable
+* resource. The configurability is device-specific.
+*
+* \param pd
+* Power Domain ID that requests for the resource
+*
+* \param resource
+* Single \ref cy_en_syspm_pd_resource_t resource value or a uint32_t bitmask of resource values to be disabled
+*
+* \return
+* the status of the resource disable request
+*
+*******************************************************************************/
+cy_en_syspm_status_t Cy_SysPm_PDResourceMapDisable(cy_pd_pdcm_id_t pd, uint32_t resource);
+
+/*******************************************************************************
+* Function Name: Cy_SysPm_PDResourceMapGet
+****************************************************************************//**
+*
+* Returns the current resource map sense register value for the given
+* Power Domain. Each bit position corresponds to a resource defined in
+* \ref cy_en_syspm_pd_resource_t.
+*
+* \param pd
+* Power Domain ID
+*
+* \return
+* Bitmask of currently enabled resources \ref cy_en_syspm_pd_resource_t
+*
+*******************************************************************************/
+uint32_t Cy_SysPm_PDResourceMapGet(cy_pd_pdcm_id_t pd);
+
+#endif /* (CY_IP_MXS22SRSS_VERSION_MINOR == 2) */
+
 /** \} group_syspm_pd_resource_map_functions */
 #endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION >= 2)*/
-
 #endif /* defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS) */
 #endif /* CY_PD_PDCM_H */

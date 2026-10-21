@@ -13,7 +13,7 @@
   </ExposedParameterKeys>
   <Connectivity location="connectivity"/>
   <Wounding location="chipresourcewoundings.xml"/>
-  <PinResourceType value="ioss[0].port[%1$d].pin[%2$d]"/>
+  <PinResourceType value="iocl[0].port[%1$d].pin[%2$d]"/>
   <TrigMuxConnectTemplate value="Cy_TrigMux_Connect(${CyMarkIn}, ${CyMarkOut}, false, ${CyMarkType});"/>
   <TrigMuxSelectTemplate value="Cy_TrigMux_Select(${CyMarkOut}, false, ${CyMarkType});"/>
   <Profiles>

@@ -2834,6 +2834,10 @@ cy_en_smif_status_t Cy_SMIF_MemInitSfdpMode(SMIF_Type *base,
 *  is not found for 4 byte addressing mode the Program command instruction
 *  is set for 1S-1S-1S Protocol mode and 3-byte addressing mode.
 *
+* \warning
+* Do not use this function for memory that is memory-mapped. Use
+* \ref Cy_SMIF_MemInitSfdpMode instead.
+*
 * \param base
 * Holds the base address of the SMIF block registers.
 *

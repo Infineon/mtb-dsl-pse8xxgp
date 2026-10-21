@@ -31,6 +31,12 @@ endif
 # Macros
 ################################################################################
 
+# The base path to the llvm cross compilation executables
+_MTB_TOOLCHAIN_LLVM_ARM__INSTALL_DIR:=$(wildcard $(call mtb_core__escaped_path,$(CY_TOOL_llvm_arm_BASE_ABS)))
+ifneq ($(_MTB_TOOLCHAIN_LLVM_ARM__INSTALL_DIR),)
+MTB_TOOLCHAIN_LLVM_ARM__BASE_DIR:=$(call mtb_core__escaped_path,$(CY_TOOL_llvm_arm_BASE_ABS))
+endif
+
 ifeq ($(TOOLCHAIN),LLVM_ARM)
 _MTB_TOOLCHAIN_LLVM_ARM__USER_1_DIR :=$(wildcard $(call mtb_core__escaped_path,$(CY_COMPILER_PATH)))
 ifneq ($(_MTB_TOOLCHAIN_LLVM_ARM__USER_1_DIR),)

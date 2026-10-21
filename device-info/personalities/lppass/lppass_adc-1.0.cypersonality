@@ -59,6 +59,14 @@
     <ExposedMember key='sar_gpiochan_$idx_enabled'    paramId='gpiochan_$idx_enabled'       repeatCount='8'/>
     <ExposedMember key='sar_muxchan_$idx_enabled'     paramId='muxchan_$idx_enabled'        repeatCount='16'/>
     <ExposedMember key='sar_scanCnt'                  paramId='total_scanCnt'/>
+    <!-- data needed by the Sequencer/Scan Group personalities to compute
+         Achieved Conversion Time, Result Format, Conversion Time/Rate and Sequencer Index -->
+    <ExposedMember key='sar_adcClockFreq'             paramId='adcClockFreq'/>
+    <ExposedMember key='sar_globalSampleTime$idx'     paramId='globalSampleTime$idx'        repeatCount='4'/>
+    <ExposedMember key='sar_group_$idx_scanCnt'       paramId='group_$idx_scanCnt'          repeatCount='32'/>
+    <ExposedMember key='sar_group_$idx_entryAddr'     paramId='groupEntryAddr$idx'          repeatCount='32'/>
+    <ExposedMember key='sar_vrefValue'                paramId='vrefValue'/>
+    <ExposedMember key='sar_includeChannelId'         paramId='includeChannelId'/>
   </ExposedMembers>
 
   <Parameters>
@@ -366,7 +374,7 @@
     <Repeat count='4'>
       <ParamRange id='lpGlobalSampleTime$idx'
                   name='Global Sample Time $idx'
-                  group='LP Mode ADC Settings'
+                  group='Sample Times'
                   min='6'
                   max='1024'
                   resolution='1'
@@ -380,7 +388,7 @@
 
       <ParamString id='lpGlobalActualTime$idx'
           name='Global Actual Time $idx'
-          group='LP Mode ADC Settings'
+          group='Sample Times'
           visible='`${(operatingMode eq "LowPower") &amp;&amp; (!lpAutosetConversionRate)}`'
           editable='false'
           desc='Actual time in ADC clock cycles = Sample Time $idx / 4.096MHz'
@@ -447,8 +455,8 @@
     <Repeat count='4'>
       <ParamRange id='hsGlobalSampleTime$idx'
                   name='Global Sample Time $idx'
-                  group='HS Mode ADC Settings'
-                  min='5'
+                  group='Sample Times'
+                  min='4'
                   max='1024'
                   resolution='1'
                   visible='`${(operatingMode eq "HighSpeed")}`'
@@ -461,7 +469,7 @@
 
       <ParamString id='hsGlobalActualTime$idx'
           name='Global Actual Time $idx'
-          group='HS Mode ADC Settings'
+          group='Sample Times'
           visible='`${operatingMode eq "HighSpeed"}`'
           editable='false'
           desc='Actual time in ADC clock cycles = Sample Time $idx / CLK_HF9'
@@ -748,6 +756,26 @@
                 editable='false'
                 desc='' />
 
+<!-- Count of enabled GPIO channels (running accumulator; total is the last element) -->
+    <Repeat count='8'>
+      <ParamRange id='gpioChanCntAcc$idx' name='gpioChanCntAcc$idx' group='Internal'
+              default='`${($idx == 0 ? 0 : getParamValue("gpioChanCntAcc" . ($idx - 1))) + (gpiochan_$idx_enabled ? 1 : 0)}`'
+              min='0' max='8' resolution='1' visible='`${debug}`' editable='false' desc='' />
+    </Repeat>
+    <ParamRange id='gpioChanCount' name='gpioChanCount' group='Internal'
+              default='`${gpioChanCntAcc7}`'
+              min='0' max='8' resolution='1' visible='`${debug}`' editable='false' desc='' />
+
+<!-- Count of enabled MUX channels (running accumulator; total is the last element) -->
+    <Repeat count='16'>
+      <ParamRange id='muxChanCntAcc$idx' name='muxChanCntAcc$idx' group='Internal'
+              default='`${($idx == 0 ? 0 : getParamValue("muxChanCntAcc" . ($idx - 1))) + (muxchan_$idx_enabled ? 1 : 0)}`'
+              min='0' max='16' resolution='1' visible='`${debug}`' editable='false' desc='' />
+    </Repeat>
+    <ParamRange id='muxChanCount' name='muxChanCount' group='Internal'
+              default='`${muxChanCntAcc15}`'
+              min='0' max='16' resolution='1' visible='`${debug}`' editable='false' desc='' />
+
     <Repeat count='32'>
       <ParamRange id='group_$idx{0}_scanCnt' name='group_$idx{0}_scanCnt' group='Internal'
               default='`${group_$idx{0}_enabled ?
@@ -821,6 +849,13 @@
                           group_31_scanCnt }`'
               min='0' max='1024' resolution='1' visible='`${debug}`' editable='false' desc='' />
 
+<!-- Entry address of scan group N in the SAR Sequencer Table = cumulative scan count of groups 0..N-1 -->
+    <Repeat count='32'>
+      <ParamRange id='groupEntryAddr$idx' name='groupEntryAddr$idx' group='Internal'
+              default='`${($idx == 0) ? 0 : (getParamValue("groupEntryAddr" . ($idx - 1)) + getParamValue("group_" . ($idx - 1) . "_scanCnt"))}`'
+              min='0' max='32' resolution='1' visible='`${debug}`' editable='false' desc='' />
+    </Repeat>
+
     <ParamBool id='adcIsUsed' name='adcIsUsed' group='Internal' editable='false' visible='false' desc='' default='`${((operatingMode eq "LowPower") ? (lpMuxResultMaskValue != 0) : ((lpMuxResultMaskValue != 0) || (hsGpioResultMaskValue != 0))) &amp;&amp; (total_scanCnt != 0)}`' />
 
     <ParamString id='sar_vrefSel'
@@ -831,12 +866,43 @@
                 desc=''
                 default='`${(operatingMode eq "LowPower") ? lpModeVrefSelect : hsModeVrefSelect}`'/>
 
+<!-- mode-agnostic ADC clock / sample time / reference exposed for conversion calculations -->
+    <ParamString id='adcClockFreq'
+                name='adcClockFreq'
+                group='Internal'
+                visible='`${debug}`'
+                editable='false'
+                desc='ADC clock frequency in Hz (LP: fixed 4.096 MHz, HS: `${formatFrequency(externvalue_frequency)}`)'
+                default='`${(operatingMode eq "LowPower") ? 4096000 : externvalue_frequency}`'/>
+
+    <Repeat count='4'>
+      <ParamString id='globalSampleTime$idx'
+                  name='globalSampleTime$idx'
+                  group='Internal'
+                  visible='`${debug}`'
+                  editable='false'
+                  desc='Global Sample Time $idx in ADC clock cycles for the active operating mode'
+                  default='`${(operatingMode eq "LowPower") ? lpGlobalSampleTime$idx : hsGlobalSampleTime$idx}`'/>
+    </Repeat>
+
+    <ParamString id='vrefValue'
+                name='vrefValue'
+                group='Internal'
+                visible='`${debug}`'
+                editable='false'
+                desc='ADC reference voltage in mV for the active operating mode'
+                default='`${(operatingMode eq "LowPower") ? lpModeReferenceValue : hsModeReferenceValue}`'/>
+
   </Parameters>
 
   <DRCs>
     <DRC type='ERROR' text='Enable and configure Autonomous Analog.' condition='`${!isBlockUsed(resource_pass)}`' >
       <FixIt action='ENABLE_BLOCK' target='`${resource_pass}`' value='lppass-1.0' valid='true' />
     </DRC>
+
+    <DRC type='INFO' paramId='hsModeVrefSelect'
+         text='HS VREF pin must be bypassed to ground with a 1uF capacitor when the reference is not VDDA or External Reference.'
+         condition='`${(operatingMode eq "HighSpeed") &amp;&amp; (hsModeVrefSelect ne CY_AUTANALOG_SAR_VREF_VDDA) &amp;&amp; (hsModeVrefSelect ne CY_AUTANALOG_SAR_VREF_EXT)}`' />
 
     <DRC type='ERROR' text='The SAR ADC shall have at least one scan configured within the scan group.' condition='`${(total_scanCnt eq 0) &amp;&amp; ((lpMuxResultMaskValue != 0) || (hsGpioResultMaskValue != 0))}`' />
     <DRC type='ERROR'
@@ -951,20 +1017,8 @@
          text='The same input is selected on the Non-Inverting and Inverting Input of the ADC GPIO channel $idx.'
          condition='`${gpiochan_$idx_enabled ? (getExposedMember(resource_gpiochan_$idx, "sar_gpio_pseudoDiffMode") &amp;&amp; getExposedMember(resource_gpiochan_$idx, "sar_gpio_nonInvPin") eq getExposedMember(resource_gpiochan_$idx, "sar_gpio_invPin")) : "false"}`' repeatCount='8'/>
     <DRC type='ERROR'
-         text='The Inverting Input for the ADC MUX channel $idx must also be connected to the temperature sensor.'
-         condition='`${muxchan_$idx_enabled ? differentialMode &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_nonInvPin") eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_invPin") ne "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") : "false"}`' repeatCount='16'/>
-    <DRC type='ERROR'
-         text='The Inverting Input for the ADC MUX channel $idx must also be connected to the temperature sensor.'
-         condition='`${muxchan_$idx_enabled ? (getExposedMember(resource_muxchan_$idx, "sar_mux_pseudoDiffMode") == true) &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_nonInvPin") eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_invPin") ne "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") : "false"}`' repeatCount='16'/>
-    <DRC type='ERROR'
-         text='The Non-Inverting Input for the ADC MUX channel $idx must also be connected to the temperature sensor.'
-         condition='`${muxchan_$idx_enabled ? differentialMode &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_nonInvPin") ne "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_invPin") eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") : "false"}`' repeatCount='16'/>
-    <DRC type='ERROR'
-         text='The Non-Inverting Input for the ADC MUX channel $idx must also be connected to the temperature sensor.'
-         condition='`${muxchan_$idx_enabled ? (getExposedMember(resource_muxchan_$idx, "sar_mux_pseudoDiffMode") == true) &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_nonInvPin") ne "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") &amp;&amp; (getExposedMember(resource_muxchan_$idx, "sar_mux_invPin") eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") : "false"}`' repeatCount='16'/>
-    <DRC type='ERROR'
          text='The ADC MUX channel $idx must only use the temperature sensor in differential or pseudo-differential mode.'
-         condition='`${muxchan_$idx_enabled ? (((operatingMode eq "LowPower" &amp;&amp; !differentialMode) || (operatingMode eq "HighSpeed" &amp;&amp; !getExposedMember(resource_muxchan_$idx, "sar_mux_pseudoDiffMode"))) &amp;&amp; getExposedMember(resource_muxchan_$idx, "sar_mux_nonInvPin") eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") : ("false")}`' repeatCount='16'/>
+         condition='`${muxchan_$idx_enabled ? ((operatingMode eq "LowPower" &amp;&amp; !differentialMode) &amp;&amp; getExposedMember(resource_muxchan_$idx, "sar_mux_nonInvPin") eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") : ("false")}`' repeatCount='16'/>
     <DRC type='ERROR'
          text='Enable and power the CTB 0, opamp 0 to provide a signal to the Inverting MUX Input of the ADC.'
          condition='`${(operatingMode eq "LowPower") &amp;&amp; differentialMode &amp;&amp; ((muxchan_$idx_enabled ? getExposedMember(resource_muxchan_$idx, "sar_mux_invPin") : "CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN1") eq "CY_AUTANALOG_SAR_PIN_MUX_CTB0_OA0_OUT") &amp;&amp; ((isBlockUsed("pass[" . inst_pass . "].ctb[0].oa[0]") ? getExposedMember("pass[" . inst_pass . "].ctb[0].oa[0]", "power") : "CY_AUTANALOG_CTB_OA_PWR_OFF") eq "CY_AUTANALOG_CTB_OA_PWR_OFF")}`' repeatCount='16'/>
@@ -1136,6 +1190,29 @@
   <ConfigFirmware>
     <ConfigInclude value='cy_autanalog.h' include='true' />
 
+    <ConfigDefine name='`${INST_NAME_adc}`_IDX'
+                  value='`${inst_sar}`U'
+                  public='true'
+                  include='true' />
+    <ConfigDefine name='`${INST_NAME_adc}`_GPIO_CHAN_$idx_IDX'
+                  value='$idx'
+                  public='true'
+                  include='`${gpiochan_$idx_enabled}`'
+                  repeatCount='8' />
+    <ConfigDefine name='`${INST_NAME_adc}`_GPIO_CHAN_COUNT'
+                  value='`${gpioChanCount}`U'
+                  public='true'
+                  include='true' />
+    <ConfigDefine name='`${INST_NAME_adc}`_MUX_CHAN_$idx_IDX'
+                  value='$idx'
+                  public='true'
+                  include='`${muxchan_$idx_enabled}`'
+                  repeatCount='16' />
+    <ConfigDefine name='`${INST_NAME_adc}`_MUX_CHAN_COUNT'
+                  value='`${muxChanCount}`U'
+                  public='true'
+                  include='true' />
+
 <!-- The channel range detection -->
     <ConfigArray    name='`${INST_NAME_adc}`_lim_cfg' type='cy_stc_autanalog_sar_limit_t' const='`${inFlash}`' public='true' include='`${limitDetection}`' >
       <ConfigStruct name='empty' type='nested' const='false' public='true' repeatCount='4' include='true'>
@@ -1166,7 +1243,7 @@
         <Member name='posPin'     value='`${muxchan_$idx{1}_enabled ? getExposedMember(resource_muxchan_$idx{1}, "sar_mux_nonInvPin")                 : "CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN1"}`' />
         <Member name='sign'       value='`${muxchan_$idx{1}_enabled ? getExposedMember(resource_muxchan_$idx{1}, "sar_mux_resultFormat")                 : "false"}`' />
         <Member name='posCoeff'   value='`${muxchan_$idx{1}_enabled ? getExposedMember(resource_muxchan_$idx{1}, "sar_mux_nonInvertingInputCoefficient") : "CY_AUTANALOG_SAR_CH_COEFF_DISABLED"}`' />
-        <Member name='negPin'     value='`${muxchan_$idx{1}_enabled &amp;&amp; (differentialMode || getExposedMember(resource_muxchan_$idx{1}, "sar_mux_pseudoDiffMode")) ? getExposedMember(resource_muxchan_$idx{1}, "sar_mux_invPin") : "CY_AUTANALOG_SAR_PIN_MUX_CTB0_PIN1"}`' />
+        <Member name='negPin'     value='`${muxchan_$idx{1}_enabled &amp;&amp; (differentialMode || getExposedMember(resource_muxchan_$idx{1}, "sar_mux_pseudoDiffMode")) ? getExposedMember(resource_muxchan_$idx{1}, "sar_mux_invPin") : "CY_AUTANALOG_SAR_PIN_MUX_VSSA"}`' />
         <Member name='buffBypass' value='`${muxchan_$idx{1}_enabled ? getExposedMember(resource_muxchan_$idx{1}, "sar_mux_bypassBuffers")                     : "true"}`' />
         <Member name='accShift'   value='`${muxchan_$idx{1}_enabled ? (accumulationMode ne CY_AUTANALOG_SAR_ACC_DISABLED) &amp;&amp; getExposedMember(resource_muxchan_$idx{1}, "sar_mux_accumulationShift")            : "false"}`' />
         <Member name='negCoeff'   value='`${muxchan_$idx{1}_enabled &amp;&amp; (differentialMode || getExposedMember(resource_muxchan_$idx{1}, "sar_mux_pseudoDiffMode")) ? getExposedMember(resource_muxchan_$idx{1}, "sar_mux_invertingInputCoefficient") : "CY_AUTANALOG_SAR_CH_COEFF_DISABLED"}`' />

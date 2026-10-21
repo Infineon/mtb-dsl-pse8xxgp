@@ -1071,6 +1071,7 @@ void Cy_ETHIF_RxErrorResetAndRecover(ETH_Type *base, uint8_t u8QueueIndex)
             ETH_RX_Q2_PTR(base) = rxQBaseAddr;
             break;
         default:
+            /* Queue index out of supported range; no pointer to rewrite */
             break;
         }
     }
@@ -1229,6 +1230,11 @@ static void Cy_ETHIF_PrepareConfiguration(uint8_t u8EthIfInstance, cy_stc_ethif_
     #else
     CY_ASSERT(u8EthIfInstance == 0u);
     #endif
+
+    if (u8EthIfInstance >= CY_ETH_DEFINE_NUM_IP)
+    {
+        return;
+    }
 
     /** Clear configuration table   */
     (void)memset((void *)&cy_ethif_cfg[u8EthIfInstance], 0, sizeof(cy_ethif_cfg[u8EthIfInstance]));

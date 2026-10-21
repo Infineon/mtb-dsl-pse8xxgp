@@ -133,8 +133,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_SetKey(CRYPTO_Type *base,
     {
         return CY_CRYPTO_BAD_PARAMS;
     }
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)((int32_t)CY_CRYPTO_AES_128_KEY_SIZE+((int32_t)8*(int32_t)keyLength)));
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)((int32_t)CY_CRYPTO_AES_128_KEY_SIZE+((int32_t)8*(int32_t)keyLength)));
     #endif
 
     // Sets the AES Key for the CBC MAC operation
@@ -202,8 +202,8 @@ static cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_Initial_Block(CRYPTO_Type
     }
 
     __DSB();
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_CleanDCache_by_Addr((volatile void*)aesCcmState->y,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_CLEAN_DCACHE((volatile void*)aesCcmState->y,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
     // Performs the CBC MAC update operation for the Initial Block data formatted with flags and length
     status = Cy_Crypto_Core_V2_Aes_CbcMac_Update(base, CY_CRYPTO_AES_BLOCK_SIZE, aesCcmState->y, &aesCcmState->aesCbcMacState);
@@ -217,8 +217,8 @@ static cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_Initial_Block(CRYPTO_Type
         aesCcmState->temp[0] = (uint8_t)(aesCcmState->aadLength >> 8u) & 0xffu;
         aesCcmState->temp[1] = (uint8_t)(aesCcmState->aadLength & 0xffu);
         __DSB();
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_CleanDCache_by_Addr((volatile void*)aesCcmState->temp,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_CLEAN_DCACHE((volatile void*)aesCcmState->temp,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
 
         status = Cy_Crypto_Core_V2_Aes_CbcMac_Update(base, 2u, aesCcmState->temp, &aesCcmState->aesCbcMacState);
@@ -347,21 +347,21 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_Start(CRYPTO_Type *base,
     aesCcmState->ctr[0] = (uint8_t)aesCcmState->L - 1u;
     aesCcmState->ctr[15] = 1u;
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_CleanDCache_by_Addr((volatile void*)aesCcmState->ctr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_CLEAN_DCACHE((volatile void*)aesCcmState->ctr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
     __DSB();
 
     Cy_Crypto_Core_V2_MemCpy(base, (void*)&aesCcmState->ctr[1], (void*)iv, (uint16_t)ivSize);
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr((volatile void *)aesCcmState->ctr, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)aesCcmState->ctr, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
     Cy_Crypto_Core_V2_MemSet(base, aesCcmState->y, 0u, CY_CRYPTO_AES_BLOCK_SIZE);
     Cy_Crypto_Core_V2_MemCpy(base, (void*)&aesCcmState->y[1], (void*)iv, (uint16_t)ivSize);
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr((volatile void *)aesCcmState->y, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)aesCcmState->y, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
     // Sets the IV for the AES CTR operation
     status = Cy_Crypto_Core_V2_Aes_Ctr_Setup(base, &aesCcmState->aesCtrState);
@@ -556,7 +556,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_Update(CRYPTO_Type *base,
 cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_Finish(CRYPTO_Type *base, uint8_t *tag, cy_stc_crypto_aes_ccm_state_t *aesCcmState)
 {
     uint8_t *temp = NULL;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     uint8_t y_t[CY_CRYPTO_ALIGN_CACHE_LINE(CY_CRYPTO_AES_BLOCK_SIZE)+CY_CRYPTO_DCAHCE_PADDING_SIZE] = {0u};
     uint8_t *y = (uint8_t*)CY_CRYPTO_DCACHE_ALIGN_ADDRESS(y_t);
 #else
@@ -604,8 +604,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_Finish(CRYPTO_Type *base, uint8_
         aesCcmState->aesCtrState.buffers->iv[15u-i] = 0u;
     }
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_CleanDCache_by_Addr((volatile void *)aesCcmState->aesCtrState.buffers->iv, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)aesCcmState->aesCtrState.buffers->iv, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
     aesCcmState->aesCtrState.unProcessedBytes = 0u;
 
@@ -623,10 +623,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ccm_Finish(CRYPTO_Type *base, uint8_
     Cy_Crypto_Core_V2_MemSet(base, aesCcmState->ctr, 0u, CY_CRYPTO_AES_BLOCK_SIZE);
     Cy_Crypto_Core_V2_MemSet(base, aesCcmState->y, 0u, CY_CRYPTO_AES_BLOCK_SIZE);
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr((volatile void *)tag, (int32_t)aesCcmState->tagLength);
-        SCB_InvalidateDCache_by_Addr((volatile void *)aesCcmState->ctr, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-        SCB_InvalidateDCache_by_Addr((volatile void *)aesCcmState->y, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)tag, (int32_t)aesCcmState->tagLength);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)aesCcmState->ctr, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)aesCcmState->y, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
     aesCcmState->isIvSet = false;
     aesCcmState->isAadProcessed = false;
@@ -972,10 +972,10 @@ static void Cy_Crypto_Core_V2_Aes_GCM_Ghash(CRYPTO_Type *base, uint8_t *h,  cons
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
     0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_CleanDCache_by_Addr((volatile void*)h,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-    SCB_CleanDCache_by_Addr((volatile void*)input,(int32_t)length);
-    SCB_CleanDCache_by_Addr((volatile void*)y,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_CLEAN_DCACHE((volatile void*)h,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void*)input,(int32_t)length);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void*)y,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
     // Load the Hash Sub Key H
     Cy_Crypto_Core_V2_FFContinue(base, CY_CRYPTO_V2_RB_FF_LOAD0, h, CY_CRYPTO_AES_BLOCK_SIZE);
@@ -1014,8 +1014,8 @@ static void Cy_Crypto_Core_V2_Aes_GCM_Ghash(CRYPTO_Type *base, uint8_t *h,  cons
     Cy_Crypto_Core_V2_RBStore(base, CY_CRYPTO_AES_BLOCK_SIZE, CY_CRYPTO_AES_BLOCK_SIZE);
     Cy_Crypto_Core_V2_FFStoreSync(base);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr((volatile void*)y,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE((volatile void*)y,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
 }
@@ -1099,9 +1099,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_SetKey(CRYPTO_Type *base, uint8_
 
     if((NULL != base) && (NULL != aesKey) && (NULL != aesGCMctx) && (NULL != aesGCMctx->aes_buffer))
     {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)aesKey,(int32_t)((int32_t)CY_CRYPTO_AES_128_KEY_SIZE+((int32_t)8*(int32_t)keyLength)));
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)aesKey,(int32_t)((int32_t)CY_CRYPTO_AES_128_KEY_SIZE+((int32_t)8*(int32_t)keyLength)));
 #endif
 
         keyRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(aesKey);
@@ -1149,7 +1149,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_SetKey(CRYPTO_Type *base, uint8_
 
 cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_Start(CRYPTO_Type *base, cy_en_crypto_dir_mode_t mode, uint8_t const *iv, uint32_t ivSize, cy_stc_crypto_aes_gcm_state_t* aesGCMctx)
 {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     uint8_t ivBitlen_t[CY_CRYPTO_ALIGN_CACHE_LINE(sizeof(uint64_t))+CY_CRYPTO_DCAHCE_PADDING_SIZE];
     uint64_t *ivBitlen = (uint64_t *)CY_CRYPTO_DCACHE_ALIGN_ADDRESS(ivBitlen_t);
     uint8_t temp_t[CY_CRYPTO_ALIGN_CACHE_LINE(CY_CRYPTO_AES_BLOCK_SIZE)+CY_CRYPTO_DCAHCE_PADDING_SIZE] = {0u};
@@ -1170,9 +1170,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_Start(CRYPTO_Type *base, cy_en_c
     if((NULL != base) && ((NULL != iv) && ivSize >0U) && (NULL != aesGCMctx) && (NULL != aesGCMctx->aes_buffer))
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)iv,(int32_t)ivSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)iv,(int32_t)ivSize);
 #endif
 
         ivRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(iv);
@@ -1195,9 +1195,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_Start(CRYPTO_Type *base, cy_en_c
         {
             Cy_Crypto_Core_V2_MemCpy(base, (void*)icbRemap, (void*)ivRemap, (uint16_t)ivSize);
             aesGCMctx->icb[15U] = 1U;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)aesGCMctx->icb,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)aesGCMctx->icb,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
             __DSB();
 
@@ -1266,9 +1266,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_AAD_Update(CRYPTO_Type *base,  u
     if((NULL != base) && (NULL != aad) && (NULL != aesGCMctx))
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)aad,(int32_t)aadSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)aad,(int32_t)aadSize);
 #endif
         aadRemap =  (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(aad);
 
@@ -1355,9 +1355,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_Update(CRYPTO_Type *base, uint8_
     if((NULL != base) && (NULL != input)  && (NULL != output) &&  (NULL != aesGCMctx))
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)input,(int32_t)inputSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)input,(int32_t)inputSize);
 #endif
 
         hRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(aesGCMctx->h);
@@ -1422,8 +1422,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_Update(CRYPTO_Type *base, uint8_
         tmpResult = CY_CRYPTO_SUCCESS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(output, (int32_t)inputSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(output, (int32_t)inputSize);
 #endif
 
     return tmpResult;
@@ -1451,7 +1451,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_Update(CRYPTO_Type *base, uint8_
 *******************************************************************************/
 static void Cy_Crypto_Core_V2_Aes_GCM_tag(CRYPTO_Type *base,  uint8_t *p_tag,   uint32_t tagSize, cy_stc_crypto_aes_gcm_state_t* aesGCMctx)
 {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     uint8_t bitlen_t[CY_CRYPTO_ALIGN_CACHE_LINE(sizeof(uint64_t))+CY_CRYPTO_DCAHCE_PADDING_SIZE];
     uint64_t *bitlen = (uint64_t *)CY_CRYPTO_DCACHE_ALIGN_ADDRESS(bitlen_t);
     uint8_t aadbitlen_t[CY_CRYPTO_ALIGN_CACHE_LINE(sizeof(uint64_t))+CY_CRYPTO_DCAHCE_PADDING_SIZE];
@@ -1492,8 +1492,8 @@ static void Cy_Crypto_Core_V2_Aes_GCM_tag(CRYPTO_Type *base,  uint8_t *p_tag,   
 
    (void)Cy_Crypto_Core_V2_Aes_Ecb(base, CY_CRYPTO_ENCRYPT, tempRemap, icbRemap, &aesGCMctx->aesState);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(temp_data, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(temp_data, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
    for (i = 0u; i < tagSize; i++)
@@ -1726,7 +1726,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_GCM_Decrypt_Tag(CRYPTO_Type *base, u
     uint8_t aesGCMctx_t[CY_CRYPTO_ALIGN_CACHE_LINE(sizeof(cy_stc_crypto_aes_gcm_state_t))+CY_CRYPTO_DCAHCE_PADDING_SIZE];
     uint8_t aesGCMBuffers_t[CY_CRYPTO_ALIGN_CACHE_LINE(sizeof(cy_stc_crypto_aes_gcm_buffers_t))+CY_CRYPTO_DCAHCE_PADDING_SIZE];
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     cy_stc_crypto_aes_gcm_state_t  *aesGCMctx = (cy_stc_crypto_aes_gcm_state_t*) CY_CRYPTO_DCACHE_ALIGN_ADDRESS(aesGCMctx_t);
     cy_stc_crypto_aes_gcm_buffers_t *aesGCMBuffers = (cy_stc_crypto_aes_gcm_buffers_t*) CY_CRYPTO_DCACHE_ALIGN_ADDRESS(aesGCMBuffers_t);
 #else
@@ -2002,21 +2002,21 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Init(CRYPTO_Type *base,
     aesBuffersRemap = (cy_stc_crypto_aes_buffers_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(aesBuffers);
 
     uint16_t keySize = CY_CRYPTO_AES_128_KEY_SIZE + ((uint16_t)keyLength * 8u);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)keySize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)keySize);
 #endif
     Cy_Crypto_Core_V2_MemSet(base, aesState, 0u, ((uint16_t)sizeof(cy_stc_crypto_aes_state_t)));
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr((volatile void *)aesState, (int32_t)sizeof(cy_stc_crypto_aes_state_t));
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)aesState, (int32_t)sizeof(cy_stc_crypto_aes_state_t));
 #endif
 
     aesState->buffers = aesBuffers;
     aesState->keyLength = keyLength;
     Cy_Crypto_Core_V2_MemCpy(base, aesBuffersRemap->key, keyRemap, keySize);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(aesState->buffers->key, (int32_t)keySize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(aesState->buffers->key, (int32_t)keySize);
 #endif
 
     return (CY_CRYPTO_SUCCESS);
@@ -2057,9 +2057,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ecb(CRYPTO_Type *base,
                                             uint8_t const *src,
                                             cy_stc_crypto_aes_state_t *aesState)
 {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     uint8_t *dstRemap;
@@ -2082,8 +2082,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ecb(CRYPTO_Type *base,
 
     Cy_Crypto_Core_WaitForReady(base);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(dst, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(dst, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     return (CY_CRYPTO_SUCCESS);
@@ -2188,9 +2188,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ecb_Update(CRYPTO_Type *base,
         return CY_CRYPTO_BAD_PARAMS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
 #endif
 
     dstRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(dst);
@@ -2252,8 +2252,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ecb_Update(CRYPTO_Type *base,
         }
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(dst, (int32_t)srcSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(dst, (int32_t)srcSize);
 #endif
 
     return status;
@@ -2351,10 +2351,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cbc(CRYPTO_Type *base,
     uint8_t *srcRemap;
     uint8_t *ivRemap;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
 #endif
 
     /* Check whether the data size is multiple of CY_CRYPTO_AES_BLOCK_SIZE */
@@ -2420,8 +2420,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cbc(CRYPTO_Type *base,
         Cy_Crypto_Core_V2_Sync(base);
 
         tmpResult = CY_CRYPTO_SUCCESS;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr((volatile void *)dst, (int32_t)srcSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst, (int32_t)srcSize);
 #endif
     }
 
@@ -2506,9 +2506,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cbc_Set_IV(CRYPTO_Type *base,
         return CY_CRYPTO_BAD_PARAMS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)iv,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)iv,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     ivRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(iv);
@@ -2576,9 +2576,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cbc_Update(CRYPTO_Type *base,
         return CY_CRYPTO_BAD_PARAMS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
 #endif
 
 
@@ -2642,8 +2642,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cbc_Update(CRYPTO_Type *base,
         }
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(dst, (int32_t)srcSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(dst, (int32_t)srcSize);
 #endif
 
     return status;
@@ -2718,8 +2718,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_CbcMac_Setup(CRYPTO_Type *base,
     Cy_Crypto_Core_V2_MemSet(base, (void*)&aesState->buffers->iv, 0u,  (uint16_t)CY_CRYPTO_AES_BLOCK_SIZE);
     aesState->unProcessedBytes = 0u;
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr((volatile void*)&aesState->buffers->iv, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void*)&aesState->buffers->iv, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
     #endif
 
     return CY_CRYPTO_SUCCESS;
@@ -2761,7 +2761,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_CbcMac_Update(CRYPTO_Type *base,
     cy_en_crypto_status_t status = CY_CRYPTO_BAD_PARAMS;
     uint32_t bytes_to_copy=0u;
     uint32_t cnt=0u;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     uint8_t tempbuf[CY_CRYPTO_ALIGN_CACHE_LINE(CY_CRYPTO_AES_BLOCK_SIZE)+CY_CRYPTO_DCAHCE_PADDING_SIZE] = {0u};
     uint8_t *temp = (uint8_t*)CY_CRYPTO_DCACHE_ALIGN_ADDRESS(tempbuf);
     uint8_t *srcRemap;
@@ -2781,23 +2781,23 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_CbcMac_Update(CRYPTO_Type *base,
         return CY_CRYPTO_BAD_PARAMS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
 #endif
 
     srcRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(src);
 
     if(aesState->unProcessedBytes + srcSize < CY_CRYPTO_AES_BLOCK_SIZE)
     {
-        #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-            SCB_CleanDCache_by_Addr((volatile void *)aesState->buffers->unProcessedData, (int32_t)srcSize);
+        #if CY_CRYPTO_DCACHE_ENABLED
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)aesState->buffers->unProcessedData, (int32_t)srcSize);
         #endif
 
         Cy_Crypto_Core_V2_MemCpy(base, (void*)&aesState->buffers->unProcessedData[aesState->unProcessedBytes], (void*)srcRemap, (uint16_t)srcSize);
 
-        #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-            SCB_InvalidateDCache_by_Addr((volatile void *)aesState->buffers->unProcessedData, (int32_t)srcSize);
+        #if CY_CRYPTO_DCACHE_ENABLED
+            CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)aesState->buffers->unProcessedData, (int32_t)srcSize);
         #endif
 
         aesState->unProcessedBytes += srcSize;
@@ -2816,14 +2816,14 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_CbcMac_Update(CRYPTO_Type *base,
                 bytes_to_copy = srcSize;
             }
 
-            #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-                SCB_CleanDCache_by_Addr((volatile void *)aesState->buffers->unProcessedData, (int32_t)bytes_to_copy);
+            #if CY_CRYPTO_DCACHE_ENABLED
+                CY_CRYPTO_CLEAN_DCACHE((volatile void *)aesState->buffers->unProcessedData, (int32_t)bytes_to_copy);
             #endif
 
             Cy_Crypto_Core_V2_MemCpy(base, (void*)&aesState->buffers->unProcessedData[aesState->unProcessedBytes], (void*)srcRemap, (uint16_t)bytes_to_copy);
 
-            #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-                SCB_InvalidateDCache_by_Addr((volatile void *)aesState->buffers->unProcessedData, (int32_t)bytes_to_copy);
+            #if CY_CRYPTO_DCACHE_ENABLED
+                CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)aesState->buffers->unProcessedData, (int32_t)bytes_to_copy);
             #endif
 
             status = Cy_Crypto_Core_V2_Aes_Cbc(base, CY_CRYPTO_ENCRYPT, CY_CRYPTO_AES_BLOCK_SIZE, aesState->buffers->iv, temp, aesState->buffers->unProcessedData, aesState);
@@ -2904,8 +2904,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_CbcMac_Finish(CRYPTO_Type *base, uin
 
     Cy_Crypto_Core_V2_MemCpy(base, macRemap, (void*)&aesState->buffers->iv, (uint16_t)CY_CRYPTO_AES_BLOCK_SIZE);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(mac, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(mac, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     return CY_CRYPTO_SUCCESS;
@@ -2966,10 +2966,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cfb(CRYPTO_Type *base,
     uint8_t *dstRemap;
     uint8_t *srcRemap;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-        SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
 #endif
 
     /* Check whether the data size is multiple of CY_CRYPTO_AES_BLOCK_SIZE */
@@ -3023,8 +3023,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cfb(CRYPTO_Type *base,
         Cy_Crypto_Core_V2_Sync(base);
 
         tmpResult = CY_CRYPTO_SUCCESS;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr(dst, (int32_t)srcSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE(dst, (int32_t)srcSize);
 #endif
     }
 
@@ -3106,9 +3106,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cfb_Set_IV(CRYPTO_Type *base,
         return CY_CRYPTO_BAD_PARAMS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)iv,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)iv,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     ivRemap =(uint8_t *) CY_REMAP_ADDRESS_FOR_CRYPTO(iv);
@@ -3161,9 +3161,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cfb_Update(CRYPTO_Type *base,
     uint8_t *unprocessedRemap;
     uint8_t *ivRemap;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
 #endif
 
     dstRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(dst);
@@ -3257,8 +3257,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Cfb_Update(CRYPTO_Type *base,
         tmpResult = CY_CRYPTO_SUCCESS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(dst, (int32_t)srcSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(dst, (int32_t)srcSize);
 #endif
 
     return tmpResult;
@@ -3365,11 +3365,11 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr(CRYPTO_Type *base,
     srcRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(src);
     ivRemap =(uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(ivPtr);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
-    SCB_CleanDCache_by_Addr((volatile void *)streamBlock,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)streamBlock,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     blockCount[ 0] = (uint32_t) CY_CRYPTO_MERGE_BYTES(ivPtr[ 3], ivPtr[ 2], ivPtr[ 1], ivPtr[ 0]);
@@ -3377,9 +3377,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr(CRYPTO_Type *base,
     blockCount[ 2] = (uint32_t) CY_CRYPTO_MERGE_BYTES(ivPtr[11], ivPtr[10], ivPtr[ 9], ivPtr[ 8]);
     blockCount[ 3] = (uint32_t) CY_CRYPTO_MERGE_BYTES(ivPtr[15], ivPtr[14], ivPtr[13], ivPtr[12]);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)blockCount,(int32_t)blockCount_size);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)blockCount,(int32_t)blockCount_size);
 #endif
 
     counter = CY_SWAP_ENDIAN64(*(uint64_t*)(blockCount + CY_CRYPTO_AES_CTR_CNT_POS));
@@ -3424,8 +3424,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr(CRYPTO_Type *base,
 
     /* Save the reminder of the last non-complete block */
     *srcOffset = (uint32_t)(srcSize % CY_CRYPTO_AES_BLOCK_SIZE);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(dst, (int32_t)srcSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(dst, (int32_t)srcSize);
 #endif
 
     return (CY_CRYPTO_SUCCESS);
@@ -3496,9 +3496,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr_Set_IV(CRYPTO_Type *base,
         return CY_CRYPTO_BAD_PARAMS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)iv,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)iv,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     ivRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(iv);
@@ -3559,10 +3559,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr_Update(CRYPTO_Type *base,
         return CY_CRYPTO_BAD_PARAMS;
     }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
-    SCB_InvalidateDCache_by_Addr(aesState->buffers->iv, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
+    CY_CRYPTO_INVALIDATE_DCACHE(aesState->buffers->iv, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
     dstRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(dst);
@@ -3572,7 +3572,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr_Update(CRYPTO_Type *base,
     uint32_t blockCount_t[CY_CRYPTO_ALIGN_CACHE_LINE_WORD(CY_CRYPTO_AES_BLOCK_SIZE_U32)+CY_CRYPTO_DCAHCE_PADDING_SIZE_WORD];
     uint32_t *blockCount = (uint32_t*)CY_CRYPTO_DCACHE_ALIGN_ADDRESS(blockCount_t);
     uint32_t *blockCounter = (uint32_t *) CY_REMAP_ADDRESS_FOR_CRYPTO(blockCount);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     uint16_t blockCount_size = (uint16_t)CY_CRYPTO_AES_BLOCK_SIZE;
     uint32_t dstSize = srcSize;
 #endif
@@ -3586,9 +3586,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr_Update(CRYPTO_Type *base,
     blockCount[ 2] = (uint32_t) CY_CRYPTO_MERGE_BYTES(aesState->buffers->iv[11], aesState->buffers->iv[10], aesState->buffers->iv[ 9], aesState->buffers->iv[ 8]);
     blockCount[ 3] = (uint32_t) CY_CRYPTO_MERGE_BYTES(aesState->buffers->iv[15], aesState->buffers->iv[14], aesState->buffers->iv[13], aesState->buffers->iv[12]);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)blockCount,(int32_t)blockCount_size);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)blockCount,(int32_t)blockCount_size);
 #endif
 
     counter = CY_SWAP_ENDIAN64(*(uint64_t*)(blockCount + CY_CRYPTO_AES_CTR_CNT_POS));
@@ -3642,9 +3642,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr_Update(CRYPTO_Type *base,
         counter++;
         *(uint64_t*)(blockCount + CY_CRYPTO_AES_CTR_CNT_POS) = CY_SWAP_ENDIAN64(counter);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)blockCount,(int32_t)blockCount_size);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)blockCount,(int32_t)blockCount_size);
 #endif
         /* CTR counter is placed into last 4 bytes of the Nonce block */
         Cy_Crypto_Core_V2_RBSetByte(base, CY_CRYPTO_AES_BLOCK_SIZE - 4U, (uint8_t)((counter >> 24u) & 0xffU));
@@ -3685,9 +3685,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr_Update(CRYPTO_Type *base,
             blockCount[ 2] = (uint32_t) CY_CRYPTO_MERGE_BYTES(aesState->buffers->iv[11], aesState->buffers->iv[10], aesState->buffers->iv[ 9], aesState->buffers->iv[ 8]);
             blockCount[ 3] = (uint32_t) CY_CRYPTO_MERGE_BYTES(aesState->buffers->iv[15], aesState->buffers->iv[14], aesState->buffers->iv[13], aesState->buffers->iv[12]);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)blockCount,(int32_t)blockCount_size);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)blockCount,(int32_t)blockCount_size);
 #endif
 
             counter = CY_SWAP_ENDIAN64(*(uint64_t*)(blockCount + CY_CRYPTO_AES_CTR_CNT_POS));
@@ -3732,8 +3732,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Aes_Ctr_Update(CRYPTO_Type *base,
     Cy_Crypto_Core_V2_MemCpy(base, aesState->buffers->iv, blockCounter, CY_CRYPTO_AES_BLOCK_SIZE);
 
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(dst, (int32_t)dstSize);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(dst, (int32_t)dstSize);
 #endif
 
     return CY_CRYPTO_SUCCESS;

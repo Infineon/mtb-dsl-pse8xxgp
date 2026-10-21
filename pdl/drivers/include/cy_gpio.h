@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file cy_gpio.h
-* \version 1.140
+* \version 1.150
 *
 * \brief
 * Provides an API declaration of the GPIO driver
@@ -138,7 +138,7 @@ extern "C" {
 #define CY_GPIO_DRV_VERSION_MINOR      140
 
 /** GPIO driver ID */
-#define CY_GPIO_ID CY_PDL_DRV_ID(0x16U)
+#define CY_GPIO_ID CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_GPIO)
 
 /** \} group_gpio_macros */
 
@@ -434,8 +434,9 @@ typedef struct
                                                      (CY_GPIO_AMUXBUSB       == (amuxBus)))
 
 #if !defined(CY_IP_MXS40IOSS)
-#define CY_GPIO_IS_HSIOM_SEC_VALID(secValue)   (0U == ((secValue) & (uint32_t)~CY_GPIO_HSIOM_SEC_MASK))
-#define CY_GPIO_IS_SLEW_RATE_VALID(slewRate)   (0U == ((slewRate) & (uint32_t)~CY_GPIO_CFG_SLEW_EXT_MASK))
+#define CY_GPIO_IS_HSIOM_SEC_VALID(secValue)      (0U == ((secValue) & (uint32_t)~CY_GPIO_HSIOM_SEC_MASK))
+#define CY_GPIO_IS_HSIOM_SEC_PORT_VALID(portMask) (0U == ((portMask) & (uint32_t)~CY_GPIO_PRT_PINS_MASK))
+#define CY_GPIO_IS_SLEW_RATE_VALID(slewRate)      (0U == ((slewRate) & (uint32_t)~CY_GPIO_CFG_SLEW_EXT_MASK))
 #define CY_GPIO_IS_DRIVE_SEL_VALID(driveSel)   (0U == ((driveSel) & (uint32_t)~CY_GPIO_CFG_DRIVE_SEL_EXT_MASK))
 #endif /* CY_IP_MXS40IOSS */
  
@@ -680,6 +681,8 @@ __STATIC_INLINE GPIO_PRT_Type* Cy_GPIO_PortToAddr(uint32_t portNum);
 void Cy_GPIO_Pin_SecFastInit(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t driveMode, uint32_t outVal, en_hsiom_sel_t hsiom);
 __STATIC_INLINE void Cy_GPIO_SetHSIOM_SecPin(GPIO_PRT_Type* base, uint32_t pinNum, uint32_t value);
 __STATIC_INLINE uint32_t Cy_GPIO_GetHSIOM_SecPin(GPIO_PRT_Type* base, uint32_t pinNum);
+__STATIC_INLINE void Cy_GPIO_SetHSIOM_SecPort(GPIO_PRT_Type* base, uint32_t value);
+__STATIC_INLINE uint32_t Cy_GPIO_GetHSIOM_SecPort(GPIO_PRT_Type* base);
 #endif /* CY_IP_MXS40SIOSS, IOSS_HSIOM_HSIOM_SEC_PORT_NR, CPUSS_CM33_0_SECEXT_PRESENT, CY_IP_MXS22IOSS, CY_IP_IOCL */
 
 /** \} group_gpio_functions_init */
@@ -824,15 +827,14 @@ __STATIC_INLINE void Cy_GPIO_SetHSIOM_SecPin(GPIO_PRT_Type* base, uint32_t pinNu
     portNum = ((uint32_t)(base) - CY_GPIO_BASE) / GPIO_PRT_SECTION_SIZE;
     portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_HSIOM_SECURE_BASE + (HSIOM_SECURE_PRT_SECTION_SIZE * portNum));
 
-#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
     if (CY_GPIO_IS_SMIF_GPIO(base))
     {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_SECURE_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_SEC_PRT_SECTION_SIZE * portNum));
     }
 #endif
-      tempReg= HSIOM_SEC_PRT_NONSEC_MASK(portAddrSecHSIOM) & ~(CY_GPIO_HSIOM_SEC_MASK << pinNum);
+     tempReg= HSIOM_SEC_PRT_NONSEC_MASK(portAddrSecHSIOM) & ~(CY_GPIO_HSIOM_SEC_MASK << pinNum);
     HSIOM_SEC_PRT_NONSEC_MASK(portAddrSecHSIOM) = tempReg | ((value & CY_GPIO_HSIOM_SEC_MASK) << pinNum);
 #else
     /* Suppress a compiler warning about unused variables */
@@ -878,20 +880,131 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetHSIOM_SecPin(GPIO_PRT_Type* base, uint32_t p
     portNum = ((uint32_t)(base) - CY_GPIO_BASE) / GPIO_PRT_SECTION_SIZE;
     portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_HSIOM_SECURE_BASE + (HSIOM_SECURE_PRT_SECTION_SIZE * portNum));
 
-#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
     if (CY_GPIO_IS_SMIF_GPIO(base))
     {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_SECURE_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_SEC_PRT_SECTION_SIZE * portNum));
     }
 #endif
-  
+
     return (uint32_t)((HSIOM_SEC_PRT_NONSEC_MASK(portAddrSecHSIOM) >> pinNum) & CY_GPIO_HSIOM_SEC_MASK);
 #else
     /* Suppress a compiler warning about unused variables */
     (void)base;
     (void)pinNum;
+
+    return (uint32_t)CY_GPIO_BAD_PARAM;
+#endif /* CY_PDL_TZ_ENABLED */
+}
+
+/*******************************************************************************
+* Function Name: Cy_GPIO_SetHSIOM_SecPort
+****************************************************************************//**
+*
+* Configures the security state of all pins on a port at once by writing the
+* HSIOM NONSECURE_MASK register for the port.
+*
+* Each bit in the 8-bit \p value corresponds to a pin on the port:
+* - 0: Pin is secure
+* - 1: Pin is non-secure (accessible from non-secure domain)
+*
+* Unlike \ref Cy_GPIO_SetHSIOM_SecPin, this function operates on the whole port
+* with a single register write, so no read-modify-write is required.
+*
+* \param base
+* Pointer to the port register base address
+*
+* \param value
+* 8-bit mask specifying the non-secure state for all pins on the port.
+* Bit N corresponds to pin N. Set a bit to 1 to mark the pin as non-secure.
+*
+* \note
+* This function should be called from the right protection context to access
+* HSIOM secure port (HSIOM_SECURE_PRT_Type).
+*
+* \note
+* This API is available for devices that support TrustZone. It should be accessed
+* from secure domain only.
+*
+* \funcusage
+*
+*******************************************************************************/
+__STATIC_INLINE void Cy_GPIO_SetHSIOM_SecPort(GPIO_PRT_Type* base, uint32_t value)
+{
+/* Restrict access to secure API. It should be accessed from secure domain only */
+#if defined (CY_PDL_TZ_ENABLED)
+    uint32_t portNum;
+    HSIOM_SECURE_PRT_Type* portAddrSecHSIOM;
+
+    CY_ASSERT_L2(CY_GPIO_IS_HSIOM_SEC_PORT_VALID(value));
+
+    portNum = ((uint32_t)(base) - CY_GPIO_BASE) / GPIO_PRT_SECTION_SIZE;
+    portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_HSIOM_SECURE_BASE + (HSIOM_SECURE_PRT_SECTION_SIZE * portNum));
+
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
+    if (CY_GPIO_IS_SMIF_GPIO(base))
+    {
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_SEC_PRT_SECTION_SIZE * portNum));
+    }
+#endif
+     HSIOM_SEC_PRT_NONSEC_MASK(portAddrSecHSIOM) = (value & CY_GPIO_PRT_PINS_MASK);
+#else
+    /* Suppress a compiler warning about unused variables */
+    (void)base;
+    (void)value;
+#endif /* CY_PDL_TZ_ENABLED */
+}
+
+/*******************************************************************************
+* Function Name: Cy_GPIO_GetHSIOM_SecPort
+****************************************************************************//**
+*
+* Returns the HSIOM NONSECURE_MASK register value for the port, indicating
+* the security state of all pins.
+*
+* Each bit in the returned value corresponds to a pin on the port:
+* - 0: Pin is secure
+* - 1: Pin is non-secure
+*
+* \param base
+* Pointer to the port register base address
+*
+* \return
+* 8-bit non-secure mask for the port. Each bit corresponds to a pin's security
+* state. In case of accessing this API from non-secure domain, it will return
+* \ref CY_GPIO_BAD_PARAM.
+*
+* \note
+* This API is available for devices that support TrustZone. It should be accessed
+* from secure domain only.
+*
+* \funcusage
+*
+*******************************************************************************/
+__STATIC_INLINE uint32_t Cy_GPIO_GetHSIOM_SecPort(GPIO_PRT_Type* base)
+{
+/* Restrict access to secure API. It should be accessed from secure domain only */
+#if defined (CY_PDL_TZ_ENABLED)
+    uint32_t portNum;
+    HSIOM_SECURE_PRT_Type* portAddrSecHSIOM;
+
+    portNum = ((uint32_t)(base) - CY_GPIO_BASE) / GPIO_PRT_SECTION_SIZE;
+    portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_HSIOM_SECURE_BASE + (HSIOM_SECURE_PRT_SECTION_SIZE * portNum));
+
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
+    if (CY_GPIO_IS_SMIF_GPIO(base))
+    {
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        portAddrSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_SEC_PRT_SECTION_SIZE * portNum));
+    }
+#endif
+
+    return (uint32_t)(HSIOM_SEC_PRT_NONSEC_MASK(portAddrSecHSIOM) & CY_GPIO_PRT_PINS_MASK);
+#else
+    /* Suppress a compiler warning about unused variables */
+    (void)base;
 
     return (uint32_t)CY_GPIO_BAD_PARAM;
 #endif /* CY_PDL_TZ_ENABLED */
@@ -936,15 +1049,14 @@ __STATIC_INLINE void Cy_GPIO_SetHSIOM(GPIO_PRT_Type* base, uint32_t pinNum, en_h
     portNum = ((uint32_t)(base) - CY_GPIO_BASE) / GPIO_PRT_SECTION_SIZE;
     portAddrHSIOM = (HSIOM_PRT_V1_Type*)(CY_HSIOM_BASE + (HSIOM_PRT_SECTION_SIZE * portNum));
 
-#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
     if (CY_GPIO_IS_SMIF_GPIO(base))
     {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        portAddrHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        portAddrHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_PRT_SECTION_SIZE * portNum));
     }
 #endif
-  
+
     if(pinNum < CY_GPIO_PRT_HALF)
     {
         tempReg = HSIOM_PRT_PORT_SEL0(portAddrHSIOM) & ~(CY_GPIO_HSIOM_MASK << (pinNum << CY_GPIO_HSIOM_OFFSET));
@@ -989,15 +1101,15 @@ __STATIC_INLINE en_hsiom_sel_t Cy_GPIO_GetHSIOM(GPIO_PRT_Type* base, uint32_t pi
     portNum = ((uint32_t)(base) - CY_GPIO_BASE) / GPIO_PRT_SECTION_SIZE;
     portAddrHSIOM = (HSIOM_PRT_V1_Type*)(CY_HSIOM_BASE + (HSIOM_PRT_SECTION_SIZE * portNum));
 
-#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
     if (CY_GPIO_IS_SMIF_GPIO(base))
     {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        portAddrHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        portAddrHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_PRT_SECTION_SIZE * portNum));
     }
 #endif
-  
+
+
     if(pinNum < CY_GPIO_PRT_HALF)
     {
         returnValue = (HSIOM_PRT_PORT_SEL0(portAddrHSIOM) >> (pinNum << CY_GPIO_HSIOM_OFFSET)) & CY_GPIO_HSIOM_MASK;
@@ -1608,6 +1720,22 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetSlewRate(GPIO_PRT_Type* base, uint32_t pinNu
     return (GPIO_PRT_SLEW_EXT(base) >> (pinNum << CY_GPIO_CFG_SLEW_EXT_OFFSET)) & CY_GPIO_CFG_SLEW_EXT_MASK;
 #endif /* CY_IP_MXS40IOSS */
 }
+
+
+
+/*******************************************************************************
+* Function Name: Cy_GPIO_MsclpControlEnable
+****************************************************************************//**
+*
+* Enables control of the IO port analog signaling by the MSCV3LP IP block.
+*
+* \param base
+* Pointer to the pin's port register base address
+*
+* \param pinNum
+* Position of the pin bit-field within the port register. Valid range: 0...7.
+*
+*******************************************************************************/
 
 
 /*******************************************************************************

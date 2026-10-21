@@ -195,6 +195,16 @@
     </DRC>
   </DRCs>
 
-  <ConfigFirmware/>
+  <ConfigFirmware>
+    <ConfigDefine name='`${getExposedMember(resource_sar, "INST_NAME_adc")}`_FIFO_SLICE_$idx_IDX'
+                  value='$idx'
+                  public='true'
+                  include='`${$idx &lt; numFifos}`'
+                  repeatCount='8' />
+    <ConfigDefine name='`${getExposedMember(resource_sar, "INST_NAME_adc")}`_FIFO_SLICE_COUNT'
+                  value='`${numFifos}`U'
+                  public='true'
+                  include='true' />
+  </ConfigFirmware>
 
 </PersonalityTemplate>

@@ -91,7 +91,8 @@ $(document).ready(function(){initNavTree('group__group__syslib__macros__status__
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">Status codes<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a> &raquo; <a class="el" href="group__group__syslib.html">SysLib       (System Library)</a> &raquo; <a class="el" href="group__group__syslib__macros.html">Macros</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -105,10 +106,181 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga45c44ce91d1e20c64430f00fd8ad9b0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the software PDL module ID. <br /></td></tr>
 <tr class="separator:ga45c44ce91d1e20c64430f00fd8ad9b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga50909cf27bac74dae5f45ae1a1b8da24"><td class="memItemLeft" align="right" valign="top"><a id="ga50909cf27bac74dae5f45ae1a1b8da24" name="ga50909cf27bac74dae5f45ae1a1b8da24"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SYSLIB_ID</b>&#160;&#160;&#160;<a class="el" href="group__group__syslib__macros__status__codes.html#ga45c44ce91d1e20c64430f00fd8ad9b0e">CY_PDL_DRV_ID</a>(0x11U)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SYSLIB_ID</b>&#160;&#160;&#160;<a class="el" href="group__group__syslib__macros__status__codes.html#ga45c44ce91d1e20c64430f00fd8ad9b0e">CY_PDL_DRV_ID</a>(CY_PDL_RSLT_MODULE_SYSLIB)</td></tr>
 <tr class="memdesc:ga50909cf27bac74dae5f45ae1a1b8da24"><td class="mdescLeft">&#160;</td><td class="mdescRight">SYSLIB PDL ID. <br /></td></tr>
 <tr class="separator:ga50909cf27bac74dae5f45ae1a1b8da24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga793518f33c7348383ff464337c42e041"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syslib__macros__status__codes.html#ga793518f33c7348383ff464337c42e041">cy_en_pdl_rslt_module_t</a> { <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SAR</b> = CY_RSLT_MODULE_DRIVER_SAR
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_CRYPTO</b> = CY_RSLT_MODULE_DRIVER_CRYPTO
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SYSPM</b> = CY_RSLT_MODULE_DRIVER_SYSPM
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SYSLIB</b> = CY_RSLT_MODULE_DRIVER_SYSLIB
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SYSCLK</b> = CY_RSLT_MODULE_DRIVER_SYSCLK
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_DMA</b> = CY_RSLT_MODULE_DRIVER_DMA
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_FLASH</b> = CY_RSLT_MODULE_DRIVER_FLASH
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SYSINT</b> = CY_RSLT_MODULE_DRIVER_SYSINT
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_GPIO</b> = CY_RSLT_MODULE_DRIVER_GPIO
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_EFUSE</b> = CY_RSLT_MODULE_DRIVER_EFUSE
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PROFILE</b> = CY_RSLT_MODULE_DRIVER_PROFILE
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_IPC</b> = CY_RSLT_MODULE_DRIVER_IPC
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_LPCOMP</b> = CY_RSLT_MODULE_DRIVER_LPCOMP
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_RTC</b> = CY_RSLT_MODULE_DRIVER_RTC
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SCB</b> = CY_RSLT_MODULE_DRIVER_SCB
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SMIF</b> = CY_RSLT_MODULE_DRIVER_SMIF
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_TCPWM</b> = CY_RSLT_MODULE_DRIVER_TCPWM
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_TRIGMUX</b> = CY_RSLT_MODULE_DRIVER_TRIGMUX
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_WDT</b> = CY_RSLT_MODULE_DRIVER_WDT
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_MCWDT</b> = CY_RSLT_MODULE_DRIVER_MCWDT
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_LVD</b> = CY_RSLT_MODULE_DRIVER_LVD
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SD_HOST</b> = CY_RSLT_MODULE_DRIVER_SD_HOST
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_DMAC</b> = CY_RSLT_MODULE_DRIVER_DMAC
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SMARTIO</b> = CY_RSLT_MODULE_DRIVER_SMARTIO
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SMARTLB</b> = 0x43U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_CANFD</b> = CY_RSLT_MODULE_DRIVER_CANFD
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SAR2</b> = CY_RSLT_MODULE_DRIVER_SAR2
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_AXIDMAC</b> = 0x4CU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_RRAM</b> = 0x4DU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_MIPIDSI</b> = 0x4EU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PPCA_HWFILT3P3Z</b> = 0x4FU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_TDM</b> = 0x50U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SDIODEV</b> = 0x51U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_DTS</b> = 0x52U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SVGS</b> = 0x53U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_HPPASS_HWFILT3P3Z</b> = 0x54U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SOCMEM</b> = 0x55U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_XMPC</b> = 0x56U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PREFETCH</b> = 0x57U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ARM_CACHE</b> = 0x58U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_NNLITE</b> = 0x59U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_AUTANALOG</b> = 0x5AU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_GRAPHICS</b> = 0x5BU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_MIPICSI</b> = 0x5CU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PROMC</b> = 0x5DU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ISPSS_CAPT</b> = 0x5EU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_MPC</b> = 0x60U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PPC</b> = 0x61U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_MS_CTL</b> = 0x62U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_CORDIC</b> = 0x63U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PDL_SRF</b> = 0x66U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_COMP</b> = 0x67U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ACTRL</b> = 0x68U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_OPAMP</b> = 0x69U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_DAC</b> = 0x6AU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_AFE</b> = 0x6BU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_DCDRAMIF</b> = 0x6CU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PPCA_CNFG</b> = 0x6DU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PPCA_CLB</b> = 0x6EU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PPCA_EPU</b> = 0x6FU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_EPHY</b> = 0x70U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ETHIF</b> = 0x71U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_PDM_PCM_V2</b> = CY_RSLT_MODULE_DRIVER_PDM_PCM2
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_CRYPTOLITE</b> = CY_RSLT_MODULE_DRIVER_CRYPTOLITE
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_I3C</b> = 0x75U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SYSFAULT</b> = CY_RSLT_MODULE_DRIVER_SYSFAULT
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_HPPASS</b> = 0x77U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_SYSTICK</b> = 0x79U
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ASAR</b> = 0x7AU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ASAR_AFE</b> = 0x7BU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ASAR_FILT</b> = 0x7CU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ASAR_FIFO</b> = 0x7DU
+, <br />
+&#160;&#160;<b>CY_PDL_RSLT_MODULE_ASAR_TIMER</b> = 0x7EU
+<br />
+ }</td></tr>
+<tr class="memdesc:ga793518f33c7348383ff464337c42e041"><td class="mdescLeft">&#160;</td><td class="mdescRight">PDL result module identifiers.  <a href="group__group__syslib__macros__status__codes.html#ga793518f33c7348383ff464337c42e041">More...</a><br /></td></tr>
+<tr class="separator:ga793518f33c7348383ff464337c42e041"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga793518f33c7348383ff464337c42e041" name="ga793518f33c7348383ff464337c42e041"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga793518f33c7348383ff464337c42e041">&#9670;&#160;</a></span>cy_en_pdl_rslt_module_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__group__syslib__macros__status__codes.html#ga793518f33c7348383ff464337c42e041">cy_en_pdl_rslt_module_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>PDL result module identifiers. </p>
+<p>Single source of truth for driver IDs in the CY_RSLT_MODULE_DRIVERS_PDL_BASE range (0x0000-0x007F). All driver CY_*_ID macros reference members of this enum via <a class="el" href="group__group__syslib__macros__status__codes.html#ga45c44ce91d1e20c64430f00fd8ad9b0e" title="Get the software PDL module ID.">CY_PDL_DRV_ID()</a>. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part

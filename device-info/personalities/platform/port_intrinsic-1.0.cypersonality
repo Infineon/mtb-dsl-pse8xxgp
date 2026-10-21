@@ -40,6 +40,10 @@
     <!--The port number this personality is instantiated on.-->
     <Variable id='port' value='`${getInstNumber("port")}`' />
 
+    <!-- device-db driven: whether this IOSS instance splits the GPIO vector into Secure/Non-secure variants -->
+    <Variable id='secExtAvailable' value='`${lookupExpression("GPIO.SECEXT", lookupExpression("SECEXT", -1))}`' />
+    <Variable id='gpioIrqn' value='`${((secExtAvailable eq 1) ? "ioss_interrupts_sec_gpio_" : "ioss_interrupts_gpio_") . port . "_IRQn"}`' />
+
     <Variable id='pinRsc$idx' value='ioss[`${ioss}`].port[`${port}`].pin[$idx]' repeatCount='8' />
     <Variable id='pinExs$idx' value='`${hasBlock(pinRsc$idx)}`' repeatCount='8' />
     <Variable id='pinUsed$idx' value='`${pinExs$idx ? isBlockUsed(pinRsc$idx) : false}`' repeatCount='8' />
@@ -64,7 +68,7 @@
                               (pinUsed5 ? getOrDefault(getExposedMember(pinRsc5, "intr"), false) : false) |
                               (pinUsed6 ? getOrDefault(getExposedMember(pinRsc6, "intr"), false) : false) |
                               (pinUsed7 ? getOrDefault(getExposedMember(pinRsc7, "intr"), false) : false)}`' >
-      <Member name='intrSrc' value='ioss_interrupts_sec_gpio_`${port}`_IRQn' />
+      <Member name='intrSrc' value='`${gpioIrqn}`' />
       <Member name='intrPriority' value='1UL' />
     </ConfigStruct>
 
@@ -96,7 +100,7 @@
                                    (pinUsed5 ? getOrDefault(getExposedMember(pinRsc5, "intr"), false) : false) |
                                    (pinUsed6 ? getOrDefault(getExposedMember(pinRsc6, "intr"), false) : false) |
                                    (pinUsed7 ? getOrDefault(getExposedMember(pinRsc7, "intr"), false) : false)}`' />
-    <ConfigInstruction purpose='INITIALIZE' value='NVIC_ClearPendingIRQ(ioss_interrupts_sec_gpio_`${port}`_IRQn);'
+    <ConfigInstruction purpose='INITIALIZE' value='NVIC_ClearPendingIRQ(`${gpioIrqn}`);'
                        include='`${(pinUsed0 ? getOrDefault(getExposedMember(pinRsc0, "intr"), false) : false) |
                                    (pinUsed1 ? getOrDefault(getExposedMember(pinRsc1, "intr"), false) : false) |
                                    (pinUsed2 ? getOrDefault(getExposedMember(pinRsc2, "intr"), false) : false) |
@@ -105,7 +109,7 @@
                                    (pinUsed5 ? getOrDefault(getExposedMember(pinRsc5, "intr"), false) : false) |
                                    (pinUsed6 ? getOrDefault(getExposedMember(pinRsc6, "intr"), false) : false) |
                                    (pinUsed7 ? getOrDefault(getExposedMember(pinRsc7, "intr"), false) : false)}`' />
-    <ConfigInstruction purpose='INITIALIZE' value='NVIC_EnableIRQ(ioss_interrupts_sec_gpio_`${port}`_IRQn);'
+    <ConfigInstruction purpose='INITIALIZE' value='NVIC_EnableIRQ(`${gpioIrqn}`);'
                        include='`${(pinUsed0 ? getOrDefault(getExposedMember(pinRsc0, "intr"), false) : false) |
                                    (pinUsed1 ? getOrDefault(getExposedMember(pinRsc1, "intr"), false) : false) |
                                    (pinUsed2 ? getOrDefault(getExposedMember(pinRsc2, "intr"), false) : false) |

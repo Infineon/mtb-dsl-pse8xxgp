@@ -577,14 +577,26 @@ void vg_lite_IRQHandler(void)
 int32_t vg_lite_hal_wait_interrupt(uint32_t timeout, uint32_t mask, uint32_t *value)
 {
 #if _BAREMETAL
-    uint32_t int_status=0;
-    int_status = vg_lite_hal_peek(VG_LITE_INTR_STATUS);
+
+    // ---- Direct register access ---
+    // uint32_t int_status=0;
+    // int_status = vg_lite_hal_peek(VG_LITE_INTR_STATUS);
+    // (void)value;
+    //
+    // while (int_status==0){
+    //     int_status = vg_lite_hal_peek(VG_LITE_INTR_STATUS);
+    //     Cy_SysLib_DelayUs(1);
+    // }
+    
+    /* Current: direct register access + shadow-latch clear. */
     (void)value;
 
-    while (int_status==0){
-        int_status = vg_lite_hal_peek(VG_LITE_INTR_STATUS);
+    while (GFXSS_GFXSS_GPU_MXGPU->INTR == 0) {
         Cy_SysLib_DelayUs(1);
     }
+
+    (void)GFXSS_GFXSS_GPU_GCNANO->AQINTRACKNOWLEDGE;
+    GFXSS_GFXSS_GPU_MXGPU->INTR = GFXSS_GPU_MXGPU_INTR_CORE_Msk;
 
     if (IS_AXI_BUS_ERR(*value))
     {

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['last_5fcommand_5fbyte_0',['LAST_COMMAND_BYTE',['../group__group__smif__data__structures__memslot.html#gga963ac023e6c79a72617a55ac7589f234a2bd6f17dc93af47831b5cbb77a5f07bb',1,'cy_smif_memslot.h']]]
+  ['exp_5fms_5fmsc_0',['EXP_MS_MSC',['../group__group__ms__ctl__enums.html#gga8f077c1a170b8f608b695f41af1165b2a37c0cfa3ce87bf4ec163dbdc96309ec9',1,'cy_ms_ctl.h']]]
 ];

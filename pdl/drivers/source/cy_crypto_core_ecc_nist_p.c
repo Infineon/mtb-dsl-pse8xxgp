@@ -2558,11 +2558,11 @@ cy_en_crypto_status_t Cy_Crypto_Core_EC_NistP_PointMultiplication(CRYPTO_Type *b
 
         if ((NULL != ecpGX) && (NULL != ecpGY) && (NULL != ecpD) && (NULL != ecpQX) && (NULL != ecpQY))
         {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)ecpGX, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
-            SCB_CleanDCache_by_Addr((volatile void *)ecpGY, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
-            SCB_CleanDCache_by_Addr((volatile void *)ecpD, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)ecpGX, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)ecpGY, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)ecpD, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
             /* Public parameters and characteristics of elliptic curve */
             tmpResult = CY_CRYPTO_VU_ALLOC_MEM (base, VR_D, bitsize);        /* Scalar factor */
@@ -2620,9 +2620,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_EC_NistP_PointMultiplication(CRYPTO_Type *b
             /* Get result P = (X,Y) = d.G from EC scalar multiplication */
             Cy_Crypto_Core_Vu_GetMemValue (base, ecpQX, VR_S_X, bitsize);
             Cy_Crypto_Core_Vu_GetMemValue (base, ecpQY, VR_S_Y, bitsize);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-            SCB_InvalidateDCache_by_Addr(ecpQX, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
-            SCB_InvalidateDCache_by_Addr(ecpQY, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+#if CY_CRYPTO_DCACHE_ENABLED
+            CY_CRYPTO_INVALIDATE_DCACHE(ecpQX, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+            CY_CRYPTO_INVALIDATE_DCACHE(ecpQY, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
             /* Free memory */
             CY_CRYPTO_VU_FREE_MEM (base,

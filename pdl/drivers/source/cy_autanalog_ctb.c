@@ -207,7 +207,6 @@ cy_en_autanalog_status_t Cy_AutAnalog_CTB_LoadDynamicConfig(uint8_t ctbIdx, uint
 
             if (CY_AUTANALOG_SUCCESS == Cy_AutAnalog_IdxToBaseAddr(CY_AUTANALOG_CTB, ctbIdx, &baseAddr))
             {
-                CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 13.5','Review shows that accessing of volatile object does not have any negative drawbacks');
                 AUTANALOG_CTBX_DYN_CFG(baseAddr, cfgIdx) = regVal;
                 result = CY_AUTANALOG_SUCCESS;
             }

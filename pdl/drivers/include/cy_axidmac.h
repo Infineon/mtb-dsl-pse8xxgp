@@ -148,7 +148,7 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 5, \
 #define CY_AXIDMAC_DRV_VERSION_MINOR       0
 
 /** The AXIDMAC driver identifier */
-#define CY_AXIDMAC_ID                      (CY_PDL_DRV_ID(0x4BU))
+#define CY_AXIDMAC_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_AXIDMAC))
 
 /** The minimum M/X/Y Count API parameters */
 #define CY_AXIDMAC_LOOP_COUNT_MIN          (1UL)
@@ -1185,7 +1185,7 @@ __STATIC_INLINE void Cy_AXIDMAC_Descriptor_SetMloopDataCount(cy_stc_axidmac_desc
 {
     CY_ASSERT_L2(CY_AXIDMAC_IS_LOOP_COUNT_VALID(mCount));
     /* Convert the data count from the user's range (1-65536) into the machine range (0-65535). */
-    CY_REG32_CLR_SET(descriptor->mSize, AXI_DMAC_CH_DESCR_M_SIZE_M_COUNT, mCount - 1UL);
+    CY_REG32_CLR_SET(descriptor->mSize, AXI_DMAC_CH_DESCR_M_SIZE_M_COUNT, (mCount > 0UL) ? (mCount - 1UL) : 0UL);
 }
 
 
@@ -1338,7 +1338,7 @@ __STATIC_INLINE void Cy_AXIDMAC_Descriptor_SetYloopDataCount(cy_stc_axidmac_desc
     CY_ASSERT_L1(CY_AXIDMAC_3D_MEMORY_COPY == Cy_AXIDMAC_Descriptor_GetDescriptorType(descriptor));
     CY_ASSERT_L2(CY_AXIDMAC_IS_LOOP_COUNT_VALID(yCount));
     /* Convert the data count from the user's range (1-65536) into the machine range (0-65535). */
-    CY_REG32_CLR_SET(descriptor->ySize, AXI_DMAC_CH_DESCR_Y_SIZE_Y_COUNT, yCount - 1UL);
+    CY_REG32_CLR_SET(descriptor->ySize, AXI_DMAC_CH_DESCR_Y_SIZE_Y_COUNT, (yCount > 0UL) ? (yCount - 1UL) : 0UL);
 }
 
 

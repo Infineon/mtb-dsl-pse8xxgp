@@ -35,18 +35,40 @@
 extern "C" {
 #endif
 
+#include "cy_crypto_core_hw.h"
+#include "cy_crypto_core_mem.h"
+
+#if defined(CY_CRYPTO_CFG_AES_C)
 #include "cy_crypto_core_aes.h"
+#include "cy_crypto_core_cmac.h"
+#endif /* CY_CRYPTO_CFG_AES_C */
+
+#if defined(CY_CRYPTO_CFG_SHA_C)
 #include "cy_crypto_core_sha.h"
 #include "cy_crypto_core_hmac.h"
-#include "cy_crypto_core_cmac.h"
+#endif /* CY_CRYPTO_CFG_SHA_C */
+
+#if defined(CY_CRYPTO_CFG_PRNG_C)
 #include "cy_crypto_core_prng.h"
+#endif /* CY_CRYPTO_CFG_PRNG_C */
+
+#if defined(CY_CRYPTO_CFG_TRNG_C)
 #include "cy_crypto_core_trng.h"
+#endif /* CY_CRYPTO_CFG_TRNG_C */
+
+#if defined(CY_CRYPTO_CFG_RSA_C) || defined(CY_CRYPTO_CFG_ECP_C)
 #include "cy_crypto_core_rsa.h"
-#include "cy_crypto_core_mem.h"
-#include "cy_crypto_core_crc.h"
-#include "cy_crypto_core_des.h"
-#include "cy_crypto_core_hw.h"
 #include "cy_crypto_core_ecc.h"
+#endif /* CY_CRYPTO_CFG_RSA_C || CY_CRYPTO_CFG_ECP_C */
+
+#if defined(CY_CRYPTO_CFG_CRC_C)
+#include "cy_crypto_core_crc.h"
+#endif /* CY_CRYPTO_CFG_CRC_C */
+
+#if defined(CY_CRYPTO_CFG_DES_C)
+#include "cy_crypto_core_des.h"
+#endif /* CY_CRYPTO_CFG_DES_C */
+
 #include "cy_ipc_drv.h"
 #include "cy_sysint.h"
 #include "cy_syslib.h"

@@ -27,6 +27,7 @@
 
 #include "mtb_hal_hw_types.h"
 #include "mtb_hal_nvm.h"
+#include "cy_rram.h"
 #include "cy_utils.h"
 #include "mtb_hal_utils_impl.h"
 #include <string.h>
@@ -58,7 +59,7 @@ typedef enum
     #if (CY_RRAM_SFLASH_REGION_SIZE > 0)
     _MTB_HAL_RRAM_SFLASH_REGION,
     #endif
-    #if (CY_RRAM_PROTECTED_REGION_SIZE > 0)
+    #if (CY_RRAM_PROTECTED_REGION_SIZE > CY_RRAM_RECLAIM_SIZE)
     _MTB_HAL_RRAM_PROTECTED_REGION,
     #endif
     #if (CY_RRAM_MAIN_REGION_SIZE > 0)

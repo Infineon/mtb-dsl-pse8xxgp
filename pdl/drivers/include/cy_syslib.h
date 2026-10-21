@@ -223,7 +223,141 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 8.6', 3, \
 
 /** Get the software PDL module ID */
 #define CY_PDL_DRV_ID(id)       ((uint32_t)((uint32_t)((id) & CY_PDL_MODULE_ID_Msk) << CY_PDL_MODULE_ID_Pos))
-#define CY_SYSLIB_ID            CY_PDL_DRV_ID(0x11U)     /**< SYSLIB PDL ID */
+
+/**
+ * \brief PDL result module identifiers.
+ *
+ * Single source of truth for driver IDs in the
+ * CY_RSLT_MODULE_DRIVERS_PDL_BASE range (0x0000-0x007F). All driver
+ * CY_*_ID macros reference members of this enum via CY_PDL_DRV_ID().
+ */
+/* Maintainer notes (not published in doxygen):
+ *
+ * Entries are kept in numeric order. Legacy modules alias the core-lib
+ * symbol (CY_RSLT_MODULE_DRIVER_*) to preserve ABI. New drivers are added
+ * directly here as a hex literal - the core-lib registry is no longer used
+ * for new PDL driver IDs.
+ *
+ * Every unused ID is annotated inline below as one of:
+ *   RESERVED - owned by another asset (mtb-pdl-cat2, DFU, CAPSENSE,
+ *              em_eeprom, csdidac, etc.); must not be reused.
+ *   FREE     - unassigned across all PDL variants and assets; may be
+ *              claimed for a new driver by replacing the marker with a
+ *              new enum entry.
+ *
+ * When adding a new driver, replace the corresponding FREE marker with
+ * the new enum entry so the annotations stay accurate.
+ */
+typedef enum
+{
+    CY_PDL_RSLT_MODULE_SAR                = CY_RSLT_MODULE_DRIVER_SAR,        /* 0x01 */
+    /* 0x02-0x05 -- FREE */
+    /* 0x06 DFU, 0x07 CAPSENSE, 0x08 USB_DEV -- RESERVED */
+    /* 0x09-0x0A -- FREE */
+    /* 0x0B CTB -- RESERVED */
+    CY_PDL_RSLT_MODULE_CRYPTO             = CY_RSLT_MODULE_DRIVER_CRYPTO,     /* 0x0C */
+    /* 0x0D-0x0F -- FREE */
+    CY_PDL_RSLT_MODULE_SYSPM              = CY_RSLT_MODULE_DRIVER_SYSPM,      /* 0x10 */
+    CY_PDL_RSLT_MODULE_SYSLIB             = CY_RSLT_MODULE_DRIVER_SYSLIB,     /* 0x11 */
+    CY_PDL_RSLT_MODULE_SYSCLK             = CY_RSLT_MODULE_DRIVER_SYSCLK,     /* 0x12 */
+    CY_PDL_RSLT_MODULE_DMA                = CY_RSLT_MODULE_DRIVER_DMA,        /* 0x13 */
+    CY_PDL_RSLT_MODULE_FLASH              = CY_RSLT_MODULE_DRIVER_FLASH,      /* 0x14 */
+    CY_PDL_RSLT_MODULE_SYSINT             = CY_RSLT_MODULE_DRIVER_SYSINT,     /* 0x15 */
+    CY_PDL_RSLT_MODULE_GPIO               = CY_RSLT_MODULE_DRIVER_GPIO,       /* 0x16 */
+    /* 0x17 SYSANALOG -- RESERVED */
+    /* 0x18 -- FREE */
+    /* 0x19 CTDAC -- RESERVED */
+    CY_PDL_RSLT_MODULE_EFUSE              = CY_RSLT_MODULE_DRIVER_EFUSE,      /* 0x1A */
+    /* 0x1B EM_EEPROM -- RESERVED */
+    /* 0x1C-0x1D -- FREE */
+    CY_PDL_RSLT_MODULE_PROFILE            = CY_RSLT_MODULE_DRIVER_PROFILE,    /* 0x1E */
+    /* 0x1F -- FREE */
+    /* 0x20 I2S -- RESERVED */
+    /* 0x21 -- FREE */
+    CY_PDL_RSLT_MODULE_IPC                = CY_RSLT_MODULE_DRIVER_IPC,        /* 0x22 */
+    CY_PDL_RSLT_MODULE_LPCOMP             = CY_RSLT_MODULE_DRIVER_LPCOMP,     /* 0x23 */
+    /* 0x24-0x25 -- FREE */
+    /* 0x26 PDM_PCM -- RESERVED */
+    /* 0x27 -- FREE */
+    CY_PDL_RSLT_MODULE_RTC                = CY_RSLT_MODULE_DRIVER_RTC,        /* 0x28 */
+    /* 0x29 -- FREE */
+    CY_PDL_RSLT_MODULE_SCB                = CY_RSLT_MODULE_DRIVER_SCB,        /* 0x2A */
+    /* 0x2B -- FREE */
+    CY_PDL_RSLT_MODULE_SMIF               = CY_RSLT_MODULE_DRIVER_SMIF,       /* 0x2C */
+    CY_PDL_RSLT_MODULE_TCPWM              = CY_RSLT_MODULE_DRIVER_TCPWM,      /* 0x2D */
+    /* 0x2E-0x2F -- FREE */
+    /* 0x30 PROT, 0x31 HVSS, 0x32 CRWDT -- RESERVED */
+    CY_PDL_RSLT_MODULE_TRIGMUX            = CY_RSLT_MODULE_DRIVER_TRIGMUX,    /* 0x33 */
+    CY_PDL_RSLT_MODULE_WDT                = CY_RSLT_MODULE_DRIVER_WDT,        /* 0x34 */
+    CY_PDL_RSLT_MODULE_MCWDT              = CY_RSLT_MODULE_DRIVER_MCWDT,      /* 0x35 */
+    /* 0x36 LTC, 0x37 LIN -- RESERVED */
+    /* 0x38 -- FREE */
+    CY_PDL_RSLT_MODULE_LVD                = CY_RSLT_MODULE_DRIVER_LVD,        /* 0x39 */
+    CY_PDL_RSLT_MODULE_SD_HOST            = CY_RSLT_MODULE_DRIVER_SD_HOST,    /* 0x3A */
+    /* 0x3B USBFS -- RESERVED */
+    /* 0x3C-0x3E -- FREE */
+    CY_PDL_RSLT_MODULE_DMAC               = CY_RSLT_MODULE_DRIVER_DMAC,       /* 0x3F */
+    /* 0x40 SEGLCD, 0x41 CSD -- RESERVED */
+    CY_PDL_RSLT_MODULE_SMARTIO            = CY_RSLT_MODULE_DRIVER_SMARTIO,    /* 0x42 */
+    CY_PDL_RSLT_MODULE_SMARTLB            = 0x43U,
+    /* 0x44 CSDIDAC -- RESERVED */
+    CY_PDL_RSLT_MODULE_CANFD              = CY_RSLT_MODULE_DRIVER_CANFD,      /* 0x45 */
+    /* 0x46 PRA, 0x47 MSC, 0x48 ADCMIC/USBPD, 0x49 MSCLP, 0x4A EVTGEN -- RESERVED */
+    CY_PDL_RSLT_MODULE_SAR2               = CY_RSLT_MODULE_DRIVER_SAR2,       /* 0x4B */
+    CY_PDL_RSLT_MODULE_AXIDMAC            = 0x4CU,
+    CY_PDL_RSLT_MODULE_RRAM               = 0x4DU,
+    CY_PDL_RSLT_MODULE_MIPIDSI            = 0x4EU,
+    CY_PDL_RSLT_MODULE_PPCA_HWFILT3P3Z    = 0x4FU,
+    CY_PDL_RSLT_MODULE_TDM                = 0x50U,
+    CY_PDL_RSLT_MODULE_SDIODEV            = 0x51U,
+    CY_PDL_RSLT_MODULE_DTS                = 0x52U,
+    CY_PDL_RSLT_MODULE_SVGS               = 0x53U,
+    CY_PDL_RSLT_MODULE_HPPASS_HWFILT3P3Z  = 0x54U,
+    CY_PDL_RSLT_MODULE_SOCMEM             = 0x55U,
+    CY_PDL_RSLT_MODULE_XMPC               = 0x56U,
+    CY_PDL_RSLT_MODULE_PREFETCH           = 0x57U,
+    CY_PDL_RSLT_MODULE_ARM_CACHE          = 0x58U,
+    CY_PDL_RSLT_MODULE_NNLITE             = 0x59U,
+    CY_PDL_RSLT_MODULE_AUTANALOG          = 0x5AU,
+    CY_PDL_RSLT_MODULE_GRAPHICS           = 0x5BU,
+    CY_PDL_RSLT_MODULE_MIPICSI            = 0x5CU,
+    CY_PDL_RSLT_MODULE_PROMC              = 0x5DU,
+    CY_PDL_RSLT_MODULE_ISPSS_CAPT         = 0x5EU,
+    /* 0x5F -- FREE */
+    CY_PDL_RSLT_MODULE_MPC                = 0x60U,
+    CY_PDL_RSLT_MODULE_PPC                = 0x61U,
+    CY_PDL_RSLT_MODULE_MS_CTL             = 0x62U,
+    CY_PDL_RSLT_MODULE_CORDIC             = 0x63U,
+    /* 0x64-0x65 -- FREE */
+    CY_PDL_RSLT_MODULE_PDL_SRF            = 0x66U,
+    CY_PDL_RSLT_MODULE_COMP               = 0x67U,
+    CY_PDL_RSLT_MODULE_ACTRL              = 0x68U,
+    CY_PDL_RSLT_MODULE_OPAMP              = 0x69U,
+    CY_PDL_RSLT_MODULE_DAC                = 0x6AU,
+    CY_PDL_RSLT_MODULE_AFE                = 0x6BU,
+    CY_PDL_RSLT_MODULE_DCDRAMIF           = 0x6CU,
+    CY_PDL_RSLT_MODULE_PPCA_CNFG          = 0x6DU,
+    CY_PDL_RSLT_MODULE_PPCA_CLB           = 0x6EU,
+    CY_PDL_RSLT_MODULE_PPCA_EPU           = 0x6FU,
+    CY_PDL_RSLT_MODULE_EPHY               = 0x70U,
+    CY_PDL_RSLT_MODULE_ETHIF              = 0x71U,
+    /* 0x72 KEYSCAN -- RESERVED */
+    CY_PDL_RSLT_MODULE_PDM_PCM_V2         = CY_RSLT_MODULE_DRIVER_PDM_PCM2,   /* 0x73 */
+    CY_PDL_RSLT_MODULE_CRYPTOLITE         = CY_RSLT_MODULE_DRIVER_CRYPTOLITE, /* 0x74 */
+    CY_PDL_RSLT_MODULE_I3C                = 0x75U,
+    CY_PDL_RSLT_MODULE_SYSFAULT           = CY_RSLT_MODULE_DRIVER_SYSFAULT,   /* 0x76 */
+    CY_PDL_RSLT_MODULE_HPPASS             = 0x77U,
+    /* 0x78 LVD_HT -- RESERVED */
+    CY_PDL_RSLT_MODULE_SYSTICK            = 0x79U,
+    CY_PDL_RSLT_MODULE_ASAR               = 0x7AU,
+    CY_PDL_RSLT_MODULE_ASAR_AFE           = 0x7BU,
+    CY_PDL_RSLT_MODULE_ASAR_FILT          = 0x7CU,
+    CY_PDL_RSLT_MODULE_ASAR_FIFO          = 0x7DU,
+    CY_PDL_RSLT_MODULE_ASAR_TIMER         = 0x7EU
+    /* 0x7F -- FREE */
+} cy_en_pdl_rslt_module_t;
+
+#define CY_SYSLIB_ID            CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SYSLIB)     /**< SYSLIB PDL ID */
 /** \} group_syslib_macros_status_codes */
 
 /** \} group_syslib_macros */
@@ -531,6 +665,11 @@ typedef enum
 /** Define variable to be placed to the secured shared SRAM area by the linker */
 #ifndef CY_SECTION_SHAREDMEM_SEC
 #define CY_SECTION_SHAREDMEM_SEC CY_SECTION(".cy_sharedmem_sec")
+#endif
+
+/** Define variable to be placed to the non cached area by the linker. This memory region is non cached for both CM33 and CM55 core */
+#ifndef CY_SECTION_NON_CACHE
+#define CY_SECTION_NON_CACHE CY_SECTION(".cy_non_cache")
 #endif
 
 /** Define start of code to be placed to the SOCMEMSRAM area by the linker */

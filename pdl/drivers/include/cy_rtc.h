@@ -279,7 +279,7 @@ extern "C" {
 */
 
 /** RTC driver identifier */
-#define CY_RTC_ID                                   (CY_PDL_DRV_ID(0x28U))
+#define CY_RTC_ID                                   (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_RTC))
 
 /** Driver major version */
 #define CY_RTC_DRV_VERSION_MAJOR                    2
@@ -941,7 +941,10 @@ __STATIC_INLINE uint32_t Cy_RTC_ConvertDayOfWeek(uint32_t day, uint32_t month, u
     if (month < CY_RTC_MARCH)
     {
         month = CY_RTC_MONTHS_PER_YEAR + month;
-        year--;
+        if (year > 0UL)
+        {
+            year--;
+        }
     }
 
     /* Calculates Day of Week using Zeller's congruence algorithms */

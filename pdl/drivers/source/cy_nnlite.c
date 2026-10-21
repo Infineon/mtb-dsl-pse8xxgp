@@ -65,7 +65,7 @@ extern "C" {
  * register field when written.
  */
 #define NNLITE_RETURN_BAD_IF_OVER_U(val, reg, field) \
-  do { if ((uint32_t)(val) > NNLITE_FLD_UMAX(reg, field)) return CY_NNLITE_BAD_PARAM; } while(0)
+  do { if ((uint32_t)(val) > NNLITE_FLD_UMAX(reg, field)) return CY_NNLITE_BAD_PARAM; } while(false)
 
 /**
  * Return CY_NNLITE_BAD_PARAM status if signed two's complement field value would overflow
@@ -75,7 +75,7 @@ extern "C" {
   do { uint32_t _ob = (uint32_t)(val) & ~(uint32_t)NNLITE_FLD_UMAX(reg, field); \
        if (!(_ob == 0u || _ob == ~(uint32_t)NNLITE_FLD_UMAX(reg, field))) \
          return CY_NNLITE_BAD_PARAM; \
-  } while(0)
+  } while(false)
 #else
 #define NNLITE_RETURN_BAD_IF_OVER_U(val, reg, field)
 #define NNLITE_RETURN_BAD_IF_OVER_S(val, reg, field)
@@ -622,7 +622,7 @@ Cy_NNLite_FFTCfg(NNLITE_Type *nnlite,
     return status;
   }
 
-  nnlite->WEIGHTSTREAMERKERNELCHANNELTIMESHEIGHTTIMESWIDTH = 1<<(1+fftStages);
+  nnlite->WEIGHTSTREAMERKERNELCHANNELTIMESHEIGHTTIMESWIDTH = (uint32_t)1U << (1 + fftStages);
   nnlite->OUTPUTWIDTH = fftStages;
   nnlite->NNLAYER_CTL =
     _VAL2FLD(MXNNLITE_2_0_NNLAYER_CTL_INPUT_SIZE_CTL, CY_NNLITE_ACTIVATION_16BIT) |
@@ -783,11 +783,11 @@ static cy_en_nnlite_status_t
 Cy_NNLite_InterruptStatusToErrMap(uint32_t intrStatus)
 {
   cy_en_nnlite_status_t status;
-  if (intrStatus & NNLITE_INTR_READ_ERRORS_MASK) {
+  if (0U != (intrStatus & NNLITE_INTR_READ_ERRORS_MASK)) {
     status = CY_NNLITE_MEM_READ_ERR;
-    } else if (intrStatus & NNLITE_INTR_WRITE_ERRORS_MASK) {
+    } else if (0U != (intrStatus & NNLITE_INTR_WRITE_ERRORS_MASK)) {
     status = CY_NNLITE_MEM_WRITE_ERR;
-    } else if (intrStatus & NNLITE_SATURATION_MASK) {
+    } else if (0U != (intrStatus & NNLITE_SATURATION_MASK)) {
     status = CY_NNLITE_SATURATION_EVENT;
     } else {
     status = CY_NNLITE_SUCCESS;

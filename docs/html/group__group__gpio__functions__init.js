@@ -9,5 +9,7 @@ var group__group__gpio__functions__init =
     [ "Cy_GPIO_PortToAddr", "group__group__gpio__functions__init.html#gab0eeafea970eadb4e147ff6d0e3804dc", null ],
     [ "Cy_GPIO_Pin_SecFastInit", "group__group__gpio__functions__init.html#gaca4efca81b3d0745dcc83108c96b4c0e", null ],
     [ "Cy_GPIO_SetHSIOM_SecPin", "group__group__gpio__functions__init.html#ga7a2a554e36ef8952ab91a4396fdbddff", null ],
-    [ "Cy_GPIO_GetHSIOM_SecPin", "group__group__gpio__functions__init.html#ga9d7fae96bd5e73600a91983b3460a2dd", null ]
+    [ "Cy_GPIO_GetHSIOM_SecPin", "group__group__gpio__functions__init.html#ga9d7fae96bd5e73600a91983b3460a2dd", null ],
+    [ "Cy_GPIO_SetHSIOM_SecPort", "group__group__gpio__functions__init.html#ga461b540de5e58b2b371dc056e749bf6b", null ],
+    [ "Cy_GPIO_GetHSIOM_SecPort", "group__group__gpio__functions__init.html#ga6b99109daee4c73675b76b82808da199", null ]
 ];

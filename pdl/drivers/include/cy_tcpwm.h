@@ -52,6 +52,34 @@
 * the TCPWM being used must be passed first, followed by the index of
 * the counter you want to touch next.
 *
+* On supported MXS40 TCPWM implementations, a TCPWM/PWM SS0 or SS1 counter
+* can receive a mapped HWFILT3P3Z result through the REGs Master IF.
+* A typical autonomous control-loop path is:
+*
+* \verbatim
+* ADC channel -> ADC filter -> REGs Master IF -> HWFILT3P3Z SS0/SS1
+*     -> REGs Master IF -> TCPWM/PWM SS0/SS1
+* \endverbatim
+*
+* The hardware mapping selects the HWFILT3P3Z source and TCPWM/PWM destination.
+* Enabling the corresponding compare parallel path bypasses the compare registers
+* for the mapped signal and avoids CPU or AHB transfers.
+*
+* Representative ADC filter to HWFILT3P3Z mappings are:
+* \verbatim
+* ADC0: ADC_FILT_00 -> HWFILT3P3Z SS1 0   ADC_FILT_01 -> HWFILT3P3Z SS1 1
+* ADC1: ADC_FILT_1  -> HWFILT3P3Z SS0 0   ADC2: ADC_FILT_2 -> HWFILT3P3Z SS0 1
+* ADC3: ADC_FILT_30 -> HWFILT3P3Z SS0 2   ADC_FILT_31 -> HWFILT3P3Z SS0 3
+*
+* Representative HWFILT3P3Z-to-TCPWM mappings are:
+* \verbatim
+* TCPWM group 0 counters 0/1/2/3 -> HWFILT3P3Z SS0 0/1/2/3
+* TCPWM group 1 counters 0/1     -> HWFILT3P3Z SS1 0/1
+* \endverbatim
+* \endverbatim
+*
+* \image html hwfilt3p3z_tcpwm_datapath.svg "HWFILT3P3Z input and direct TCPWM datapath"
+*
 * The TCPWM supports eight function modes:
 * * Timer
 * * Capture
@@ -212,7 +240,7 @@ extern "C" {
 ******************************************************************************/
 
 /** TCPWM driver identifier */
-#define CY_TCPWM_ID                     (CY_PDL_DRV_ID(0x2DU))
+#define CY_TCPWM_ID                     (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_TCPWM))
 
 /** \cond INTERNAL */
 
@@ -252,6 +280,74 @@ extern "C" {
 
 #endif /* TCPWM_TR_ONE_CNT_NR */
 #endif /* (CY_IP_MXTCPWM_VERSION >= 2U) || defined(CY_DOXYGEN) */
+
+#ifdef CY_TCPWM_GF_PRESENT
+/* TCPWM_GRP_NRx_CNT_TR_ONE_GF_NR is only defined by cy_device.h for groups that
+   physically exist on the device. Overlay each of the 8 possible groups (the
+   design-time maximum group count for TCPWM) to 0 when its macro is absent, so
+   the ternary chain below is always well-formed regardless of group count. */
+#if defined(TCPWM_GRP_NR0_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR0_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR0_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR0_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+#if defined(TCPWM_GRP_NR1_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR1_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR1_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR1_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+#if defined(TCPWM_GRP_NR2_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR2_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR2_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR2_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+#if defined(TCPWM_GRP_NR3_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR3_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR3_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR3_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+#if defined(TCPWM_GRP_NR4_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR4_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR4_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR4_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+#if defined(TCPWM_GRP_NR5_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR5_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR5_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR5_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+#if defined(TCPWM_GRP_NR6_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR6_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR6_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR6_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+#if defined(TCPWM_GRP_NR7_CNT_TR_ONE_GF_NR)
+#define TCPWM_GRP_NR7_CNT_TR_ONE_GF_NR_OVERLAY   TCPWM_GRP_NR7_CNT_TR_ONE_GF_NR
+#else
+#define TCPWM_GRP_NR7_CNT_TR_ONE_GF_NR_OVERLAY   0U
+#endif
+
+/* Returns the number of one-to-one trigger glitch filter registers present in the
+   given TCPWM counter group (0-7, the design-time maximum number of TCPWM groups).
+   The count can differ between groups, so it must be selected based on the
+   counter's actual group rather than assuming group 0. */
+#define CY_TCPWM_GRP_CNT_TR_ONE_GF_NR(grp) \
+    (((grp) == 0U) ? TCPWM_GRP_NR0_CNT_TR_ONE_GF_NR_OVERLAY : \
+     ((grp) == 1U) ? TCPWM_GRP_NR1_CNT_TR_ONE_GF_NR_OVERLAY : \
+     ((grp) == 2U) ? TCPWM_GRP_NR2_CNT_TR_ONE_GF_NR_OVERLAY : \
+     ((grp) == 3U) ? TCPWM_GRP_NR3_CNT_TR_ONE_GF_NR_OVERLAY : \
+     ((grp) == 4U) ? TCPWM_GRP_NR4_CNT_TR_ONE_GF_NR_OVERLAY : \
+     ((grp) == 5U) ? TCPWM_GRP_NR5_CNT_TR_ONE_GF_NR_OVERLAY : \
+     ((grp) == 6U) ? TCPWM_GRP_NR6_CNT_TR_ONE_GF_NR_OVERLAY : \
+                     TCPWM_GRP_NR7_CNT_TR_ONE_GF_NR_OVERLAY)
+#endif /* CY_TCPWM_GF_PRESENT */
 
 /** Input is defined by Creator, and Init() function does not need to configure input */
 #define CY_TCPWM_INPUT_CREATOR          (0xFFFFFFFFU)
@@ -318,6 +414,7 @@ extern "C" {
 #define CY_TCPWM_INT_ON_CC0_OR_TC       (3U) /**< Interrupt on TC or CC0 */
 #define CY_TCPWM_INT_ON_CC1             (4U) /**< Interrupt on Compare 1/Capture 1(CC1)*/
 /** \} group_tcpwm_interrupt_sources */
+
 
 /***************************************
 *        Registers Constants

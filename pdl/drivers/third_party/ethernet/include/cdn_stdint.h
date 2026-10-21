@@ -15,6 +15,9 @@
  * limitations under the License. 
  ***********************************************************************/
 
+#if !defined(CDN_STDINT_H)
+#define CDN_STDINT_H
+
 #include <stdint.h>
 
 /* NOTE - The driver uses fixed width types as defined in C99
@@ -39,3 +42,5 @@
  #include <linux/types.h>
 
 */
+
+#endif /* CDN_STDINT_H */

@@ -94,6 +94,14 @@
                  editable='false'
                  desc='' />
 
+    <ParamString id='inst_group'
+                 name='inst_group'
+                 group='Internal'
+                 default='`${getInstNumber("group")}`'
+                 visible='`${debug}`'
+                 editable='false'
+                 desc='' />
+
 <!-- LPPASS resources -->
     <ParamString id='resource_pass'
                  name='resource_pass'
@@ -119,6 +127,14 @@
                  editable='false'
                  default='`${"pass[" . inst_pass . "].sar[" . inst_sar . "]"}`'/>
 
+    <ParamString id='resource_group'
+                 name='resource_group'
+                 group='Internal'
+                 visible='`${debug}`'
+                 desc=''
+                 editable='false'
+                 default='`${"pass[" . inst_pass . "].sar[" . inst_sar . "].group[" . inst_group . "]"}`'/>
+
 <!-- LPPASS external variables -->
     <ParamString id='operatingMode' name='operatingMode' group='Internal' visible='false' desc='' editable='false' default='`${getExposedMember(resource_ac, "opMode")}`'/>
     <ParamString id='lpAutosetConversionRate' name='lpAutosetConversionRate' group='Internal' visible='false' desc='' editable='false' default='`${getExposedMember(resource_sar, "sar_lpAutosetConversionRate")}`'/>
@@ -143,39 +159,64 @@
                editable='true'
                desc='Enables Simultaneous Sampling of the Channels in this Scan Group in High Speed mode'
                default='false'/>
-<!-- DRIVERS-19853
-    <ParamString id='conversionTime'
+<!-- SAR ADC scan group conversion-rate configuration fields -->
+    <ParamString id='autosetConversionRate' name='autosetConversionRate' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${(operatingMode eq "HighSpeed") ? hsAutosetConversionRate : lpAutosetConversionRate}`'/>
+
+    <ParamRange  id='setConversionTime'
                  name='Set conversion Time'
                  group='Scan Groups'
-                 default='TBD'
-                 visible='`${(operatingMode eq "HighSpeed" ? hsAutosetConversionRate : lpAutosetConversionRate) &amp;&amp; (!conversionMode)}`'
+                 min='0' max='1000000' resolution='1'
+                 default='0'
+                 visible='`${autosetConversionRate &amp;&amp; (!conversionMode)}`'
                  editable='true'
-                 desc='Automatically set conversion time for the scan group by adjusting sample times and accumulation' />
+                 desc='Target conversion time (us) for the scan group. Automatically set by adjusting sample times and accumulation.' />
 
-    <ParamString id='conversionRate'
+    <ParamRange  id='setConversionRate'
                  name='Set conversion Rate'
                  group='Scan Groups'
-                 default='TBD'
-                 visible='`${(operatingMode eq "HighSpeed" ? hsAutosetConversionRate : lpAutosetConversionRate) &amp;&amp; (conversionMode)}`'
+                 min='0' max='4000000' resolution='1'
+                 default='0'
+                 visible='`${autosetConversionRate &amp;&amp; (conversionMode)}`'
                  editable='true'
-                 desc='Automatically set conversion rate for scan group by adjusting sample times and accumulation' />
+                 desc='Target sample rate (Hz) for the scan group. Automatically set by adjusting sample times and accumulation.' />
 
-    <ParamString id='achievedConversionTime'
-                 name='Achieved conversion Time'
-                 group='Scan Groups'
-                 default='TBD'
-                 visible='true'
-                 editable='false'
-                 desc='Expected conversion time for the entire scan group' />
+<!-- Read-only group conversion time/rate. Valid when auto-set is on: all scans share Global
+     Sample Time 0 with no accumulation, so the group total is (scan count) x per-scan time.
+     In manual mode, see each scan's Achieved Conversion Time. -->
+    <ParamString id='adcClockFreq' name='adcClockFreq' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${getExposedMember(resource_sar, "sar_adcClockFreq")}`'/>
 
-    <ParamString id='achievedConversionRate'
-                 name='Achieved conversion Rate'
+    <ParamString id='globalSampleTime0' name='globalSampleTime0' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${getExposedMember(resource_sar, "sar_globalSampleTime0")}`'/>
+
+    <ParamString id='groupScanCount' name='groupScanCount' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${getExposedMember(resource_sar, "sar_group_" . inst_group . "_scanCnt")}`'/>
+
+    <ParamString id='groupConversionTimeSec' name='groupConversionTimeSec' group='Internal' visible='`${debug}`' editable='false' desc=''
+                 default='`${(cast(float, adcClockFreq) &gt; 0.0) ?
+                             (cast(float, groupScanCount) * (cast(float, globalSampleTime0) + 16.0) / cast(float, adcClockFreq)) : 0.0}`'/>
+
+    <ParamString id='conversionTime'
+                 name='Conversion Time'
                  group='Scan Groups'
-                 default='TBD'
-                 visible='`${(conversionMode)}`'
+                 visible='`${autosetConversionRate}`'
                  editable='false'
-                 desc='Expected sample rate for the entire scan group' />
--->
+                 desc='Total conversion time for one pass through all scans in this group (scan count x per-scan time).'
+                 default='`${groupConversionTimeSec ge 0.001       ? "" . groupConversionTimeSec * 1000 . " m" :
+                             groupConversionTimeSec ge 0.000001    ? "" . groupConversionTimeSec * 1000000 . " u" :
+                             groupConversionTimeSec ge 0.000000001 ? "" . groupConversionTimeSec * 1000000000 . " n" :
+                             "" . groupConversionTimeSec * 1000000000000 . " p"}`s'/>
+
+    <ParamString id='conversionRate'
+                 name='Conversion Rate'
+                 group='Scan Groups'
+                 visible='`${autosetConversionRate &amp;&amp; conversionMode}`'
+                 editable='false'
+                 desc='Group conversion rate = 1 / Conversion Time (continuous mode).'
+                 default='`${(groupConversionTimeSec &gt; 0.0) ?
+                             (splitAt(formatFrequency(1.0 / cast(float, groupConversionTimeSec)), 0, "H") . "Sps") : "0 Sps"}`'/>
+
     </Parameters>
 
   <DRCs>
@@ -183,5 +224,15 @@
       <FixIt action='ENABLE_BLOCK' target='`${resource_sar}`' value='lppass_adc-1.0' valid='true' />
     </DRC>
   </DRCs>
+
+  <ConfigFirmware>
+<!-- Public firmware reference: SAR sequencer entry-state index (0-31) where this scan group
+     starts. Pass as cy_stc_autanalog_stt_sar_t::entryState, and as the base sarSequencer
+     argument of Cy_AutAnalog_SAR_CountsTo_Volts/mVolts/uVolts/degreeC. -->
+    <ConfigDefine name='`${getExposedMember(resource_sar, "INST_NAME_adc")}`_SCAN_GROUP_`${inst_group}`_ENTRY_ADDR'
+                  value='`${getExposedMember(resource_sar, "sar_group_" . inst_group . "_entryAddr")}`U'
+                  public='true'
+                  include='true' />
+  </ConfigFirmware>
 
 </PersonalityTemplate>

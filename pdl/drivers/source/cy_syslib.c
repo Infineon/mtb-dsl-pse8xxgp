@@ -75,7 +75,7 @@
 
 
 #if  defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS28SRSS) || defined(CY_IP_MXS22SRSS)
-#if (CY_IP_MXS22SRSS_VERSION == 2UL)
+#if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL))
 #define CY_SRSS_RES_CAUSE2_CSV_LOSS_Msk    (RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_HF_Msk) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
 #define CY_SRSS_RES_CAUSE2_CSV_LOSS_Pos    (RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_HF_Pos) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
 #define CY_SRSS_RES_CAUSE2_CSV_ERROR_Msk    (RSTCTL_MAIN_LV_RES_CAUSE2_RESET_CSV_REF_Msk) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
@@ -278,19 +278,19 @@ uint32_t Cy_SysLib_GetResetReason(void)
     value = _FLD2VAL(RSTCTL_MAIN_HV_RES_CAUSE_EXTEND_RESET_WDT, SRSS_RES_CAUSE_EXTEND);
     if(0 != value)
     {
-        if(value & ((uint32)1 << 0))
+        if(0U != (value & ((uint32)1 << 0)))
         {
             retVal |= CY_SYSLIB_RESET_HWWDT0;
         }
-        if(value & ((uint32)1 << 1))
+        if(0U != (value & ((uint32)1 << 1)))
         {
             retVal |= CY_SYSLIB_RESET_HWWDT1;
         }
-        if(value & ((uint32)1 << 2))
+        if(0U != (value & ((uint32)1 << 2)))
         {
             retVal |= CY_SYSLIB_RESET_HWWDT2;
         }
-        if(value & ((uint32)1 << 3))
+        if(0U != (value & ((uint32)1 << 3)))
         {
             retVal |= CY_SYSLIB_RESET_HWWDT3;
         }
@@ -378,7 +378,7 @@ uint32_t Cy_SysLib_GetResetReason(void)
         retVal |= CY_SYSLIB_RESET_DS_OFF_WAKEUP;
     }
 	#endif
-    #if (CY_IP_MXS22SRSS_VERSION == 2UL)
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL))
     if(0U != _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE)) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
     #else
     if(CY_SYSLIB_HIBERNATE_TOKEN == _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
@@ -452,7 +452,7 @@ void Cy_SysLib_ClearResetReason(void)
     SRSS_RES_CAUSE_EXTEND = 0xFFFFFFFFU;
 #endif /* defined(CY_IP_MXS22SRSS) && (SRSS_POR_PRESENT) */
 
-    #if (CY_IP_MXS22SRSS_VERSION == 2UL)
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL))
     if(0U != _FLD2VAL(PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE)) // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
     #else
 	if(0U != _FLD2VAL(SRSS_PWR_HIBERNATE_TOKEN, SRSS_PWR_HIBERNATE))
@@ -462,7 +462,7 @@ void Cy_SysLib_ClearResetReason(void)
 #if CY_CPU_CORTEX_M4 && defined (CY_DEVICE_SECURE)
         CY_PRA_REG32_CLR_SET(CY_PRA_INDX_SRSS_PWR_HIBERNATE, SRSS_PWR_HIBERNATE_TOKEN, 0UL);
 #else
-    #if (CY_IP_MXS22SRSS_VERSION == 2UL)
+    #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2UL))
         SRSS_PWR_HIBERNATE &= ~PWRCTL_MAIN_HV_HIBERNATE_PWR_HIBERNATE_TOKEN_Msk; // INTEGRATION_SRSS20_CASE1 Found an alternative for SRSS define. Need verify
     #else
         SRSS_PWR_HIBERNATE &= ~SRSS_PWR_HIBERNATE_TOKEN_Msk;
@@ -871,12 +871,29 @@ cy_en_syslib_lcs_mode_t Cy_SysLib_GetDeviceLCS(cy_syslib_lcs_data_t *base)
     cy_en_syslib_lcs_mode_t lcsMode;
 
 #if defined(CY_IP_MXS40SSRSS)
-    lcsMode = (cy_en_syslib_lcs_mode_t)(base->BOOTROW);
+    uint32_t temp = base->BOOTROW & (0xFFFFUL);
+    lcsMode = (cy_en_syslib_lcs_mode_t)temp;
 #elif defined(CY_IP_MXS22SRSS)
     lcsMode = (cy_en_syslib_lcs_mode_t)(base->DECODED_LCS_DATA);
 #else
     lcsMode = (cy_en_syslib_lcs_mode_t)(CY_GET_REG32(base));
 #endif
+
+#if defined(CY_SFLASH_LCS_NVM_BOOTROW)
+    /* On devices with SFLASH NVM_BOOTROW support, the SECURE LCS transition
+     * is stored in SFLASH NVM_BOOTROW instead of eFUSE BOOTROW, removing the
+     * need for a 2.5V supply to blow eFUSE bits. The eFUSE BOOTROW remains at
+     * NORMAL_PROVISIONED after the SECURE transition. Read the NVM_BOOTROW
+     * SECURE bits [9:8] to detect if the device has transitioned to SECURE. */
+    if (lcsMode == CY_SYSLIB_LCS_NORMAL_PROVISIONED)
+    {
+        uint32_t nvmBootrow = SFLASH_NVM_BOOTROW;
+        if ((nvmBootrow & SFLASH_NVM_BOOTROW_SECURE_Msk) != 0UL)
+        {
+            lcsMode = CY_SYSLIB_LCS_SECURE;
+        }
+    }
+#endif /* defined(CY_SFLASH_LCS_NVM_BOOTROW) */
 
     switch (lcsMode)
     {

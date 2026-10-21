@@ -152,9 +152,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Hmac_Start(CRYPTO_Type *base, cy_stc_cry
     opadPtr = hmacState->opad;
     m0KeyPtr = hmacState->m0Key;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)keyLength);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)keyLength);
 #endif
     Cy_Crypto_Core_V2_MemSet(base, m0KeyRemap, 0x00u, (uint16_t)blockSizeTmp);
     Cy_Crypto_Core_V2_MemSet(base, ipadRemap, 0x00u, (uint16_t)blockSizeTmp);
@@ -188,8 +188,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Hmac_Start(CRYPTO_Type *base, cy_stc_cry
     {
         Cy_Crypto_Core_V2_MemCpy(base, m0KeyRemap, key, (uint16_t)keyLength);
     }
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-    SCB_InvalidateDCache_by_Addr(hmacState->m0Key, (int32_t)blockSizeTmp);
+#if CY_CRYPTO_DCACHE_ENABLED
+    CY_CRYPTO_INVALIDATE_DCACHE(hmacState->m0Key, (int32_t)blockSizeTmp);
 #endif
 
     if (CY_CRYPTO_SUCCESS == status)
@@ -202,9 +202,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Hmac_Start(CRYPTO_Type *base, cy_stc_cry
             i++;
         }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_CleanDCache_by_Addr((volatile void *)hmacState->ipad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
-        SCB_CleanDCache_by_Addr((volatile void *)hmacState->opad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)hmacState->ipad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)hmacState->opad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
 #endif
 
 
@@ -216,9 +216,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Hmac_Start(CRYPTO_Type *base, cy_stc_cry
             status = Cy_Crypto_Core_V2_Sha_Update(base, &hmacState->hashState, ipadRemap, blockSizeTmp);
         }
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr((volatile void *)hmacState->ipad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
-        SCB_InvalidateDCache_by_Addr((volatile void *)hmacState->opad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
+#if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)hmacState->ipad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)hmacState->opad,(int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
 #endif
     }
 
@@ -395,11 +395,11 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Hmac_Free(CRYPTO_Type *base, cy_stc_cryp
         }
 
         Cy_Crypto_Core_V2_MemSet(base, hmacState, 0u, (uint16_t)sizeof(cy_stc_crypto_hmac_state_t));
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr(hmacState->ipad, (int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
-        SCB_InvalidateDCache_by_Addr(hmacState->opad, (int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
-        SCB_InvalidateDCache_by_Addr(hmacState->m0Key, (int32_t)CY_CRYPTO_SHA_MAX_BLOCK_SIZE);
-        SCB_InvalidateDCache_by_Addr(hmacState, (int32_t)sizeof(cy_stc_crypto_hmac_state_t));
+    #if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE(hmacState->ipad, (int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE(hmacState->opad, (int32_t)CY_CRYPTO_HMAC_MAX_PAD_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE(hmacState->m0Key, (int32_t)CY_CRYPTO_SHA_MAX_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE(hmacState, (int32_t)sizeof(cy_stc_crypto_hmac_state_t));
     #endif
 
     }

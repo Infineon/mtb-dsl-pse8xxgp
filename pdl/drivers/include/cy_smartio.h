@@ -207,7 +207,7 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 12, \
 #define CY_SMARTIO_DRV_VERSION_MINOR       0
 
 /** SmartIO driver ID */
-#define CY_SMARTIO_ID CY_PDL_DRV_ID(0x42u)
+#define CY_SMARTIO_ID CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SMARTIO)
 
 /**
 * \defgroup group_smartio_channels Smart I/O channel selection

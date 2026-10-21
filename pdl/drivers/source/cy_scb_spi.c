@@ -706,7 +706,7 @@ cy_en_scb_spi_status_t Cy_SCB_SPI_Transfer(CySCB_Type *base, void *txBuffer, voi
             Cy_SCB_SetRxFifoLevel(base,
                                   (size > fifoSize) ?
                                   (((fifoSize / 2UL) > 1UL) ? ((fifoSize / 2UL) - 2UL) : 0UL) :
-                                  (size - 1UL));
+                                  ((size > 0UL) ? (size - 1UL) : 0UL));
 
             Cy_SCB_SetMasterInterruptMask(base, CY_SCB_CLEAR_ALL_INTR_SRC);
 
@@ -723,7 +723,7 @@ cy_en_scb_spi_status_t Cy_SCB_SPI_Transfer(CySCB_Type *base, void *txBuffer, voi
             Cy_SCB_SetRxFifoLevel(base,
                                   (size > (fifoSize / 2UL)) ?
                                   (((fifoSize / 2UL) > 1UL) ? ((fifoSize / 2UL) - 2UL) : 0UL) :
-                                  (size - 1UL));
+                                  ((size > 0UL) ? (size - 1UL) : 0UL));
 
             Cy_SCB_SetSlaveInterruptMask(base, CY_SCB_SLAVE_INTR_SPI_BUS_ERROR);
 

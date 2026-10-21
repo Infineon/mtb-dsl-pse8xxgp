@@ -99,6 +99,22 @@ $(document).ready(function(){initNavTree('group__group__tcpwm.html',''); initRes
 <p>The TCPWM driver is a multifunction driver that implements Timer Counter, PWM, Quadrature Decoder, Shift Register and Motion Interface functionality using the TCPWM block. </p>
 <p>The functions and other declarations used in this driver are in cy_tcpwm_counter.h, cy_tcpwm_pwm.h, cy_tcpwm_quaddec.h, cy_tcpwm_shiftreg.h respectively. Include cy_pdl.h to get access to all functions and declarations in the PDL.</p>
 <p>Each TCPWM block is a collection of counters that can all be triggered simultaneously. For each function call, the base register address of the TCPWM being used must be passed first, followed by the index of the counter you want to touch next.</p>
+<p>On supported MXS40 TCPWM implementations, a TCPWM/PWM SS0 or SS1 counter can receive a mapped HWFILT3P3Z result through the REGs Master IF. A typical autonomous control-loop path is:</p>
+<pre class="fragment">* ADC channel -&gt; ADC filter -&gt; REGs Master IF -&gt; HWFILT3P3Z SS0/SS1
+*     -&gt; REGs Master IF -&gt; TCPWM/PWM SS0/SS1
+* </pre><p>The hardware mapping selects the HWFILT3P3Z source and TCPWM/PWM destination. Enabling the corresponding compare parallel path bypasses the compare registers for the mapped signal and avoids CPU or AHB transfers.</p>
+<p>Representative ADC filter to HWFILT3P3Z mappings are: </p><pre class="fragment">* ADC0: ADC_FILT_00 -&gt; HWFILT3P3Z SS1 0   ADC_FILT_01 -&gt; HWFILT3P3Z SS1 1
+* ADC1: ADC_FILT_1  -&gt; HWFILT3P3Z SS0 0   ADC2: ADC_FILT_2 -&gt; HWFILT3P3Z SS0 1
+* ADC3: ADC_FILT_30 -&gt; HWFILT3P3Z SS0 2   ADC_FILT_31 -&gt; HWFILT3P3Z SS0 3
+*
+* Representative HWFILT3P3Z-to-TCPWM mappings are:
+* \verbatim
+* TCPWM group 0 counters 0/1/2/3 -&gt; HWFILT3P3Z SS0 0/1/2/3
+* TCPWM group 1 counters 0/1     -&gt; HWFILT3P3Z SS1 0/1
+* </pre> <div class="image">
+<object type="image/svg+xml" data="hwfilt3p3z_tcpwm_datapath.svg" style="pointer-events: none;"></object>
+<div class="caption">
+HWFILT3P3Z input and direct TCPWM datapath</div></div>
 <p>The TCPWM supports eight function modes:</p><ul>
 <li>Timer</li>
 <li>Capture</li>
@@ -126,17 +142,17 @@ $(document).ready(function(){initNavTree('group__group__tcpwm.html',''); initRes
 <li>Capturing time stamps when events occur</li>
 </ul>
 <p><br  />
-<b>PWM</b> </p>
+ <b>PWM</b> </p>
 <p>Use this mode when an output square wave is needed with a specific period and duty cycle, such as:</p><ul>
 <li>Creating arbitrary square wave outputs</li>
 <li>Driving an LED (changing the brightness)</li>
 <li>Driving Motors (dead time assertion available)</li>
 </ul>
 <p><br  />
-<b>Quadrature</b> <b>Decoder</b> </p>
+ <b>Quadrature</b> <b>Decoder</b> </p>
 <p>A quadrature decoder is used to decode the output of a quadrature encoder. A quadrature encoder senses the position, velocity, and direction of an object (for example a rotating axle, or a spinning mouse ball). A quadrature decoder can also be used for precision measurement of speed, acceleration, and position of a motor's rotor, or with a rotary switch to determine user input. <br  />
  <br  />
-<b>Shift</b> <b>Register</b> </p>
+ <b>Shift</b> <b>Register</b> </p>
 <p>Shift Register functionality shifts the counter value to the right. A shift register is used to apply a signal delay function which can be used eg: in detecting frequency shift keying (FSK) signals. A shift register is also used in parallel-in to serial-out data conversion and serial-in to parallel-out data conversion.</p>
 <h1><a class="anchor" id="group_tcpwm_version_information"></a>
 TCPWM Version</h1>

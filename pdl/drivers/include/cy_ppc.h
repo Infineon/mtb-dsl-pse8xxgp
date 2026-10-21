@@ -96,7 +96,7 @@ extern "C" {
 */
 /** The PPC driver identifier */
 /** PPC driver ID */
-#define CY_PPC_ID                      (CY_PDL_DRV_ID(0x61U))
+#define CY_PPC_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_PPC))
 /** Driver major version */
 #define CY_PPC_DRV_VERSION_MAJOR       1
 /** Driver minor version */

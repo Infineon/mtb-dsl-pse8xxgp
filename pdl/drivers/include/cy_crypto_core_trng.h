@@ -460,8 +460,7 @@ __STATIC_INLINE uint8_t Cy_Crypto_Core_Trng_GetRoStatus(CRYPTO_Type *base, cy_en
 __STATIC_INLINE void Cy_Crypto_Core_Trng_SetRoStatus(CRYPTO_Type *base,
                                                         cy_en_crypto_trng_ro_sel_t roSelector, uint8_t roStatus)
 {
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.6','enum cy_en_crypto_trng_ro_sel_t to uint32_t conversion intentional.');
-    uint32_t roMask = 1U << (uint32_t)roSelector;
+    uint32_t roMask = (uint32_t)1U << (uint32_t)roSelector;
     uint32_t roData = (REG_CRYPTO_TR_CTL1(base) & ~roMask) | (((uint32_t)roStatus != 0U) ? roMask : 0U);
     REG_CRYPTO_TR_CTL1(base) = roData;
 }

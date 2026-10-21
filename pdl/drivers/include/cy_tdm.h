@@ -179,7 +179,7 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 14, \
 #define CY_I2S_DRV_VERSION_MINOR       0
 
 /** The TDM driver identifier */
-#define CY_TDM_ID                      (CY_PDL_DRV_ID(0x50U))
+#define CY_TDM_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_TDM))
 
 /** \} group_tdm_macros */
 

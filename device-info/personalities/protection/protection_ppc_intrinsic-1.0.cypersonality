@@ -45,7 +45,8 @@
     <!-- True if it should be filtered out -->
     <!-- Filter if peri 0 and access to PC0 or if PPC1_PPC_PPC_SECURE/PPC1_PPC_PPC_NONSECURE -->
     <!-- Regions that meet that criteria will break functionality if configured at runtime initialization-->
-    <Variable id='ppc_reg$idx_filterOut' value='`${(ppc_reg$idx_peri == 0) &amp;&amp; (ppc_reg$idx_pcMask &amp; 0x01) || (ppc_reg$idx eq "PPC1_PPC_PPC_SECURE" || ppc_reg$idx eq "PPC1_PPC_PPC_NONSECURE" || ppc_reg$idx eq "DCDRAMIF")}`' repeatCount='$PPC_REGIONS'/>
+<!--    <Variable id='ppc_reg$idx_filterOut' value='`${(ppc_reg$idx_peri == 0) &amp;&amp; (ppc_reg$idx_pcMask &amp; 0x01) || (ppc_reg$idx eq "PPC1_PPC_PPC_SECURE" || ppc_reg$idx eq "PPC1_PPC_PPC_NONSECURE" || ppc_reg$idx eq "DCDRAMIF")}`' repeatCount='$PPC_REGIONS'/> -->
+	<Variable id='ppc_reg$idx_filterOut' value='`${(ppc_reg$idx_peri == 0) &amp;&amp; (ppc_reg$idx_pcMask &amp; 0x01) || (ppc_reg$idx eq "PPC1_PPC_PPC_SECURE" || ppc_reg$idx eq "PPC1_PPC_PPC_NONSECURE")}`' repeatCount='$PPC_REGIONS'/>
   </Variables>
 
 

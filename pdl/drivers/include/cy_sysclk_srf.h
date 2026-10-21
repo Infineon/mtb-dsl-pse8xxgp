@@ -26,11 +26,16 @@
 *******************************************************************************/
 
 
+#if !defined(CY_SYSCLK_SRF_H)
+#define CY_SYSCLK_SRF_H
+
 /**
 * \addtogroup group_sysclk_srf
 * \{
 * Internal operation declarations to enable Secure Aware SYSCLK.
-*   \defgroup group_sysclk_srf_enums    Enums
+*   \defgroup group_sysclk_srf_macros          Macros
+*   \defgroup group_sysclk_srf_enums           Enums
+*   \defgroup group_sysclk_srf_data_structures Data Structures
 */
 
 #include "mtb_srf.h"
@@ -38,6 +43,7 @@
 #if !defined(CY_PDL_ENABLE_SECURE_AWARE_SYSCLK)
 /** SYSCLK Secure Aware Driver enablement.  Set to 0 via Makefile defines to disable. When not manually set,
  * defaults to the PDL-wide Secure Aware Driver enablement status.
+ * \ingroup group_sysclk_srf_macros
 */
 #define CY_PDL_ENABLE_SECURE_AWARE_SYSCLK           (CY_PDL_ENABLE_SECURE_AWARE)
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE_SYSCLK) */
@@ -50,6 +56,11 @@
 #if !defined(_CY_PDL_SYSCLK_PPC_SECURED_LF)
 #define _CY_PDL_SYSCLK_PPC_SECURED_LF		        (CYCFG_PPC_SECURED_SRSS_MAIN)
 #endif /* !defined(_CY_PDL_SYSCLK_PPC_SECURED_LF) */
+
+#if !defined(CYCFG_PPC_SECURED_PERI_PCLK1_MAIN)
+/* Not all devices expose a second PERI PCLK group - default to not-secured (0) when the configurator macro is absent. */
+#define CYCFG_PPC_SECURED_PERI_PCLK1_MAIN           (0)
+#endif /* !defined(CYCFG_PPC_SECURED_PERI_PCLK1_MAIN) */
 
 #if !defined(_CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK)
 #define _CY_PDL_SYSCLK_PPC_SECURED_PERI_PCLK        (CYCFG_PPC_SECURED_PERI_PCLK0_MAIN || CYCFG_PPC_SECURED_PERI_PCLK1_MAIN)
@@ -204,8 +215,13 @@ typedef enum
 /** \} group_sysclk_srf_enums */
 
 #if defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSCLK_ENABLE_SRF_INTEG)
-/** Array of SYSCLK Secure Operations */
+/**
+ * Array of SYSCLK Secure Operations
+ * \ingroup group_sysclk_srf_data_structures
+ */
 extern mtb_srf_op_s_t _cy_pdl_sysclk_srf_operations[(uint32_t)CY_PDL_SYSCLK_OP_MAX];
 #endif /* defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SYSCLK_ENABLE_SRF_INTEG) */
 
 /** \} group_sysclk_srf */
+
+#endif /* CY_SYSCLK_SRF_H */

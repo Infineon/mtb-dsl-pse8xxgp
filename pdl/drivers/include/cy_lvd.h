@@ -98,7 +98,7 @@ extern "C" {
 #define CY_LVD_DRV_VERSION_MINOR       80
 
 /** The LVD driver identifier */
-#define CY_LVD_ID                      (CY_PDL_DRV_ID(0x39U))
+#define CY_LVD_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_LVD))
 
  
  

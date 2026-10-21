@@ -110,6 +110,12 @@
     <ConfigFirmware>
       <ConfigInclude value='cy_cmsis_utils.h' public='header' />
 
+      <!--Signals to the BSP that at least one MPU region is configured for this core, so that
+          cybsp_init() can call init_cycfg_protection() only when it is actually generated.
+          Restricted to the CM33 non-secure MPU: this personality also serves mpu_s and CM55,
+          which must not emit this define.-->
+      <ConfigDefine name='CYCFG_MPU_NS_ENABLED' value='1U' public='true' include='`${enabled_num &gt; 0 &amp;&amp; (getBlockType(1) eq "cm33") &amp;&amp; (getBlockType(2) eq "mpu_ns")}`' />
+
       <ConfigArray name='`${configArrayName}`' type='cy_stc_mpu_config_t' const='true' public='true' arraySize='`${enabled_num}`'>
         <ConfigStruct repeatCount='$REGION_COUNT' include='`${enable$idx eq true}`' name='na' type='na' const='true' public='true' >
           <Member name='reg_num'             value='$idxU' />

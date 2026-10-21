@@ -57,10 +57,12 @@
 
     <ParamString id='frequency' default='32768' desc='Fixed WCO nominal frequency in Hz used for code generation' />
 
-    <ParamChoice id='clockPort' name='Clock Port' group='General' default='CY_SYSCLK_WCO_NOT_BYPASSED' visible='true' desc='Activates the WCO bypass mode'>
+    <ParamChoice id='clockPort' name='Clock Port' group='General' default='CY_SYSCLK_WCO_NOT_BYPASSED' visible='true' desc='Selects the WCO operating mode: Normal uses a crystal on both wco_in and wco_out pins; Bypass accepts an external sine wave; External LPO uses only the wco_in pin for a capacitively coupled 32.768 kHz clock, freeing wco_out for GPIO use.'>
       <Entry name='Normal (Crystal)' value='CY_SYSCLK_WCO_NOT_BYPASSED' />
       <Entry name='Bypass (External sine wave)' value='CY_SYSCLK_WCO_BYPASSED' />
+      <Entry name='External LPO (single pin input)' value='CY_SYSCLK_WCO_LPO' visible='`${"mxs22srss" eq getIpBlockName()}`' />
     </ParamChoice>
+    <ParamBool id='isLpoMode' name='isLpoMode' group='Internal' default='`${clockPort eq "CY_SYSCLK_WCO_LPO"}`' visible='false' desc='Internal flag: true when External LPO mode is selected' />
     <ParamBool id='clockLostDetection' name='Enable Clock Loss Detection' group='General' default='false' visible='`${isCSVBAKPresent || isWCOCSVPresent}`' desc='Enables supervision of the WCO to detect a loss of the clock signal' />
     <ParamChoice id='clockSupervisor' name='Supervisor' group='General' default='CY_SYSCLK_WCO_CSV_SUPERVISOR_ILO' visible='`${clockLostDetection}`' desc='Selects the reference clock used to supervise the WCO'>
       <Entry name='ILO' value='CY_SYSCLK_WCO_CSV_SUPERVISOR_ILO' />
@@ -91,7 +93,7 @@
     <ParamSignal port='wco_in[0]' name='Input' group='Connections' visible='true' desc='The input/passive terminal of the internal WCO circuitry' canBeEmpty='false' requirePreferred='true'>
       <Constraint type='REQUIRE' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
     </ParamSignal>
-    <ParamSignal port='wco_out[0]' name='Output' group='Connections' visible='true' desc='The output/active terminal of the internal WCO circuitry' canBeEmpty='false' requirePreferred='true'>
+    <ParamSignal port='wco_out[0]' name='Output' group='Connections' visible='`${!isLpoMode}`' desc='The output/active terminal of the internal WCO circuitry' canBeEmpty='`${isLpoMode}`' requirePreferred='true'>
       <Constraint type='REQUIRE' targetLocation='(ioss|iocl)\[\d+\]\.port\[\d+\]\.pin.*' valid='true' />
     </ParamSignal>
 
@@ -102,8 +104,8 @@
   <Variables>
     <Variable id='gpio_in_port' value='`${getInstFromLocation(getParamValue("wco_in[0]"), "port")}`' />
     <Variable id='gpio_in_pin' value='`${getInstFromLocation(getParamValue("wco_in[0]"), "pin")}`' />
-    <Variable id='gpio_out_port' value='`${getInstFromLocation(getParamValue("wco_out[0]"), "port")}`' />
-    <Variable id='gpio_out_pin' value='`${getInstFromLocation(getParamValue("wco_out[0]"), "pin")}`' />
+    <Variable id='gpio_out_port' value='`${isLpoMode ? 0 : getInstFromLocation(getParamValue("wco_out[0]"), "port")}`' />
+    <Variable id='gpio_out_pin' value='`${isLpoMode ? 0 : getInstFromLocation(getParamValue("wco_out[0]"), "pin")}`' />
   </Variables>
 
   <DRCs>
@@ -116,9 +118,10 @@
     <ConfigDefine name='CY_CFG_SYSCLK_WCO_ENABLED' value='1' public='false' />
     <ConfigDefine name='CY_CFG_SYSCLK_WCO_IN_PRT' value='GPIO_PRT`${gpio_in_port}`' public='false' />
     <ConfigDefine name='CY_CFG_SYSCLK_WCO_IN_PIN' value='`${gpio_in_pin}`U' public='false' />
-    <ConfigDefine name='CY_CFG_SYSCLK_WCO_OUT_PRT' value='GPIO_PRT`${gpio_out_port}`' public='false' />
-    <ConfigDefine name='CY_CFG_SYSCLK_WCO_OUT_PIN' value='`${gpio_out_pin}`U' public='false' />
-    <ConfigDefine name='CY_CFG_SYSCLK_WCO_BYPASS' value='`${clockPort}`' public='false' />
+    <ConfigDefine name='CY_CFG_SYSCLK_WCO_OUT_PRT' value='GPIO_PRT`${gpio_out_port}`' public='false' include='`${!isLpoMode}`' />
+    <ConfigDefine name='CY_CFG_SYSCLK_WCO_OUT_PIN' value='`${gpio_out_pin}`U' public='false' include='`${!isLpoMode}`' />
+    <ConfigDefine name='CY_CFG_SYSCLK_WCO_BYPASS' value='`${clockPort}`' public='false' include='`${!isLpoMode}`' />
+    <ConfigDefine name='CY_CFG_SYSCLK_WCO_LPO_ENABLED' value='1' public='false' include='`${isLpoMode}`' />
     <ConfigStruct name='`${INST_NAME . "_wcoCsv"}`' type='cy_stc_wco_csv_config_t' const='true' public='true' include='`${isCSVBAKPresent || isWCOCSVPresent}`' >
       <Member name='supervisorClock' value='`${clockSupervisor}`' />
       <Member name='enableLossDetection' value='`${clockLostDetection}`' />
@@ -128,8 +131,9 @@
     
     <ConfigFunction signature='__STATIC_INLINE void Cy_SysClk_WcoInit(void)' public='false' include='`${("mxs40srss" ne getIpBlockName()) || (getDeviceAttr("Security") eq "NA")}`'>
       <Line value='(void)Cy_GPIO_Pin_FastInit(GPIO_PRT`${gpio_in_port}`, `${gpio_in_pin}`U, 0x00U, 0x00U, HSIOM_SEL_GPIO);' />
-      <Line value='(void)Cy_GPIO_Pin_FastInit(GPIO_PRT`${gpio_out_port}`, `${gpio_out_pin}`U, 0x00U, 0x00U, HSIOM_SEL_GPIO);' />
+      <Line value='(void)Cy_GPIO_Pin_FastInit(GPIO_PRT`${gpio_out_port}`, `${gpio_out_pin}`U, 0x00U, 0x00U, HSIOM_SEL_GPIO);' include='`${!isLpoMode}`' />
       <Line value='Cy_SysClk_WcoBypass(CY_SYSCLK_WCO_BYPASSED);' include='`${clockPort eq CY_SYSCLK_WCO_BYPASSED}`' />
+      <Line value='Cy_SysClk_Wco_LpoMode_Enable();' include='`${isLpoMode}`' />
       <Line value='if (CY_SYSCLK_SUCCESS != Cy_SysClk_WcoEnable(1000000UL))' />
       <Line value='{' />
       <Line value='    cycfg_ClockStartupError(CY_CFG_SYSCLK_WCO_ERROR);' />

@@ -27,12 +27,8 @@
 #if defined(CY_IP_MXS22LPPASS) && (CY_IP_MXS22LPPASS_VERSION <= 1U)
 #include <string.h>
 #include "cy_autanalog.h"
-
-#if defined (CY_IP_MXS22RRAMC) && (CY_IP_MXS22RRAMC_VERSION == 2)
-#include "cy_v2_systrimm.h"
-#else
 #include "cy_systrimm.h"
-#endif
+
 
 /* Helper macros for range validation */
 #define AUTANALOG_PRB_IDX(value)                                    ((value) < CY_AUTANALOG_PRB_NUM)
@@ -161,20 +157,17 @@ void Cy_AutAnalog_Clear(void)
 
 uint32_t Cy_AutAnalog_Init(const cy_stc_autanalog_t * cfgAndStates)
 {
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from enum to uint32_t does not have any negative drawbacks');
-    uint32_t retVal = CY_AUTANALOG_BAD_PARAM;
+    uint32_t retVal = (uint32_t)CY_AUTANALOG_BAD_PARAM;
 
     if (NULL != cfgAndStates)
     {
         /* Loads static and dynamic pairs of the configuration into the MMIO */
         retVal = Cy_AutAnalog_LoadConfig(cfgAndStates->configuration);
 
-        CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.4','Review shows that comparison of enum with uint32_t does not have any negative drawbacks');
-        if (CY_AUTANALOG_SUCCESS == retVal)
+        if ((uint32_t)CY_AUTANALOG_SUCCESS == retVal)
         {
             /* Loads the entire content of the State Transition Table into the MMIO */
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that assignment of enum to uint32_t does not have any negative drawbacks');
-            retVal = Cy_AutAnalog_LoadStateTransitionTable(cfgAndStates->numSttEntries, cfgAndStates->stateTransitionTable);
+            retVal = (uint32_t)Cy_AutAnalog_LoadStateTransitionTable(cfgAndStates->numSttEntries, cfgAndStates->stateTransitionTable);
         }
     }
 
@@ -207,13 +200,11 @@ void Cy_AutAnalog_Enable(void)
 
 uint32_t Cy_AutAnalog_LoadConfig(const cy_stc_autanalog_cfg_t * analogCfg)
 {
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from enum to uint32_t does not have any negative drawbacks');
-    uint32_t retVal = CY_AUTANALOG_BAD_PARAM;
+    uint32_t retVal = (uint32_t)CY_AUTANALOG_BAD_PARAM;
 
     if (NULL != analogCfg)
     {
-        CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from enum to uint32_t does not have any negative drawbacks');
-        retVal = CY_AUTANALOG_ENABLE_ERR;
+        retVal = (uint32_t)CY_AUTANALOG_ENABLE_ERR;
 
         uint8_t cfgIdx;
         uint32_t regVal;
@@ -228,8 +219,7 @@ uint32_t Cy_AutAnalog_LoadConfig(const cy_stc_autanalog_cfg_t * analogCfg)
         regVal = _FLD2VAL(ACTRLR_PWR_STATUS_SW_OK, AUTANALOG_AC_PWR_STATUS(ACTRLR_BASE));
         if (regVal != 0U)
         {
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from enum to uint32_t does not have any negative drawbacks');
-            retVal = CY_AUTANALOG_SUCCESS;
+            retVal = (uint32_t)CY_AUTANALOG_SUCCESS;
 
             /* Delay for startup of IZTAT current reference, 200uS maximum */
             Cy_SysLib_DelayUs(200U);
@@ -257,11 +247,7 @@ uint32_t Cy_AutAnalog_LoadConfig(const cy_stc_autanalog_cfg_t * analogCfg)
             {
                 for (cfgIdx = 0U; cfgIdx < CY_AUTANALOG_PRB_NUM; cfgIdx++)
                 {
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 1, 'Review shows that usage type enum as operand to the arithmetic operator OR does not have any negative drawbacks');
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.4', 1, 'Review shows that interpretation of type enum as uint32_t does not have any negative drawbacks');
-                    retVal |= Cy_AutAnalog_PRB_LoadConfig(cfgIdx, analogCfg->prb);
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.4');
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1');
+                    retVal |= (uint32_t)Cy_AutAnalog_PRB_LoadConfig(cfgIdx, analogCfg->prb);
                 }
             }
 #endif
@@ -284,11 +270,7 @@ uint32_t Cy_AutAnalog_LoadConfig(const cy_stc_autanalog_cfg_t * analogCfg)
 #endif
                 if (NULL != analogCfg->ctb[cfgIdx])
                 {
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 1, 'Review shows that usage type enum as operand to the arithmetic operator OR does not have any negative drawbacks');
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.4', 1, 'Review shows that interpretation of type enum as uint32_t does not have any negative drawbacks');
-                    retVal |= Cy_AutAnalog_CTB_LoadConfig(cfgIdx, analogCfg->ctb[cfgIdx]);
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.4');
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1');
+                    retVal |= (uint32_t)Cy_AutAnalog_CTB_LoadConfig(cfgIdx, analogCfg->ctb[cfgIdx]);
                 }
             }
 #endif
@@ -302,11 +284,7 @@ uint32_t Cy_AutAnalog_LoadConfig(const cy_stc_autanalog_cfg_t * analogCfg)
 #endif
                 if (NULL != analogCfg->ptcomp[cfgIdx])
                 {
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 1, 'Review shows that usage type enum as operand to the arithmetic operator OR does not have any negative drawbacks');
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.4', 1, 'Review shows that interpretation of type enum as uint32_t does not have any negative drawbacks');
-                    retVal |= Cy_AutAnalog_PTComp_LoadConfig(cfgIdx, analogCfg->ptcomp[cfgIdx]);
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.4');
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1');
+                    retVal |= (uint32_t)Cy_AutAnalog_PTComp_LoadConfig(cfgIdx, analogCfg->ptcomp[cfgIdx]);
                 }
             }
 #endif
@@ -329,11 +307,7 @@ uint32_t Cy_AutAnalog_LoadConfig(const cy_stc_autanalog_cfg_t * analogCfg)
 #endif
                 if (NULL != analogCfg->dac[cfgIdx])
                 {
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 1, 'Review shows that usage type enum as operand to the arithmetic operator OR does not have any negative drawbacks');
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.4', 1, 'Review shows that interpretation of type enum as uint32_t does not have any negative drawbacks');
-                    retVal |= Cy_AutAnalog_DAC_LoadConfig(cfgIdx, analogCfg->dac[cfgIdx]);
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.4');
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1');
+                    retVal |= (uint32_t)Cy_AutAnalog_DAC_LoadConfig(cfgIdx, analogCfg->dac[cfgIdx]);
                 }
             }
 #endif
@@ -347,28 +321,16 @@ uint32_t Cy_AutAnalog_LoadConfig(const cy_stc_autanalog_cfg_t * analogCfg)
 #endif
                 if (NULL != analogCfg->sar[cfgIdx])
                 {
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 1, 'Review shows that usage type enum as operand to the arithmetic operator OR does not have any negative drawbacks');
-                    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.4', 1, 'Review shows that interpretation of type enum as uint32_t does not have any negative drawbacks');
-                    retVal |= Cy_AutAnalog_SAR_LoadConfig(cfgIdx, analogCfg->sar[cfgIdx]);
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.4');
-                    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1');
+                    retVal |= (uint32_t)Cy_AutAnalog_SAR_LoadConfig(cfgIdx, analogCfg->sar[cfgIdx]);
                 }
             }
 #endif
 
             /* Configure AC */
-            CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 1, 'Review shows that usage type enum as operand to the arithmetic operator OR does not have any negative drawbacks');
-            CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.4', 1, 'Review shows that interpretation of type enum as uint32_t does not have any negative drawbacks');
-            retVal |= Cy_AutAnalog_AC_LoadConfig(analogCfg->ac);
-            CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.4');
-            CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1');
+            retVal |= (uint32_t)Cy_AutAnalog_AC_LoadConfig(analogCfg->ac);
 #if !defined (CY_AUTANALOG_TRIMM_DISABLE)
             /* Read and apply trimming values for the LPPASS subsystems */
-            CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.1', 1, 'Review shows that usage type enum as operand to the arithmetic operator OR does not have any negative drawbacks');
-            CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.4', 1, 'Review shows that interpretation of type enum as uint32_t does not have any negative drawbacks');
-            retVal |= Analog_LoadTrimmValues(analogCfg);
-            CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.4');
-            CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.1');
+            retVal |= (uint32_t)Analog_LoadTrimmValues(analogCfg);
 #endif
             /* Check the need for start-up/settling delays according to the configuration provided */
             for (int32_t i = (int32_t)CY_AUTANALOG_PRIORITY_ENABLER_NUM - 1; i >= 0; i--)

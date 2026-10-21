@@ -340,7 +340,7 @@ extern "C"
 * API Constants
 ******************************************************************************/
 
-#define CY_SD_HOST_ID                       CY_PDL_DRV_ID(0x3AU) /**< SD_HOST PDL ID */
+#define CY_SD_HOST_ID                       CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SD_HOST) /**< SD_HOST PDL ID */
 
 #define CY_SD_HOST_BLOCK_SIZE               (512UL) /**< The SD memory card block size. */
 

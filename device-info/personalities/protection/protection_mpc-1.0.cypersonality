@@ -59,31 +59,31 @@
          Uses MpcLocation/@key lookup because getCustomData does not support bracket characters in
          attribute-value predicates (e.g. [@location="flashc[0].mpc[0]"] is invalid). -->
     <ParamBool id='rotConfigurableFlash' name="rotConfigurableFlash"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;FLASH_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"FLASH_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableRRAM' name="rotConfigurableRRAM"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;RRAM_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"RRAM_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSMIF0' name="rotConfigurableSMIF0"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SMIF_PORT0_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"SMIF_PORT0_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSMIF1' name="rotConfigurableSMIF1"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SMIF_PORT1_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"SMIF_PORT1_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSOCMEM' name="rotConfigurableSOCMEM"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SOCMEM_RAM_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"SOCMEM_RAM_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSRAM0' name="rotConfigurableSRAM0"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SRAM0_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"SRAM0_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurableSRAM1' name="rotConfigurableSRAM1"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;SRAM1_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"SRAM1_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePROMC' name="rotConfigurablePROMC"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PROMC_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"PROMC_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM0' name="rotConfigurablePPCASRAM0"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM0_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"PPCA_SRAM0_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM1' name="rotConfigurablePPCASRAM1"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM1_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"PPCA_SRAM1_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM2' name="rotConfigurablePPCASRAM2"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM2_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"PPCA_SRAM2_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM3' name="rotConfigurablePPCASRAM3"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM3_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"PPCA_SRAM3_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
     <ParamBool id='rotConfigurablePPCASRAM4' name="rotConfigurablePPCASRAM4"
-        default='`${getOrDefault(getCustomData("/MpcLocation[@key=&apos;PPCA_SRAM4_MPC&apos;]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
+        default='`${getOrDefault(getCustomData("/MpcLocation[@key=\"PPCA_SRAM4_MPC\"]/@rot_configurable"), "true") ne "false"}`' visible='false' editable='false' />
 
     <ParamString id='regionCountFlash' name="regionCountFlash" default='`${hasFlash ? splitCount(getMpcRegionStarts("flashc[0].mpc[0]")) : ""}`' visible='false' />
     <ParamString id='regionCountRRAM' name="regionCountRRAM" default='`${hasRRAM ? splitCount(getMpcRegionStarts("mxrramc[0].mpc[0]")) : ""}`' visible='false' />

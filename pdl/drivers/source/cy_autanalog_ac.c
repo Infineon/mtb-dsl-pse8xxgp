@@ -127,8 +127,7 @@ uint8_t Cy_AutAnalog_PauseAutonomousControl(void)
 {
     AUTANALOG_AC_CMD_PAUSE(ACTRLR_BASE) = 0x1U;
 
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from uint32_t to uint8_t does not have any negative drawbacks');
-    return _FLD2VAL(ACTRLR_STATUS_CUR_STATE, AUTANALOG_AC_STATUS(ACTRLR_BASE));
+    return (uint8_t)_FLD2VAL(ACTRLR_STATUS_CUR_STATE, AUTANALOG_AC_STATUS(ACTRLR_BASE));
 }
 
 
@@ -152,21 +151,16 @@ cy_en_autanalog_status_t Cy_AutAnalog_GetControllerState(cy_stc_autanalog_state_
     if (NULL != ctrlState)
     {
         /* The Autonomous Controller status and state */
-        CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Review shows that type conversion from uint32_t to enum does not have any negative drawbacks');
         ctrlState->ac.status = (cy_en_autanalog_ac_status_t)_FLD2VAL(ACTRLR_STATUS_STATUS, AUTANALOG_AC_STATUS(ACTRLR_BASE));
-        CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from uint32_t to uint8_t does not have any negative drawbacks');
-        ctrlState->ac.state = _FLD2VAL(ACTRLR_STATUS_CUR_STATE, AUTANALOG_AC_STATUS(ACTRLR_BASE));
+        ctrlState->ac.state = (uint8_t)_FLD2VAL(ACTRLR_STATUS_CUR_STATE, AUTANALOG_AC_STATUS(ACTRLR_BASE));
         ctrlState->lpModeEnabled = _FLD2BOOL(ACTRLR_STATUS_MODE, AUTANALOG_AC_STATUS(ACTRLR_BASE));
 
         /* The Timer/Counter[] state */
         for (cntIdx = 0U; cntIdx < CY_AUTANALOG_TC_NUM; cntIdx++)
         {
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from uint32_t to uint8_t does not have any negative drawbacks');
-            ctrlState->tc[cntIdx].state = _FLD2VAL(ACTRLR_CNTR_STATUS_CUR_STATE, AUTANALOG_AC_CNTR_STATUS(ACTRLR_BASE, cntIdx));
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from uint32_t to uint16_t does not have any negative drawbacks');
-            ctrlState->tc[cntIdx].val = _FLD2VAL(ACTRLR_CNTR_STATUS_CUR_CNT, AUTANALOG_AC_CNTR_STATUS(ACTRLR_BASE, cntIdx));
-            CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from uint32_t to boolean does not have any negative drawbacks');
-            ctrlState->tc[cntIdx].busy = _FLD2VAL(ACTRLR_CNTR_STATUS_BUSY, AUTANALOG_AC_CNTR_STATUS(ACTRLR_BASE, cntIdx));
+            ctrlState->tc[cntIdx].state = (uint8_t)_FLD2VAL(ACTRLR_CNTR_STATUS_CUR_STATE, AUTANALOG_AC_CNTR_STATUS(ACTRLR_BASE, cntIdx));
+            ctrlState->tc[cntIdx].val = (uint16_t)_FLD2VAL(ACTRLR_CNTR_STATUS_CUR_CNT, AUTANALOG_AC_CNTR_STATUS(ACTRLR_BASE, cntIdx));
+            ctrlState->tc[cntIdx].busy = _FLD2BOOL(ACTRLR_CNTR_STATUS_BUSY, AUTANALOG_AC_CNTR_STATUS(ACTRLR_BASE, cntIdx));
         }
 
         result = CY_AUTANALOG_SUCCESS;
@@ -201,7 +195,6 @@ void Cy_AutAnalog_SetOutputTriggerMask(cy_en_autanalog_ac_out_trigger_idx_t trig
     CY_ASSERT_L3(AUTANALOG_AC_OUT_TRIGG_REG(trigIdx));
     CY_ASSERT_L3(AUTANALOG_AC_OUT_TRIGG_MASK(mask));
 
-    CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.3','Review shows that type conversion from enum to uint32_t does not have any negative drawbacks');
     AUTANALOG_MMIO_TR_OUT(LPPASS_MMIO_BASE, trigIdx) = (uint32_t)mask;
 }
 

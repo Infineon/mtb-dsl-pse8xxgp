@@ -27,6 +27,8 @@
     <ExposedParamKey id="PERI1_MMIO4_TARGETS" param_name="PERI1_MMIO4_TARGETS"/>
   </ExposedParameterKeys>
   <MpcLocations location="mpc_locations.cydata"/>
+  <PinResourceType value="ioss[0].port[%1$d].pin[%2$d]"/>
   <CustomData location="protection.cydata"/>
   <CustomData location="protection_regions.cydata"/>
+  <CustomData location="tfm_data.cydata"/>
 </View>

@@ -177,9 +177,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_MakePrivateKey(CRYPTO_Type *base,
             {
                 tmpResult = CY_CRYPTO_HW_ERROR;
             }
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)bytesize);
 #endif
         }
         else
@@ -266,8 +266,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_MakePrivateKey(CRYPTO_Type *base,
             CY_CRYPTO_VU_FREE_MEM(base, CY_CRYPTO_VU_REG_BIT(VR_P));
 
             Cy_Crypto_Core_Vu_GetMemValue(base, (uint8_t *)keyRemap, VR_D, bitsize);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-            SCB_InvalidateDCache_by_Addr(key, (int32_t)bytesize);
+#if CY_CRYPTO_DCACHE_ENABLED
+            CY_CRYPTO_INVALIDATE_DCACHE(key, (int32_t)bytesize);
 #endif
             tmpResult = CY_CRYPTO_SUCCESS;
         }
@@ -329,9 +329,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_MakePublicKey(CRYPTO_Type *base,
         uint32_t p_d = 10u;       /* private key */
         uint32_t p_x = 11u;       /* x coordinate */
         uint32_t p_y = 12u;       /* y coordinate */
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)privateKey,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)privateKey,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
         /* make the public key
          * EC scalar multiplication - X,Y-only co-Z arithmetic
@@ -397,9 +397,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_MakePublicKey(CRYPTO_Type *base,
 
         Cy_Crypto_Core_Vu_GetMemValue(base, (uint8_t *)publicKeyXRemap, p_x, bitsize);
         Cy_Crypto_Core_Vu_GetMemValue(base, (uint8_t *)publicKeyYRemap, p_y, bitsize);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-        SCB_InvalidateDCache_by_Addr(publicKey->pubkey.x, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
-        SCB_InvalidateDCache_by_Addr(publicKey->pubkey.y, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+#if CY_CRYPTO_DCACHE_ENABLED
+        CY_CRYPTO_INVALIDATE_DCACHE(publicKey->pubkey.x, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+        CY_CRYPTO_INVALIDATE_DCACHE(publicKey->pubkey.y, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
         publicKey->type = PK_PUBLIC;
         publicKey->curveID = curveID;
@@ -461,10 +461,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_ECC_CheckPublicKey(CRYPTO_Type *base,
         uint32_t p_rhs = 10u;    /* RHS */
         uint32_t p_x = 11u;      /* x coordinate */
         uint32_t p_y = 12u;      /* y coordinate */
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)publicKey->pubkey.x,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
-        SCB_CleanDCache_by_Addr((volatile void *)publicKey->pubkey.y,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)publicKey->pubkey.x,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)publicKey->pubkey.y,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
 
         tmpResult = CY_CRYPTO_VU_ALLOC_MEM(base, VR_P, bitsize);

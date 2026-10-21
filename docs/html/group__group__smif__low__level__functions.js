@@ -57,6 +57,7 @@ var group__group__smif__low__level__functions =
     [ "Cy_SMIF_SetCryptoSubRegionDisable", "group__group__smif__low__level__functions.html#ga4660298e64ac781fa5b3d7bd6d2dec8b", null ],
     [ "Cy_SMIF_ConvertSlaveSlotToIndex", "group__group__smif__low__level__functions.html#ga5252ac741f6ba0122748d89d907d87f6", null ],
     [ "Cy_SMIF_SetRxCaptureMode", "group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca", null ],
+    [ "Cy_SMIF_GetRxCaptureMode", "group__group__smif__low__level__functions.html#ga9a3e704149b3cfa6629988a514a79808", null ],
     [ "Cy_SMIF_SetMasterDLP", "group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d", null ],
     [ "Cy_SMIF_GetMasterDLP", "group__group__smif__low__level__functions.html#ga338f6c1d218cd2093c48254995f6f06b", null ],
     [ "Cy_SMIF_GetMasterDLPSize", "group__group__smif__low__level__functions.html#ga220136f6a2fe90ea720c3e1577f96421", null ],

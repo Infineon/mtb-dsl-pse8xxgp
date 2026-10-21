@@ -64,7 +64,7 @@ extern "C" {
 /*****************************************************************************/
 
 /** NNLite driver ID */
-#define CY_NNLITE_ID                              CY_PDL_DRV_ID(0x48U)
+#define CY_NNLITE_ID                              CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_NNLITE)
 
 /** NNLite type */
 #define NNLITE_Type                               MXNNLITE_2_0_Type

@@ -415,6 +415,7 @@
       <Member name="clockHz" value="`${gfxssClkHz}`U" />
     </ConfigStruct>
 
+    <ConfigInstruction value="Cy_System_EnableGFXSS();" include="`${(getIpBlockName() eq &quot;mxs22gfxss&quot;)}`" guard="defined(CY_SYSTEM_GFXSS_PWR_ENABLE) &amp;&amp; defined(COMPONENT_SECURE_DEVICE)" />
     <ConfigInstruction value="Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_GFXSS_GPU_PERI_NR, CY_MMIO_GFXSS_GPU_GROUP_NR, CY_MMIO_GFXSS_GPU_SLAVE_NR, CY_MMIO_GFXSS_GPU_CLK_HF_NR);" include="`${(getIpBlockName() eq &quot;mxs22gfxss&quot;)}`"  />
     <ConfigInstruction value="Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_GFXSS_DC_PERI_NR, CY_MMIO_GFXSS_DC_GROUP_NR, CY_MMIO_GFXSS_DC_SLAVE_NR, CY_MMIO_GFXSS_DC_CLK_HF_NR);" include="`${(getIpBlockName() eq &quot;mxs22gfxss&quot;)}`"  />
     <ConfigInstruction value="Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_GFXSS_MIPIDSI_PERI_NR, CY_MMIO_GFXSS_MIPIDSI_GROUP_NR, CY_MMIO_GFXSS_MIPIDSI_SLAVE_NR, CY_MMIO_GFXSS_MIPIDSI_CLK_HF_NR);" include="`${(getIpBlockName() eq &quot;mxs22gfxss&quot;)}`"  />

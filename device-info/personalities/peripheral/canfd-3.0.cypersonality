@@ -567,7 +567,7 @@ treated.'>
     <ConfigFunction signature='__WEAK void `${errorCallback}`(uint32_t errorMask)' body='    (void)errorMask;' public='false' include='`${errorCallback ne "NULL"}`'/>
 
     <ConfigInstruction value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_CANFD0_PERI_NR , CY_MMIO_CANFD0_GROUP_NR, CY_MMIO_CANFD0_SLAVE_NR, CY_MMIO_CANFD0_CLK_HF_NR);' include='true' guard='defined (CY_DEVICE_CONFIGURATOR_IP_ENABLE_FEATURE)' />
-    <ConfigInstruction value='Cy_SysClk_PeriphAssignDivider(`${pclkDstInst}`, `${getExposedMember(pclk, "clockSel")}`);' include='`${(ipblockName eq "mxttcanfd_s40s") &amp;&amp; pclkOk}`'  />
+    <ConfigInstruction value='Cy_SysClk_PeriPclkAssignDivider(`${pclkDstInst}`, `${getExposedMember(pclk, "clockSel")}`);' include='`${(ipblockName eq "mxttcanfd_s40s") &amp;&amp; pclkOk}`'  />
     <ConfigInstruction value='Cy_SysClk_PeriPclkAssignDivider(`${pclkDstInst}`, `${getExposedMember(pclk, "clockSel")}`);' include='`${((ipblockName eq "mxttcanfd") || (ipblockName eq "mxttcanfd_s40e")) &amp;&amp; pclkOk}`'   />
 
   </ConfigFirmware>

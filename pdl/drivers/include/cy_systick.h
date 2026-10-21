@@ -111,7 +111,7 @@ typedef void (*Cy_SysTick_Callback)(void);
 #define CY_SYSTICK_DRV_VERSION_MINOR       80
 
 /** SysTick driver ID */
-#define CY_SYSTICK_ID           CY_PDL_DRV_ID(0x79U)
+#define CY_SYSTICK_ID           CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SYSTICK)
 
 /** Number of the callbacks assigned to the SysTick interrupt */
 #define CY_SYS_SYST_NUM_OF_CALLBACKS         (5u)

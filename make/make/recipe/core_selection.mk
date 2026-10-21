@@ -39,3 +39,17 @@ MTB_RECIPE__CORE_NAME=$(CORE_NAME)
 endif
 
 COMPONENTS+=$(MTB_RECIPE__CORE) $(MTB_RECIPE__CORE_NAME)
+
+# MVE support — resolved here (before toolchain .mk files that consume it at parse time).
+# If MVE is not available on device then MVE_SELECT=NO_MVE.
+# If MVE is available on device and VFP_SELECT=softfloat, then MVE_SELECT=MVE-I,
+# else MVE_SELECT=<empty> (MVE-F mode).
+ifeq ($(filter $(MTB_RECIPE__CORE_NAME)_MVE_PRESENT,$(DEVICE_$(DEVICE)_FEATURES)),)
+MVE_SELECT?=NO_MVE
+else
+ifeq ($(VFP_SELECT),softfloat)
+MVE_SELECT?=MVE-I
+else
+MVE_SELECT?=
+endif
+endif

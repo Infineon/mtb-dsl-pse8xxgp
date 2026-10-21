@@ -146,7 +146,10 @@ void Cy_IPC_Pipe_Init(cy_stc_ipc_pipe_config_t const *config)
     ipc_intr_cypipeConfig.intrPriority     = epConfigDataA.ipcNotifierPriority;
 #else
     /* Configure interrupts */
-    ipc_intr_cypipeConfig.intrSrc          = (IRQn_Type)((int32_t)cpuss_interrupts_ipc_0_IRQn + (int32_t)epConfigDataA.ipcNotifierNumber);
+    {
+        int32_t ipcIntrSrc = (int32_t)cpuss_interrupts_ipc_0_IRQn + (int32_t)epConfigDataA.ipcNotifierNumber;
+        ipc_intr_cypipeConfig.intrSrc      = (IRQn_Type)ipcIntrSrc;
+    }
     ipc_intr_cypipeConfig.intrPriority     = epConfigDataA.ipcNotifierPriority;
 
 #endif /* (CY_CPU_CORTEX_M0P && CY_IP_M4CPUSS) */
@@ -430,8 +433,7 @@ cy_en_ipc_pipe_status_t Cy_IPC_Pipe_SendMessage(uint32_t toAddr, uint32_t fromAd
 
                 #if CY_IPC_DRV_CACHE_PRESENT
                     /* Flush the cache */
-                    CY_MISRA_DEVIATE_LINE('SIZEOF_MISMATCH','SizeOf void pointer is passed.');
-                    SCB_CleanDCache_by_Addr((uint32_t *)msgPtr,(int32_t)sizeof(msgPtr));
+                    SCB_CleanDCache_by_Addr((uint32_t *)msgPtr,(int32_t)sizeof(uint32_t));
                 #endif
 
                 /* If the channel was acquired, write the message.   */

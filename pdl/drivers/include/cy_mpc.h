@@ -97,7 +97,7 @@ extern "C" {
 */
 /** The MPC driver identifier */
 /** MPC driver ID */
-#define CY_MPC_ID                      (CY_PDL_DRV_ID(0x60U))
+#define CY_MPC_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_MPC))
 
 /** Driver major version */
 #define CY_MPC_DRV_VERSION_MAJOR       1

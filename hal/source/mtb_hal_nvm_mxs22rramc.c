@@ -62,7 +62,8 @@ static const mtb_hal_nvm_region_info_t _mtb_hal_nvm_mem_regions[_MTB_HAL_NVM_MEM
             #else
             CY_RRAM_MAIN_HOST_NS_START_ADDRESS,
         #endif
-        .size = CY_RRAM_MAIN_REGION_SIZE,
+        // Reclaimed protected RRAM is mapped onto the end of the host MAIN region.
+        .size = CY_RRAM_MAIN_REGION_SIZE + CY_RRAM_RECLAIM_SIZE,
         .sector_size = CY_RRAM_SECTOR_SIZE_KB * 1024,
         .block_size = CY_RRAM_BLOCK_SIZE_BYTES,
         .is_erase_required = false,
@@ -103,8 +104,8 @@ static const mtb_hal_nvm_region_info_t _mtb_hal_nvm_mem_regions[_MTB_HAL_NVM_MEM
         .erase_value = 0x00U,
     },
     #endif /* (CY_RRAM_SFLASH_REGION_SIZE > 0) */
-    #if (CY_RRAM_PROTECTED_REGION_SIZE > 0)
-    // SFALSH RRAM region, 8KB sectors
+    #if (CY_RRAM_PROTECTED_REGION_SIZE > CY_RRAM_RECLAIM_SIZE)
+    // Protected RRAM region, 8KB sectors
     {
         .nvm_type = MTB_HAL_NVM_TYPE_RRAM,
         .start_address =
@@ -113,13 +114,14 @@ static const mtb_hal_nvm_region_info_t _mtb_hal_nvm_mem_regions[_MTB_HAL_NVM_MEM
             #else
             CY_RRAM_PROTECTED_HOST_NS_START_ADDRESS,
         #endif
-        .size = CY_RRAM_PROTECTED_REGION_SIZE,
+        // The reclaimed prefix is no longer part of the visible protected region.
+        .size = CY_RRAM_PROTECTED_REGION_SIZE - CY_RRAM_RECLAIM_SIZE,
         .sector_size = CY_RRAM_SECTOR_SIZE_KB * 1024,
         .block_size = CY_RRAM_BLOCK_SIZE_BYTES,
         .is_erase_required = false,
         .erase_value = 0x00U,
     },
-    #endif /* (CY_RRAM_PROTECTED_REGION_SIZE > 0) */
+    #endif /* (CY_RRAM_PROTECTED_REGION_SIZE > CY_RRAM_RECLAIM_SIZE) */
     #endif /* (_MTB_HAL_DRIVER_AVAILABLE_NVM_RRAM) */
 
     #if (_MTB_HAL_DRIVER_AVAILABLE_NVM_OTP)

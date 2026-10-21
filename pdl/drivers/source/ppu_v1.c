@@ -178,7 +178,7 @@ bool ppu_v1_is_power_devactive_high(struct ppu_v1_reg *ppu,
     fwk_assert(ppu != NULL);
 
     return (ppu->DISR &
-            (1 << (ppu_mode + PPU_V1_DISR_PWR_DEVACTIVE_STATUS_POS))) != 0;
+            ((uint32_t)1U << (ppu_mode + PPU_V1_DISR_PWR_DEVACTIVE_STATUS_POS))) != 0;
 }
 
 bool ppu_v1_is_op_devactive_high(struct ppu_v1_reg *ppu,
@@ -187,7 +187,7 @@ bool ppu_v1_is_op_devactive_high(struct ppu_v1_reg *ppu,
     fwk_assert(ppu != NULL);
 
     return (ppu->DISR &
-            (1 << (op_devactive + PPU_V1_DISR_OP_DEVACTIVE_STATUS_POS))) != 0;
+            ((uint32_t)1U << (op_devactive + PPU_V1_DISR_OP_DEVACTIVE_STATUS_POS))) != 0;
 }
 
 /*
@@ -299,13 +299,13 @@ enum ppu_v1_edge_sensitivity ppu_v1_get_input_edge_sensitivity(
 void ppu_v1_ack_power_active_edge_interrupt(struct ppu_v1_reg *ppu,
     enum ppu_v1_mode ppu_mode)
 {
-    ppu->ISR = 1 << (ppu_mode + PPU_V1_ISR_ACTIVE_EDGE_POS);
+    ppu->ISR = (uint32_t)1U << (ppu_mode + PPU_V1_ISR_ACTIVE_EDGE_POS);
 }
 
 bool ppu_v1_is_power_active_edge_interrupt(struct ppu_v1_reg *ppu,
     enum ppu_v1_mode ppu_mode)
 {
-    return ppu->ISR & (1 << (ppu_mode + PPU_V1_ISR_ACTIVE_EDGE_POS));
+    return ppu->ISR & ((uint32_t)1U << (ppu_mode + PPU_V1_ISR_ACTIVE_EDGE_POS));
 }
 
 void ppu_v1_set_op_active_edge_sensitivity(struct ppu_v1_reg *ppu,
@@ -339,13 +339,13 @@ enum ppu_v1_edge_sensitivity ppu_v1_get_op_active_edge_sensitivity(
 void ppu_v1_ack_op_active_edge_interrupt(struct ppu_v1_reg *ppu,
     enum ppu_v1_op_devactive op_devactive)
 {
-    ppu->ISR = 1 << (op_devactive + PPU_V1_ISR_OP_ACTIVE_EDGE_POS);
+    ppu->ISR = (uint32_t)1U << (op_devactive + PPU_V1_ISR_OP_ACTIVE_EDGE_POS);
 }
 
 bool ppu_v1_is_op_active_edge_interrupt(struct ppu_v1_reg *ppu,
     enum ppu_v1_op_devactive op_devactive)
 {
-    return ppu->ISR & (1 << (op_devactive + PPU_V1_ISR_OP_ACTIVE_EDGE_POS));
+    return ppu->ISR & ((uint32_t)1U << (op_devactive + PPU_V1_ISR_OP_ACTIVE_EDGE_POS));
 }
 
 bool ppu_v1_is_dyn_policy_min_interrupt(struct ppu_v1_reg *ppu)

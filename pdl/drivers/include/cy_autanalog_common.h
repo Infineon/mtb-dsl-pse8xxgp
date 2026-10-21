@@ -52,7 +52,7 @@ extern "C" {
 #define CY_AUTANALOG_DRV_VERSION_MINOR                      0
 
 /** The driver identifier for the Autonomous Analog driver */
-#define CY_AUTANALOG_ID                                     CY_PDL_DRV_ID(0x76UL)
+#define CY_AUTANALOG_ID                                     CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_AUTANALOG)
 
 /** \cond INTERNAL */
 

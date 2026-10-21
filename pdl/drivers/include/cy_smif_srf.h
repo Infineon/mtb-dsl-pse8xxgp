@@ -26,6 +26,9 @@
 *******************************************************************************/
 
 
+#if !defined(CY_SMIF_SRF_H)
+#define CY_SMIF_SRF_H
+
 /**
 * \addtogroup group_smif_srf
 * \{
@@ -102,3 +105,5 @@ extern mtb_srf_op_s_t _cy_pdl_smif_srf_operations[(uint32_t)CY_PDL_SMIF_OP_MAX];
 
 
 /** \} group_smif_srf */
+
+#endif /* CY_SMIF_SRF_H */

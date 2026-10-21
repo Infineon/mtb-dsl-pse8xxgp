@@ -251,21 +251,42 @@
 #if !defined (CY_CRYPTO_CORE_H)
 #define CY_CRYPTO_CORE_H
 
+#include "cy_crypto_core_hw.h"
+#include "cy_crypto_core_mem.h"
+
+#if defined(CY_CRYPTO_CFG_AES_C)
 #include "cy_crypto_core_aes.h"
-#include "cy_crypto_core_crc.h"
 #include "cy_crypto_core_cmac.h"
+#endif /* CY_CRYPTO_CFG_AES_C */
+
+#if defined(CY_CRYPTO_CFG_DES_C)
 #include "cy_crypto_core_des.h"
+#endif /* CY_CRYPTO_CFG_DES_C */
+
+#if defined(CY_CRYPTO_CFG_SHA_C)
+#include "cy_crypto_core_sha.h"
+#include "cy_crypto_core_hmac.h"
+#include "cy_crypto_core_hkdf.h"
+#endif /* CY_CRYPTO_CFG_SHA_C */
+
+#if defined(CY_CRYPTO_CFG_CRC_C)
+#include "cy_crypto_core_crc.h"
+#endif /* CY_CRYPTO_CFG_CRC_C */
+
+#if defined(CY_CRYPTO_CFG_TRNG_C)
+#include "cy_crypto_core_trng.h"
+#endif /* CY_CRYPTO_CFG_TRNG_C */
+
+#if defined(CY_CRYPTO_CFG_RSA_C) || defined(CY_CRYPTO_CFG_ECP_C)
 #include "cy_crypto_core_ecc.h"
 #include "cy_crypto_core_ecc_nist_p.h"
-#include "cy_crypto_core_hmac.h"
-#include "cy_crypto_core_hw.h"
-#include "cy_crypto_core_prng.h"
-#include "cy_crypto_core_mem.h"
 #include "cy_crypto_core_rsa.h"
-#include "cy_crypto_core_sha.h"
-#include "cy_crypto_core_trng.h"
 #include "cy_crypto_core_vu.h"
-#include "cy_crypto_core_hkdf.h"
+#endif /* CY_CRYPTO_CFG_RSA_C || CY_CRYPTO_CFG_ECP_C */
+
+#if defined(CY_CRYPTO_CFG_PRNG_C)
+#include "cy_crypto_core_prng.h"
+#endif /* CY_CRYPTO_CFG_PRNG_C */
 
 #endif /* #if !defined (CY_CRYPTO_CORE_H) */
 

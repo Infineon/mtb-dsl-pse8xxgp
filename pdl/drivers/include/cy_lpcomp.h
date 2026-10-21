@@ -169,7 +169,7 @@ extern "C"
 ******************************************************************************/
 
 /** The low-power comparator PDL ID. */
-#define CY_LPCOMP_ID                                CY_PDL_DRV_ID(0x23u)
+#define CY_LPCOMP_ID                                CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_LPCOMP)
 
 /** The low-power comparator number of channels. */
 #define CY_LPCOMP_MAX_CHANNEL_NUM                   (2u)

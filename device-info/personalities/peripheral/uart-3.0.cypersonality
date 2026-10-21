@@ -67,7 +67,7 @@
 
     <ParamBool id='IrdaLowPower' name='Low Power Receiving' group='General' default='false' visible='`${IrDA}`' editable='true' desc='This parameter enables the low-power receiver option. Only applicable when Com Mode is IrDA.'/>
 
-    <ParamRange id='BaudRate' name='Baud Rate (bps)' group='General' default='115200' min='1' max='8000000' resolution='1' visible='true' editable='true' desc='Baud rate that UART operates. Maximum baud rate is 8 Mbps in LP mode.' />
+    <ParamRange id='BaudRate' name='Baud Rate (bps)' group='General' default='115200' min='1' max='`${(ipName eq &quot;mxs22scb&quot;) ? 16000000 : 8000000}`' resolution='1' visible='true' editable='true' desc='`${(ipName eq &quot;mxs22scb&quot;) ? &quot;Baud rate that UART operates. Maximum baud rate: HP mode 16 Mbps, LP mode 8 Mbps, ULP mode 3 Mbps.&quot; : &quot;Baud rate that UART operates. Maximum baud rate is 8 Mbps in LP mode.&quot;}`' />
 
     <!--Oversample-->
     <ParamChoice id='Oversample' name='Oversample' group='General' default='8' visible='`${!IrDA}`' editable='true' desc='This parameter defines how many SCB clocks oversample the selected baud rate.'>
@@ -174,23 +174,23 @@
       <Constraint type='ACCEPT' targetLocation='peri\[\d+\](\.group\[\d+\])?\.div_8.*' valid='`${useUartDiv8}`' >
         <Parameter id='intDivider' severity='ERROR' reason='Clock frequency does not match desired `${uartClkHz / 1000.0}` kHz.'>
           <Fixed
-            value='`${((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) >= 0.5) ? ceil(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) : floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)}`' />
+            value='`${max(1, floor(getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz) + 0.5))}`' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='peri\[\d+\](\.group\[\d+\])?\.div_16\[.*' valid='true' >
         <Parameter id='intDivider' severity='ERROR' reason='Clock frequency does not match desired `${uartClkHz / 1000.0}`kHz.' >
           <Fixed
-            value='`${((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) >= 0.5) ? ceil(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) : floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)}`' />
+            value='`${max(1, floor(getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz) + 0.5))}`' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='peri\[\d+\](\.group\[\d+\])?\.div_(16.5|24.5).*' valid='true' >
         <Parameter id='intDivider' severity='ERROR' reason='Update integer divider. Clock frequency does not match desired `${uartClkHz / 1000.0}`kHz.' >
           <Fixed
-            value='`${floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / cast(float, uartClkHz))}`' />
+            value='`${floor(max(1, getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz)))}`' />
         </Parameter>
         <Parameter id='fracDivider' severity='ERROR' reason='Update fractional divider. Clock frequency does not match desired `${uartClkHz / 1000.0}`kHz.' >
           <Fixed
-            value='`${((((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0) - floor(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0) >= 0.5) ? (ceil(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0) == 32 ? 31 : ceil(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0)) : floor(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0)}`' />
+            value='`${floor((max(1, getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz)) - floor(max(1, getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz)))) * 32.0 + 0.5)}`' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />
@@ -200,23 +200,23 @@
       <Constraint type='ACCEPT' targetLocation='peri\[\d+\](\.group\[\d+\])?\.div_8.*' valid='`${useUartDiv8}`' >
         <Parameter id='intDivider' severity='ERROR' reason='Clock frequency does not match desired `${uartClkHz / 1000.0}` kHz.'>
           <Fixed
-            value='`${((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) >= 0.5) ? ceil(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) : floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)}`' />
+            value='`${max(1, floor(getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz) + 0.5))}`' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='peri\[\d+\](\.group\[\d+\])?\.div_16\[.*' valid='true' >
         <Parameter id='intDivider' severity='ERROR' reason='Clock frequency does not match desired `${uartClkHz / 1000.0}`kHz.' >
           <Fixed
-            value='`${((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) >= 0.5) ? ceil(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) : floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)}`' />
+            value='`${max(1, floor(getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz) + 0.5))}`' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='peri\[\d+\](\.group\[\d+\])?\.div_(16.5|24.5).*' valid='true' >
         <Parameter id='intDivider' severity='ERROR' reason='Update integer divider. Clock frequency does not match desired `${uartClkHz / 1000.0}`kHz.' >
           <Fixed
-            value='`${floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / cast(float, uartClkHz))}`' />
+            value='`${floor(max(1, getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz)))}`' />
         </Parameter>
         <Parameter id='fracDivider' severity='ERROR' reason='Update fractional divider. Clock frequency does not match desired `${uartClkHz / 1000.0}`kHz.' >
           <Fixed
-            value='`${((((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0) - floor(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0) >= 0.5) ? (ceil(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0) == 32 ? 31 : ceil(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0)) : floor(((getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz) - floor(getExposedMember("REF_LOCATION", "frequency") * getExposedMember("REF_LOCATION", "divider") / uartClkHz)) * 32.0)}`' />
+            value='`${floor((max(1, getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz)) - floor(max(1, getExposedMember(getExposedMember("REF_LOCATION", "sourceClockRsc"), "frequency") / cast(float, uartClkHz)))) * 32.0 + 0.5)}`' />
         </Parameter>
       </Constraint>
       <Constraint type='ACCEPT' targetLocation='.*' valid='true' />

@@ -323,7 +323,7 @@ extern "C" {
 #define CY_SMIF_DRV_VERSION_MAJOR       2
 
 /** The driver minor version */
-#define CY_SMIF_DRV_VERSION_MINOR       130
+#define CY_SMIF_DRV_VERSION_MINOR       140
 
 /** One microsecond timeout for Cy_SMIF_TimeoutRun() */
 #define CY_SMIF_WAIT_1_UNIT             (1U)
@@ -336,7 +336,7 @@ extern "C" {
 
 /** The SMIF driver ID, reported as part of an unsuccessful API return status
  * \ref cy_en_smif_status_t */
-#define CY_SMIF_ID                      CY_PDL_DRV_ID(0x2CUL)
+#define CY_SMIF_ID                      CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SMIF)
 
 
 /**
@@ -1220,6 +1220,28 @@ cy_en_smif_status_t Cy_SMIF_SetCryptoSubRegionDisable(SMIF_Type *base, uint8_t c
 cy_en_smif_status_t Cy_SMIF_ConvertSlaveSlotToIndex(cy_en_smif_slave_select_t ss, uint32_t *device_idx);
 
 cy_en_smif_status_t Cy_SMIF_SetRxCaptureMode(SMIF_Type *base, cy_en_smif_capture_mode_t mode, cy_en_smif_slave_select_t slaveId);
+
+/*******************************************************************************
+* Function Name: Cy_SMIF_GetRxCaptureMode
+****************************************************************************//**
+*
+* Returns the current Rx Capture mode setting for the SMIF IP block instance.
+*
+* \param base
+* Holds the base address of the SMIF block registers.
+*
+* \return The current Rx Capture mode \ref cy_en_smif_capture_mode_t
+*   - \ref CY_SMIF_SEL_NORMAL_SPI - Normal SPI without DLP.
+*   - \ref CY_SMIF_SEL_NORMAL_SPI_WITH_DLP - Normal SPI with DLP.
+*   - \ref CY_SMIF_SEL_XSPI_HYPERBUS_WITH_DQS - xSPI or HyperBus with DQS.
+*
+*******************************************************************************/
+__STATIC_INLINE cy_en_smif_capture_mode_t Cy_SMIF_GetRxCaptureMode(SMIF_Type *base)
+{
+    uint32_t regVal = _FLD2VAL(SMIF_CORE_CTL2_RX_CAPTURE_MODE, SMIF_CTL2(base));
+    return (cy_en_smif_capture_mode_t)regVal;
+}
+
 #if (defined (SMIF_BRIDGE_PRESENT) && (SMIF_BRIDGE_PRESENT == 1u)) || defined (CY_DOXYGEN)
 bool Cy_SMIF_IsBridgeOn(SMIF_Base_Type *base);
 cy_en_smif_status_t Cy_SMIF_Bridge_Enable(SMIF_Base_Type *base, bool enable);

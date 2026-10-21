@@ -103,7 +103,7 @@ extern "C" {
 */
 /** The MSC driver identifier */
 /** MSC driver ID */
-#define CY_MS_CTL_ID                      (CY_PDL_DRV_ID(0x62U))
+#define CY_MS_CTL_ID                      (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_MS_CTL))
 
 /** Driver major version */
 #define CY_MS_CTL_DRV_VERSION_MAJOR       1
@@ -169,15 +169,15 @@ typedef enum
 /** Bus masters security controller and Access Control Group (ACG) config */
 typedef enum
 {
-    CODE_MS0_MSC = 0,
-    SYS_MS0_MSC  = 1,
-    SYS_MS1_MSC  = 2,
-    EXP_MS_MSC   = 3,
-    DMAC0_MSC    = 4,
-    DMAC1_MSC    = 5,
+    CODE_MS0_MSC = 0, /**< External 128-bit AHB5 CODE master-0 security controller */
+    SYS_MS0_MSC  = 1, /**< External 32-bit AHB5 SYS interconnect master-0 security controller */
+    SYS_MS1_MSC  = 2, /**< External 32-bit AHB5 SYS interconnect master-1 security controller */
+    EXP_MS_MSC   = 3, /**< External 32-bit AHB5 EXP interconnect master security controller */
+    DMAC0_MSC    = 4, /**< AHBDMA 0 controller security controller */
+    DMAC1_MSC    = 5, /**< AHBDMA 1 controller security controller */
 #if defined (CY_IP_M33SYSCPUSS_VERSION) && (CY_IP_M33SYSCPUSS_VERSION >= 5)
-    NNLITE_MS0_MSC = 6,
-    NNLITE_MS1_MSC = 7,
+    NNLITE_MS0_MSC = 6, /**< NNLITE MS 0 Class security controller */
+    NNLITE_MS1_MSC = 7, /**< NNLITE MS 1 Class security controller */
 #endif
 } en_ms_ctl_master_sc_acg_t;
 
@@ -186,27 +186,27 @@ typedef enum
 /** Bus masters security controller and Access Control Group (ACG) config */
 typedef enum
 {
-    APP_SYS_MS0_MSC  = 0,
-    APP_SYS_MS1_MSC  = 1,
-    APP_AXIDMAC0_MSC = 2,
-    APP_AXIDMAC1_MSC = 3,
-    APP_AXI_MS0_MSC  = 4,
-    APP_AXI_MS1_MSC  = 5,
-    APP_AXI_MS2_MSC  = 6,
-    APP_AXI_MS3_MSC  = 7,
-    APP_EXP_MS0_MSC  = 8,
-    APP_EXP_MS1_MSC  = 9,
-    APP_EXP_MS2_MSC  = 10,
-    APP_EXP_MS3_MSC  = 11,
+    APP_SYS_MS0_MSC  = 0,  /**< External 32-bit AHB5 SYS interconnect master-0 security controller */
+    APP_SYS_MS1_MSC  = 1,  /**< External 32-bit AHB5 SYS interconnect master-1 security controller */
+    APP_AXIDMAC0_MSC = 2,  /**< AXI DMA controller-0 security controller */
+    APP_AXIDMAC1_MSC = 3,  /**< AXI DMA controller-1 security controller */
+    APP_AXI_MS0_MSC  = 4,  /**< AXI master-0 security controller */
+    APP_AXI_MS1_MSC  = 5,  /**< AXI master-1 security controller */
+    APP_AXI_MS2_MSC  = 6,  /**< AXI master-2 security controller */
+    APP_AXI_MS3_MSC  = 7,  /**< AXI master-3 security controller */
+    APP_EXP_MS0_MSC  = 8,  /**< External 32-bit AHB5 EXP interconnect master-0 security controller */
+    APP_EXP_MS1_MSC  = 9,  /**< External 32-bit AHB5 EXP interconnect master-1 security controller */
+    APP_EXP_MS2_MSC  = 10, /**< External 32-bit AHB5 EXP interconnect master-2 security controller */
+    APP_EXP_MS3_MSC  = 11, /**< External 32-bit AHB5 EXP interconnect master-3 security controller */
 #if defined (CY_IP_M55APPCPUSS_VERSION) && (CY_IP_M55APPCPUSS_VERSION >= 1)
 #if defined (CY_IP_M55APPCPUSS_VERSION_MINOR) && (CY_IP_M55APPCPUSS_VERSION_MINOR >= 2)
-    APP_AXI_MS4_MSC  = 12,
-    APP_AXI_MS5_MSC  = 13,
-    APP_AXI_MS6_MSC  = 14,
-    APP_AXI_MS7_MSC  = 15,
-    APP_AXI_MS8_MSC  = 16,
-    APP_AXI_MS9_MSC  = 17,
-    APP_AXI_MS10_MSC = 18,
+    APP_AXI_MS4_MSC  = 12, /**< AXI master-4 security controller */
+    APP_AXI_MS5_MSC  = 13, /**< AXI master-5 security controller */
+    APP_AXI_MS6_MSC  = 14, /**< AXI master-6 security controller */
+    APP_AXI_MS7_MSC  = 15, /**< AXI master-7 security controller */
+    APP_AXI_MS8_MSC  = 16, /**< AXI master-8 security controller */
+    APP_AXI_MS9_MSC  = 17, /**< AXI master-9 security controller */
+    APP_AXI_MS10_MSC = 18, /**< AXI master-10 security controller */
 #endif
 #endif
 } en_ms_ctl_master_sc_acg_v1_t;
@@ -249,7 +249,7 @@ typedef enum
 
 /** \} group_ms_ctl_enums */
 
-#if ((CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
+#if (defined (CY_IP_MXS22RRAMC) && (CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
 /** \cond INTERNAL */
 
 /*******************************************************************************
@@ -444,8 +444,9 @@ __STATIC_INLINE uint32_t Cy_Ms_Ctl_GetActivePCV1(en_ms_ctl_master_t busMaster)
     return ((uint32_t)_FLD2VAL(MS_CTL_MS_PC_PC_READ_MIR_PC, MS_CTL_PC_READ_MIRROR_V1(busMaster)));
 }
 
-/** \} group_ms_ctl_functions */
  
+/** \} group_ms_ctl_functions */
+
 #if defined(__cplusplus)
 }
 #endif

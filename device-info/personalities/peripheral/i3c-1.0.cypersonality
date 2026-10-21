@@ -170,7 +170,10 @@
 
     <!-- Peripheral clock divider connection -->
     <ParamBool id='pclkOk' name='PCLK Valid' group='Internal' default='`${hasConnection("clock_i3c_en", 0) &amp;&amp; isBlockUsed(sourceClock)}`' visible='false' editable='false' desc='Checks whether there is a PCLK connected and enabled.' />
-    <ParamString id='pclkDst' name='PCLK Destination' group='Internal' default='PCLK_I3C_CLOCK_I3C_EN' visible='false' editable='false' desc='Generates PCLK connection define.' />
+    <ParamBool id='isMultiI3c' name='Multi-instance I3C' group='Internal' default='`${hasBlock("i3c[1]")}`' visible='false' editable='false' desc='True when the device has more than one I3C instance. Single-instance devices use unnumbered symbol names.' />
+    <ParamString id='instNumber' name='Instance number' group='Internal' default='`${isMultiI3c ? getInstNumber("i3c") : ""}`' visible='false' editable='false' desc='I3C instance suffix, empty on single-instance devices.' />
+    <ParamString id='irqInstNumber' name='IRQ instance number' group='Internal' default='`${isMultiI3c ? "_" . getInstNumber("i3c") : ""}`' visible='false' editable='false' desc='I3C interrupt instance suffix, empty on single-instance devices.' />
+    <ParamString id='pclkDst' name='PCLK Destination' group='Internal' default='PCLK_I3C`${instNumber}`_CLOCK_I3C_EN' visible='false' editable='false' desc='Generates PCLK connection define.' />
 
     <!-- Internal params: mirror Cy_I3C_SetDataRate algorithm for auto-mode actual rate display
          clkPeriodNs = ceil(1e9/clkHz),  hcnt = max(ceil(41/clkPeriodNs)-1, 5)
@@ -248,8 +251,8 @@
     <ConfigInclude value='cy_i3c.h' include='true' />
     <ConfigInclude value='cy_sysclk.h' include='`${pclkOk}`' />
 
-    <ConfigDefine name='`${INST_NAME}`_HW' value='I3C_CORE' public='true' include='true' />
-    <ConfigDefine name='`${INST_NAME}`_IRQ' value='i3c_interrupt_IRQn' public='true' include='true' />
+    <ConfigDefine name='`${INST_NAME}`_HW' value='(&amp;I3C`${instNumber}`-&gt;CORE)' public='true' include='true' />
+    <ConfigDefine name='`${INST_NAME}`_IRQ' value='i3c`${irqInstNumber}`_interrupt_IRQn' public='true' include='true' />
     <ConfigStruct name='`${INST_NAME}`_config' type='cy_stc_i3c_config_t' const='`${inFlash}`' public='true' include='true'>
       <Member name='i3cMode' value='`${ModeUser}`' />
       <Member name='i3cBusMode' value='`${Controller ?  I3CBusMode : "CY_I3C_BUS_MODE_NOT_APPLICABLE"}`' />  <!-- add one more enum member for target in PDL code-->
@@ -299,7 +302,7 @@
       <Member name='busIdleTime' value='`${Target ? BusIdleTime : "0"}`U' />
     </ConfigStruct>
 
-    <ConfigInstruction value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_I3C_PERI_NR, CY_MMIO_I3C_GROUP_NR, CY_MMIO_I3C_SLAVE_NR, CY_MMIO_I3C_CLK_HF_NR);' include='true' />
+    <ConfigInstruction value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_I3C`${instNumber}`_PERI_NR, CY_MMIO_I3C`${instNumber}`_GROUP_NR, CY_MMIO_I3C`${instNumber}`_SLAVE_NR, CY_MMIO_I3C`${instNumber}`_CLK_HF_NR);' include='true' />
     <ConfigInstruction value='Cy_SysClk_PeriphAssignDivider(`${pclkDst}`, `${getExposedMember(sourceClock, "clockSel")}`);' include='`${pclkOk}`' />
   </ConfigFirmware>
 

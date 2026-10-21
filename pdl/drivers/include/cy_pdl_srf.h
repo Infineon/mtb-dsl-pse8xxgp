@@ -26,6 +26,9 @@
 *******************************************************************************/
 
 
+#if !defined(CY_PDL_SRF_H)
+#define CY_PDL_SRF_H
+
 #if !defined(CY_SRF_DISABLE)
 /**
 * \addtogroup group_pdl_srf
@@ -88,8 +91,6 @@
 *   \defgroup group_pdl_srf_funcs    Functions
 */
 
-#pragma once
-
 #include "mtb_srf.h"
 #include "cy_syslib.h"
 #include "cycfg_ppc.h"
@@ -118,7 +119,7 @@ extern mtb_srf_pool_t cy_pdl_srf_default_pool;
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE) */
 
 /** SRF Integration identifier */
-#define CY_PDL_SRF_ID                                   (CY_PDL_DRV_ID(0x66U))
+#define CY_PDL_SRF_ID                                   (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_PDL_SRF))
 
 /** \} group_pdl_srf_macros */
 
@@ -187,4 +188,6 @@ cy_rslt_t cy_pdl_srf_module_register(mtb_srf_context_s_t* context);
 
 #endif /* defined(COMPONENT_SECURE_DEVICE) && (CY_PDL_ENABLE_SECURE_AWARE) */
 #endif /* CY_SRF_DISABLE */
+
+#endif /* CY_PDL_SRF_H */
 /** \} group_pdl_srf */

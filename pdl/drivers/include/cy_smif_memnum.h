@@ -317,7 +317,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
 * cross-core calls, not calls between security contexts on the same core.
 *
 *******************************************************************************/
-cy_en_smif_status_t Cy_SMIF_MemNumRead(cy_stc_smif_mem_context_t *context, uint8_t memNum,
+cy_en_smif_status_t Cy_SMIF_MemNumRead(cy_stc_smif_mem_context_t const *context, uint8_t memNum,
                                     uint32_t address, uint8_t rxBuffer[],
                                     uint32_t length);
 
@@ -366,7 +366,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumRead(cy_stc_smif_mem_context_t *context, uint8
 * cross-core calls, not calls between security contexts on the same core.
 *
 *******************************************************************************/
-cy_en_smif_status_t Cy_SMIF_MemNumWrite(cy_stc_smif_mem_context_t *context, uint8_t memNum,
+cy_en_smif_status_t Cy_SMIF_MemNumWrite(cy_stc_smif_mem_context_t const *context, uint8_t memNum,
                                      uint32_t address, uint8_t const txBuffer[],
                                      uint32_t length);
 
@@ -417,7 +417,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumWrite(cy_stc_smif_mem_context_t *context, uint
 * cross-core calls, not calls between security contexts on the same core.
 *
 *******************************************************************************/
-cy_en_smif_status_t Cy_SMIF_MemNumEraseSector(cy_stc_smif_mem_context_t *context, uint8_t memNum,
+cy_en_smif_status_t Cy_SMIF_MemNumEraseSector(cy_stc_smif_mem_context_t const *context, uint8_t memNum,
                                            uint32_t address, uint32_t length);
 
 /*******************************************************************************
@@ -456,7 +456,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumEraseSector(cy_stc_smif_mem_context_t *context
 * cross-core calls, not calls between security contexts on the same core.
 *
 *******************************************************************************/
-cy_en_smif_status_t Cy_SMIF_MemNumEraseChip(cy_stc_smif_mem_context_t *context, uint8_t memNum);
+cy_en_smif_status_t Cy_SMIF_MemNumEraseChip(cy_stc_smif_mem_context_t const *context, uint8_t memNum);
 
 /*******************************************************************************
 * Function Name: Cy_SMIF_MemNumHyperBusRead

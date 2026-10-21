@@ -92,9 +92,9 @@
       <Entry name='CPHA = 1, CPOL = 0' value='CY_SCB_SPI_CPHA1_CPOL0' visible='true' />
       <Entry name='CPHA = 1, CPOL = 1' value='CY_SCB_SPI_CPHA1_CPOL1' visible='true' />
     </ParamChoice>
-    <ParamRange id='DataRate' name='Data Rate (kbps)' group='General' default='1000' min='1' max='`${maxFreq}`' resolution='1' visible='true' editable='true' desc='Data rate that SPI operates. The actual data rate may differ based on the available clock frequency and SPI settings. The range: 1-`${maxFreq}` kbps.' />
+    <ParamRange id='DataRate' name='Data Rate (kbps)' group='General' default='1000' min='1' max='`${maxFreq}`' resolution='1' visible='true' editable='true' desc='Data rate that SPI operates. The actual data rate may differ based on the available clock frequency and SPI settings. The range: 1-`${maxFreq}` kbps.`${(!isSpiBlockHs &amp;&amp; hasConnection("spi_miso", 0)) ? (" The data rate can be up to " . (maxFreq * 2) . " kbps if the MISO line is disabled (not connected).") : ""}`' />
     <!--Oversample-->
-    <ParamRange id='OvsFactor' name='Oversample' group='General' default='16' min='`${hasConnection("spi_miso", 0) ? 4 : 2}`' max='16' resolution='1' visible='`${MasterMode}`' editable='true' desc='This parameter defines how many SCB clocks are used to generate the SCLK period (only applicable for the master mode). When the oversample is even the first and second phase of the clock period are the same. Otherwise the first phase of the clock signal period is one SCB clock cycle longer than the second phase. The range: 4-16 (MISO utilized) and 2-16 (MISO is not utilized).' />
+    <ParamRange id='OvsFactor' name='Oversample' group='General' default='16' min='`${((isSpiBlockHs) &amp;&amp; (ipName eq "mxs22scb")) ? 2 : (hasConnection("spi_miso", 0) ? 4 : 2)}`' max='16' resolution='1' visible='`${MasterMode}`' editable='true' desc='This parameter defines how many SCB clocks are used to generate the SCLK period (only applicable for the master mode). When the oversample is even the first and second phase of the clock period are the same. Otherwise the first phase of the clock signal period is one SCB clock cycle longer than the second phase. The range: 4-16 (MISO utilized) and 2-16 (MISO is not utilized). For HS SCB blocks (mxs22scb), the valid range is 2-16 even when MISO is utilized, enabling SPI data rates up to 32 MHz and 48 MHz at 1.8 V.' />
 
     <ParamBool id='EnableInputFilter' name='Enable Input Glitch Filter' group='General' default='false' visible='true' editable='true' desc='This parameter applies a digital 3-tap median filter to the SPI input lines.' />
     <ParamBool id='EnableLateMisoSample' name='Enable MISO Late Sampling' group='General' default='`${MasterMode}`' visible='true' editable='true' desc='This option changes the SCLK edge on which data is captured. In master mode, MISO is sampled half an SCLK period later (on the alternate clock edge) to address round-trip delay. In slave mode (Motorola, CPHA=0, internally-clocked only), MOSI is captured on the alternate edge. Late sampling also controls the slave data rate calculation: with late sampling the 2x round-trip divisor is removed.' />
@@ -450,7 +450,7 @@
     <!-- Master Mode -->
     <DRC type='INFO' paramId='clock_scb_en[0]' text='The clock frequency must be `${MasterClkHz / 1000}` kHz to operate with data rate `${DataRate}` kbps.' condition='`${((MasterMode) &amp;&amp; ((getExposedMember(sourceClock, "divider") != bestMasterDiv) || (OvsFactor != overSampleFix)) &amp;&amp; (hasVisibleOption("clock_scb_en[0]")))}`' >
         <FixIt action='SET_PARAM' target='`${getBlockFromSignalValue(getParamValue("clock_scb_en[0]")).".intDivider"}`' value='`${bestMasterDiv}`' valid='`${true}`' />
-        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (hasConnection("spi_miso", 0) ? 3 : 1)) ? overSampleFix : (hasConnection("spi_miso", 0) ? 4 : 2)) : 16)}`' valid='`${(MasterClkHz != sourceFreqHz)}`' />
+        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (((isSpiBlockHs) &amp;&amp; (ipName eq "mxs22scb")) ? 1 : (hasConnection("spi_miso", 0) ? 3 : 1))) ? overSampleFix : (((isSpiBlockHs) &amp;&amp; (ipName eq "mxs22scb")) ? 2 : (hasConnection("spi_miso", 0) ? 4 : 2))) : 16)}`' valid='`${(MasterClkHz != sourceFreqHz)}`' />
     </DRC>
 
     <!-- Slave Mode -->
@@ -461,7 +461,7 @@
     <!-- Master Mode -->
     <DRC type='INFO' paramId='clock[0]' text='The clock frequency must be `${MasterClkHz / 1000}` kHz to operate with data rate `${DataRate}` kbps.' condition='`${((MasterMode) &amp;&amp; ((getExposedMember(sourceClock, "divider") != bestMasterDiv) || (OvsFactor != overSampleFix)) &amp;&amp; (hasVisibleOption("clock[0]")))}`' >
         <FixIt action='SET_PARAM' target='`${getBlockFromSignalValue(getParamValue("clock[0]")).".intDivider"}`' value='`${bestMasterDiv}`' valid='`${true}`' />
-        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (hasConnection("spi_miso", 0) ? 3 : 1)) ? overSampleFix : (hasConnection("spi_miso", 0) ? 4 : 2)) : 16)}`' valid='`${(MasterClkHz != sourceFreqHz)}`' />
+        <FixIt action='SET_PARAM' target='OvsFactor' value='`${((17 > overSampleFix) ? ((overSampleFix > (((isSpiBlockHs) &amp;&amp; (ipName eq "mxs22scb")) ? 1 : (hasConnection("spi_miso", 0) ? 3 : 1))) ? overSampleFix : (((isSpiBlockHs) &amp;&amp; (ipName eq "mxs22scb")) ? 2 : (hasConnection("spi_miso", 0) ? 4 : 2))) : 16)}`' valid='`${(MasterClkHz != sourceFreqHz)}`' />
     </DRC>
 
     <!--RxDataWidth and $TxDataWidth DRCs-->
@@ -479,10 +479,10 @@
     <DRC type='ERROR' text='The SCLK and MOSI connections are not available for the selected device. The SPI Master can not operate on this SCB.' paramId='ModeUser' condition='`${MasterMode &amp;&amp; !hasConnectionSclk &amp;&amp; !hasConnectionMosi}`' />
 
     <!-- Check data rate value -->
-    <DRC type='ERROR' text='Data rate upto 50000 kbps is allowed only if MISO is not used. Otherwise only upto `${maxFreq}` kbps data rate is allowed.' paramId='DataRate' condition='`${MasterMode ? (isSpiBlockHs ? ((DataRate &lt; maxFreq) ? false : true) : ((!hasConnection("spi_miso", 0)) ? ((DataRate &lt; 50001) ? false : true) : ((DataRate &lt; 25001) ? false : true))) : false}`' />
+    <DRC type='ERROR' text='For HS SCB blocks (mxs22scb), data rate up to 50000 kbps is allowed even with MISO. For non-HS blocks, data rate up to 50000 kbps is allowed only if MISO is not used. Otherwise only up to `${maxFreq}` kbps data rate is allowed.' paramId='DataRate' condition='`${MasterMode ? (isSpiBlockHs ? ((DataRate &lt; 50001) ? false : true) : ((!hasConnection("spi_miso", 0)) ? ((DataRate &lt; 50001) ? false : true) : ((DataRate &lt; 25001) ? false : true))) : false}`' />
 
     <!-- Check oversample value -->
-    <DRC type='ERROR' text='Oversample between 2-16 is allowed only if MISO is not used. Otherwise oversample only between 4-16 is allowed.' paramId='OvsFactor' condition='`${MasterMode ? ((!hasConnection("spi_miso", 0)) ? ((OvsFactor &lt; 2) ? true : false) : ((OvsFactor &lt; 4) ? true : false)) : false}`' />
+    <DRC type='ERROR' text='Oversample between 2-16 is allowed only if MISO is not used. Otherwise oversample only between 4-16 is allowed. For HS SCB blocks (mxs22scb), oversample 2-16 is allowed even with MISO.' paramId='OvsFactor' condition='`${MasterMode ? ((!hasConnection("spi_miso", 0)) ? ((OvsFactor &lt; 2) ? true : false) : (((isSpiBlockHs) &amp;&amp; (ipName eq "mxs22scb")) ? ((OvsFactor &lt; 2) ? true : false) : ((OvsFactor &lt; 4) ? true : false))) : false}`' />
   </DRCs>
 
   <ConfigFirmware>

@@ -163,7 +163,7 @@
       <Entry name='CTB1 Opamp 1 Out'      value='CY_AUTANALOG_SAR_PIN_MUX_CTB1_OA1_OUT' visible='`${hasBlock("pass[0].ctb[1].oa[1]") &amp;&amp; isBlockUsed("pass[0].ctb[1].oa[1]")}`'/>
       <Entry name='DAC0'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC0'         visible='`${hasBlock("pass[0].dac[0]") &amp;&amp; isBlockUsed("pass[0].dac[0]")}`'/>
       <Entry name='DAC1'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC1'         visible='`${hasBlock("pass[0].dac[1]") &amp;&amp; isBlockUsed("pass[0].dac[1]")}`'/>
-      <Entry name='Temp Sensor'           value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='true'/>
+      <Entry name='Temp Sensor'           value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='`${(operatingMode eq "LowPower") || (sar_mux_nonInvPin eq CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR)}`'/>
       <Entry name='SAR / PTComp Pin $idx' value='CY_AUTANALOG_SAR_PIN_MUX_GPIO$idx'     visible='`${getExposedMember("pass[0]", "ptc_pin$idx")}`' repeatCount='8' />
       <Entry name='VSSA'                  value='CY_AUTANALOG_SAR_PIN_MUX_VSSA'         visible='true'/>
     </ParamChoice>
@@ -189,7 +189,7 @@
       <Entry name='CTB1 Opamp 1 Out'      value='CY_AUTANALOG_SAR_PIN_MUX_CTB1_OA1_OUT' visible='`${hasBlock("pass[0].ctb[1].oa[1]") &amp;&amp; isBlockUsed("pass[0].ctb[1].oa[1]")}`'/>
       <Entry name='DAC0'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC0'         visible='`${hasBlock("pass[0].dac[0]") &amp;&amp; isBlockUsed("pass[0].dac[0]")}`'/>
       <Entry name='DAC1'                  value='CY_AUTANALOG_SAR_PIN_MUX_DAC1'         visible='`${hasBlock("pass[0].dac[1]") &amp;&amp; isBlockUsed("pass[0].dac[1]")}`'/>
-      <Entry name='Temp Sensor'           value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='true'/>
+      <Entry name='Temp Sensor'           value='CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR'  visible='`${(operatingMode eq "LowPower") || (sar_mux_invPin eq CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR)}`'/>
       <Entry name='SAR / PTComp Pin $idx' value='CY_AUTANALOG_SAR_PIN_MUX_GPIO$idx'     visible='`${getExposedMember("pass[0]", "ptc_pin$idx")}`' repeatCount='8' />
       <Entry name='VSSA'                  value='CY_AUTANALOG_SAR_PIN_MUX_VSSA'         visible='true'/>
     </ParamChoice>
@@ -320,6 +320,15 @@
     <DRC type='ERROR' text='Enable and configure a parent resource for ADC MUX Channels.' condition='`${!isBlockUsed(resource_sar)}`' >
       <FixIt action='ENABLE_BLOCK' target='`${resource_sar}`' value='lppass_adc-1.0' valid='true' />
     </DRC>
+        <DRC type='ERROR'
+          text='The Inverting Input must also be connected to the temperature sensor for a Low Power differential channel.'
+          condition='`${(operatingMode eq "LowPower") &amp;&amp; diffMode &amp;&amp; (sar_mux_nonInvPin eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") &amp;&amp; (sar_mux_invPin ne "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR")}`'/>
+        <DRC type='ERROR'
+          text='The Non-Inverting Input must also be connected to the temperature sensor for a Low Power differential channel.'
+          condition='`${(operatingMode eq "LowPower") &amp;&amp; diffMode &amp;&amp; (sar_mux_nonInvPin ne "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") &amp;&amp; (sar_mux_invPin eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR")}`'/>
+    <DRC type='ERROR'
+         text='Temperature Sensor channels are supported only in Low Power mode and cannot be used in a High Speed scan.'
+         condition='`${(operatingMode eq "HighSpeed") &amp;&amp; ((sar_mux_nonInvPin eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR") || (sar_mux_invPin eq "CY_AUTANALOG_SAR_PIN_MUX_TEMP_SENSOR"))}`'/>
   </DRCs>
 
   <ConfigFirmware/>

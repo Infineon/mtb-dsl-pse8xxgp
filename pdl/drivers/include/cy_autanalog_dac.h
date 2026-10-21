@@ -1211,10 +1211,8 @@ __STATIC_INLINE int32_t Cy_AutAnalog_DAC_ReadNextSample(uint8_t dacIdx)
 {
     uint32_t baseAddr;
 
-    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 1, 'Review shows that type conversion from unsigned to signed does not have any negative drawbacks');
     return CY_AUTANALOG_SUCCESS == Cy_AutAnalog_IdxToBaseAddr(CY_AUTANALOG_DAC, dacIdx, &baseAddr) ?
            (int32_t)_FLD2VAL(DAC_STA_FW_DAC_VAL_NXT_VALUE, AUTANALOG_DAC_FW_DAC_VAL_NXT(baseAddr)) : 0;
-    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8');
 }
 
 
@@ -1250,10 +1248,8 @@ __STATIC_INLINE int32_t Cy_AutAnalog_DAC_Data_ReadSample(uint8_t dacIdx, uint16_
 
     CY_ASSERT_L2(AUTANALOG_DAC_LUT_IDX(dataIdx));
 
-    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 1, 'Review shows that type conversion from unsigned to signed does not have any negative drawbacks');
     return CY_AUTANALOG_SUCCESS == Cy_AutAnalog_IdxToBaseAddr(CY_AUTANALOG_DAC, dacIdx, &baseAddr) ?
            (int32_t)_FLD2VAL(DAC_SRAM_WAVEFORM, AUTANALOG_DAC_LUT(baseAddr, dataIdx)) : 0;
-    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8');
 }
 
 

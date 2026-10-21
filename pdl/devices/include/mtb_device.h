@@ -24,6 +24,9 @@
 * limitations under the License.
 *******************************************************************************/
 
-#pragma once
+#if !defined(MTB_DEVICE_H)
+#define MTB_DEVICE_H
 
 #include "cy_device_headers.h"
+
+#endif /* MTB_DEVICE_H */

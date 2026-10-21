@@ -151,7 +151,7 @@ extern "C" {
 #define CY_SCB_DRV_VERSION_MINOR    (40)
 
 /** SCB driver identifier */
-#define CY_SCB_ID           CY_PDL_DRV_ID(0x2AU)
+#define CY_SCB_ID           CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_SCB)
 
 /** Position for SCB driver sub mode */
 #define CY_SCB_SUB_MODE_Pos (13UL)

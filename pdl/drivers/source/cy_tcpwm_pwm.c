@@ -234,7 +234,7 @@ cy_en_tcpwm_status_t Cy_TCPWM_PWM_Init(TCPWM_Type *base, uint32_t cntNum,  cy_st
                 {
                     TCPWM_GRP_CNT_CTRL(base, grp, cntNum) |=
                             _VAL2FLD(TCPWM_GRP_CNT_V2_CTRL_UP_DOWN_MODE, CY_TCPWM_PWM_LEFT_ALIGN);
-                    TCPWM_GRP_CNT_COUNTER(base, grp, cntNum) = CY_TCPWM_CNT_UP_DOWN_INIT_VAL;
+                    TCPWM_GRP_CNT_COUNTER(base, grp, cntNum) = CY_TCPWM_CNT_UP_INIT_VAL;
                     TCPWM_GRP_CNT_TR_PWM_CTRL(base, grp, cntNum) = CY_TCPWM_PWM_MODE_ASYMM_CC0_CC1;
                 }
                 else if (TCPWM_GRP_CC1(base, grp) && (CY_TCPWM_PWM_CENTER_ASYMMETRIC_CC0_CC1_ALIGN == config->pwmAlignment))
@@ -266,7 +266,7 @@ cy_en_tcpwm_status_t Cy_TCPWM_PWM_Init(TCPWM_Type *base, uint32_t cntNum,  cy_st
 
                     /* Counter direction/mode (Count Up, Count Down or Count Up/Down). */
                     TCPWM_GRP_CNT_CTRL(base, grp, cntNum) |=
-                            _VAL2FLD(TCPWM_GRP_CNT_V2_CTRL_UP_DOWN_MODE, config->upDownMode);
+                            _VAL2FLD(TCPWM_GRP_CNT_V2_CTRL_UP_DOWN_MODE, config->countDirectionMode);
 
                     /* Initial counter value loaded at start. */
                     TCPWM_GRP_CNT_COUNTER(base, grp, cntNum) = config->initialCountVal;

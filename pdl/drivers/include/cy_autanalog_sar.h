@@ -1864,10 +1864,8 @@ __STATIC_INLINE int32_t Cy_AutAnalog_SAR_FIRreadResult(uint8_t sarIdx, uint8_t f
 
     CY_ASSERT_L2(AUTANALOG_SAR_FIR_IDX(firIdx));
 
-    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 1, 'Review shows that type conversion from unsigned to signed does not have any negative drawbacks');
     return CY_AUTANALOG_SUCCESS == Cy_AutAnalog_IdxToBaseAddr(CY_AUTANALOG_SAR, sarIdx, &baseAddr) ?
            (int32_t)_FLD2VAL(SAR_STA_FIR_RESULT_RESULT, AUTANALOG_SAR_FIR_RESULT(baseAddr, firIdx)) : 0;
-    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8');
 }
 
 /*******************************************************************************
@@ -2004,11 +2002,9 @@ __STATIC_INLINE int32_t Cy_AutAnalog_SAR_ReadResult(uint8_t sarIdx, cy_en_autana
 
     if (CY_AUTANALOG_SUCCESS == Cy_AutAnalog_IdxToBaseAddr(CY_AUTANALOG_SAR, sarIdx, &baseAddr))
     {
-        CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 2, 'Review shows that type conversion from unsigned to signed does not have any negative drawbacks');
         regVal = (input == CY_AUTANALOG_SAR_INPUT_GPIO) ?
                  (int32_t)_FLD2VAL(SAR_STA_GPIO_CHAN_RESULT_RESULT, AUTANALOG_SAR_GPIO_CHAN_RESULT(baseAddr, channel)):
                  (int32_t)_FLD2VAL(SAR_STA_MUX_CHAN_RESULT_RESULT, AUTANALOG_SAR_MUX_CHAN_RESULT(baseAddr, channel));
-        CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8');
     }
 
     return regVal;
@@ -2285,10 +2281,8 @@ __STATIC_INLINE int32_t Cy_AutAnalog_FIFO_ReadWord(uint8_t fifoIdx, uint8_t buff
 
     CY_ASSERT_L2(AUTANALOG_MMIO_FIFO_BUFF_IDX(buffIdx));
 
-    CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.8', 1, 'Review shows that type conversion from unsigned to signed does not have any negative drawbacks');
     return CY_AUTANALOG_SUCCESS == Cy_AutAnalog_IdxToBaseAddr(CY_AUTANALOG_FIFO, fifoIdx, &baseAddr) ?
            (int32_t)_FLD2VAL(LPPASS_MMIO_STA_RD_DATA_RESULT, AUTANALOG_MMIO_FIFO_STA_RD_DATA(baseAddr, buffIdx)) : 0;
-    CY_MISRA_BLOCK_END('MISRA C-2012 Rule 10.8');
 }
 
 

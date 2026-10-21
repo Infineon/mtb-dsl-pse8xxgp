@@ -154,11 +154,11 @@ cy_en_smif_status_t Cy_SMIF_MemInit(SMIF_Type *base,
                         uint32_t sfdpRet = (uint32_t)CY_SMIF_SUCCESS;
                         if (0U != (memCfg->flags & CY_SMIF_FLAG_DETECT_SFDP))
                         {
-                            sfdpRet = (uint32_t)Cy_SMIF_MemSfdpDetect(base,
-                                                    memCfg->deviceCfg,
-                                                    memCfg->slaveSelect,
-                                                    memCfg->dataSelect,
-                                                    context);
+                            sfdpRet = (uint32_t)Cy_SMIF_MemInitSfdpMode(base,
+                                                                        memCfg,
+                                                                        CY_SMIF_WIDTH_OCTAL,
+                                                                        CY_SMIF_SFDP_QER_0,
+                                                                        context);
                             if((uint32_t)CY_SMIF_SUCCESS != sfdpRet)
                             {
                                 sfdpRes |=  ((uint32_t)CY_SMIF_SFDP_FAIL << idx);
@@ -1896,6 +1896,10 @@ cy_en_smif_status_t Cy_SMIF_MemEraseSector(SMIF_Type *base, cy_stc_smif_mem_conf
             length = endAddress - address + 1UL;
 
             status = CY_SMIF_SUCCESS;
+        }
+        else
+        {
+            /* No action required */
         }
 
         /* Check if the address exceeds the memory size */

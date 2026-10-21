@@ -136,7 +136,7 @@ extern "C" {
 #define CY_TRIGMUX_DRV_VERSION_MINOR       70
 
 /** TRIGMUX PDL ID */
-#define CY_TRIGMUX_ID                       CY_PDL_DRV_ID(0x33UL) /**< The trigger multiplexer driver identifier */
+#define CY_TRIGMUX_ID                       CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_TRIGMUX) /**< The trigger multiplexer driver identifier */
 
 /** Values for the cycles parameter in the \ref Cy_TrigMux_SwTrigger() function */
 #define CY_TRIGGER_INFINITE                 (255UL) /**< The trigger will be active until the user clears it or a hardware deactivates it. */

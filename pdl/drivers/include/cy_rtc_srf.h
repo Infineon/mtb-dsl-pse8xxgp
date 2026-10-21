@@ -26,11 +26,16 @@
 *******************************************************************************/
 
 
+#if !defined(CY_RTC_SRF_H)
+#define CY_RTC_SRF_H
+
 /**
 * \addtogroup group_rtc_srf
 * \{
 * Internal operation declarations to enable Secure Aware RTC.
-*   \defgroup group_rtc_srf_enums    Enums
+*   \defgroup group_rtc_srf_macros          Macros
+*   \defgroup group_rtc_srf_enums           Enums
+*   \defgroup group_rtc_srf_data_structures Data Structures
 */
 
 #include "mtb_srf.h"
@@ -44,6 +49,7 @@
 #if !defined(CY_PDL_ENABLE_SECURE_AWARE_RTC)
 /** RTC Secure Aware Driver enablement.  Set to 0 via Makefile defines to disable. When not manually set,
  * defaults to the PDL-wide Secure Aware Driver enablement status.
+ * \ingroup group_rtc_srf_macros
 */
 #define CY_PDL_ENABLE_SECURE_AWARE_RTC (CY_PDL_ENABLE_SECURE_AWARE)
 #endif /* !defined(CY_PDL_ENABLE_SECURE_AWARE_RTC) */
@@ -77,8 +83,13 @@ typedef enum
 /** \} group_rtc_srf_enums */
 
 #if defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_RTC_ENABLE_SRF_INTEG)
-/** Array of RTC Secure Operations */
+/**
+ * Array of RTC Secure Operations
+ * \ingroup group_rtc_srf_data_structures
+ */
 extern mtb_srf_op_s_t _cy_pdl_rtc_srf_operations[(uint32_t)CY_PDL_RTC_OP_MAX];
 #endif /* defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_RTC_ENABLE_SRF_INTEG) */
 
 /** \} group_rtc_srf */
+
+#endif /* CY_RTC_SRF_H */

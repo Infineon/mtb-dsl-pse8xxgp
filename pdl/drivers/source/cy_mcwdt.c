@@ -92,7 +92,7 @@ cy_en_mcwdt_status_t Cy_MCWDT_Init(MCWDT_STRUCT_Type *base, cy_stc_mcwdt_config_
         #endif
 
 #if defined (CY_IP_MXS28SRSS) || defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
-        #if (CY_IP_MXS22SRSS_VERSION == 2)
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_MAIN_MCWDT_CONFIG_WDT_LOWER_MODE0, config->c0LowerLimitMode);
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_MAIN_MCWDT_CONFIG_WDT_LOWER_MODE1, config->c1LowerLimitMode);
         MCWDT_LOWER_LIMIT(base) = _VAL2FLD(MCWDT_MAIN_MCWDT_LOWER_LIMIT_WDT_LOWER_LIMIT1, config->c1LowerLimit) |
@@ -106,7 +106,7 @@ cy_en_mcwdt_status_t Cy_MCWDT_Init(MCWDT_STRUCT_Type *base, cy_stc_mcwdt_config_
 #endif /* CY_IP_MXS28SRSS, CY_IP_MXS40SSRSS, CY_IP_MXS22SRSS  */
 
 #if defined (CY_IP_MXS40SSRSS) || defined (CY_IP_MXS22SRSS)
-        #if (CY_IP_MXS22SRSS_VERSION == 2)
+        #if (defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2))
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_MAIN_MCWDT_CONFIG_WDT_CARRY0_1, config->c0c1carryoutconfig);
         MCWDT_CONFIG(base) |=_VAL2FLD(MCWDT_MAIN_MCWDT_CONFIG_WDT_CARRY1_2, config->c1c2carryoutconfig);
 

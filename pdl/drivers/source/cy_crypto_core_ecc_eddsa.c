@@ -1205,9 +1205,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_MakePublicKey(CRYPTO_Type *base,
             uint32_t bitsize  = edwDp->size;
             uint32_t bytesize = CY_CRYPTO_BYTE_SIZE_OF_BITS(edwDp->size);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)privateKey,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)privateKey,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
             privateKeyRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(privateKey);
             publicKeyXRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(publicKey->pubkey.x);
@@ -1249,7 +1249,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_MakePublicKey(CRYPTO_Type *base,
             {
                 return tmpResult;
             }
-            digest = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_sha);
+            /* Cy_Crypto_Core_Vu_RegMemPointer() returns a crypto-engine-side (SAHB) address */
+            digest = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_sha));
             /*Base Point, G = (p_x, p_y) */
             Cy_Crypto_Core_Vu_SetMemValue (base, p_x, (uint8_t const *)CY_REMAP_ADDRESS_FOR_CRYPTO(edwDp->Gx), bitsize);
             Cy_Crypto_Core_Vu_SetMemValue (base, p_y, (uint8_t const *)CY_REMAP_ADDRESS_FOR_CRYPTO(edwDp->Gy), bitsize);
@@ -1292,9 +1293,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_MakePublicKey(CRYPTO_Type *base,
 
             Cy_Crypto_Core_Vu_GetMemValue(base, (uint8_t *)publicKeyXRemap, p_x, bitsize);
             Cy_Crypto_Core_Vu_GetMemValue(base, (uint8_t *)publicKeyYRemap, p_y, bitsize);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-            SCB_InvalidateDCache_by_Addr(publicKey->pubkey.x, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
-            SCB_InvalidateDCache_by_Addr(publicKey->pubkey.y, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+#if CY_CRYPTO_DCACHE_ENABLED
+            CY_CRYPTO_INVALIDATE_DCACHE(publicKey->pubkey.x, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+            CY_CRYPTO_INVALIDATE_DCACHE(publicKey->pubkey.y, (int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
             publicKey->type = PK_PUBLIC;
             publicKey->curveID = curveID;
@@ -1415,10 +1416,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Sign(CRYPTO_Type *base, const uint8
             uint32_t bitsize  = edwDp->size;
             uint32_t bytesize = CY_CRYPTO_BYTE_SIZE_OF_BITS(edwDp->size);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)hash,(int32_t)hashlen);
-            SCB_CleanDCache_by_Addr((volatile void *)key->k, (int32_t)bytesize);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)hash,(int32_t)hashlen);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)key->k, (int32_t)bytesize);
             /* sigctx is managed by the SHA functions */
 #endif
 
@@ -1481,7 +1482,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Sign(CRYPTO_Type *base, const uint8
                 {
                     return tmpResult;
                 }
-                Cy_Crypto_Core_MemSet(base, (void*)Cy_Crypto_Core_Vu_RegMemPointer(base, p_r), (uint8_t)0, (uint16_t)bytesize);
+                Cy_Crypto_Core_MemSet(base, (void*)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_r)), (uint8_t)0, (uint16_t)bytesize);
 
                 tmpResult = CY_CRYPTO_VU_ALLOC_MEM (base, p_s, bitsize+1u);
                 if(CY_CRYPTO_SUCCESS != tmpResult)
@@ -1494,7 +1495,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Sign(CRYPTO_Type *base, const uint8
                 {
                     return tmpResult;
                 }
-                digest = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_sha);
+                /* RegMemPointer() returns a crypto/SAHB-side address; translate for CPU use. */
+                digest = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_sha));
 
                tmpResult = CY_CRYPTO_VU_ALLOC_MEM (base, p_temp, bitsize);
                 if(CY_CRYPTO_SUCCESS != tmpResult)
@@ -1552,8 +1554,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Sign(CRYPTO_Type *base, const uint8
                 }
                 Cy_Crypto_Core_Vu_SetMemValue (base, p_s, (uint8_t const*)scalar, ((CY_CRYPTO_SHA512_HASH_SIZE*8u) >> 1u));
 
-                pubkey_x = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_X);
-                pubkey_y = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_Y);
+                /* RegMemPointer() returns a crypto/SAHB-side address; translate for CPU use. */
+                pubkey_x = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_X));
+                pubkey_y = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_Y));
 
                 /* step2: 'r' computation */
                 (void)Cy_Crypto_Core_Sha_Start(base, shaHashState);
@@ -1586,8 +1589,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Sign(CRYPTO_Type *base, const uint8
                 /*Note: key encode/decode can be a separate function helps verify */
                 /* encode point: From RFC 5.1.2, we shall copy LSB of x to the MSB of y */
                 /* Test p_x for odd */
-                r_x = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_x);
-                r_y = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_y);
+                /* RegMemPointer() returns a crypto/SAHB-side address; translate for CPU use. */
+                r_x = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_x));
+                r_y = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_y));
                 if((bool)(((uint8_t*)r_x)[0] & (uint8_t)0x01))
                 {
                     ((uint8_t*)r_y)[31] = ((uint8_t*)r_y)[31] | (uint8_t)0x80;
@@ -1647,9 +1651,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Sign(CRYPTO_Type *base, const uint8
                 /* Free all mem allocations */
                 CY_CRYPTO_VU_FREE_MEM(base, mallocMask);
                 (void)Cy_Crypto_Core_Sha_Free(base, shaHashState);
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
                 CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-                SCB_InvalidateDCache_by_Addr(sig, (int32_t)(bytesize*2U));
+                CY_CRYPTO_INVALIDATE_DCACHE(sig, (int32_t)(bytesize*2U));
 #endif
             }
         }
@@ -1845,9 +1849,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_PointDecode(CRYPTO_Type *base,
             uint32_t bitsize  = edwDp->size;
             uint32_t bytesize = CY_CRYPTO_BYTE_SIZE_OF_BITS(edwDp->size);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
             /* Flush the cache */
-            SCB_CleanDCache_by_Addr((volatile void *)publicKey,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)publicKey,(int32_t)CY_CRYPTO_BYTE_SIZE_OF_BITS(bitsize));
 #endif
             publicKeyRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(publicKey);
             publicKeyXRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(pubKey_x);
@@ -2003,7 +2007,7 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_PointDecode(CRYPTO_Type *base,
                 }
                 else
                 {
-                    uint8_t *x = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_x);
+                    uint8_t *x = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_x));
 
                     if( (x[0] & 0x1u) != x_0)
                     {
@@ -2210,7 +2214,8 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Verify(CRYPTO_Type *base, uint8_t *
                 {
                     return tmpResult;
                 }
-                digest = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_sha);
+                /* RegMemPointer() returns a crypto/SAHB-side address; translate for CPU use. */
+                digest = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_sha));
 
                tmpResult = CY_CRYPTO_VU_ALLOC_MEM (base, p_temp, bitsize+1u);
                 if(CY_CRYPTO_SUCCESS != tmpResult)
@@ -2248,8 +2253,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Verify(CRYPTO_Type *base, uint8_t *
                 /* step2: h = sha512(Rs + public + msg) mod N */
                 (void)Cy_Crypto_Core_Sha_Update(base, shaHashState, (uint8_t const*)sig_r, bytesize);
                 /* compress public key */
-                pubkey_x = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_x);
-                pubkey_y = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, p_y);
+                /* RegMemPointer() returns a crypto/SAHB-side address; translate for CPU use. */
+                pubkey_x = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_x));
+                pubkey_y = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, p_y));
 
                 if((bool)(((uint8_t*)pubkey_x)[0] & (uint8_t)0x01))
                 {
@@ -2286,8 +2292,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_ED25519_Verify(CRYPTO_Type *base, uint8_t *
                 }
 
                 /* Compress R (we re-use pubkey_x & y)*/
-                pubkey_x = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_X);
-                pubkey_y = (uint8_t *)Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_Y);
+                /* RegMemPointer() returns a crypto/SAHB-side address; translate for CPU use. */
+                pubkey_x = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_X));
+                pubkey_y = (uint8_t *)CY_REMAP_ADDRESS_FOR_CPU(Cy_Crypto_Core_Vu_RegMemPointer(base, VR_S_Y));
                 if((bool)(((uint8_t*)pubkey_x)[0] & (uint8_t)0x01))
                 {
                     ((uint8_t*)pubkey_y)[31] |= (uint8_t)0x80;

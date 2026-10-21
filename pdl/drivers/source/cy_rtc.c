@@ -1393,7 +1393,8 @@ bool Cy_RTC_GetDstStatus(cy_stc_rtc_dst_t const *dstTime, cy_stc_rtc_config_t co
 *******************************************************************************/
 __WEAK void Cy_RTC_Alarm1Interrupt(void)
 {
-    /* weak blank function */
+    /* Weak blank function.*/
+    __NOP();
 }
 
 
@@ -1416,7 +1417,8 @@ __WEAK void Cy_RTC_Alarm1Interrupt(void)
 *******************************************************************************/
 __WEAK void Cy_RTC_Alarm2Interrupt(void)
 {
-    /* weak blank function */
+    /* Weak blank function.*/
+    __NOP();
 }
 
 
@@ -1555,7 +1557,8 @@ void Cy_RTC_DstInterrupt(cy_stc_rtc_dst_t const *dstTime)
 *******************************************************************************/
 __WEAK void Cy_RTC_CenturyInterrupt(void)
 {
-    /* weak blank function */
+    /* Weak blank function.*/
+    __NOP();
 }
 
 

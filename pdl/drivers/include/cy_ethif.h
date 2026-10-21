@@ -150,7 +150,7 @@ extern "C" {
 #define CY_ETHIF_DRV_VERSION_MINOR        40
 
 /** Eth driver ID */
-#define CY_ETHIF_ID                     CY_PDL_DRV_ID(0x71U)
+#define CY_ETHIF_ID                     CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_ETHIF)
 
 /** \} group_ethif_macros */
 

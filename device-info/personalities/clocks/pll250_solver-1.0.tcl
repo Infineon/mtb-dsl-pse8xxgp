@@ -100,10 +100,11 @@ proc solve_pll_internal {srcFreqMHz targetFreqMHz frequencyScaler lfMode minPowe
     set divOut $::OUT_MIN
     set fracDiv 0
     set foutBest 0
+    set found false
     set targetFreqMHz [expr {$targetFreqMHz * $frequencyScaler}]
 
-    for {set q $::REF_MIN} {$q <= $::REF_MAX} {incr q} {
-        for {set p $::FB_MIN} {$p <= $::FB_MAX} {incr p} {
+    for {set q $::REF_MIN} {$q <= $::REF_MAX && !$found} {incr q} {
+        for {set p $::FB_MIN} {$p <= $::FB_MAX && !$found} {incr p} {
             set pdf [expr {($srcFreqMHz)/ $q}]
             set fdco [expr {($pdf * $p)}]
 
@@ -121,20 +122,20 @@ proc solve_pll_internal {srcFreqMHz targetFreqMHz frequencyScaler lfMode minPowe
                 set dcoMode false
             }
 
-            for {set o $::OUT_MIN} {$o <= $::OUT_MAX} {incr o} {
+            for {set o $::OUT_MIN} {$o <= $::OUT_MAX && !$found} {incr o} {
                 set tempVco [expr { $targetFreqMHz * $o}]
                 set tempFeedBackDivLeftShifted [expr { ((($tempVco) * pow (2, 24)) * $q) / $srcFreqMHz }]
                 set feedBackFracDiv [expr { (int($tempFeedBackDivLeftShifted) & (( 1 << 24 ) - 1)) }]
                 set fout [expr {($srcFreqMHz * ( ($p << 24) + $feedBackFracDiv) / ($q * $o)) / pow (2, 24)}]
-                if {round($foutBest) == round($targetFreqMHz)}   {
-                       break;
-                }
                 set foutBest $fout
                 set divFb $p
                 set divRef $q
                 set divOut [expr {$o * $frequencyScaler}]
                 set fracDiv $feedBackFracDiv
                 set dcoModeBit $dcoMode
+                if {abs($fout - $targetFreqMHz) < 0.0005} {
+                    set found true
+                }
             }
         }
     }

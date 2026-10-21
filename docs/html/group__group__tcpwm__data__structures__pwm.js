@@ -1,5 +1,7 @@
 var group__group__tcpwm__data__structures__pwm =
 [
+    [ "PWM CC Match / Overflow / Underflow Actions", "group__group__tcpwm__pwm__output__action.html", "group__group__tcpwm__pwm__output__action" ],
+    [ "PWM Count Direction Mode", "group__group__tcpwm__pwm__count__direction__mode.html", "group__group__tcpwm__pwm__count__direction__mode" ],
     [ "cy_stc_tcpwm_pwm_config_t", "group__group__tcpwm__data__structures__pwm.html#structcy__stc__tcpwm__pwm__config__t", [
       [ "pwmMode", "group__group__tcpwm__data__structures__pwm.html#a4d95b8b2e7841f999f6994fa0a90bd2f", null ],
       [ "clockPrescaler", "group__group__tcpwm__data__structures__pwm.html#a877ff8bc42b17e292f6ae99e1b872cbc", null ],
@@ -65,12 +67,12 @@ var group__group__tcpwm__data__structures__pwm =
       [ "pwm_sync_kill_dt", "group__group__tcpwm__data__structures__pwm.html#a8703da1aecb3538a8e98eed27063d894", null ],
       [ "debug_freeze_enable", "group__group__tcpwm__data__structures__pwm.html#a65f9a164620363fa75eac28a87aee5ea", null ],
       [ "debug_suspend_enable", "group__group__tcpwm__data__structures__pwm.html#a9d7d000bc686c74cc6df5df5705c0868", null ],
-      [ "upDownMode", "group__group__tcpwm__data__structures__pwm.html#a35bd7fab8f3f5b211851713449aea167", null ],
       [ "initialCountVal", "group__group__tcpwm__data__structures__pwm.html#a78d4fcef965acbb67821fd2d3ccb3dcf", null ],
-      [ "cc0MatchMode", "group__group__tcpwm__data__structures__pwm.html#a006986df22cd26697690eeb935b6cb0d", null ],
-      [ "cc1MatchMode", "group__group__tcpwm__data__structures__pwm.html#a56238b382fcdc092a9fa1cfdaa735552", null ],
-      [ "overflowMode", "group__group__tcpwm__data__structures__pwm.html#a92f470198a5227a4c629dbc5d42dca25", null ],
-      [ "underflowMode", "group__group__tcpwm__data__structures__pwm.html#ae9e87696b19fb526f5bcc39c077922ea", null ]
+      [ "countDirectionMode", "group__group__tcpwm__data__structures__pwm.html#a3d4a328487598d0af6e800a41f459990", null ],
+      [ "cc0MatchMode", "group__group__tcpwm__data__structures__pwm.html#a8d23f1b827b1560f3e690f9e63f0dd2c", null ],
+      [ "cc1MatchMode", "group__group__tcpwm__data__structures__pwm.html#a447abb3b520a5b437348a50f0d340b03", null ],
+      [ "overflowMode", "group__group__tcpwm__data__structures__pwm.html#adfe607a0385fcf5bdfc701d8844b6c98", null ],
+      [ "underflowMode", "group__group__tcpwm__data__structures__pwm.html#a024d76f66c3f2a44e5a999f81b7081a5", null ]
     ] ],
     [ "Cy_TCPWM_DeadTime", "group__group__tcpwm__data__structures__pwm.html#unionCy__TCPWM__DeadTime", [
       [ "u", "group__group__tcpwm__data__structures__pwm.html#a904d1913149faa91937b48618acf5671", null ]

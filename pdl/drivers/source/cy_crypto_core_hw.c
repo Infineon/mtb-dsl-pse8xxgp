@@ -57,7 +57,9 @@ CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 14.3', 2, \
 *                   Global Variables
 *******************************************************************************/
 
-static uint32_t  cy_cryptoVuMemSize = 0u;
+#if (CPUSS_CRYPTO_VU == 1u)
+static uint32_t  cy_cryptoVuMemSize;
+#endif
 
 #if !defined(CY_CRYPTO_CFG_HW_USE_MPN_SPECIFIC)
 /* This is set in Cy_Crypto_Core_Enable() to the device information relevant
@@ -197,7 +199,9 @@ void Cy_Crypto_Core_ClearVuRegisters(CRYPTO_Type *base)
         CY_CRYPTO_VU_SET_REG(base, CY_CRYPTO_VU_HW_REG0,  0u, 1u);
 
         /* Set the stack pointer to the Crypto buff size, in words */
+#if (CPUSS_CRYPTO_VU == 1u)
         CY_CRYPTO_VU_SET_REG(base, CY_CRYPTO_VU_HW_REG15, cy_cryptoVuMemSize / 4u, 1u);
+#endif
     }
 }
 
@@ -343,7 +347,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_SetVuMemoryAddress(CRYPTO_Type *base,
                     /* Set the stack pointer to the Crypto buff size, in words */
                     CY_CRYPTO_VU_SET_REG(base, CY_CRYPTO_VU_HW_REG15, vuMemSize / 4u, 1u);
 
+#if (CPUSS_CRYPTO_VU == 1u)
                     cy_cryptoVuMemSize = vuMemSize;
+#endif
 
                     resultVal = CY_CRYPTO_SUCCESS;
                 }
@@ -372,7 +378,7 @@ uint32_t Cy_Crypto_Core_GetVuMemorySize(CRYPTO_Type *base)
 {
     uint32_t memSize = CY_CRYPTO_MEM_BUFF_SIZE;
 
-#if !defined(CY_CRYPTO_CFG_HW_USE_MPN_SPECIFIC)
+#if !defined(CY_CRYPTO_CFG_HW_USE_MPN_SPECIFIC) && (CPUSS_CRYPTO_VU == 1u)
     if ( (cy_cryptoIP != NULL) && (cy_cryptoVuMemSize != 0uL))
     {
 #endif
@@ -430,7 +436,7 @@ uint32_t Cy_Crypto_Core_GetVuMemorySize(CRYPTO_Type *base)
             }
         #endif
         }
-#if !defined(CY_CRYPTO_CFG_HW_USE_MPN_SPECIFIC)
+#if !defined(CY_CRYPTO_CFG_HW_USE_MPN_SPECIFIC) && (CPUSS_CRYPTO_VU == 1u)
     }
 #endif
 
@@ -567,7 +573,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_Disable(CRYPTO_Type *base)
         #endif
     }
 
+#if (CPUSS_CRYPTO_VU == 1u)
     cy_cryptoVuMemSize = 0uL;
+#endif
 
     return (CY_CRYPTO_SUCCESS);
 }

@@ -55,7 +55,7 @@
     <ParamString id='pinNumber' default='`${getInstNumber("pin")}`' />
     <ParamString id='pinPort' default='P`${portNumber}`_`${pinNumber}`' />
     <ParamString id='driveModeExtension' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.DRIVEMODE_WIDTH", 0)}`' />
-    <ParamRange id='pullUpResAvailable' default='`${lookupExpression("GPIO.GPIO_PORT_NR[3].GPIO_PRT.RES_CFG", 0)}`' min='-1' max='1' resolution='1' />
+    <ParamRange id='pullUpResAvailable' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.RES_CFG", 0)}`' min='-1' max='1' resolution='1' />
     <ParamString id='secExtAvailable' default='`${lookupExpression("GPIO.SECEXT", lookupExpression("SECEXT", -1))}`' />
     <ParamString id='is_GPIO' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.OUT".pinNumber,1)}`' />
 
@@ -88,6 +88,7 @@
     <ParamBool id='hasSIO' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.SIO") &gt; 0}`' />
     <ParamBool id='hasPullUpRes' default='`${pullUpResAvailable ? (lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.RES_CFG") &gt; 0) : 0}`' />
     <ParamBool id='hasIRQ' default='`${lookupExpression("GPIO.GPIO_PORT_NR[" . portNumber . "].GPIO_PRT.IRQ", 0) &gt; 0}`' />
+    <ParamString id='secureVectorInfo' name='Secure interrupt vector' group='General' default='A per-port Secure interrupt vector is unavailable for this SMIF GPIO. Use ioss_interrupt_sec_gpio_IRQn.' visible='`${hasIRQ &amp;&amp; (nonSec eq 0) &amp;&amp; (findConnectedBlock("aux[0]", "smif.core") ne "") &amp;&amp; !getOrDefault(getExposedMember(findConnectedBlock("aux[0]", "smif.core"), "hasSecextIossGpio"), false)}`' editable='false' desc='Secure SMIF GPIO interrupts are delivered through the aggregate Secure GPIO interrupt vector.' />
     <!--Input-->
     <ParamChoice id='vtrip' name='Threshold' group='Input' default='CY_GPIO_VTRIP_CMOS' visible='true' editable='`${!is_mxs22ioss}`' desc='This parameter selects the threshold levels that define a logic high level (1) and a logic low level (0).' >
       <Entry name='CMOS' value='CY_GPIO_VTRIP_CMOS' visible='true' />
@@ -193,6 +194,8 @@
 
     <Variable id='smif' value='`${findConnectedBlock("aux[0]", "smif.core")}`' />
     <Variable id='hasSmifConn' value='`${smif ne ""}`' />
+    <!-- device-db driven: whether the connected SMIF core has a per-port Secure interrupt vector for SMIF GPIO pins -->
+    <Variable id='smifHasSecextIossGpio' value='`${hasSmifConn ? getOrDefault(getExposedMember(smif, "hasSecextIossGpio"), false) : false}`' />
     <Variable id='smifVersion' value='`${hasSmifConn &amp;&amp; hasExposedMember(smif, "smif_ip_version")  ? getExposedMember(smif, "smif_ip_version") : 6}`' />
     <Variable id='smifCore' value='`${ hasSmifConn ? ((smifVersion == 5) ? getInstFromLocation(findConnectedBlock("aux[0]", "smif.core"), "core") : getInstFromLocation(findConnectedBlock("aux[0]", "smif.core"), "smif")) : ""}`' />
     <Variable id='smifPortString' value='`${hasSmifConn ? ((smifVersion == 5) ? "(GPIO_PRT_Type*)SMIF0_CORE" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : (smifVersion >= 7) ? "(GPIO_PRT_Type*)SMIF" . smifCore . "_SMIF_GPIO_SMIF_PRT0" : "(GPIO_PRT_Type*)SMIF" . smifCore . "_CORE_SMIF_GPIO_SMIF_PRT0") : ""}`' />
@@ -225,7 +228,7 @@
     <ConfigDefine name='`${INST_NAME}`_INIT_DRIVESTATE' value='`${initialState}`' public='true' include='true' />
     <ConfigDefine name='`${blockName . "_HSIOM"}`' value='`${(hasSmifConn &amp;&amp; hasConnection("aux", 0)) ? "HSIOM_SEL_ACT_15" : "HSIOM_SEL_GPIO"}`' public='true' include='true' preventOverride='true' />
     <ConfigDefine name='`${INST_NAME}`_HSIOM' value='`${blockName . "_HSIOM"}`' public='true' include='`${!(INST_NAME eq blockName)}`' />
-    <ConfigDefine name='`${INST_NAME}`_IRQ' value='`${(nonSec eq 1) ? "ioss_interrupts_" : "ioss_interrupts_sec_"}`gpio_`${portNumber}`_IRQn' public='true' include='`${hasIRQ &amp;&amp; !(is_mxs40ioss &amp;&amp; (ipVersion eq 3))}`' />
+    <ConfigDefine name='`${INST_NAME}`_IRQ' value='`${(nonSec eq 1) ? "ioss_interrupts_" : "ioss_interrupts_sec_"}`gpio_`${portNumber}`_IRQn' public='true' include='`${hasIRQ &amp;&amp; !(is_mxs40ioss &amp;&amp; (ipVersion eq 3)) &amp;&amp; !(hasSmifConn &amp;&amp; !smifHasSecextIossGpio &amp;&amp; (nonSec eq 0))}`' />
     <ConfigDefine name='`${INST_NAME}`_IRQ' value='`${(deepsleep eq 1) ? "ioss_interrupts_gpio_dpslp" : "ioss_interrupts_gpio_act"}`_`${portNumber}`_IRQn' public='true' include='`${hasIRQ &amp;&amp; (is_mxs40ioss &amp;&amp; (ipVersion eq 3))}`' />
 
     <ConfigStruct name='`${INST_NAME}`_config' type='cy_stc_gpio_pin_config_t' const='`${inFlash}`' public='true' include='true' >
@@ -249,6 +252,9 @@
     </ConfigStruct>
 
     <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_GROUP_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_SLAVE_NR, CY_MMIO_SMIF`${smifMmioSuffix}`_CLK_HF_NR);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <!-- For SMIF GPIO pins: claim Secure access before any IOSS/SMIF register writes below.
+         Cy_GPIO_SetHSIOM_SecPin is a no-op in NS builds (CY_PDL_TZ_ENABLED not defined); it only executes in the secure build. -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM_SecPin(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, CY_GPIO_HSIOM_SECURE_ACCESS);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (secExtAvailable eq 1)}`' />
     <!-- For SMIF pins used as GPIO (AUX not connected): route SMIF output to pad by setting IOSS-side HSIOM to ACT_14.
          GPIO_PRT is NOT a SMIF address, so Cy_GPIO_SetHSIOM writes directly to IOSS HSIOM (no SMIF redirect).
          ACT_14 on IOSS HSIOM connects the SMIF active function output to the physical pad. -->
@@ -260,18 +266,17 @@
          Instead, configure only the registers that exist in the SMIF GPIO port: HSIOM, CFG, OUT. -->
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${INST_NAME}`_HSIOM);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetDrivemode(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${DriveModes}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <!-- SMIF GPIO port's CFG_SLEW_EXT/CFG_DRIVE_EXT0/1 have the same layout as the IOSS port, so the
+         configured Slew Rate/Drive Strength must be applied explicitly since Cy_GPIO_Pin_Init is skipped. -->
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetSlewRate(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${slewRate}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetDriveSel(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${extended_drive_sel ? extended_driveStrength : driveStrength}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
     <!-- SMIF GPIO: OUT_SET/OUT_CLR/OUT_INV are non-functional; must write OUT register directly -->
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_WriteDirectOut(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${initialState}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0)}`' guard='defined(CY_MMIO_SMIF`${smifMmioSuffix}`_PERI_NR)' />
-    <!-- For SMIF GPIO pins: set the IOSS port security attribute (nonSec) BEFORE interrupt config.
-         Changing pin security attribute clears INTR_MASK, so this must come first.
-         Cy_GPIO_Pin_Init normally handles this, but since we skip it for SMIF GPIO, we must call it explicitly.
-         Cy_GPIO_SetHSIOM_SecPin is a no-op in NS builds (CY_PDL_TZ_ENABLED not defined); it only executes in the secure build. -->
-    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM_SecPin(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, `${nonSec}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (secExtAvailable eq 1)}`' />
-    <!-- For SMIF GPIO pins: interrupt config (INTR_CFG, INTR_MASK) must go through IOSS GPIO_PRT, not the SMIF port.
-         These must come AFTER SetHSIOM_SecPin because the security transition clears INTR_MASK. -->
+    <!-- For SMIF GPIO pins: interrupt config (INTR_CFG, INTR_MASK) must go through IOSS GPIO_PRT, not the SMIF port. -->
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetInterruptEdge(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, `${isrTrigger}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (isrTrigger ne "CY_GPIO_INTR_DISABLE")}`' />
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_ClearInterrupt(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (isrTrigger ne "CY_GPIO_INTR_DISABLE")}`' />
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetInterruptMask(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, 1UL);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (isrTrigger ne "CY_GPIO_INTR_DISABLE")}`' />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetHSIOM_SecPin(GPIO_PRT`${portNumber}`, `${INST_NAME}`_PIN, `${nonSec}`);' include='`${hasSmifConn &amp;&amp; !hasConnection("aux", 0) &amp;&amp; (secExtAvailable eq 1) &amp;&amp; (nonSec eq 1)}`' />
     <ConfigInstruction purpose='INITIALIZE' value='Cy_GPIO_SetDriveSelTrim(`${INST_NAME}`_PORT, `${INST_NAME}`_PIN, `${driveStrengthTrim}`);' include='`${hasDriveStrengthTrim &amp;&amp; !(hasSmifConn &amp;&amp; !hasConnection("aux", 0))}`' />
   </ConfigFirmware>
 </PersonalityTemplate>

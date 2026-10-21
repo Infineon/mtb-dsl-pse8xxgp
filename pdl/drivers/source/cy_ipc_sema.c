@@ -245,11 +245,11 @@ cy_en_ipcsema_status_t Cy_IPC_Sema_InitExt(uint32_t ipcChannel, cy_stc_ipc_sema_
     /* Cache the trustworthy values for usage in subsequent function calls. */
     if (CY_IPC_SEMA_SUCCESS == retStatus)
     {
-        memcpy(&cy_semaStruct, ipcSema, sizeof(cy_semaStruct));
+        (void)memcpy(&cy_semaStruct, ipcSema, sizeof(cy_semaStruct));
     }
     else
     {
-        memset(&cy_semaStruct, 0u, sizeof(cy_semaStruct));
+        (void)memset(&cy_semaStruct, 0u, sizeof(cy_semaStruct));
     }
     #endif
 
@@ -569,8 +569,6 @@ cy_en_ipcsema_status_t Cy_IPC_Sema_Status(uint32_t semaNumber)
     {
         return retStatus;
     }
-
-    retStatus = CY_IPC_SEMA_LOCKED; /* Assume locked until we determine otherwise */
 
 #if (CY_IPC_DRV_CACHE_PRESENT)
     SCB_InvalidateDCache_by_Addr((uint32_t*)&semaStruct->maxSema, (int32_t)sizeof(semaStruct->maxSema));

@@ -73,19 +73,19 @@ void Cy_Crypto_Core_V2_MemCpy(CRYPTO_Type *base, void* dst, void const *src, uin
     if (size != 0U)
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
         if(((uint32_t)src & 0x1FU) == 0u)
         {
 
-            SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)size);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)size);
 
         }
 
         if(((uint32_t)dst & 0x1FU) == 0u)
         {
 
-            SCB_InvalidateDCache_by_Addr((volatile void *)dst,(int32_t)size);
+            CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst,(int32_t)size);
 
         }
 
@@ -143,11 +143,11 @@ void Cy_Crypto_Core_V2_MemSet(CRYPTO_Type *base, void* dst, uint8_t data, uint16
 
         dstRemap = CY_REMAP_ADDRESS_FOR_CRYPTO(dst);
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         if(((uint32_t)dst & 0x1FU) == 0u)
         {
 
-            SCB_InvalidateDCache_by_Addr((volatile void *)dst,(int32_t)size);
+            CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst,(int32_t)size);
 
         }
 
@@ -207,19 +207,19 @@ uint32_t Cy_Crypto_Core_V2_MemCmp(CRYPTO_Type *base, void const *src0, void cons
     if (size != 0U)
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
     if(((uint32_t)src0 & 0x1FU) == 0u)
     {
 
-        SCB_CleanDCache_by_Addr((volatile void *)src0,(int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src0,(int32_t)size);
 
     }
 
     if(((uint32_t)src1 & 0x1FU) == 0u)
     {
 
-        SCB_CleanDCache_by_Addr((volatile void *)src1,(int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src1,(int32_t)size);
 
     }
 
@@ -291,21 +291,21 @@ void Cy_Crypto_Core_V2_MemXor(CRYPTO_Type *base,
     if (size != 0U)
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
         if(((uint32_t)src0 & 0x1FU) == 0u)
         {
-            SCB_CleanDCache_by_Addr((volatile void *)src0,(int32_t)size);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)src0,(int32_t)size);
         }
 
         if(((uint32_t)src1 & 0x1FU) == 0u)
         {
-            SCB_CleanDCache_by_Addr((volatile void *)src1,(int32_t)size);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)src1,(int32_t)size);
         }
 
         if(((uint32_t)dst & 0x1FU) == 0u)
         {
-            SCB_InvalidateDCache_by_Addr((volatile void *)dst,(int32_t)size);
+            CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst,(int32_t)size);
         }
 
 

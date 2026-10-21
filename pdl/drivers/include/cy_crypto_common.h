@@ -52,26 +52,50 @@ extern "C" {
 #define CY_CRYPTO_DRV_VERSION_MINOR         150
 
 
-/** Rounds off value to nearest multiple of 32 */
+/*******************************************************************************
+* Cache maintenance abstraction
+*
+* CM7/CM55: internal DCache via CMSIS SCB APIs
+* CM33 : SoC-level CCACHE on SAHB via Cy_ARMCACHE driver
+*******************************************************************************/
 #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+    #define CY_CRYPTO_DCACHE_ENABLED         1
+    #define CY_CRYPTO_CACHE_LINE_SIZE        __SCB_DCACHE_LINE_SIZE
+    #define CY_CRYPTO_CLEAN_DCACHE(addr, size) \
+        SCB_CleanDCache_by_Addr((volatile void *)(addr), (int32_t)(size))
+    #define CY_CRYPTO_INVALIDATE_DCACHE(addr, size) \
+        SCB_InvalidateDCache_by_Addr((volatile void *)(addr), (int32_t)(size))
+#elif ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
+    #include "cy_arm_cache.h"
+    #define CY_CRYPTO_DCACHE_ENABLED         1
+    #define CY_CRYPTO_CACHE_LINE_SIZE        CY_ARM_CACHE_LINE_BYTES
+    #define CY_CRYPTO_CLEAN_DCACHE(addr, size) \
+        (void)Cy_ARMCACHE_CleanRange(CY_CM33_0_ARM_CACHE_SAHB, (uintptr_t)(addr), (size_t)(size))
+    #define CY_CRYPTO_INVALIDATE_DCACHE(addr, size) \
+        (void)Cy_ARMCACHE_InvalidateRange(CY_CM33_0_ARM_CACHE_SAHB, (uintptr_t)(addr), (size_t)(size))
+#else
+    #define CY_CRYPTO_DCACHE_ENABLED         0
+#endif
+
+/** Rounds off value to nearest multiple of cache line size */
+#if CY_CRYPTO_DCACHE_ENABLED
 /** Rounds off size x in bytes to nearest multiple of 32 */
 #define CY_CRYPTO_ALIGN_CACHE_LINE(x)        ((uint32_t)(((x) + 31u) & ~31u))
 /** Rounds off size x in int word to nearest multiple of 32 */
 #define CY_CRYPTO_ALIGN_CACHE_LINE_WORD(x)   (CY_CRYPTO_ALIGN_CACHE_LINE(x*4u)/4u)
-#define CY_CRYPTO_DCAHCE_PADDING_SIZE        (__SCB_DCACHE_LINE_SIZE)
-#define CY_CRYPTO_DCAHCE_PADDING_SIZE_WORD   (__SCB_DCACHE_LINE_SIZE/4u)
-#define TYPE                                 uint8_t
+#define CY_CRYPTO_DCAHCE_PADDING_SIZE        (CY_CRYPTO_CACHE_LINE_SIZE)
+#define CY_CRYPTO_DCAHCE_PADDING_SIZE_WORD   (CY_CRYPTO_CACHE_LINE_SIZE/4u)
+#define CY_CRYPTO_PADDING_TYPE               uint8_t
 
-#define CY_CRYPTO_PADDING_FILLSIZE           dummy[__SCB_DCACHE_LINE_SIZE];
+#define CY_CRYPTO_PADDING_FILLSIZE           dummy[CY_CRYPTO_CACHE_LINE_SIZE];
 /* Fill CACHE line size dummy bytes */
-#define CY_CRYPTO_DCAHCE_PADDING_BYTES       TYPE CY_CRYPTO_PADDING_FILLSIZE
+#define CY_CRYPTO_DCAHCE_PADDING_BYTES       CY_CRYPTO_PADDING_TYPE CY_CRYPTO_PADDING_FILLSIZE
 
 #define CY_CRYPTO_PADDING_ALIGN_FILLSIZE(x, y)  dummy_##y[CY_CRYPTO_ALIGN_CACHE_LINE(x)-((uint32_t)x)];
 /* Fill dummy bytes to align to 32byte multiple size.(x-size, y-number to append for naming resolution */
-#define CY_CRYPTO_DCAHCE_ALIGN_NEXT(x, y)       TYPE CY_CRYPTO_PADDING_ALIGN_FILLSIZE(x, y)
+#define CY_CRYPTO_DCAHCE_ALIGN_NEXT(x, y)       CY_CRYPTO_PADDING_TYPE CY_CRYPTO_PADDING_ALIGN_FILLSIZE(x, y)
 /* returns 32 byte aligned address */
 #define CY_CRYPTO_DCACHE_ALIGN_ADDRESS(x)    CY_CRYPTO_ALIGN_CACHE_LINE((uint32_t)x)
-/*(((uint32_t)x) + (((uint32_t)__SCB_DCACHE_LINE_SIZE) - (((uint32_t)x) & 0x1Fu)))*/
 #else
 #define CY_CRYPTO_ALIGN_CACHE_LINE(x)        (x)
 #define CY_CRYPTO_ALIGN_CACHE_LINE_WORD(x)   (x)
@@ -80,16 +104,16 @@ extern "C" {
 #define CY_CRYPTO_DCAHCE_PADDING_BYTES
 #define CY_CRYPTO_DCAHCE_ALIGN_NEXT(x,y)
 #define CY_CRYPTO_DCACHE_ALIGN_ADDRESS(x)    ((uint32_t)x)
-#endif /* #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55) */
+#endif /* CY_CRYPTO_DCACHE_ENABLED */
 
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
-#define CRYPTO_MEM_ALIGN /*CY_ALIGN(__SCB_DCACHE_LINE_SIZE)*/
+#if CY_CRYPTO_DCACHE_ENABLED
+#define CRYPTO_MEM_ALIGN /*CY_ALIGN(CY_CRYPTO_CACHE_LINE_SIZE)*/
 #else
 #define CRYPTO_MEM_ALIGN
 #endif
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
 //#define CRYPTO_MEM_ALIGN_4  CRYPTO_MEM_ALIGN
 #define CRYPTO_MEM_ALIGN_4  CY_ALIGN(4)
 #else
@@ -351,7 +375,7 @@ typedef struct
 #endif /* (CPUSS_CRYPTO_VU == 1) && defined(CY_CRYPTO_CFG_RSA_C) */
 
 /** Crypto Driver PDL ID */
-#define CY_CRYPTO_ID                        CY_PDL_DRV_ID(0x0Cu)
+#define CY_CRYPTO_ID                        CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_CRYPTO)
 
 /** \} group_crypto_macros */
 

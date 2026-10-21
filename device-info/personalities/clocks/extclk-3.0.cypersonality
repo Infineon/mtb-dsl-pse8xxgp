@@ -51,7 +51,7 @@
     <!-- PDL documentation -->
     <ParamDoc id='pdlDoc' name='Configuration Help' group='Overview' default='file:///`${cy_libs_path()}`/docs/html/group__group__sysclk__ext.html' linkText='Open External Clock Source Documentation' visible='true' desc='Opens the Peripheral Driver Library Documentation' />
 
-    <ParamString id='maxFrequency' default='`${min(getDeviceAttr("CPU_MAX_MHZ"), 100)}`' desc='Maximum allowed external clock frequency in MHz for the device' />
+    <ParamRange id="maxFrequency" name="Max Frequency (MHz)" group="Internal" default="`${getDeviceAttr(&quot;CPU_MAX_MHZ&quot;) &gt; 100 ? 100.000 : getDeviceAttr(&quot;CPU_MAX_MHZ&quot;)}`" min="0.001" max="100.000" resolution="0.001" visible="false" editable="false" desc="The maximum EXTCLK frequency" />
 
     <ParamRange id='extFrequency' name='Frequency (MHz)' group='General' default='24.000' min='0.001' max='100' resolution='0.001' visible='true' desc='The frequency of the external clock source provided on the EXTCLK pin' />
     <ParamString id='frequency' default='`${extFrequency * 1000000}`' />

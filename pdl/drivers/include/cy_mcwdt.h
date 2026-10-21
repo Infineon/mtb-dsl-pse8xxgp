@@ -164,7 +164,7 @@ extern "C" {
 
 /** \endcond */
 
-#define CY_MCWDT_ID       CY_PDL_DRV_ID(0x35u)                      /**< MCWDT PDL ID */
+#define CY_MCWDT_ID       CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_MCWDT)                      /**< MCWDT PDL ID */
 
 #define CY_MCWDT_CTR0     (1UL << CY_MCWDT_CTR0_Pos)                /**< The sub-counter#0 mask. This macro is used with functions
                                                                    that handle multiple counters, including Cy_MCWDT_Enable(),

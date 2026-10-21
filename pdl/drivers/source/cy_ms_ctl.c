@@ -127,6 +127,8 @@ cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigBusMaster(en_ms_ctl_master_t busMaster, bo
 *******************************************************************************/
 cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgResp(en_ms_ctl_master_sc_acg_t busMaster, cy_en_ms_ctl_cfg_gate_resp_t gateResp, cy_en_ms_ctl_sec_resp_t secResp)
 {
+    cy_en_ms_ctl_status_t status = CY_MS_CTL_SUCCESS;
+    bool badParam = false;
     uint32_t *reg = NULL;
     uint32_t gate_mask = 0, gate_pos = 0, sec_mask = 0, sec_pos = 0;
 
@@ -191,15 +193,24 @@ cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgResp(en_ms_ctl_master_sc_acg_t busMa
             break;
     #endif
         default:
-            return CY_MS_CTL_BAD_PARAM;
+            status = CY_MS_CTL_BAD_PARAM;
+            badParam = true;
+            break;
     }
 
-    Cy_Ms_Ctl_SetMscAcgResp(reg, gate_mask, gate_pos, gateResp, sec_mask, sec_pos, secResp);
+    if ((!badParam) && (NULL != reg))
+    {
+        Cy_Ms_Ctl_SetMscAcgResp(reg, gate_mask, gate_pos, gateResp, sec_mask, sec_pos, secResp);
+    }
+    else
+    {
+        status = CY_MS_CTL_BAD_PARAM;
+    }
 
-    return CY_MS_CTL_SUCCESS;
+    return status;
 }
 
-#if ((CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
+#if (defined (CY_IP_MXS22RRAMC) && (CY_IP_MXS22RRAMC_VERSION == 2) && ((CY_IP_MXS22RRAMC_VERSION_MINOR == 0) || (CY_IP_MXS22RRAMC_VERSION_MINOR == 1)))
 
 uint32_t Cy_Ms_Ctl_GetActivePC_S(en_ms_ctl_master_t busMaster)
 {
@@ -374,6 +385,8 @@ cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigBusMasterV1(en_ms_ctl_master_t busMaster, 
 *******************************************************************************/
 cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgRespV1(en_ms_ctl_master_sc_acg_v1_t busMaster, cy_en_ms_ctl_cfg_gate_resp_t gateResp, cy_en_ms_ctl_sec_resp_t secResp)
 {
+    cy_en_ms_ctl_status_t status = CY_MS_CTL_SUCCESS;
+    bool badParam = false;
     uint32_t *reg = NULL;
     uint32_t gate_mask = 0, gate_pos = 0, sec_mask = 0, sec_pos = 0;
 
@@ -517,12 +530,21 @@ cy_en_ms_ctl_status_t Cy_Ms_Ctl_ConfigMscAcgRespV1(en_ms_ctl_master_sc_acg_v1_t 
     #endif /* CY_IP_M55APPCPUSS_VERSION_MINOR >= 2 */
     #endif /* CY_IP_M55APPCPUSS_VERSION >= 1 */
         default:
-            return CY_MS_CTL_BAD_PARAM;
+            status = CY_MS_CTL_BAD_PARAM;
+            badParam = true;
+            break;
     }
 
-    Cy_Ms_Ctl_SetMscAcgResp(reg, gate_mask, gate_pos, gateResp, sec_mask, sec_pos, secResp);
+    if ((!badParam) && (NULL != reg))
+    {
+        Cy_Ms_Ctl_SetMscAcgResp(reg, gate_mask, gate_pos, gateResp, sec_mask, sec_pos, secResp);
+    }
+    else
+    {
+        status = CY_MS_CTL_BAD_PARAM;
+    }
 
-    return CY_MS_CTL_SUCCESS;
+    return status;
 }
 
 #endif /* #if defined (CY_IP_M55APPCPUSS) */

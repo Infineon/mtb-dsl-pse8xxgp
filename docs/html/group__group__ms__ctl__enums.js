@@ -41,8 +41,28 @@ var group__group__ms__ctl__enums =
       [ "CY_MS_CTL_ID_RESERVED", "group__group__ms__ctl__enums.html#ggad39353bf3922611b74d786d11d4b162caa94ee082bdc0ad8cf3f8183f25a328c8", null ],
       [ "CY_MS_CTL_ID_TC_MS", "group__group__ms__ctl__enums.html#ggad39353bf3922611b74d786d11d4b162caf19d4487b923b6ad6bcac11e8770bff0", null ]
     ] ],
-    [ "en_ms_ctl_master_sc_acg_t", "group__group__ms__ctl__enums.html#ga8f077c1a170b8f608b695f41af1165b2", null ],
-    [ "en_ms_ctl_master_sc_acg_v1_t", "group__group__ms__ctl__enums.html#gada123c0e487d495d708d6765765e7268", null ],
+    [ "en_ms_ctl_master_sc_acg_t", "group__group__ms__ctl__enums.html#ga8f077c1a170b8f608b695f41af1165b2", [
+      [ "CODE_MS0_MSC", "group__group__ms__ctl__enums.html#gga8f077c1a170b8f608b695f41af1165b2a23fe006d55bd970f45e2ff1401e6aa42", null ],
+      [ "SYS_MS0_MSC", "group__group__ms__ctl__enums.html#gga8f077c1a170b8f608b695f41af1165b2a0df83517e024d4c325562f43d5771a7a", null ],
+      [ "SYS_MS1_MSC", "group__group__ms__ctl__enums.html#gga8f077c1a170b8f608b695f41af1165b2ac854b2105a94d95eb66d93fcc092933b", null ],
+      [ "EXP_MS_MSC", "group__group__ms__ctl__enums.html#gga8f077c1a170b8f608b695f41af1165b2a37c0cfa3ce87bf4ec163dbdc96309ec9", null ],
+      [ "DMAC0_MSC", "group__group__ms__ctl__enums.html#gga8f077c1a170b8f608b695f41af1165b2ab06b83dc9c46fbae9aacb5e9d5c5fe85", null ],
+      [ "DMAC1_MSC", "group__group__ms__ctl__enums.html#gga8f077c1a170b8f608b695f41af1165b2aff8ffc7cf3b1445790f85b01a594b0d8", null ]
+    ] ],
+    [ "en_ms_ctl_master_sc_acg_v1_t", "group__group__ms__ctl__enums.html#gada123c0e487d495d708d6765765e7268", [
+      [ "APP_SYS_MS0_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268ad262d5f6777c6d6532d84570945eff2d", null ],
+      [ "APP_SYS_MS1_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a79d5cd13f022758c13dd21e1b28dfcda", null ],
+      [ "APP_AXIDMAC0_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a0fd1a74146c20ff75be40a4e07217fe0", null ],
+      [ "APP_AXIDMAC1_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a27f1ce6fcec526cb1c4605a4c3a01a15", null ],
+      [ "APP_AXI_MS0_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a5e746887d59d87bbb61d146edc213b83", null ],
+      [ "APP_AXI_MS1_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a59609b90956f621b314c9a5379875e2b", null ],
+      [ "APP_AXI_MS2_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a45d7927947f4a5c130f2ef4633698a36", null ],
+      [ "APP_AXI_MS3_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268aef75765e9f85df099e37bf8b2868a1c3", null ],
+      [ "APP_EXP_MS0_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268ace0c876d4384e914011696a03b74ef9a", null ],
+      [ "APP_EXP_MS1_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a3c2ed504439272486f604699396d4577", null ],
+      [ "APP_EXP_MS2_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a12839ca073c2549983046850a92fb2d8", null ],
+      [ "APP_EXP_MS3_MSC", "group__group__ms__ctl__enums.html#ggada123c0e487d495d708d6765765e7268a3f065b9114fd2ca46396099f96c0da70", null ]
+    ] ],
     [ "cy_en_ms_ctl_cfg_gate_resp_t", "group__group__ms__ctl__enums.html#gaab2499fc22e5ca081a46b3cf762e622b", [
       [ "CY_MS_CTL_GATE_RESP_WAITED_TRFR", "group__group__ms__ctl__enums.html#ggaab2499fc22e5ca081a46b3cf762e622ba5c5707431b653dc24bbe4a27e8a31966", null ],
       [ "CY_MS_CTL_GATE_RESP_ERR", "group__group__ms__ctl__enums.html#ggaab2499fc22e5ca081a46b3cf762e622ba75e82b11b87226881ec7cc0f1c6614a9", null ]

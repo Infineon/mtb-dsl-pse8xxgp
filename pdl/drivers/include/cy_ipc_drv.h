@@ -312,7 +312,7 @@
 #define CY_IPC_NO_NOTIFICATION         (uint32_t)(0x00000000UL)
 
 /* Error Code constants */
-#define CY_IPC_ID CY_PDL_DRV_ID(0x22u)  /**< Software PDL driver ID for IPC */
+#define CY_IPC_ID CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_IPC)  /**< Software PDL driver ID for IPC */
 
 /** Return prefix for IPC driver function status codes */
 #define CY_IPC_ID_INFO    (uint32_t)( CY_IPC_ID | CY_PDL_STATUS_INFO )

@@ -146,6 +146,9 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SECTION_SHAREDMEM_SEC</b>&#160;&#160;&#160;CY_SECTION(&quot;.cy_sharedmem_sec&quot;)</td></tr>
 <tr class="memdesc:gaffa03f0f4964652cf1e8981829e56214"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define variable to be placed to the secured shared SRAM area by the linker. <br /></td></tr>
 <tr class="separator:gaffa03f0f4964652cf1e8981829e56214"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6c5996f1868dc896d1df6b083eb0ee44"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__syslib__section__macros.html#ga6c5996f1868dc896d1df6b083eb0ee44">CY_SECTION_NON_CACHE</a>&#160;&#160;&#160;CY_SECTION(&quot;.cy_non_cache&quot;)</td></tr>
+<tr class="memdesc:ga6c5996f1868dc896d1df6b083eb0ee44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define variable to be placed to the non cached area by the linker.  <br /></td></tr>
+<tr class="separator:ga6c5996f1868dc896d1df6b083eb0ee44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1ee9ec1a465f6c127790e0077a5bdc27"><td class="memItemLeft" align="right" valign="top"><a id="ga1ee9ec1a465f6c127790e0077a5bdc27" name="ga1ee9ec1a465f6c127790e0077a5bdc27"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_SECTION_SOCMEMSRAMCODE_BEGIN</b>&#160;&#160;&#160;CY_SECTION(&quot;.cy_socmem_code&quot;)</td></tr>
 <tr class="memdesc:ga1ee9ec1a465f6c127790e0077a5bdc27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define start of code to be placed to the SOCMEMSRAM area by the linker. <br /></td></tr>
@@ -179,6 +182,23 @@ Macros</h2></td></tr>
 
 <p>Define variable to be placed to the shared SRAM area by the linker. </p>
 <p>This memory region is un-cached for CM55 core </p>
+
+</div>
+</div>
+<a id="ga6c5996f1868dc896d1df6b083eb0ee44" name="ga6c5996f1868dc896d1df6b083eb0ee44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6c5996f1868dc896d1df6b083eb0ee44">&#9670;&#160;</a></span>CY_SECTION_NON_CACHE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CY_SECTION_NON_CACHE&#160;&#160;&#160;CY_SECTION(&quot;.cy_non_cache&quot;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Define variable to be placed to the non cached area by the linker. </p>
+<p>This memory region is non cached for both CM33 and CM55 core </p>
 
 </div>
 </div>

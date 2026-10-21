@@ -91,6 +91,7 @@ $(document).ready(function(){initNavTree('group__group__tcpwm__data__structures_
 
 <div class="header">
   <div class="summary">
+<a href="#groups">API Reference</a> &#124;
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">Data Structures<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a> &raquo; <a class="el" href="group__group__tcpwm.html">TCPWM        (Timer Counter PWM)</a> &raquo; <a class="el" href="group__group__tcpwm__pwm.html">PWM (TCPWM)</a></div></div></div>
@@ -98,6 +99,15 @@ $(document).ready(function(){initNavTree('group__group__tcpwm__data__structures_
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">General Description</h2>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
+API Reference</h2></td></tr>
+<tr class="memitem:group__group__tcpwm__pwm__output__action"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__tcpwm__pwm__output__action.html">PWM CC Match / Overflow / Underflow Actions</a></td></tr>
+<tr class="memdesc:group__group__tcpwm__pwm__output__action"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the PWM output line action performed on a CC0/CC1 match, overflow or underflow event. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__tcpwm__pwm__count__direction__mode"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__tcpwm__pwm__count__direction__mode.html">PWM Count Direction Mode</a></td></tr>
+<tr class="memdesc:group__group__tcpwm__pwm__count__direction__mode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the PWM counter direction/mode. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:structcy__stc__tcpwm__pwm__config__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__tcpwm__data__structures__pwm.html#structcy__stc__tcpwm__pwm__config__t">cy_stc_tcpwm_pwm_config_t</a></td></tr>
@@ -551,14 +561,15 @@ Outputs line_out and line_out_compl_out while the TCPWM counter is disabled or s
 <td class="fieldname">
 deadTimeClocksBuff</td>
 <td class="fielddoc">
-Buffer value for the number of dead time-clocks if PWM with dead time is chosen. <p>Can be swapped with Line out on a terminal count event. </p>
+Buffer value for the number of dead time-clocks for line out if PWM with dead time is chosen. <p>Shadow-transfers into deadTimeClocks on a terminal count event only when buffer_swap_enable is false (shadow-copy mode). Has no effect when buffer_swap_enable is true, because dead time switching is not supported for the buffered DT registers. </p>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="ac700d4f8834d9702fdcfb3478627e7e3" name="ac700d4f8834d9702fdcfb3478627e7e3"></a>uint16_t</td>
 <td class="fieldname">
 deadTimeClocksBuff_linecompl_out</td>
 <td class="fielddoc">
-The number of dead time-clocks for line compl out if PWM with dead time is chosen. </td></tr>
+Buffer value for the number of dead time-clocks for line compl out if PWM with dead time is chosen. <p>Shadow-transfers into deadTimeClocks_linecompl_out on a terminal count event only when buffer_swap_enable is false (shadow-copy mode). Has no effect when buffer_swap_enable is true, because dead time switching is not supported for the buffered DT registers. </p>
+</td></tr>
 <tr><td class="fieldtype">
 <a id="a67a6184cfff26a9bbd37430308da4891" name="a67a6184cfff26a9bbd37430308da4891"></a>bool</td>
 <td class="fieldname">
@@ -611,46 +622,46 @@ debug_suspend_enable</td>
 <td class="fielddoc">
 Specifies the counter behavior in debug mode when suspend is enabled. </td></tr>
 <tr><td class="fieldtype">
-<a id="a35bd7fab8f3f5b211851713449aea167" name="a35bd7fab8f3f5b211851713449aea167"></a>uint8_t</td>
-<td class="fieldname">
-upDownMode</td>
-<td class="fielddoc">
-Custom alignment counter direction/mode: 0 = Count Up, 1 = Count Down, 2/3 = Count Up/Down. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
-</td></tr>
-<tr><td class="fieldtype">
 <a id="a78d4fcef965acbb67821fd2d3ccb3dcf" name="a78d4fcef965acbb67821fd2d3ccb3dcf"></a>uint32_t</td>
 <td class="fieldname">
 initialCountVal</td>
 <td class="fielddoc">
-Custom alignment initial counter value loaded when the counter starts. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+Initial counter value loaded when the counter starts. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a006986df22cd26697690eeb935b6cb0d" name="a006986df22cd26697690eeb935b6cb0d"></a>uint8_t</td>
+<a id="a3d4a328487598d0af6e800a41f459990" name="a3d4a328487598d0af6e800a41f459990"></a><a class="el" href="group__group__tcpwm__pwm__count__direction__mode.html#ga30a6c6c8e90b2f6b9cc729de8dc56bba">cy_en_pwm_count_direction_t</a></td>
+<td class="fieldname">
+countDirectionMode</td>
+<td class="fielddoc">
+Counter direction mode. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a8d23f1b827b1560f3e690f9e63f0dd2c" name="a8d23f1b827b1560f3e690f9e63f0dd2c"></a><a class="el" href="group__group__tcpwm__pwm__output__action.html#ga565e7bb57bb6726e95414663849629bc">cy_en_pwm_output_action_t</a></td>
 <td class="fieldname">
 cc0MatchMode</td>
 <td class="fielddoc">
-Custom alignment output line action on a Compare 0 (CC0) match: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+Output line action on a Compare 0 (CC0) match. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a56238b382fcdc092a9fa1cfdaa735552" name="a56238b382fcdc092a9fa1cfdaa735552"></a>uint8_t</td>
+<a id="a447abb3b520a5b437348a50f0d340b03" name="a447abb3b520a5b437348a50f0d340b03"></a><a class="el" href="group__group__tcpwm__pwm__output__action.html#ga565e7bb57bb6726e95414663849629bc">cy_en_pwm_output_action_t</a></td>
 <td class="fieldname">
 cc1MatchMode</td>
 <td class="fielddoc">
-Custom alignment output line action on a Compare 1 (CC1) match: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a> and the counter supports CC1. </p>
+Output line action on a Compare 1 (CC1) match. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a92f470198a5227a4c629dbc5d42dca25" name="a92f470198a5227a4c629dbc5d42dca25"></a>uint8_t</td>
+<a id="adfe607a0385fcf5bdfc701d8844b6c98" name="adfe607a0385fcf5bdfc701d8844b6c98"></a><a class="el" href="group__group__tcpwm__pwm__output__action.html#ga565e7bb57bb6726e95414663849629bc">cy_en_pwm_output_action_t</a></td>
 <td class="fieldname">
 overflowMode</td>
 <td class="fielddoc">
-Custom alignment output line action on a counter overflow: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+Output line action on a counter overflow. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
 </td></tr>
 <tr><td class="fieldtype">
-<a id="ae9e87696b19fb526f5bcc39c077922ea" name="ae9e87696b19fb526f5bcc39c077922ea"></a>uint8_t</td>
+<a id="a024d76f66c3f2a44e5a999f81b7081a5" name="a024d76f66c3f2a44e5a999f81b7081a5"></a><a class="el" href="group__group__tcpwm__pwm__output__action.html#ga565e7bb57bb6726e95414663849629bc">cy_en_pwm_output_action_t</a></td>
 <td class="fieldname">
 underflowMode</td>
 <td class="fielddoc">
-Custom alignment output line action on a counter underflow: 0 = Set, 1 = Clear, 2 = Invert, 3 = No Change. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
+Output line action on a counter underflow. <p>Applied only when <a class="el" href="group__group__tcpwm__data__structures__pwm.html#a44305a03f21dd618f4dcd4f0020c1917">cy_stc_tcpwm_pwm_config_t::pwmAlignment</a> is <a class="el" href="group__group__tcpwm__pwm__alignment.html#ga8c2177241fb8aaf46e4481a02d7f00fa">CY_TCPWM_PWM_CUSTOM_ALIGN</a>. </p>
 </td></tr>
 </table>
 

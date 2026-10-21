@@ -91,7 +91,8 @@ $(document).ready(function(){initNavTree('group__group__rram.html',''); initResi
 
 <div class="header">
   <div class="summary">
-<a href="#groups">API Reference</a>  </div>
+<a href="#groups">API Reference</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">RRAM (Resistive Random Access Memory)<div class="ingroups"><a class="el" href="group__group__pdl__top.html">PDL API Reference</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -99,6 +100,7 @@ $(document).ready(function(){initNavTree('group__group__rram.html',''); initResi
 <p>Resistive Random Access Memory (RRAM) is a type of non-volatile memory used on MXS22 platform devices in place of FLASH and OTP memory. </p>
 <p>RRAM is organized as an NVM region and an Extra area. The NVM region is further divided into MAIN (code), Em_EEPROM, SupMEM (Supervisory), and PROTECTED sub regions. The Extra area is partitioned into an OTP region and a configuration space region. The OTP region is further divided into PROTECTED_OTP (including BootRow and UDS), General OTP data, and BISR SRAM repair OTP regions. The exact sizes of the NVM and Extra regions, and of their sub regions, are device-dependent; refer to the device datasheet and the technical reference manual (TRM) for the values applicable to a particular device.</p>
 <p>RRAM driver provides APIs to Read/Write from/to RRAM memory, Enable/Disable RRAM sleep mode, Write protection. The functions and other declarations used in this driver are in cy_rram.h You can include cy_pdl.h to get access to all functions and declarations in the PDL.h</p>
+<p>Read APIs will reset the previous read operation ECC related errors.</p>
 <h1><a class="anchor" id="group_rram_configuration"></a>
 Configuration Considerations</h1>
 <p>The RRAM driver provides the API to read and write to RRAM memory. No configuration is needed.</p>
@@ -112,8 +114,16 @@ API Reference</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__rram__functions"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__rram__functions.html">Functions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__rram__data__structures"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__rram__data__structures.html">Group_rram_data_structures</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__rram__macros"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__rram__macros.html">Macros</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:gaef516ae0935207f4f75fcb4674651f2a"><td class="memItemLeft" align="right" valign="top"><a id="gaef516ae0935207f4f75fcb4674651f2a" name="gaef516ae0935207f4f75fcb4674651f2a"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CY_RRAMC_NUM_MACROS_MUL</b>&#160;&#160;&#160;1u</td></tr>
+<tr class="separator:gaef516ae0935207f4f75fcb4674651f2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

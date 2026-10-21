@@ -458,6 +458,6 @@
     </ConfigStruct>
 
     <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriGroupSlaveInit(CY_MMIO_TCPWM`${tcpwmInst}`_PERI_NR, CY_MMIO_TCPWM`${tcpwmInst}`_GROUP_NR, CY_MMIO_TCPWM`${tcpwmInst}`_SLAVE_NR, CY_MMIO_TCPWM`${tcpwmInst}`_CLK_HF_NR);' include='true' guard='defined (CY_DEVICE_CONFIGURATOR_IP_ENABLE_FEATURE)' />
-    <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriphAssignDivider(`${pclkDst}`, `${getExposedMember(pclk, "clockSel")}`);' include='`${pclkOk}`'  />
+    <ConfigInstruction purpose='INITIALIZE' value='Cy_SysClk_PeriPclkAssignDivider(`${pclkDst}`, `${getExposedMember(pclk, "clockSel")}`);' include='`${pclkOk}`'  />
   </ConfigFirmware>
 </Personality>

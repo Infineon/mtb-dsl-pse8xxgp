@@ -209,7 +209,7 @@ void Cy_AXIDMAC_Descriptor_SetXloopDataCount(cy_stc_axidmac_descriptor_t * descr
 
     CY_ASSERT_L2(CY_AXIDMAC_IS_LOOP_COUNT_VALID(xCount));
     /* Convert the data count from the user's range (1-65536) into the machine range (0-65535). */
-    descriptor->xSize = _VAL2FLD(AXI_DMAC_CH_DESCR_X_SIZE_X_COUNT, xCount - 1UL);
+    descriptor->xSize = _VAL2FLD(AXI_DMAC_CH_DESCR_X_SIZE_X_COUNT, (xCount > 0UL) ? (xCount - 1UL) : 0UL);
 }
 
 

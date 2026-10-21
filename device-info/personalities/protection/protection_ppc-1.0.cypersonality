@@ -3,8 +3,8 @@
 <PersonalityTemplate id='protection_ppc' name='PPC' version='1.0' xmlns='http://cypress.com/xsd/cyhwpersonality_v14'>
   <Constants>
     <Const id="PROTECTION_LOC" value='vres[0].protection[0]'/>
-    <Const id="PPC_REGIONS" value='500'/>
-    <Const id="PPC_LOCATIONS" value='170'/>
+    <Const id="PPC_REGIONS" value='700'/>
+    <Const id="PPC_LOCATIONS" value='200'/>
     <Const id="MAX_DOMAINS" value="16" />
   </Constants>
 
@@ -66,7 +66,7 @@
                      default='`${secure_locations_ss_pp_$idx ? getInstanceFromBlock("vres[0].protection[0].domain[0]") : domain_unprotected}`'
                      visible='`${isSupported &amp;&amp; !isCustom &amp;&amp; valid_$idx}`'
                      editable='`${valid_$idx}`' blockType='vres\.protection\.domain' canBeEmpty='false' multiSelect='false' displayMemberKey='displayName'>
-        <GotoLocation gotoLocationId='`${associated_$idx{parent}}`' reciprocalLinkDisplay='Peripheral PPC' />
+        <GotoLocation gotoLocationId='`${associated_$idx{parent}}`' reciprocalLinkDisplay='Peripheral PPC - Security Setting: `${getOrDefault(getExposedMember(getBlockFromInstance(parent_$idx{parent}), "displayName"), "Unassigned")}`' />
       </ParamPersonality>
     </Repeat>
 
@@ -102,7 +102,7 @@
                         group='`${splitJoin(reg$idx_location_display, "//", "/")}`'
                         visible='`${(isSupported &amp;&amp; reg$idx_valid) &amp;&amp; !(((reg$idx_pcMask &amp; 1) ne 0) || ((reg$idx_enum_name eq "PROT_PERI1_PPC1_PPC_PPC_SECURE") || (reg$idx_enum_name eq "PROT_PERI1_PPC1_PPC_PPC_NONSECURE")))}`'
                         editable='`${isSupported &amp;&amp; isCustom &amp;&amp; reg$idx_valid}`' blockType='vres\.protection\.domain' canBeEmpty='false' multiSelect='false' displayMemberKey='displayName'>
-        <GotoLocation gotoLocationId='`${reg$idx{reg}_associated}`' reciprocalLinkDisplay='Peripheral PPC' />
+        <GotoLocation gotoLocationId='`${reg$idx{reg}_associated}`' reciprocalLinkDisplay='Peripheral PPC - Security Setting: `${getOrDefault(getExposedMember(getBlockFromInstance(reg$idx{reg}), "displayName"), "Unassigned")}`' />
       </ParamPersonality>
     </Repeat>
 
@@ -127,9 +127,13 @@
         ((getExposedMember("vres[0].protection[0].domain[$idx]", "pc6") ? 1 : 0) &lt;&lt; 6u) |
         ((getExposedMember("vres[0].protection[0].domain[$idx]", "pc7") ? 1 : 0) &lt;&lt; 7u) ) : "0x00"
         }`' repeatCount='$MAX_DOMAINS' />
+
+    <!-- Per-domain check: true if the domain has PPC regions assigned AND is set to NSC (which is not valid for PPC) -->
+    <Variable id='has_nsc_domain$idx' value='`${isBlockUsed("vres[0].protection[0].domain[$idx]") &amp;&amp; (tcl_ppc_region_set$idx ne "") &amp;&amp; (getExposedMember("vres[0].protection[0].domain[$idx]", "cmseAttribute") eq "NON_SECURE_CALLABLE")}`' repeatCount='$MAX_DOMAINS' />
   </Variables>
 
   <DRCs>
+    <DRC type='ERROR' condition='`${has_nsc_domain0 || has_nsc_domain1 || has_nsc_domain2 || has_nsc_domain3 || has_nsc_domain4 || has_nsc_domain5 || has_nsc_domain6 || has_nsc_domain7 || has_nsc_domain8 || has_nsc_domain9 || has_nsc_domain10 || has_nsc_domain11 || has_nsc_domain12 || has_nsc_domain13 || has_nsc_domain14 || has_nsc_domain15}`' text='PPC regions do not support the Non-Secure Callable (NSC) attribute. PPC only supports Secure and Non-Secure. Set the PPC region domain attribute to Secure or Non-Secure, then regenerate.' />
     <DRC type='ERROR' condition='`${!isSupported &amp;&amp; ((hasBlock("peri[0]") &amp;&amp; isBlockUsed("peri[0]")) || (hasBlock("peri[1]") &amp;&amp; isBlockUsed("peri[1]")))}`' text='PPC configuration is enabled for Peri 0 or Peri 1 but the current Protection Level does not support peripheral protection. Please enable a supported protection level.' >
       <FixItBatch description='Enable Protection with a protection level of &apos;Secure Services+Peripherals&apos;'>
         <FixIt action='ENABLE_BLOCK' target='$PROTECTION_LOC' valid='`${!isBlockUsed("$PROTECTION_LOC")}`' />

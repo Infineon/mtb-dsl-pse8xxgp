@@ -300,14 +300,14 @@ cy_en_crypto_status_t Cy_Crypto_Enable(void)
         clientContext->instr = CY_CRYPTO_INSTR_ENABLE;
         clientContext->xdata = NULL;
 
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
 #endif
         err = Cy_Crypto_Client_Send();
 
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
         /* Wait until initialization completes */
         if (CY_CRYPTO_SUCCESS == err)
@@ -340,10 +340,10 @@ cy_en_crypto_status_t Cy_Crypto_GetLibraryInfo(cy_en_crypto_lib_info_t *cryptoIn
     {
         clientContext->instr = CY_CRYPTO_INSTR_SRV_INFO;
         clientContext->xdata = (void *)cryptoInfo;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
         err = Cy_Crypto_Client_Send();
     }
@@ -358,15 +358,15 @@ cy_en_crypto_status_t Cy_Crypto_Disable(void)
     {
         clientContext->instr = CY_CRYPTO_INSTR_DISABLE;
         clientContext->xdata = NULL;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();
 
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
         /* Wait until initialization completes */
         if (CY_CRYPTO_SUCCESS == err)
@@ -393,11 +393,11 @@ cy_en_crypto_status_t Cy_Crypto_Prng_Init(uint32_t lfsr32InitState,
         cfContext->lfsr32InitState = lfsr32InitState;
         cfContext->lfsr31InitState = lfsr31InitState;
         cfContext->lfsr29InitState = lfsr29InitState;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -418,12 +418,12 @@ cy_en_crypto_status_t Cy_Crypto_Prng_Generate(uint32_t max,
 
         cfContext->max = max;
         cfContext->prngNum = randomNum;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)randomNum, (int32_t)sizeof(uint32_t));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)randomNum, (int32_t)sizeof(uint32_t));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -446,13 +446,13 @@ cy_en_crypto_status_t Cy_Crypto_Aes_Init(uint32_t *key,
 
         cfContext->key = key;
         cfContext->keyLength = keyLength;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
         CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-        SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)(CY_CRYPTO_AES_128_KEY_SIZE + ((uint32_t)keyLength << 3)));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)(CY_CRYPTO_AES_128_KEY_SIZE + ((uint32_t)keyLength << 3)));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -475,13 +475,13 @@ cy_en_crypto_status_t Cy_Crypto_Aes_Ecb_Run(cy_en_crypto_dir_mode_t dirMode,
         cfContext->dirMode = dirMode;
         cfContext->dst = dstBlock;
         cfContext->src = srcBlock;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)srcBlock,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dstBlock, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)srcBlock,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dstBlock, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
         err = Cy_Crypto_Client_Send();
     }
@@ -508,14 +508,14 @@ cy_en_crypto_status_t Cy_Crypto_Aes_Cbc_Run(cy_en_crypto_dir_mode_t dirMode,
         cfContext->ivPtr = ivPtr;
         cfContext->dst = dst;
         cfContext->src = src;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
-        SCB_CleanDCache_by_Addr((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dst, (int32_t)srcSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst, (int32_t)srcSize);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -544,14 +544,14 @@ cy_en_crypto_status_t Cy_Crypto_Aes_Cfb_Run(cy_en_crypto_dir_mode_t dirMode,
         cfContext->ivPtr = ivPtr;
         cfContext->dst = dst;
         cfContext->src = src;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
-        SCB_CleanDCache_by_Addr((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dst, (int32_t)srcSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)ivPtr,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst, (int32_t)srcSize);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -584,16 +584,16 @@ cy_en_crypto_status_t Cy_Crypto_Aes_Ctr_Run(cy_en_crypto_dir_mode_t dirMode,
         cfContext->streamBlock = streamBlock;
         cfContext->dst = dst;
         cfContext->src = src;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
-        SCB_CleanDCache_by_Addr((volatile void *)nonceCounter,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
-        SCB_CleanDCache_by_Addr((volatile void *)srcOffset, (int32_t)sizeof(*srcOffset));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dst, (int32_t)srcSize);
-        SCB_InvalidateDCache_by_Addr((volatile void *)srcOffset, (int32_t)sizeof(*srcOffset));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)nonceCounter,(int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)srcOffset, (int32_t)sizeof(*srcOffset));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst, (int32_t)srcSize);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)srcOffset, (int32_t)sizeof(*srcOffset));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -623,15 +623,15 @@ cy_en_crypto_status_t Cy_Crypto_Aes_Cmac_Run(uint32_t *src,
         cfContext->src = src;
         cfContext->key = key;
         cfContext->keyLength = keyLength;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)srcSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)srcSize);
         CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-        SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)(CY_CRYPTO_AES_128_KEY_SIZE + ((uint32_t)keyLength << 3)));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)cmacPtr, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)(CY_CRYPTO_AES_128_KEY_SIZE + ((uint32_t)keyLength << 3)));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)cmacPtr, (int32_t)CY_CRYPTO_AES_BLOCK_SIZE);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -642,7 +642,7 @@ cy_en_crypto_status_t Cy_Crypto_Aes_Cmac_Run(uint32_t *src,
 
 #if (CPUSS_CRYPTO_SHA == 1) && defined(CY_CRYPTO_CFG_SHA_C)
 
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 10.3', 1, 'Intentional typecast to int32_t.')
 static const int32_t Cy_Crypto_Sha_Digest_size[] = { CY_CRYPTO_SHA1_DIGEST_SIZE, CY_CRYPTO_SHA224_DIGEST_SIZE,
                                             CY_CRYPTO_SHA256_DIGEST_SIZE, CY_CRYPTO_SHA384_DIGEST_SIZE,
@@ -667,13 +667,13 @@ cy_en_crypto_status_t Cy_Crypto_Sha_Run(uint32_t *message,
         cfContext->messageSize = messageSize;
         cfContext->dst = digest;
         cfContext->mode = mode;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)message,(int32_t)messageSize);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)digest, Cy_Crypto_Sha_Digest_size[mode]);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)message,(int32_t)messageSize);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)digest, Cy_Crypto_Sha_Digest_size[mode]);
 #endif
         err = Cy_Crypto_Client_Send();
     }
@@ -703,14 +703,14 @@ cy_en_crypto_status_t Cy_Crypto_Hmac_Run(uint32_t *hmac,
         cfContext->mode = mode;
         cfContext->key = key;
         cfContext->keyLength = keyLength;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)message,(int32_t)messageSize);
-        SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)keyLength);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)hmac, Cy_Crypto_Sha_Digest_size[mode]);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)message,(int32_t)messageSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)keyLength);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)hmac, Cy_Crypto_Sha_Digest_size[mode]);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -735,13 +735,13 @@ cy_en_crypto_status_t Cy_Crypto_Str_MemCpy(void* dst,
         cfContext->dst = dst;
         cfContext->src0 = src;
         cfContext->dataSize = size;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)src,(int32_t)size);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dst, (int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src,(int32_t)size);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst, (int32_t)size);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -764,12 +764,12 @@ cy_en_crypto_status_t Cy_Crypto_Str_MemSet(void* dst,
         cfContext->dst = dst;
         cfContext->data = data;
         cfContext->dataSize = size;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dst, (int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst, (int32_t)size);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -794,14 +794,14 @@ cy_en_crypto_status_t Cy_Crypto_Str_MemCmp(void const *src0,
         cfContext->src1 = src1;
         cfContext->dataSize = size;
         cfContext->dst = (void* )resultPtr;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)src0,(int32_t)size);
-        SCB_CleanDCache_by_Addr((volatile void *)src1,(int32_t)size);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)resultPtr, (int32_t)sizeof(*resultPtr));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src0,(int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src1,(int32_t)size);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)resultPtr, (int32_t)sizeof(*resultPtr));
 #endif
         err = Cy_Crypto_Client_Send();
     }
@@ -825,14 +825,14 @@ cy_en_crypto_status_t Cy_Crypto_Str_MemXor(void const *src0,
         cfContext->src1 = src1;
         cfContext->dst = dst;
         cfContext->dataSize = size;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)src0,(int32_t)size);
-        SCB_CleanDCache_by_Addr((volatile void *)src1,(int32_t)size);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dst, (int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src0,(int32_t)size);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)src1,(int32_t)size);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dst, (int32_t)size);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -861,11 +861,11 @@ cy_en_crypto_status_t Cy_Crypto_Crc_Init(uint32_t polynomial,
         cfContext->dataXor = dataXor;
         cfContext->polynomial = polynomial;
         cfContext->remXor = remXor;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -890,13 +890,13 @@ cy_en_crypto_status_t Cy_Crypto_Crc_Run(void *data,
         cfContext->data  = data;
         cfContext->dataSize = dataSize;
         cfContext->crc = crc;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)data,(int32_t)dataSize);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)crc, (int32_t)sizeof(*crc));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)data,(int32_t)dataSize);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)crc, (int32_t)sizeof(*crc));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -923,12 +923,12 @@ cy_en_crypto_status_t Cy_Crypto_Trng_Generate(uint32_t  GAROPol,
         cfContext->FIROPol = FIROPol;
         cfContext->max = max;
         cfContext->trngNum = randomNum;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)randomNum, (int32_t)sizeof(*randomNum));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)randomNum, (int32_t)sizeof(*randomNum));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -955,14 +955,14 @@ cy_en_crypto_status_t Cy_Crypto_Des_Run(cy_en_crypto_dir_mode_t dirMode,
         cfContext->key = key;
         cfContext->dst = dstBlock;
         cfContext->src = srcBlock;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)CY_CRYPTO_DES_KEY_SIZE);
-        SCB_CleanDCache_by_Addr((volatile void *)srcBlock,(int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dstBlock, (int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)CY_CRYPTO_DES_KEY_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)srcBlock,(int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dstBlock, (int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -987,14 +987,14 @@ cy_en_crypto_status_t Cy_Crypto_Tdes_Run(cy_en_crypto_dir_mode_t dirMode,
         cfContext->key = key;
         cfContext->dst = dstBlock;
         cfContext->src = srcBlock;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)key,(int32_t)CY_CRYPTO_TDES_KEY_SIZE);
-        SCB_CleanDCache_by_Addr((volatile void *)srcBlock,(int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)dstBlock, (int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)key,(int32_t)CY_CRYPTO_TDES_KEY_SIZE);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)srcBlock,(int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)dstBlock, (int32_t)CY_CRYPTO_DES_BLOCK_SIZE);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -1017,11 +1017,11 @@ cy_en_crypto_status_t Cy_Crypto_SetMemBufAddress(uint32_t const *newMembufAddres
 
         cfContext->src0 = newMembufAddress;
         cfContext->dataSize = newMembufSize;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -1040,11 +1040,11 @@ cy_en_crypto_status_t Cy_Crypto_GetMemBufAddress(uint32_t **membufAddress,
         clientContext->xdata = cfContext;
 
         cfContext->dst = (void *)membufAddress;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -1063,11 +1063,11 @@ cy_en_crypto_status_t Cy_Crypto_GetMemBufSize(uint32_t *membufSize,
         clientContext->xdata = cfContext;
 
         cfContext->dst = (void *)membufSize;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -1092,27 +1092,27 @@ cy_en_crypto_status_t Cy_Crypto_Rsa_Proc(cy_stc_crypto_rsa_pub_key_t const *pubK
         cfContext->message = message;
         cfContext->messageSize = messageSize;
         cfContext->result = processedMessage;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
         if(NULL != pubKey->barretCoefPtr)
         {
             CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-            SCB_CleanDCache_by_Addr((volatile void *)pubKey->barretCoefPtr,(int32_t)(pubKey->moduloLength+1u));
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)pubKey->barretCoefPtr,(int32_t)(pubKey->moduloLength+1u));
         }
         if(NULL != pubKey->inverseModuloPtr)
         {
-            SCB_CleanDCache_by_Addr((volatile void *)pubKey->inverseModuloPtr,(int32_t)pubKey->moduloLength);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)pubKey->inverseModuloPtr,(int32_t)pubKey->moduloLength);
         }
         if(NULL != pubKey->rBarPtr)
         {
-            SCB_CleanDCache_by_Addr((volatile void *)pubKey->rBarPtr,(int32_t)pubKey->moduloLength);
+            CY_CRYPTO_CLEAN_DCACHE((volatile void *)pubKey->rBarPtr,(int32_t)pubKey->moduloLength);
         }
-        SCB_CleanDCache_by_Addr((volatile void *)pubKey->moduloPtr,(int32_t)pubKey->moduloLength);
-        SCB_CleanDCache_by_Addr((volatile void *)pubKey->pubExpPtr,(int32_t)pubKey->pubExpLength);
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)processedMessage, (int32_t)messageSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)pubKey->moduloPtr,(int32_t)pubKey->moduloLength);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)pubKey->pubExpPtr,(int32_t)pubKey->pubExpLength);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)processedMessage, (int32_t)messageSize);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -1131,16 +1131,16 @@ cy_en_crypto_status_t Cy_Crypto_Rsa_CalcCoefs(cy_stc_crypto_rsa_pub_key_t const 
         clientContext->xdata = cfContext;
 
         cfContext->key = pubKey;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
-        SCB_CleanDCache_by_Addr((volatile void *)pubKey->moduloPtr,(int32_t)pubKey->moduloLength);
-        SCB_CleanDCache_by_Addr((volatile void *)pubKey->pubExpPtr,(int32_t)pubKey->pubExpLength);
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)pubKey->moduloPtr,(int32_t)pubKey->moduloLength);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)pubKey->pubExpPtr,(int32_t)pubKey->pubExpLength);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
         CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-        SCB_InvalidateDCache_by_Addr((volatile void *)pubKey->barretCoefPtr,(int32_t)(pubKey->moduloLength+1U));
-        SCB_InvalidateDCache_by_Addr((volatile void *)pubKey->inverseModuloPtr,(int32_t)pubKey->moduloLength);
-        SCB_InvalidateDCache_by_Addr((volatile void *)pubKey->rBarPtr,(int32_t)pubKey->moduloLength);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)pubKey->barretCoefPtr,(int32_t)(pubKey->moduloLength+1U));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)pubKey->inverseModuloPtr,(int32_t)pubKey->moduloLength);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)pubKey->rBarPtr,(int32_t)pubKey->moduloLength);
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -1168,14 +1168,14 @@ cy_en_crypto_status_t Cy_Crypto_Rsa_Verify(cy_en_crypto_rsa_ver_result_t *verRes
         cfContext->hash = digest;
         cfContext->decryptedSignature = decryptedSignature;
         cfContext->decryptedSignatureLength = decryptedSignatureLength;
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)decryptedSignature,(int32_t)decryptedSignatureLength);
-        SCB_CleanDCache_by_Addr((volatile void *)digest, Cy_Crypto_Sha_Digest_size[digestType]);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
-        SCB_InvalidateDCache_by_Addr((volatile void *)verResult, (int32_t)sizeof(*verResult));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)decryptedSignature,(int32_t)decryptedSignatureLength);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)digest, Cy_Crypto_Sha_Digest_size[digestType]);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)verResult, (int32_t)sizeof(*verResult));
 #endif
 
         err = Cy_Crypto_Client_Send();
@@ -1207,12 +1207,12 @@ cy_en_crypto_status_t Cy_Crypto_ECDSA_SignHash(const uint8_t *hash,
         cfContext->key  = key;
         cfContext->src1 = messageKey;
 
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)hash,(int32_t)hashlen);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)hash,(int32_t)hashlen);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
         err = Cy_Crypto_Client_Send();
     }
@@ -1241,12 +1241,12 @@ cy_en_crypto_status_t Cy_Crypto_ECDSA_VerifyHash(const uint8_t *sig,
         cfContext->dst0 = stat;
         cfContext->key  = key;
 
-#if (CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)
+#if ((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || ((CY_CPU_CORTEX_M33) && defined (ENABLE_CM33_DATA_CACHE))
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
-        SCB_CleanDCache_by_Addr((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
-        SCB_CleanDCache_by_Addr((volatile void *)hash,(int32_t)hashlen);
-        SCB_InvalidateDCache_by_Addr((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)clientContext,(int32_t)sizeof(*clientContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)cfContext,(int32_t)sizeof(*cfContext));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)hash,(int32_t)hashlen);
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)clientContext, (int32_t)sizeof(*clientContext));
 #endif
 
         err = Cy_Crypto_Client_Send();

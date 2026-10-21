@@ -16,6 +16,11 @@ This release of the PSOC™ Edge GNU make build recipe includes complete support
     * LLVM Embedded Toolchain for Arm
 
 ### What Changed?
+#### v2.3.5
+* Fixed MVE_SELECT auto-selection not taking effect for `VFP_SELECT=softfloat` on Cortex-M55.
+* Added Arm Toolchain for Embedded 22.1.0 support.
+* Minor bug fixes.
+
 #### v2.3.4
 * Added Advanced KitProg3 Programming task in VS Code export.
 * Enhanced project export to Keil uVision IDE.
@@ -49,7 +54,7 @@ This version of the PSOC™ Edge build system was validated for compatibility wi
 | :---                                      | :----:  |
 | ModusToolbox™ Software Environment        | 3.8     |
 | GCC Compiler                              | 14.2.1  |
-| LLVM Compiler                             | 19.1.5  |
+| LLVM Compiler                             | 22.1.0  |
 | IAR Compiler                              | 9.70.2  |
 | ARM Compiler                              | 6.22    |
 

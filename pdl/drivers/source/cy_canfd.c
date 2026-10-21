@@ -1517,14 +1517,14 @@ void Cy_CANFD_IrqHandler(CANFD_Type *base, uint32_t chan, cy_stc_canfd_context_t
                  messageBufferNumber++)
             {
                 CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 12.2', 'messageBufferNumber is bounded by loop condition (< CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS = 32); shift cannot exceed 31.');
-                if (0UL != (CANFD_NDAT1(base, chan) & (1UL << messageBufferNumber)))
+                if (0UL != (CANFD_NDAT1(base, chan) & (1UL << (messageBufferNumber & 31UL))))
                 {
                     /* Calculates the Rx Buffer address */
                     address = Cy_CANFD_CalcRxBufAdrs(base, chan, messageBufferNumber, context);
 
                     /* Clears the NDAT1 register */
                     CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 12.2', 'messageBufferNumber is bounded by loop condition (< CY_CANFD_MESSAGE_HALF_OF_RX_BUFFERS = 32); shift cannot exceed 31.');
-                    CANFD_NDAT1(base, chan) = (1UL << messageBufferNumber);
+                    CANFD_NDAT1(base, chan) = (1UL << (messageBufferNumber & 31UL));
 
                     break;
                 }

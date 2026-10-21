@@ -105,18 +105,18 @@ Functions</h2></td></tr>
 <tr class="memitem:gab4db2735b96e247a8181a9fb889160d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#gab4db2735b96e247a8181a9fb889160d1">Cy_SMIF_MemNumGetInfo</a> (const <a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *context, uint8_t memNum, <a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__info__t">cy_stc_smif_mem_info_t</a> *memNumInfo)</td></tr>
 <tr class="memdesc:gab4db2735b96e247a8181a9fb889160d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is to be called from the non secure partition in trustzone devices to gather all information about the memory size, erase and program size to be used in subsequent MemNum calls instead of polling the secure partition repeatedly for the information.  <br /></td></tr>
 <tr class="separator:gab4db2735b96e247a8181a9fb889160d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7b8e79e0dac326c8c2bb3f9eaddf621e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#ga7b8e79e0dac326c8c2bb3f9eaddf621e">Cy_SMIF_MemNumRead</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *context, uint8_t memNum, uint32_t address, uint8_t rxBuffer[], uint32_t length)</td></tr>
-<tr class="memdesc:ga7b8e79e0dac326c8c2bb3f9eaddf621e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the external memory and blocks until the read transfer is complete or a timeout occurs.  <br /></td></tr>
-<tr class="separator:ga7b8e79e0dac326c8c2bb3f9eaddf621e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaea43c03ea5b9d860dffb991888a929d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#gaea43c03ea5b9d860dffb991888a929d4">Cy_SMIF_MemNumWrite</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *context, uint8_t memNum, uint32_t address, uint8_t const txBuffer[], uint32_t length)</td></tr>
-<tr class="memdesc:gaea43c03ea5b9d860dffb991888a929d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function writes data to the external memory.  <br /></td></tr>
-<tr class="separator:gaea43c03ea5b9d860dffb991888a929d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5c213ddaa8165c67bb0b02bd3d2b9268"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#ga5c213ddaa8165c67bb0b02bd3d2b9268">Cy_SMIF_MemNumEraseSector</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *context, uint8_t memNum, uint32_t address, uint32_t length)</td></tr>
-<tr class="memdesc:ga5c213ddaa8165c67bb0b02bd3d2b9268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases a block/sector of the external memory.  <br /></td></tr>
-<tr class="separator:ga5c213ddaa8165c67bb0b02bd3d2b9268"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa64f50292063e65833c72f1deaf27f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#gafa64f50292063e65833c72f1deaf27f2">Cy_SMIF_MemNumEraseChip</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *context, uint8_t memNum)</td></tr>
-<tr class="memdesc:gafa64f50292063e65833c72f1deaf27f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases the entire chip of the external memory.  <br /></td></tr>
-<tr class="separator:gafa64f50292063e65833c72f1deaf27f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa943a3c3b6cd04679714cd50e7dd37d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#gaa943a3c3b6cd04679714cd50e7dd37d8">Cy_SMIF_MemNumRead</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *context, uint8_t memNum, uint32_t address, uint8_t rxBuffer[], uint32_t length)</td></tr>
+<tr class="memdesc:gaa943a3c3b6cd04679714cd50e7dd37d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the external memory and blocks until the read transfer is complete or a timeout occurs.  <br /></td></tr>
+<tr class="separator:gaa943a3c3b6cd04679714cd50e7dd37d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac4e99bc2600135b6b63065239e76842d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#gac4e99bc2600135b6b63065239e76842d">Cy_SMIF_MemNumWrite</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *context, uint8_t memNum, uint32_t address, uint8_t const txBuffer[], uint32_t length)</td></tr>
+<tr class="memdesc:gac4e99bc2600135b6b63065239e76842d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function writes data to the external memory.  <br /></td></tr>
+<tr class="separator:gac4e99bc2600135b6b63065239e76842d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf909d5135ca6314885283bfd31abc929"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#gaf909d5135ca6314885283bfd31abc929">Cy_SMIF_MemNumEraseSector</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *context, uint8_t memNum, uint32_t address, uint32_t length)</td></tr>
+<tr class="memdesc:gaf909d5135ca6314885283bfd31abc929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases a block/sector of the external memory.  <br /></td></tr>
+<tr class="separator:gaf909d5135ca6314885283bfd31abc929"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0db7e2dea965ee564b1f7523bf458965"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#ga0db7e2dea965ee564b1f7523bf458965">Cy_SMIF_MemNumEraseChip</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *context, uint8_t memNum)</td></tr>
+<tr class="memdesc:ga0db7e2dea965ee564b1f7523bf458965"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erases the entire chip of the external memory.  <br /></td></tr>
+<tr class="separator:ga0db7e2dea965ee564b1f7523bf458965"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga20bffdee7e2b8c7404b746b4b7de1f90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__memnum__functions.html#ga20bffdee7e2b8c7404b746b4b7de1f90">Cy_SMIF_MemNumHyperBusRead</a> (<a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *context, uint8_t memNum, uint32_t address, uint8_t rxBuffer[], uint32_t length)</td></tr>
 <tr class="memdesc:ga20bffdee7e2b8c7404b746b4b7de1f90"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function reads data from hyper bus memory in MMIO mode.  <br /></td></tr>
 <tr class="separator:ga20bffdee7e2b8c7404b746b4b7de1f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,8 +229,8 @@ Ensure that context and memNumInfo arguments are DCache aligned when calling fro
 
 </div>
 </div>
-<a id="ga7b8e79e0dac326c8c2bb3f9eaddf621e" name="ga7b8e79e0dac326c8c2bb3f9eaddf621e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7b8e79e0dac326c8c2bb3f9eaddf621e">&#9670;&#160;</a></span>Cy_SMIF_MemNumRead()</h2>
+<a id="gaa943a3c3b6cd04679714cd50e7dd37d8" name="gaa943a3c3b6cd04679714cd50e7dd37d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa943a3c3b6cd04679714cd50e7dd37d8">&#9670;&#160;</a></span>Cy_SMIF_MemNumRead()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,7 +238,7 @@ Ensure that context and memNumInfo arguments are DCache aligned when calling fro
         <tr>
           <td class="memname"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> Cy_SMIF_MemNumRead </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
@@ -292,8 +292,8 @@ Ensure that context and rxBuffer arguments are DCache aligned when calling from 
 
 </div>
 </div>
-<a id="gaea43c03ea5b9d860dffb991888a929d4" name="gaea43c03ea5b9d860dffb991888a929d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaea43c03ea5b9d860dffb991888a929d4">&#9670;&#160;</a></span>Cy_SMIF_MemNumWrite()</h2>
+<a id="gac4e99bc2600135b6b63065239e76842d" name="gac4e99bc2600135b6b63065239e76842d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac4e99bc2600135b6b63065239e76842d">&#9670;&#160;</a></span>Cy_SMIF_MemNumWrite()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -301,7 +301,7 @@ Ensure that context and rxBuffer arguments are DCache aligned when calling from 
         <tr>
           <td class="memname"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> Cy_SMIF_MemNumWrite </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
@@ -355,8 +355,8 @@ Ensure that context and txBuffer arguments are DCache aligned when calling from 
 
 </div>
 </div>
-<a id="ga5c213ddaa8165c67bb0b02bd3d2b9268" name="ga5c213ddaa8165c67bb0b02bd3d2b9268"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5c213ddaa8165c67bb0b02bd3d2b9268">&#9670;&#160;</a></span>Cy_SMIF_MemNumEraseSector()</h2>
+<a id="gaf909d5135ca6314885283bfd31abc929" name="gaf909d5135ca6314885283bfd31abc929"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf909d5135ca6314885283bfd31abc929">&#9670;&#160;</a></span>Cy_SMIF_MemNumEraseSector()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -364,7 +364,7 @@ Ensure that context and txBuffer arguments are DCache aligned when calling from 
         <tr>
           <td class="memname"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> Cy_SMIF_MemNumEraseSector </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
@@ -414,8 +414,8 @@ Ensure that context argument is DCache aligned when calling from a non-secured C
 
 </div>
 </div>
-<a id="gafa64f50292063e65833c72f1deaf27f2" name="gafa64f50292063e65833c72f1deaf27f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafa64f50292063e65833c72f1deaf27f2">&#9670;&#160;</a></span>Cy_SMIF_MemNumEraseChip()</h2>
+<a id="ga0db7e2dea965ee564b1f7523bf458965" name="ga0db7e2dea965ee564b1f7523bf458965"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0db7e2dea965ee564b1f7523bf458965">&#9670;&#160;</a></span>Cy_SMIF_MemNumEraseChip()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -423,7 +423,7 @@ Ensure that context argument is DCache aligned when calling from a non-secured C
         <tr>
           <td class="memname"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a> Cy_SMIF_MemNumEraseChip </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group__group__smif__memnum__data__structures.html#structcy__stc__smif__mem__context__t">cy_stc_smif_mem_context_t</a> const *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>

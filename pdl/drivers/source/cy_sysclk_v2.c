@@ -6472,11 +6472,15 @@ cy_en_sysclk_status_t Cy_SysClk_DpllLpConfigure(uint32_t pllNum, const cy_stc_pl
                as close as possible to the desired output frequency. */
             uint32_t p, q, out;
             uint32_t foutBest = 0UL; /* to ensure at least one pass through the for loops below */
+            uint32_t maxOutputDivSearch = CY_SYSCLK_DPLL_LP_MAX_OUTPUT_DIV;
 
         #if (defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 > 0UL))
             /* Modify automatic DPLL settings to generate 2x target clock internally and use 2x
                output divider to provide a 50/50 duty cycle clock. */
             uint32_t outputFrequency = config->outputFreq * 2UL;
+            /* The internal 2x duty-cycle adjustment consumes a factor of 2 in the output
+               divider, so limit the auto-search range to keep the programmed value valid. */
+            maxOutputDivSearch /= 2UL;
         #else
             uint32_t outputFrequency = config->outputFreq;
         #endif /* (defined (CY_IP_MXS40SSRSS) && (CY_MXS40SSRSS_VER_1_2 > 0UL)) */
@@ -6494,7 +6498,7 @@ cy_en_sysclk_status_t Cy_SysClk_DpllLpConfigure(uint32_t pllNum, const cy_stc_pl
                     if (((CY_SYSCLK_DPLL_LP_MIN_FDCO <= fdco) && (fdco <= CY_SYSCLK_DPLL_LP_MAX_FDCO)) && ((CY_SYSCLK_DPLL_LP_MIN_PDF <= pdf) && (pdf <= CY_SYSCLK_DPLL_LP_MAX_PDF)))
                     {
                         /* OUTPUT_DIV selection */
-                        for (out = CY_SYSCLK_DPLL_LP_MIN_OUTPUT_DIV; out <= CY_SYSCLK_DPLL_LP_MAX_OUTPUT_DIV; out++)
+                        for (out = CY_SYSCLK_DPLL_LP_MIN_OUTPUT_DIV; out <= maxOutputDivSearch; out++)
                         {
                             uint64_t tempVco = ((uint64_t)outputFrequency) * ((uint64_t)out);
                             uint64_t tempFeedBackDivLeftShifted = ((tempVco << (uint64_t)SRSS_DPLL_LP_FRAC_BIT_COUNT) * (uint64_t)q) / (uint64_t)config->inputFreq;
@@ -6946,7 +6950,12 @@ uint32_t Cy_SysClk_DpllLpGetFrequency(uint32_t pllNum)
         pllNum++; /* to correctly access PLL source clock */
 #endif
         freq = Cy_SysClk_ClkPathMuxGetFrequency(pllNum);
-        freq = (uint32_t)((((uint64_t)freq * (((uint64_t)fDiv << SRSS_DPLL_LP_FRAC_BIT_COUNT) + (uint64_t)fracDiv)) / ((uint64_t)rDiv * (uint64_t)oDiv)) >> SRSS_DPLL_LP_FRAC_BIT_COUNT);
+        /* Combine the divide-by-(rDiv*oDiv) and the >> FRAC_BIT_COUNT into a single division
+           with round-to-nearest. Performing them as two separate floor operations compounds
+           the truncation and reports a frequency up to 1 Hz below the actual output. */
+        uint64_t numerator   = (uint64_t)freq * (((uint64_t)fDiv << SRSS_DPLL_LP_FRAC_BIT_COUNT) + (uint64_t)fracDiv);
+        uint64_t denominator = ((uint64_t)rDiv * (uint64_t)oDiv) << SRSS_DPLL_LP_FRAC_BIT_COUNT;
+        freq = (uint32_t)((numerator + (denominator >> 1U)) / denominator);
     }
 
     return (freq);
@@ -7508,6 +7517,56 @@ bool Cy_SysClk_PllIsEnabled(uint32_t clkPath)
 #endif
     {
         return Cy_SysClk_Pll200MIsEnabled(clkPath - CY_SRSS_NUM_PLL400M);
+    }
+#endif
+}
+
+bool Cy_SysClk_PllIsConfigured(uint32_t clkPath)
+{
+    /* "Configured" is derived from the PLL's own configuration register (the
+     * feedback/reference divider for the DPLL/PLL types, the integer feedback
+     * divider for a DPLL-HP). Those fields survive Cy_SysClk_PllDisable(), so
+     * this reports whether the application ever set the PLL up, without keeping
+     * any software state. */
+#if defined(CY_IP_MXS22SRSS)
+    CY_ASSERT_L1(clkPath < (CY_SRSS_NUM_PLL));
+
+    if(clkPath < SRSS_NUM_DPLL_LP)
+    {
+        return (0UL != _FLD2VAL(CLK_DPLL_LP_CONFIG_FEEDBACK_DIV, SRSS_CLK_DPLL_LP_CONFIG(clkPath)));
+    }
+    else
+    {
+#if (CY_SRSS_DPLL_HP_PRESENT)
+        return (0UL != _FLD2VAL(CLK_DPLL_HP_CONFIG_PLL_FREQ_NDIV_INT_SEL, SRSS_CLK_DPLL_HP_CONFIG(clkPath - SRSS_NUM_DPLL_LP)));
+#else
+        return false;
+#endif
+    }
+#elif (defined (CY_IP_MXS40SSRSS) && (SRSS_NUM_TOTAL_PLL > 0UL))
+    uint32_t pllPath = clkPath - 1UL; /* to correctly access PLL config registers structures */
+    CY_ASSERT_L1(pllPath < (CY_SRSS_NUM_PLL));
+    if(pllPath < SRSS_NUM_DPLL_LP)
+    {
+        return (0UL != _FLD2VAL(CLK_DPLL_LP_CONFIG_FEEDBACK_DIV, SRSS_CLK_DPLL_LP_CONFIG(pllPath)));
+    }
+    else
+    {
+        return false;
+    }
+#else
+    uint32_t pllPath = clkPath - 1UL; /* to correctly access PLL config registers structures */
+    CY_ASSERT_L1(pllPath < (CY_SRSS_NUM_PLL));
+
+#if defined (CY_SRSS_NUM_PLL400M) && (CY_SRSS_NUM_PLL400M > 0)
+    if(pllPath < CY_SRSS_NUM_PLL400M)
+    {
+        return (0UL != _FLD2VAL(CLK_PLL400M_CONFIG_FEEDBACK_DIV, SRSS_CLK_PLL_400M_CONFIG(pllPath)));
+    }
+    else
+#endif
+    {
+        return (0UL != _FLD2VAL(SRSS_CLK_PLL_CONFIG_FEEDBACK_DIV, SRSS_CLK_PLL_CONFIG[pllPath - CY_SRSS_NUM_PLL400M]));
     }
 #endif
 }
@@ -8290,6 +8349,10 @@ uint32_t Cy_Sysclk_PeriPclkGetClkHfNum(uint32_t ipBlock)
         return peri1GrpToHfArray[grpNum];
     }
 #else
+    if (grpNum >= (uint32_t)(sizeof(peri0GrpToHfArray) / sizeof(peri0GrpToHfArray[0])))
+    {
+        return CY_SYSCLK_INVALID_HF_NUM;
+    }
     return peri0GrpToHfArray[grpNum];
 #endif
 #endif

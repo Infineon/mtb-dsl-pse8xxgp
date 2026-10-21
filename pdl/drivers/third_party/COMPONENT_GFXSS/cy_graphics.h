@@ -142,6 +142,8 @@
 
 #if defined (CY_IP_MXS22GFXSS)
 
+#include "gfxss_ip_compat.h"
+
 #include "viv_dc_type.h"
 #include "viv_dc_util.h"
 #include "viv_dc_setting.h"
@@ -161,7 +163,7 @@ extern "C" {
 */
 
 /** Graphics driver identifier */
-#define CY_GRAPHICS_ID                                   (CY_PDL_DRV_ID(0x4DU))
+#define CY_GRAPHICS_ID                                   (CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_GRAPHICS))
 
 /** Driver major version */
 #define CY_GRAPHICS_DRV_VERSION_MAJOR                    1

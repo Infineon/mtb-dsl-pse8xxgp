@@ -28,10 +28,9 @@
 
 #include "cy_device.h"
 
-#if (CY_IP_MXSMIF_VERSION == 4) || (CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION==7)
+#if (CY_IP_MXSMIF_VERSION == 3) || (CY_IP_MXSMIF_VERSION == 4) || (CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION==7)
 #include "cy_smif_memnum.h"
 #include "cy_pdl_srf_common.h"
-#include "cycfg_ppc.h"
 #include <string.h>
 
 #if defined(__cplusplus)
@@ -80,11 +79,12 @@ typedef struct {
 
 
 #if defined(COMPONENT_SECURE_DEVICE)
-cy_stc_smif_mem_context_t* smif_internal_secure_contexts[CY_IP_MXSMIF_INSTANCES];
+static cy_stc_smif_mem_context_t* smif_internal_secure_contexts[CY_IP_MXSMIF_INSTANCES];
 #endif
 
 //Helper to get the correct SMIF Number based on the base address
-static inline uint8_t _Cy_SMIF_GetSmifNumber(SMIF_CORE_Type* baseAddress)
+#if (CY_IP_MXSMIF_INSTANCES > 1)
+static inline uint8_t _Cy_SMIF_GetSmifNumber(SMIF_CORE_Type const * baseAddress)
 {
     if ((SMIF_CORE_Type*)GET_ALIAS_ADDRESS(baseAddress) == SMIF0_CORE)
     {
@@ -95,9 +95,17 @@ static inline uint8_t _Cy_SMIF_GetSmifNumber(SMIF_CORE_Type* baseAddress)
         return CY_SMIF_SUB_BLOCK_1;
     }
 }
+#else
+/* Single SMIF instance devices have only one sub-block. */
+static inline uint8_t _Cy_SMIF_GetSmifNumber(SMIF_Type const * baseAddress)
+{
+    CY_UNUSED_PARAM(baseAddress);
+    return (uint8_t)CY_SMIF_SUB_BLOCK_0;
+}
+#endif
 
 //Helper to get the correct MemConfig number based on the memory slot number
-uint8_t _Cy_SMIF_GetConfigNumber(const cy_stc_smif_mem_context_t *context, uint8_t smif_number, uint8_t memNum)
+static uint8_t _Cy_SMIF_GetConfigNumber(const cy_stc_smif_mem_context_t *context, uint8_t smif_number, uint8_t memNum)
 {
     uint8_t memConfigNumber = 0xFF;
     CY_ASSERT_L3(CY_SMIF_MEM_NUM_VALID(memNum));
@@ -107,9 +115,9 @@ uint8_t _Cy_SMIF_GetConfigNumber(const cy_stc_smif_mem_context_t *context, uint8
     {
         for(uint32_t idx = 0; idx < smif_internal_secure_contexts[smif_number]->block_config->memCount; idx ++)
         {
-            if(smif_internal_secure_contexts[smif_number]->block_config->memConfig[idx]->slaveSelect == (1 << memNum))
+            if((uint32_t)smif_internal_secure_contexts[smif_number]->block_config->memConfig[idx]->slaveSelect == (1UL << memNum))
             {
-                memConfigNumber = idx;
+                memConfigNumber = (uint8_t)idx;
                 break;
             }
         }
@@ -120,9 +128,9 @@ uint8_t _Cy_SMIF_GetConfigNumber(const cy_stc_smif_mem_context_t *context, uint8
         CY_UNUSED_PARAM(smif_number);
         for(uint32_t idx = 0; idx < context->block_config->memCount; idx ++)
         {
-            if(context->block_config->memConfig[idx]->slaveSelect == (1 << memNum))
+            if((uint32_t)context->block_config->memConfig[idx]->slaveSelect == (1UL << memNum))
             {
-                memConfigNumber = idx;
+                memConfigNumber = (uint8_t)idx;
                 break;
             }
         }
@@ -167,6 +175,7 @@ bool _Cy_SMIF_IsAddressRangeNSAccessible(const cy_stc_smif_mem_context_t *contex
 /* Default SMIF permissions.  These may be overriden by declaring a custom structure. */
 __WEAK mtb_srf_permission_s_t mtb_pdl_smif_srf_permissions[] = /* SMIF_INSTANCES */
 {
+#if (CY_IP_MXSMIF_INSTANCES > 1)
     {
         .base = SMIF0_CORE,
         .sub_block = CY_SMIF_SUB_BLOCK_0,
@@ -187,6 +196,14 @@ __WEAK mtb_srf_permission_s_t mtb_pdl_smif_srf_permissions[] = /* SMIF_INSTANCES
         .sub_block = CY_SMIF_SUB_BLOCK_1,
         .write_allowed = true,
     },
+#else
+    /* Single SMIF instance devices register only one region. */
+    {
+        .base = SMIF0,
+        .sub_block = CY_SMIF_SUB_BLOCK_0,
+        .write_allowed = true,
+    },
+#endif
 };
 
 static cy_rslt_t cy_pdl_smif_srf_get_info_impl_s(mtb_srf_input_ns_t* inputs_ns,
@@ -460,6 +477,7 @@ static cy_rslt_t cy_pdl_smif_srf_mem_num_hb_write_impl_s(mtb_srf_input_ns_t* inp
 }
 
 
+/* Cache-block operations are only present on devices with a dedicated SMIF cache block (SMIF_CACHE_BLOCK_Type). */
 static cy_rslt_t cy_pdl_smif_srf_clean_cache_impl_s(mtb_srf_input_ns_t* inputs_ns,
                                             mtb_srf_output_ns_t* outputs_ns,
                                             mtb_srf_invec_ns_t* inputs_ptr_ns,
@@ -715,7 +733,7 @@ mtb_srf_op_s_t _cy_pdl_smif_srf_operations[] =
         .allowed_rsc = mtb_pdl_smif_srf_permissions,
         .num_allowed = (sizeof(mtb_pdl_smif_srf_permissions)/sizeof(mtb_pdl_smif_srf_permissions[0]))
     },
-};
+ };
 
 #endif /* defined(COMPONENT_SECURE_DEVICE) && defined(CY_PDL_SMIF_ENABLE_SRF_INTEG) */
 
@@ -767,7 +785,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumInit(SMIF_Type *base,
 cy_en_smif_status_t Cy_SMIF_MemNumSetupNonSecure(SMIF_Type *base,
                             cy_stc_smif_mem_context_t *context)
 {
-    memset(context, 0x00, sizeof(cy_stc_smif_mem_context_t));
+    (void)memset(context, 0x00, sizeof(cy_stc_smif_mem_context_t));
     uint8_t smif_number = _Cy_SMIF_GetSmifNumber(base);
     CY_UNUSED_PARAM(smif_number); /* May be unused depending on the defines below */
     //No initialization done, only populating the context with the info available to NS
@@ -855,8 +873,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
 #if defined(COMPONENT_SECURE_DEVICE)
     if(context->requires_secure_call)
     {
-        cy_stc_smif_mem_device_cfg_t*  devCfg = smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber]->deviceCfg;
-        cy_stc_smif_hbmem_device_config_t* hbDevCfg = smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber]->hbdeviceCfg;
+        cy_stc_smif_mem_device_cfg_t const *  devCfg = smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber]->deviceCfg;
+        cy_stc_smif_hbmem_device_config_t const * hbDevCfg = smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber]->hbdeviceCfg;
 
         if((devCfg != NULL))
         {
@@ -867,7 +885,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
 
             //Copy info relevant to Hybrid Regions if present
             memNumInfo->hybridRegionCount = devCfg->hybridRegionCount;
-            for(uint8_t index = 0; index < memNumInfo->hybridRegionCount; index ++)
+            for(uint8_t index = 0U; index < memNumInfo->hybridRegionCount; index ++)
             {
                 memNumInfo->hybridRegionInfo[index].regionStartAddress = devCfg->hybridRegionInfo[index]->regionAddress;
                 memNumInfo->hybridRegionInfo[index].eraseSize = devCfg->hybridRegionInfo[index]->eraseSize;
@@ -877,8 +895,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
         else
         {
             memNumInfo->flags = CY_SMIF_FLAG_HYPERBUS_DEVICE;
-            memNumInfo->memSize = hbDevCfg->memSize;
-            memNumInfo->eraseSize = 0;
+            memNumInfo->memSize = (uint32_t)hbDevCfg->memSize;
+            memNumInfo->eraseSize = 0UL;
         }
     }
     else
@@ -886,8 +904,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
     {
         if(!context->requires_secure_call)
         {
-            cy_stc_smif_mem_device_cfg_t*  devCfg = context->block_config->memConfig[memConfigNumber]->deviceCfg;
-            cy_stc_smif_hbmem_device_config_t* hbDevCfg = context->block_config->memConfig[memConfigNumber]->hbdeviceCfg;
+            cy_stc_smif_mem_device_cfg_t const *  devCfg = context->block_config->memConfig[memConfigNumber]->deviceCfg;
+            cy_stc_smif_hbmem_device_config_t const * hbDevCfg = context->block_config->memConfig[memConfigNumber]->hbdeviceCfg;
 
             if((devCfg != NULL))
             {
@@ -898,7 +916,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
 
                 //Copy info relevant to Hybrid Regions if present
                 memNumInfo->hybridRegionCount = devCfg->hybridRegionCount;
-                for(uint8_t index = 0; index < memNumInfo->hybridRegionCount; index ++)
+                for(uint8_t index = 0U; index < memNumInfo->hybridRegionCount; index ++)
                 {
                     memNumInfo->hybridRegionInfo[index].regionStartAddress = devCfg->hybridRegionInfo[index]->regionAddress;
                     memNumInfo->hybridRegionInfo[index].eraseSize = devCfg->hybridRegionInfo[index]->eraseSize;
@@ -908,8 +926,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
             else
             {
                 memNumInfo->flags = CY_SMIF_FLAG_HYPERBUS_DEVICE;
-                memNumInfo->memSize = hbDevCfg->memSize;
-                memNumInfo->eraseSize = 0;
+                memNumInfo->memSize = (uint32_t)hbDevCfg->memSize;
+                memNumInfo->eraseSize = 0UL;
             }
         }
         else
@@ -921,7 +939,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumGetInfo(const cy_stc_smif_mem_context_t *conte
     return result;
 }
 
-cy_en_smif_status_t Cy_SMIF_MemNumRead(cy_stc_smif_mem_context_t *context, uint8_t memNum,
+cy_en_smif_status_t Cy_SMIF_MemNumRead(cy_stc_smif_mem_context_t const *context, uint8_t memNum,
                                     uint32_t address, uint8_t rxBuffer[],
                                     uint32_t length)
 {
@@ -1010,7 +1028,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumRead(cy_stc_smif_mem_context_t *context, uint8
     }
 }
 
-cy_en_smif_status_t Cy_SMIF_MemNumWrite(cy_stc_smif_mem_context_t *context, uint8_t memNum,
+cy_en_smif_status_t Cy_SMIF_MemNumWrite(cy_stc_smif_mem_context_t const *context, uint8_t memNum,
                                      uint32_t address, uint8_t const txBuffer[],
                                      uint32_t length)
 {
@@ -1098,7 +1116,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumWrite(cy_stc_smif_mem_context_t *context, uint
     }
 }
 
-cy_en_smif_status_t Cy_SMIF_MemNumEraseSector(cy_stc_smif_mem_context_t *context, uint8_t memNum,
+cy_en_smif_status_t Cy_SMIF_MemNumEraseSector(cy_stc_smif_mem_context_t const *context, uint8_t memNum,
                                            uint32_t address, uint32_t length)
 {
     uint8_t smif_number = _Cy_SMIF_GetSmifNumber(context->base);
@@ -1185,7 +1203,7 @@ cy_en_smif_status_t Cy_SMIF_MemNumEraseSector(cy_stc_smif_mem_context_t *context
 }
 
 
-cy_en_smif_status_t Cy_SMIF_MemNumEraseChip(cy_stc_smif_mem_context_t *context, uint8_t memNum)
+cy_en_smif_status_t Cy_SMIF_MemNumEraseChip(cy_stc_smif_mem_context_t const *context, uint8_t memNum)
 {
     uint8_t smif_number = _Cy_SMIF_GetSmifNumber(context->base);
 
@@ -1342,8 +1360,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusRead(cy_stc_smif_mem_context_t *contex
                                     smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber],
                                     CY_SMIF_HB_CONTINUOUS_BURST,
                                     address,
-                                    length / 2, // size in half word
-                                    (uint16_t*)rxBuffer,
+                                    length / 2U, // size in half word
+                                    (uint16_t*)(void*)rxBuffer,
                                     smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber]->hbdeviceCfg->dummyCycles,
                                     false, // Double initial latency
                                     true, // Blocking mode
@@ -1358,8 +1376,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusRead(cy_stc_smif_mem_context_t *contex
                                     context->block_config->memConfig[memConfigNumber],
                                     CY_SMIF_HB_CONTINUOUS_BURST,
                                     address,
-                                    length / 2, // size in half word
-                                    (uint16_t*)rxBuffer,
+                                    length / 2U, // size in half word
+                                    (uint16_t*)(void*)rxBuffer,
                                     context->block_config->memConfig[memConfigNumber]->hbdeviceCfg->dummyCycles,
                                     false, // Double initial latency
                                     true, // Blocking mode
@@ -1447,8 +1465,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusWrite(cy_stc_smif_mem_context_t *conte
                                     smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber],
                                     CY_SMIF_HB_CONTINUOUS_BURST,
                                     address,
-                                    length / 2, // size in half word
-                                    (uint16_t*)txBuffer,
+                                    length / 2U, // size in half word
+                                    (uint16_t*)(void*)txBuffer,
                                     smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber]->hbdeviceCfg->hbDevType,
                                     smif_internal_secure_contexts[smif_number]->block_config->memConfig[memConfigNumber]->hbdeviceCfg->dummyCycles, // Double initial latency
                                     true, // Blocking mode
@@ -1463,8 +1481,8 @@ cy_en_smif_status_t Cy_SMIF_MemNumHyperBusWrite(cy_stc_smif_mem_context_t *conte
                                     context->block_config->memConfig[memConfigNumber],
                                     CY_SMIF_HB_CONTINUOUS_BURST,
                                     address,
-                                    length / 2, // size in half word
-                                    (uint16_t*)txBuffer,
+                                    length / 2U, // size in half word
+                                    (uint16_t*)(void*)txBuffer,
                                     context->block_config->memConfig[memConfigNumber]->hbdeviceCfg->hbDevType,
                                     context->block_config->memConfig[memConfigNumber]->hbdeviceCfg->dummyCycles,
                                     true, // Blocking mode

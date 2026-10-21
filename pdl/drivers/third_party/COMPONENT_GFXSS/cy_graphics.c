@@ -28,7 +28,6 @@
 #if defined(CY_IP_MXS22GFXSS)
 
 #include "cy_graphics.h"
-#include "gfxss_ip_compat.h"
 
 #if defined(__cplusplus)
 extern "C" {

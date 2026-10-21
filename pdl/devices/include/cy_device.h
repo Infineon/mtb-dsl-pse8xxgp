@@ -396,9 +396,9 @@ typedef CRYPTO_V2_Type CRYPTO_Type;
 #define CY_SMIF_HSIOM_BASE                        ((uint32_t)SMIF0_CORE0_SMIF_HSIOM_SMIF_PRT0)
 #define CY_SMIF_SECURE_HSIOM_BASE                 ((uint32_t)SMIF0_CORE0_SMIF_HSIOM_SMIF_SECURE_PRT0)
 #else
-#define CY_SMIF_GPIO_BASE                         ((uint32_t)SMIF0_CORE_SMIF_GPIO_SMIF_PRT0)
-#define CY_SMIF_HSIOM_BASE                        ((uint32_t)SMIF0_CORE_SMIF_HSIOM_SMIF_PRT0)
-#define CY_SMIF_SECURE_HSIOM_BASE                 ((uint32_t)SMIF0_CORE_SMIF_HSIOM_SMIF_SECURE_PRT0)
+#define CY_SMIF_GPIO_BASE(base)                   ((uint32_t)(((void *)(base) >= (void *)SMIF1_CORE_SMIF_GPIO_SMIF_PRT0) ? SMIF1_CORE_SMIF_GPIO_SMIF_PRT0 : SMIF0_CORE_SMIF_GPIO_SMIF_PRT0))
+#define CY_SMIF_HSIOM_BASE(base)                  ((uint32_t)(((void *)(base) >= (void *)SMIF1_CORE_SMIF_HSIOM_SMIF_PRT0) ? SMIF1_CORE_SMIF_HSIOM_SMIF_PRT0 : SMIF0_CORE_SMIF_HSIOM_SMIF_PRT0))
+#define CY_SMIF_SECURE_HSIOM_BASE(base)           ((uint32_t)(((void *)(base) >= (void *)SMIF1_CORE_SMIF_HSIOM_SMIF_SECURE_PRT0) ? SMIF1_CORE_SMIF_HSIOM_SMIF_SECURE_PRT0 : SMIF0_CORE_SMIF_HSIOM_SMIF_SECURE_PRT0))
 #endif
 #define SMIF_CRYPTO_CMD(base)            (((SMIF_CORE_Type*) base)->SMIF_CRYPTO_BLOCK[0].CRYPTO_CMD)
 #define SMIF_CRYPTO_ADDR(base)           (((SMIF_CORE_Type*) base)->SMIF_CRYPTO_BLOCK[0].CRYPTO_ADDR)
@@ -615,7 +615,7 @@ typedef CRYPTO_V2_Type CRYPTO_Type;
 #endif /* CY_IP_MXSMIF */
 
 /* All GPIO ports use IOSS register layout */
-#define CY_GPIO_IS_IOSS_GPIO(baseAddress)       (1U)
+#define CY_GPIO_IS_IOSS_GPIO(baseAddress)       (true)
 
 typedef GPIO_PRT_Type  CY_GPIO_IOSS_PRT_Type;
 
@@ -906,6 +906,10 @@ typedef GPIO_PRT_Type  CY_GPIO_IOSS_PRT_Type;
 #define RRAM_NVM_STATUS(base)                  (((RRAMC_Type*)(base))->RRAM_SFR.NVM_STATUS)
 #define RRAM_NVM_VMODE(base)                   (((RRAMC_Type*)(base))->RRAM_SFR.NVM_VMODE)
 #define RRAM_NVM_ACC(base)                     (((RRAMC_Type*)(base))->RRAM_SFR.NVM_ACC)
+
+#ifdef CY_DEVICE_IFX_SECURITY_EPC2
+#define CY_RRAM_RECLAIM_PROTECTED_NVM (0x15UL)
+#endif /* CY_DEVICE_IFX_SECURITY_EPC2 */
 
 /*******************************************************************************
 *                IOSS
@@ -1210,6 +1214,7 @@ typedef GPIO_PRT_Type  CY_GPIO_IOSS_PRT_Type;
 #define CY_SRSS_DPLL_HP_PRESENT             SRSS_NUM_DPLL_HP
 
 #define CY_SRSS_IHO_PRESENT                 1
+#define CY_DEVICE_IHO_FREQ                  (50000000UL) /* IHO clock frequency in Hz */
 #define CY_SRSS_IMO_PRESENT                 SRSS_IMO_PRESENT
 #define CY_SRSS_ILO_PRESENT                 SRSS_ILO_PRESENT
 
@@ -1992,6 +1997,15 @@ __STATIC_INLINE uint32_t PERI_PCLK_GR_DIV_24_5_NR(uint32_t instNum, uint32_t grN
 /*******************************************************************************
 *                TCPWM
 *******************************************************************************/
+
+/* TCPWM glitch filter presence derived from config.h - check all groups */
+#if (defined(TCPWM_GRP_NR0_CNT_TR_ONE_GF_NR) && (TCPWM_GRP_NR0_CNT_TR_ONE_GF_NR > 0U)) || \
+    (defined(TCPWM_GRP_NR1_CNT_TR_ONE_GF_NR) && (TCPWM_GRP_NR1_CNT_TR_ONE_GF_NR > 0U)) || \
+    (defined(TCPWM_GRP_NR2_CNT_TR_ONE_GF_NR) && (TCPWM_GRP_NR2_CNT_TR_ONE_GF_NR > 0U))
+#define CY_TCPWM_GF_PRESENT             1U
+#else
+#define CY_TCPWM_GF_PRESENT             0U
+#endif
 
 #define TCPWM_CTRL_SET(base)                (((TCPWM_Type *)(base))->CTRL_SET)
 #define TCPWM_CTRL_CLR(base)                (((TCPWM_Type *)(base))->CTRL_CLR)
@@ -3117,6 +3131,18 @@ extern const uint32_t IPC_BASE_PTR[CY_IPC_INSTANCES];
 *                MXCM55
 *******************************************************************************/
 #define MXCM55_CM55_STATUS                     (((MXCM55_Type*) MXCM55_BASE)->CM55_STATUS)
+
+/*******************************************************************************
+*                I3C Platform Compatibility
+*******************************************************************************/
+/* Platform compatibility accessors for cy_i3c.c. pse8xxgp wraps the I3C core
+ * registers in I3C_Type.CORE and unrolls the vendor-CCC ports into indexed
+ * members, so map the shared driver's accessors accordingly. */
+#define CY_I3C_DEVICE_CTRL                 (I3C->CORE.DEVICE_CTRL)
+/* IP-enable accessor: the enable bit lives in the wrapper CTRL register at offset 0x400. */
+#define CY_I3C_ENABLE_CTRL_REG             (I3C->CTRL)
+#define CY_I3C_EXT_TX_DATA_PORT_PTR(base)  ((uint32_t *)&(base)->EXT_TX_DATA_PORT_0)
+#define CY_I3C_EXT_CMD_REG_PTR(base)       ((uint32_t *)&(base)->EXT_CMD_REG_0)
 
 
 CY_MISRA_BLOCK_END('MISRA C-2012 Rule 8.6')

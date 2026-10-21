@@ -12,6 +12,7 @@ var group__group__syslib__section__macros =
     [ "CY_SECTION_INIT_CODECOPY_END", "group__group__syslib__section__macros.html#ga10926a1e1ebe0e4c7b2024a80cf93266", null ],
     [ "CY_SECTION_SHAREDMEM", "group__group__syslib__section__macros.html#ga2b993962501511509b8b00983f63a3db", null ],
     [ "CY_SECTION_SHAREDMEM_SEC", "group__group__syslib__section__macros.html#gaffa03f0f4964652cf1e8981829e56214", null ],
+    [ "CY_SECTION_NON_CACHE", "group__group__syslib__section__macros.html#ga6c5996f1868dc896d1df6b083eb0ee44", null ],
     [ "CY_SECTION_SOCMEMSRAMCODE_BEGIN", "group__group__syslib__section__macros.html#ga1ee9ec1a465f6c127790e0077a5bdc27", null ],
     [ "CY_SECTION_SOCMEMSRAMDATA_BEGIN", "group__group__syslib__section__macros.html#ga1587da210f7941e4b2fa119aa760d39b", null ],
     [ "CY_SECTION_SOCMEMSRAMSHARED_BEGIN", "group__group__syslib__section__macros.html#gaa768a043f67cc8909f97862a2b221813", null ],

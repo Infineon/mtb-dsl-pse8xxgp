@@ -25,7 +25,8 @@
 * limitations under the License.
 *******************************************************************************/
 
-#pragma once
+#if !defined(MTB_DEVICE_DRIVERS_H)
+#define MTB_DEVICE_DRIVERS_H
 
 #include "cy_device.h"
 #include "cy_device_headers.h"
@@ -76,4 +77,6 @@
 #include "cy_tdm.h"
 #include "cy_trigmux.h"
 #include "cy_wdt.h"
+
+#endif /* MTB_DEVICE_DRIVERS_H */
 

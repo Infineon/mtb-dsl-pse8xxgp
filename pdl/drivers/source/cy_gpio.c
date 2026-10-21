@@ -75,9 +75,8 @@ static HSIOM_PRT_V1_Type *Cy_Gpio_GetHsiomPortBase(GPIO_PRT_Type *base)
     ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
     if (CY_GPIO_IS_SMIF_GPIO(base))
     {
-        uint32_t smifCoreOffset = ((void *)base >= (void *)CY_GPIO_SMIF_INST1_PRT0) ? CY_GPIO_SMIF_INST_OFFSET : 0UL;
-        portNum = ((uint32_t)base - CY_SMIF_GPIO_BASE - smifCoreOffset) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
-        baseHSIOM = (HSIOM_PRT_V1_Type *)(CY_SMIF_HSIOM_BASE + (CY_GPIO_SMIF_HSIOM_PRT_SECTION_SIZE * portNum) + smifCoreOffset);
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_PRT_SECTION_SIZE * portNum));
     }
 #endif
 
@@ -437,7 +436,9 @@ static cy_en_gpio_status_t Cy_Gpio_PinInitIoss(CY_GPIO_IOSS_PRT_Type *base, uint
     Cy_GPIO_IOSS_SetDriveMode(base, pinNum, config->driveMode);
     Cy_GPIO_IOSS_SetVtrip(base, pinNum, config->vtrip);
 
-        Cy_GPIO_SetPullupResistance(base, pinNum, config->pullUpRes);
+#if defined (CY_IP_MXS22IOSS)
+    Cy_GPIO_SetPullupResistance((GPIO_PRT_Type *)base, pinNum, config->pullUpRes);
+#endif /* CY_IP_MXS22IOSS, */
 
     /* SIO configuration - present on IOSS ports that have CFG_SIO register */
     {
@@ -727,20 +728,11 @@ cy_en_gpio_status_t Cy_GPIO_Port_Init(GPIO_PRT_Type* base, const cy_stc_gpio_prt
         baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_HSIOM_BASE + (HSIOM_PRT_SECTION_SIZE * portNum));
         (void)baseHSIOM; /* May be unused on platforms dispatching to IOCL/IOSS helpers */
 
-    #if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
+    #if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
         if (CY_GPIO_IS_SMIF_GPIO(base))
         {
-            uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-            portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-            baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_PRT_SECTION_SIZE * portNum) + smif_core_offset);
-        }
-    #endif
-    #if defined (CY_IP_MXSMIF) && (CY_IP_MXSMIF_VERSION == 7)
-        if (CY_GPIO_IS_SMIF_GPIO(base))
-        {
-            uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-            portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-            baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE + (SMIF_SMIF_HSIOM_SMIF_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+            portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+            baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_PRT_SECTION_SIZE * portNum));
         }
     #endif
 
@@ -773,20 +765,11 @@ cy_en_gpio_status_t Cy_GPIO_Port_Init(GPIO_PRT_Type* base, const cy_stc_gpio_prt
 
         baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_HSIOM_SECURE_BASE + (HSIOM_SECURE_PRT_SECTION_SIZE * portNum));
 
-#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
-    if (CY_GPIO_IS_SMIF_GPIO(base))
-    {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_SECURE_PRT_SECTION_SIZE * portNum) + smif_core_offset);
-    }
-#endif /* CY_IP_MXSMIF, CY_IP_MXSMIF_VERSION */
-#if defined (CY_IP_MXSMIF) && (CY_IP_MXSMIF_VERSION == 7)
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
         if (CY_GPIO_IS_SMIF_GPIO(base))
         {
-            uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-            portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-            baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE + (SMIF_SMIF_HSIOM_SMIF_SECURE_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+            portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+            baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_SEC_PRT_SECTION_SIZE * portNum));
         }
 #endif
 
@@ -1188,20 +1171,11 @@ void Cy_GPIO_Port_Deinit(GPIO_PRT_Type* base)
     portNum = ((uint32_t)(base) - CY_GPIO_BASE) / GPIO_PRT_SECTION_SIZE;
     baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_HSIOM_BASE + (HSIOM_PRT_SECTION_SIZE * portNum));
 
-#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
     if (CY_GPIO_IS_SMIF_GPIO(base))
     {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_PRT_SECTION_SIZE * portNum) + smif_core_offset);
-    }
-#endif
-#if defined (CY_IP_MXSMIF) && (CY_IP_MXSMIF_VERSION == 7)
-    if (CY_GPIO_IS_SMIF_GPIO(base))
-    {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE + (SMIF_SMIF_HSIOM_SMIF_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        baseHSIOM = (HSIOM_PRT_V1_Type*)(CY_SMIF_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_PRT_SECTION_SIZE * portNum));
     }
 #endif
 
@@ -1210,20 +1184,11 @@ void Cy_GPIO_Port_Deinit(GPIO_PRT_Type* base)
     HSIOM_SECURE_PRT_Type *baseSecHSIOM;
     baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_HSIOM_SECURE_BASE + (HSIOM_SECURE_PRT_SECTION_SIZE * portNum));
 
-#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6))
+#if defined (CY_IP_MXSMIF) && ((CY_IP_MXSMIF_VERSION == 5) || (CY_IP_MXSMIF_VERSION == 6) || (CY_IP_MXSMIF_VERSION == 7))
     if (CY_GPIO_IS_SMIF_GPIO(base))
     {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_CORE_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE + (SMIF_CORE_SMIF_HSIOM_SMIF_SECURE_PRT_SECTION_SIZE * portNum) + smif_core_offset);
-    }
-#endif
-#if defined (CY_IP_MXSMIF) && (CY_IP_MXSMIF_VERSION == 7)
-    if (CY_GPIO_IS_SMIF_GPIO(base))
-    {
-        uint32_t smif_core_offset = ((void *)base >= (void *)SMIF_INST1_PRT0) ? SMIF_INST_OFFSET : 0U;
-        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE - smif_core_offset) / SMIF_SMIF_GPIO_SMIF_PRT_SECTION_SIZE;
-        baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE + (SMIF_SMIF_HSIOM_SMIF_SECURE_PRT_SECTION_SIZE * portNum) + smif_core_offset);
+        portNum = ((uint32_t)(base) - CY_SMIF_GPIO_BASE(base) ) / CY_GPIO_SMIF_PRT_SECTION_SIZE;
+        baseSecHSIOM = (HSIOM_SECURE_PRT_Type*)(CY_SMIF_SECURE_HSIOM_BASE(base) + (CY_GPIO_SMIF_HSIOM_SEC_PRT_SECTION_SIZE * portNum));
     }
 #endif
 

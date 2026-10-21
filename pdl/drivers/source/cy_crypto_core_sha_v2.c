@@ -536,10 +536,10 @@ static cy_en_crypto_status_t Cy_Crypto_Sha3_Finish(CRYPTO_Type *base,
     
     if ((hashState != NULL) && (digest != NULL))
     {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
         CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-        SCB_InvalidateDCache_by_Addr((volatile void *)hashState->hash,(int32_t)(CY_CRYPTO_SHA_MAX_HASH_SIZE));
+        CY_CRYPTO_INVALIDATE_DCACHE((volatile void *)hashState->hash,(int32_t)(CY_CRYPTO_SHA_MAX_HASH_SIZE));
 #endif  
 
         uint32_t hashBlockSize   = hashState->blockSize;
@@ -549,10 +549,10 @@ static cy_en_crypto_status_t Cy_Crypto_Sha3_Finish(CRYPTO_Type *base,
         hashState->hash[hashBlockIdx] = hashState->hash[hashBlockIdx] ^ 0x06U;
         hashState->hash[hashBlockSize-1U] = hashState->hash[hashBlockSize-1U] ^ 0x80U;
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
         CY_MISRA_DEVIATE_LINE('MISRA C-2012 Rule 10.8','Intentional typecast to int32_t.');
-        SCB_CleanDCache_by_Addr((volatile void *)hashState->hash,(int32_t)(CY_CRYPTO_SHA_MAX_HASH_SIZE));
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)hashState->hash,(int32_t)(CY_CRYPTO_SHA_MAX_HASH_SIZE));
 #endif    
         /* Load the calculated hash state from the context buffer */
         Cy_Crypto_Core_V2_RBClear(base);
@@ -824,9 +824,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Sha_Update(CRYPTO_Type *base,
     if ((hashState != NULL) && (message != NULL))
     {
 
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)message,(int32_t)messageSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)message,(int32_t)messageSize);
 #endif
 
         messageRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(message);
@@ -950,10 +950,10 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Sha_Finish(CRYPTO_Type *base,
         }
     }
 
-    #if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+    #if CY_CRYPTO_DCACHE_ENABLED
     if(tmpResult == CY_CRYPTO_SUCCESS)
     {
-        SCB_InvalidateDCache_by_Addr(digest, (int32_t)hashState->digestSize);
+        CY_CRYPTO_INVALIDATE_DCACHE(digest, (int32_t)hashState->digestSize);
     }
     #endif
 

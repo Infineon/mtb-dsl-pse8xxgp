@@ -197,6 +197,7 @@
 *
 * \defgroup group_wdt_macros Macros
 * \defgroup group_wdt_clk_src_enums Enums
+* \defgroup group_wdt_structures Data Structures
 * \defgroup group_wdt_functions Functions
 *
 */
@@ -263,7 +264,7 @@ extern "C" {
 #define CY_SRSS_WDT_LOCK_BITS                           (3U)
 
 /** The WDT driver identifier */
-#define CY_WDT_ID                                       CY_PDL_DRV_ID(0x34U)
+#define CY_WDT_ID                                       CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_WDT)
 
 /** \cond Internal */
 
@@ -308,10 +309,11 @@ extern "C" {
 #define CY_WDT_IS_CLK_SRC_VALID(src)         (((src) == CY_WDT_CLK_SOURCE_ILO)  || \
                                               ((src) == CY_WDT_CLK_SOURCE_PILO) || \
                                               ((src) == CY_WDT_CLK_SOURCE_WCO))
-/** WDT driver retry macros. WDT busy bet is set for three clock cycles
- *  (~92us) after writing to WDT_CNT.COUNTER or after writing to
- *  WDT_INTR_SET (set) or WDT_INTR (clear).*/
-#define CY_WDT_ACCESS_BUSY_RETRY_COUNT    (92u)
+/** WDT driver retry macros. WDT busy bit can remain set for up to five
+ *  CLK_WDT cycles (~153us) after writing to WDT_CNT.COUNTER or after writing
+ *  to WDT_INTR_SET (set) or WDT_INTR (clear). The retry budget (count x
+ *  CY_WDT_BUSY_RETRY_DELAY_US) is sized to cover this worst case plus margin.*/
+#define CY_WDT_ACCESS_BUSY_RETRY_COUNT    (160u)
 
 /** WDT driver retry delay value */
 #define CY_WDT_BUSY_RETRY_DELAY_US         (1u)     /* 1 usec */
@@ -907,7 +909,7 @@ __STATIC_INLINE cy_en_wdt_status_t Cy_WDTx_DisableReset(WDT_STRUCT_Type *base)
 __STATIC_INLINE void Cy_WDT_Enable(void)
 {
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
-    Cy_WDTx_Enable_Common(WDT_DEFAULT);
+    (void)Cy_WDTx_Enable_Common(WDT_DEFAULT);
 #else
 #if (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     SRSS_WDT_CTL |= WDT_CTL_ENABLE_Msk;
@@ -930,7 +932,7 @@ __STATIC_INLINE void Cy_WDT_Enable(void)
 __STATIC_INLINE void Cy_WDT_Disable(void)
 {
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
-    Cy_WDTx_Disable_Common(WDT_DEFAULT);
+    (void)Cy_WDTx_Disable_Common(WDT_DEFAULT);
 #elif (defined (CY_IP_MXS40SRSS) && (CY_IP_MXS40SRSS_VERSION >= 2))
     SRSS_WDT_CTL &= ((uint32_t) ~(_VAL2FLD(WDT_CTL_ENABLE, 1U)));
 #else
@@ -1028,7 +1030,7 @@ __STATIC_INLINE uint32_t Cy_WDT_GetIgnoreBits(void)
 __STATIC_INLINE void Cy_WDT_SetClkSource(cy_en_wdt_clk_sources_t src)
 {
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION == 2) && defined(SRSS_NUM_WDT_A) && (SRSS_NUM_WDT_A == 1)
-    Cy_WDTx_SetClkSource_Common(WDT_DEFAULT, src);
+    (void)Cy_WDTx_SetClkSource_Common(WDT_DEFAULT, src);
 #else
     CY_ASSERT_L2(CY_WDT_IS_CLK_SRC_VALID(src));
 
@@ -1185,7 +1187,7 @@ __STATIC_INLINE void Cy_WDT_UnmaskInterrupt(void)
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_EnableReset(void)
 {
-    Cy_WDTx_EnableReset_Common(WDT_DEFAULT);
+    (void)Cy_WDTx_EnableReset_Common(WDT_DEFAULT);
 }
 
 /*******************************************************************************
@@ -1201,7 +1203,7 @@ __STATIC_INLINE void Cy_WDT_EnableReset(void)
 *******************************************************************************/
 __STATIC_INLINE void Cy_WDT_DisableReset(void)
 {
-    Cy_WDTx_DisableReset_Common(WDT_DEFAULT);
+    (void)Cy_WDTx_DisableReset_Common(WDT_DEFAULT);
 }
 #endif /* defined (CY_IP_MXS22SRSS) && ( CY_IP_MXS22SRSS_VERSION == 2) */
 

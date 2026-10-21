@@ -1,5 +1,7 @@
 var NAVTREEINDEX15 =
 {
+"group__group__i3c__enums.html#ggafaca58d175e1f72e4f8f895ad4139031af3a93e8b6c0e186ab3cede3452f3b4a5":[2,2,10,1,8,4],
+"group__group__i3c__functions.html":[2,2,10,2],
 "group__group__i3c__general__functions.html":[2,2,10,2,1],
 "group__group__i3c__general__functions.html#ga059861a80e44e10f15f8b31679a4a670":[2,2,10,2,1,0],
 "group__group__i3c__general__functions.html#ga09a5271ededa841ff8a6417eb6403450":[2,2,10,2,1,24],
@@ -247,7 +249,5 @@ var NAVTREEINDEX15 =
 "group__group__ipc__pipe__data__structures.html#ac585fb98c4029e06b8153e4e5d64f165":[2,2,11,1,0,3,0],
 "group__group__ipc__pipe__data__structures.html#ad355292f5cd562ab1a213a68af163348":[2,2,11,1,0,1,2],
 "group__group__ipc__pipe__data__structures.html#ae680b2cd09aa2d25fb94504acfdce5e1":[2,2,11,1,0,1,0],
-"group__group__ipc__pipe__data__structures.html#aec89378774fd910f4037abf56114d868":[2,2,11,1,0,3,4],
-"group__group__ipc__pipe__data__structures.html#aefa7a75db152315e2e3e3ae46820a4ce":[2,2,11,1,0,3,1],
-"group__group__ipc__pipe__data__structures.html#structcy__stc__ipc__pipe__config__t":[2,2,11,1,0,3]
+"group__group__ipc__pipe__data__structures.html#aec89378774fd910f4037abf56114d868":[2,2,11,1,0,3,4]
 };

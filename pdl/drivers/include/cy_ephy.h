@@ -83,7 +83,7 @@ extern "C" {
 #define CY_EPHY_DRV_VERSION_MINOR       30
 
 /** EPHY driver ID */
-#define CY_EPHY_ID CY_PDL_DRV_ID(0x70U)
+#define CY_EPHY_ID CY_PDL_DRV_ID(CY_PDL_RSLT_MODULE_EPHY)
 
 /** \} group_ephy_macros */
 

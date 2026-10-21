@@ -136,14 +136,14 @@ cy_en_syspm_status_t cy_pd_pdcm_clear_dependency(cy_pd_pdcm_id_t host_pd,cy_pd_p
 
 #if defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION >= 2)
 
-cy_en_syspm_status_t Cy_SysPm_PDResourceMapEnable(cy_pd_pdcm_id_t pd, cy_en_syspm_pd_resource_t resource, bool enable)
+cy_en_syspm_status_t Cy_SysPm_PDResourceMapEnable(cy_pd_pdcm_id_t pd, uint32_t resource, bool enable)
 {
     cy_en_syspm_status_t status = CY_SYSPM_FAIL;
     CY_ASSERT(CY_SYSPM_IS_PDCM_ID_VALID(pd));
     CY_ASSERT(CY_SYSPM_IS_PD_RESOURCE_VALID(resource));
 
     /* If the resource is configurable  */
-    if((resource & (~CY_PD_RESOURCE_MAP_CONFIG_ON(pd))) == 0)
+    if((resource & (~CY_PD_RESOURCE_MAP_CONFIG_ON(pd))) == 0UL)
     {
         /* Set the corresponding bit(s) in the resource map dependency sense register */
         enable ? (CY_PD_RESOURCE_MAP_SENSE(pd) |= resource) : (CY_PD_RESOURCE_MAP_SENSE(pd) &= ~resource);
@@ -151,6 +151,31 @@ cy_en_syspm_status_t Cy_SysPm_PDResourceMapEnable(cy_pd_pdcm_id_t pd, cy_en_sysp
     }
     return status;
 }
+
+#if (CY_IP_MXS22SRSS_VERSION_MINOR == 2)
+cy_en_syspm_status_t Cy_SysPm_PDResourceMapDisable(cy_pd_pdcm_id_t pd, uint32_t resource)
+{
+    cy_en_syspm_status_t status = CY_SYSPM_FAIL;
+    CY_ASSERT(CY_SYSPM_IS_PDCM_ID_VALID(pd));
+    CY_ASSERT(CY_SYSPM_IS_PD_RESOURCE_VALID(resource));
+
+    /* If the resource is configurable */
+    if((resource & (~CY_PD_RESOURCE_MAP_CONFIG_ON(pd))) == 0UL)
+    {
+        /* Clear the corresponding bit(s) in the resource map dependency sense register */
+        CY_PD_RESOURCE_MAP_SENSE(pd) &= ~resource;
+        status = CY_SYSPM_SUCCESS;
+    }
+    return status;
+}
+
+uint32_t Cy_SysPm_PDResourceMapGet(cy_pd_pdcm_id_t pd)
+{
+    CY_ASSERT(CY_SYSPM_IS_PDCM_ID_VALID(pd));
+    return CY_PD_RESOURCE_MAP_SENSE(pd);
+}
+#endif /* (CY_IP_MXS22SRSS_VERSION_MINOR == 2) */
+
 #endif /* defined (CY_IP_MXS22SRSS) && (CY_IP_MXS22SRSS_VERSION >= 2) */
 
 #endif /* defined(CY_IP_MXS40SSRSS) || defined(CY_IP_MXS22SRSS) */

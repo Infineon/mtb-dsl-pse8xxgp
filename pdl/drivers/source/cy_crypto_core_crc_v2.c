@@ -137,9 +137,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Crc(CRYPTO_Type *base,
                                         uint32_t  dataSize,
                                         uint32_t  lfsrInitState)
 {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)data,(int32_t)dataSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)data,(int32_t)dataSize);
 #endif
     uint8_t *dataRemap;
     dataRemap = (uint8_t *)CY_REMAP_ADDRESS_FOR_CRYPTO(data);
@@ -288,9 +288,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Crc_CalcStart(CRYPTO_Type *base, uint32_
 cy_en_crypto_status_t Cy_Crypto_Core_V2_Crc_CalcPartial(CRYPTO_Type *base,
                                         void const  *data, uint32_t  dataSize)
 {
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
     /* Flush the cache */
-    SCB_CleanDCache_by_Addr((volatile void *)data,(int32_t)dataSize);
+    CY_CRYPTO_CLEAN_DCACHE((volatile void *)data,(int32_t)dataSize);
 #endif
 
     uint8_t *dataRemap;
@@ -387,9 +387,9 @@ cy_en_crypto_status_t Cy_Crypto_Core_V2_Crc_Calc(CRYPTO_Type *base,
     CY_ASSERT_L1((width >= 1U) && (width <= CY_CRYPTO_HW_REGS_WIDTH));
 
     uint32_t calculatedCrc;
-#if (((CY_CPU_CORTEX_M7) && defined (ENABLE_CM7_DATA_CACHE)) || CY_CPU_CORTEX_M55)
+#if CY_CRYPTO_DCACHE_ENABLED
         /* Flush the cache */
-        SCB_CleanDCache_by_Addr((volatile void *)data,(int32_t)dataSize);
+        CY_CRYPTO_CLEAN_DCACHE((volatile void *)data,(int32_t)dataSize);
 #endif
 
     uint8_t *dataRemap;

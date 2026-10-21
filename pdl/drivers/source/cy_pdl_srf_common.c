@@ -57,7 +57,7 @@ cy_rslt_t _Cy_PDL_Invoke_SRF(cy_pdl_invoke_srf_args* args)
         {
             if(args->input_base != NULL)
             {
-                memcpy(&(input->input_values[0]), args->input_base, args->input_len);
+                (void)memcpy(&(input->input_values[0]), args->input_base, args->input_len);
                 input->len = args->input_len;
             }
             else

@@ -32,7 +32,7 @@
 
 #include "cy_smif.h"
 #include "cy_sysclk.h"
-
+#include <string.h>
  #include "cy_smif_memnum.h"
 
 #if defined(__cplusplus)
@@ -103,11 +103,11 @@ cy_en_smif_status_t Cy_SMIF_Init(SMIF_Type *base,
     context->rxCompleteCb = NULL;
     context->timeout = timeout;
     context->memReadyPollDelay = 0U;
-        context->preCmdDataRate = CY_SMIF_SDR;
-        context->preCmdWidth = CY_SMIF_WIDTH_SINGLE;
-        context->preXIPDataRate = CY_SMIF_SDR;
-        context->dummyCycles = 0U;
-        context->flags = 0U;
+    context->preCmdDataRate = CY_SMIF_SDR;
+    context->preCmdWidth = CY_SMIF_WIDTH_SINGLE;
+    context->preXIPDataRate = CY_SMIF_SDR;
+    context->dummyCycles = 0U;
+    context->flags = 0U;
 
     /* The SMIF CTL and CTL2 registers cannot be modified while the SMIF is enabled in XIP mode. */
     uint32_t smif_ctl_value = SMIF_CTL(base);

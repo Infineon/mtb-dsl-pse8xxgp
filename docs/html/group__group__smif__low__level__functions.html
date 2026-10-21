@@ -281,6 +281,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga25746c7a8d9bd474509d10dcf48133ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__smif__enums.html#ga75fb83c49239ece738cfba778165cb41">cy_en_smif_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#ga25746c7a8d9bd474509d10dcf48133ca">Cy_SMIF_SetRxCaptureMode</a> (SMIF_Type *base, <a class="el" href="group__group__smif__enums.html#ga159307bb2b563a18f87dcf492a2bcc75">cy_en_smif_capture_mode_t</a> mode, <a class="el" href="group__group__smif__enums.html#gad776a0db9224477ab865254a32d9e312">cy_en_smif_slave_select_t</a> slaveId)</td></tr>
 <tr class="memdesc:ga25746c7a8d9bd474509d10dcf48133ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function sets the Rx Capture mode setting for SMIF IP block instance.  <br /></td></tr>
 <tr class="separator:ga25746c7a8d9bd474509d10dcf48133ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9a3e704149b3cfa6629988a514a79808"><td class="memItemLeft" align="right" valign="top">__STATIC_INLINE <a class="el" href="group__group__smif__enums.html#ga159307bb2b563a18f87dcf492a2bcc75">cy_en_smif_capture_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__smif__low__level__functions.html#ga9a3e704149b3cfa6629988a514a79808">Cy_SMIF_GetRxCaptureMode</a> (SMIF_Type *base)</td></tr>
+<tr class="memdesc:ga9a3e704149b3cfa6629988a514a79808"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current Rx Capture mode setting for the SMIF IP block instance.  <br /></td></tr>
+<tr class="separator:ga9a3e704149b3cfa6629988a514a79808"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4ba290997356aff8767bf5519fcbb33"><td class="memItemLeft" align="right" valign="top"><a id="gaa4ba290997356aff8767bf5519fcbb33" name="gaa4ba290997356aff8767bf5519fcbb33"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>Cy_SMIF_IsBridgeOn</b> (SMIF_Base_Type *base)</td></tr>
 <tr class="separator:gaa4ba290997356aff8767bf5519fcbb33"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3204,6 +3207,38 @@ This is a blocking API. The API waits for encryption completion. Will exit if a 
 <div class="ttc" id="agroup__group__smif__low__level__functions_html_ga6ecd1075db9d75ae45f4eb437dbfed8d"><div class="ttname"><a href="group__group__smif__low__level__functions.html#ga6ecd1075db9d75ae45f4eb437dbfed8d">Cy_SMIF_SetMasterDLP</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_SetMasterDLP(SMIF_Type *base, uint16 dlp, uint8_t size)</div><div class="ttdoc">This function sets the data learning pattern.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:2493</div></div>
 <div class="ttc" id="agroup__group__smif__low__level__functions_html_gaea2684847f04e2e7e2c85cfe7fd37881"><div class="ttname"><a href="group__group__smif__low__level__functions.html#gaea2684847f04e2e7e2c85cfe7fd37881">Cy_SMIF_Init</a></div><div class="ttdeci">cy_en_smif_status_t Cy_SMIF_Init(SMIF_Type *base, cy_stc_smif_config_t const *config, uint32_t timeout, cy_stc_smif_context_t *context)</div><div class="ttdoc">This function initializes the SMIF block as a communication block.</div><div class="ttdef"><b>Definition:</b> cy_smif.c:75</div></div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a id="ga9a3e704149b3cfa6629988a514a79808" name="ga9a3e704149b3cfa6629988a514a79808"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9a3e704149b3cfa6629988a514a79808">&#9670;&#160;</a></span>Cy_SMIF_GetRxCaptureMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__STATIC_INLINE <a class="el" href="group__group__smif__enums.html#ga159307bb2b563a18f87dcf492a2bcc75">cy_en_smif_capture_mode_t</a> Cy_SMIF_GetRxCaptureMode </td>
+          <td>(</td>
+          <td class="paramtype">SMIF_Type *&#160;</td>
+          <td class="paramname"><em>base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the current Rx Capture mode setting for the SMIF IP block instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">base</td><td>Holds the base address of the SMIF block registers.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current Rx Capture mode <a class="el" href="group__group__smif__enums.html#ga159307bb2b563a18f87dcf492a2bcc75">cy_en_smif_capture_mode_t</a><ul>
+<li><a class="el" href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75aa7b7f500bee438993cd709de7d8a62f7">CY_SMIF_SEL_NORMAL_SPI</a> - Normal SPI without DLP.</li>
+<li><a class="el" href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a4223535fb0e9f40aa3402e30f3aeecb9">CY_SMIF_SEL_NORMAL_SPI_WITH_DLP</a> - Normal SPI with DLP.</li>
+<li><a class="el" href="group__group__smif__enums.html#gga159307bb2b563a18f87dcf492a2bcc75a14048df7957c7a19e5824e8935108abe">CY_SMIF_SEL_XSPI_HYPERBUS_WITH_DQS</a> - xSPI or HyperBus with DQS. </li>
+</ul>
+</dd></dl>
+
 </div>
 </div>
 <a id="ga6ecd1075db9d75ae45f4eb437dbfed8d" name="ga6ecd1075db9d75ae45f4eb437dbfed8d"></a>
